@@ -322,6 +322,9 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'prospect', 'do/create/email/'.$email, $params );
 	}
 
+	/**
+	 * @param string $id_type
+	 */
 	public function updateUser( $settings, $id_type, $id, $lists, $p=array() )
 	{
 		$params = array(	'user_key' => $settings['user_key'],
@@ -349,6 +352,9 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'prospect', 'do/update/'.$id_type.'/'.$id, $params );
 	}
 
+	/**
+	 * @param string $id_type
+	 */
 	public function readProspect( $settings, $id_type, $id )
 	{
 		$params = array(	'user_key' => $settings['user_key'],
@@ -370,6 +376,10 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'prospect', 'do/read/'.$id_type.'/'.$id, $params );
 	}
 
+	/**
+	 * @param string $area
+	 * @param null|string $cmd
+	 */
 	public function fetch( $settings, $area, $cmd, $params, $retry=false )
 	{
 		global $aecConfig;

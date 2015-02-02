@@ -444,6 +444,9 @@ class PaymentProcessor
 		}
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function getParamLang( $name )
 	{
 		$lang = JFactory::getLanguage();
@@ -918,6 +921,9 @@ class PaymentProcessor
 		return $return;
 	}
 
+	/**
+	 * @param string $error
+	 */
 	public function notificationError( $response, $error )
 	{
 		if ( method_exists( $this->processor, 'notificationError' ) ) {
@@ -965,6 +971,9 @@ class PaymentProcessor
 		return $response;
 	}
 
+	/**
+	 * @param Subscription $subscription_id
+	 */
 	public function validateSubscription( $subscription_id )
 	{
 		if ( empty( $this->settings ) ) {
@@ -1190,6 +1199,9 @@ class processor extends serialParamDBTable
 		}
 	}
 
+	/**
+	 * @param string $text
+	 */
 	public function fileError( $text, $level=128, $tags="", $params=array() )
 	{
 		$eventlog = new eventLog();
@@ -1687,6 +1699,9 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
+	/**
+	 * @param string[] $values
+	 */
 	public function getCCform( $var=array(), $values=null, $content=null )
 	{
 		if ( empty( $values ) ) {
@@ -2052,6 +2067,9 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
+	/**
+	 * @param string[] $values
+	 */
 	public function getFormInfo( $var=array(), $values=null )
 	{
 		if ( empty( $values ) ) {
@@ -2226,11 +2244,18 @@ class XMLprocessor extends processor
 		return implode( '&', $content );
 	}
 
+	/**
+	 * @param string $tag
+	 */
 	public function XMLsubstring_tag( $haystack, $tag )
 	{
 		return XMLprocessor::substring_between( $haystack, '<' . $tag . '>', '</' . $tag . '>' );
 	}
 
+	/**
+	 * @param string $start
+	 * @param string $end
+	 */
 	public function substring_between( $haystack, $start, $end )
 	{
 		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
@@ -2246,6 +2271,11 @@ class XMLprocessor extends processor
 
 class SOAPprocessor extends XMLprocessor
 {
+	/**
+	 * @param string $url
+	 * @param string $path
+	 * @param string $command
+	 */
 	public function transmitSOAP( $url, $path, $command, $content, $headers=null, $options=null, $header=null )
 	{
 		global $aecConfig;
@@ -2267,6 +2297,9 @@ class SOAPprocessor extends XMLprocessor
 		return $response;
 	}
 
+	/**
+	 * @param string $command
+	 */
 	public function followupRequest( $command, $content )
 	{
 		if ( empty( $this->soapclient ) ) {

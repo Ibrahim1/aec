@@ -240,6 +240,9 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		}
 	}
 
+	/**
+	 * @param metaUser $metaUser
+	 */
 	public function setPPAN( $metaUser, $ppan )
 	{
 		$metaUser->meta->setCustomParams( array( 'ppan' => $ppan ) );
@@ -259,6 +262,9 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return null;
 	}
 
+	/**
+	 * @param metaUser $metaUser
+	 */
 	public function deletePPAN( $metaUser )
 	{
 		$metaUser->meta->setCustomParams( array( 'ppan' => '' ) );
@@ -267,6 +273,10 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return true;
 	}
 
+	/**
+	 * @param string $key
+	 * @param string $data
+	 */
 	public function hmac( $key, $data )
 	{
 	   // RFC 2104 HMAC implementation for php.

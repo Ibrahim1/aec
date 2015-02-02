@@ -204,6 +204,9 @@ class mi_acl
 		return true;
 	}
 
+	/**
+	 * @param string $section
+	 */
 	public function jaclplusGIDchange( $metaUser, $section )
 	{
 		$db = JFactory::getDBO();

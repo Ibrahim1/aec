@@ -13,6 +13,9 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecCartHelper
 {
+	/**
+	 * @param integer $userid
+	 */
 	static function getCartidbyUserid( $userid )
 	{
 		$db = JFactory::getDBO();
@@ -595,6 +598,9 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
+	/**
+	 * @param Invoice $InvoiceFactory
+	 */
 	public function getAmount( $metaUser=null, $counter=0, $InvoiceFactory=null )
 	{
 		$checkout = $this->getCheckout( $metaUser, $counter, $InvoiceFactory );
@@ -610,6 +616,9 @@ class aecCart extends serialParamDBTable
 		}
 	}
 
+	/**
+	 * @param Invoice $InvoiceFactory
+	 */
 	public function checkAllFree( $metaUser, $counter=0, $InvoiceFactory=null )
 	{
 		$co = $this->getCheckout( $metaUser, $counter, $InvoiceFactory );

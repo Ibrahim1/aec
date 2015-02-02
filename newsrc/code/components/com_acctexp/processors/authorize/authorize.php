@@ -150,6 +150,10 @@ class processor_authorize extends POSTprocessor
 		return $response;
 	}
 
+	/**
+	 * @param string $key
+	 * @param string $data
+	 */
 	public function hmac( $key, $data )
 	{
 		// RFC 2104 HMAC implementation for php.

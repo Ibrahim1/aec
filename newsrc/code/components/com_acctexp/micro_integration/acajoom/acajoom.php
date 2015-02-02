@@ -154,6 +154,9 @@ class mi_acajoom
 		$db->query();
 	}
 
+	/**
+	 * @param boolean $subscriber_id
+	 */
 	public function hasList( $subscriber_id, $listid )
 	{
 		$db = JFactory::getDBO();
@@ -181,6 +184,9 @@ class mi_acajoom
 		return $db->loadResult();
 	}
 
+	/**
+	 * @param boolean $subscriber_id
+	 */
 	public function addToList( $subscriber_id, $list_id )
 	{
 		$db = JFactory::getDBO();
@@ -193,6 +199,9 @@ class mi_acajoom
 		return $db->query();
 	}
 
+	/**
+	 * @param boolean $subscriber_id
+	 */
 	public function deleteFromList( $subscriber_id, $list_id )
 	{
 		$db = JFactory::getDBO();

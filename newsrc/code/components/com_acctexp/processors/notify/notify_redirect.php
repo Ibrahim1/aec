@@ -120,6 +120,9 @@ class bootstrapLoader
 		return implode( '&', $reduced );
 	}
 
+	/**
+	 * @return string
+	 */
 	public function clearVariable( $var )
 	{
 		$return = $var;

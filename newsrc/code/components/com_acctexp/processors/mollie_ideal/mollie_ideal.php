@@ -177,6 +177,9 @@ class processor_mollie_ideal extends XMLprocessor
 		return $response;
 	}
 
+	/**
+	 * @param string $shortdesc
+	 */
 	public function ___logError( $shortdesc, $errorcode, $errordesc )
 	{
 		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );

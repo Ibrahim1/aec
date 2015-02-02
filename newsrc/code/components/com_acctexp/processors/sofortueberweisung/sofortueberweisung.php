@@ -192,6 +192,9 @@ class processor_sofortueberweisung extends POSTprocessor
 		return $response;
 	}
 
+	/**
+	 * @param string $string
+	 */
 	public function getHash( $string )
 	{
 		if ( $this->settings['hash_encoding'] == 'SHA1' ) {

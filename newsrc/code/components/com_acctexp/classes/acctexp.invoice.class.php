@@ -1467,6 +1467,9 @@ class InvoiceFactory
 		$this->triggerMIs( 'invoice_creation', $exchange, $add, $silent );
 	}
 
+	/**
+	 * @param string $action
+	 */
 	public function triggerMIs( $action, &$exchange, &$add, &$silent )
 	{
 		if ( !empty( $this->cart ) && !empty( $this->cartobject ) ) {
@@ -2840,6 +2843,9 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
+	/**
+	 * @param InvoiceFactory $InvoiceFactory
+	 */
 	public function create( $userid, $usage, $processor, $second_ident=null, $store=true, $InvoiceFactory=null, $recurring_choice=null )
 	{
 		if ( !$userid ) {
@@ -2892,6 +2898,9 @@ class Invoice extends serialParamDBTable
 		return $inum;
 	}
 
+	/**
+	 * @param InvoiceFactory $InvoiceFactory
+	 */
 	public function processorResponse( $InvoiceFactory, $response, $resp='', $altvalidation=false )
 	{
 		global $aecConfig;

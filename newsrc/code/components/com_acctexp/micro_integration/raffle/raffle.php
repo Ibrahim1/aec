@@ -256,6 +256,9 @@ class AECMI_rafflelist extends serialParamDBTable {
 		}
 	}
 
+	/**
+	 * @param integer $winid
+	 */
 	public function closeRun( $winid )
 	{
 		$db = JFactory::getDBO();

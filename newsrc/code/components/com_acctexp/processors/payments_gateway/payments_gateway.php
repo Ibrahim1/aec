@@ -74,6 +74,9 @@ class processor_payments_gateway extends POSTprocessor
 		return $form;
 	}
 
+	/**
+	 * @param boolean $type
+	 */
 	public function createGatewayLink( $request, $type )
 	{
 		if ( $this->settings['testmode'] ) {
@@ -236,6 +239,10 @@ class processor_payments_gateway extends POSTprocessor
 		}
 	}
 
+	/**
+	 * @param string $key
+	 * @param string $data
+	 */
 	public function hmac( $key, $data )
 	{
 		// RFC 2104 HMAC implementation for php.

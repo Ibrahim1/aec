@@ -720,6 +720,10 @@ class mi_hotproperty extends MI
 		return false;
 	}
 
+	/**
+	 * @param string $table
+	 * @param string $id
+	 */
 	public function update( $table, $id, $fields, $request, $sid=false )
 	{
 		$db = JFactory::getDBO();
@@ -751,6 +755,9 @@ class mi_hotproperty extends MI
 		}
 	}
 
+	/**
+	 * @param boolean|null $agentid
+	 */
 	public function publishProperties( $agentid )
 	{
 		$db = JFactory::getDBO();
@@ -768,6 +775,9 @@ class mi_hotproperty extends MI
 		}
 	}
 
+	/**
+	 * @param boolean|null $agentid
+	 */
 	public function unpublishProperties( $agentid )
 	{
 		$db = JFactory::getDBO();
@@ -825,6 +835,9 @@ class aec_hotproperty extends serialParamDBTable
 		return $db->loadResult();
 	}
 
+	/**
+	 * @param boolean $userid
+	 */
 	public function loadUserID( $userid )
 	{
 		$id = $this->getIDbyUserID( $userid );

@@ -13,6 +13,9 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecSuperCommand
 {
+	/**
+	 * @param string $string
+	 */
 	public function parseString( $string )
 	{
 		$particles = explode( '|', str_replace( 'supercommand:', '', str_replace( '!supercommand:', '', $string ) ) );
@@ -50,6 +53,9 @@ class aecSuperCommand
 		return $return;
 	}
 
+	/**
+	 * @param boolean $armed
+	 */
 	public function query( $armed )
 	{
 		$userlist = $this->getAudience();
@@ -146,6 +152,9 @@ class aecSuperCommand
 		return $userlist;
 	}
 
+	/**
+	 * @param metaUser $metaUser
+	 */
 	public function action( $metaUser )
 	{
 		switch ( $this->action['command'] ) {
@@ -302,6 +311,9 @@ class aecSuperCommand
 
 class aecImport
 {
+	/**
+	 * @param string $file
+	 */
 	public function aecImport( $file, $options )
 	{
 		$this->filepath = $file;
@@ -1082,12 +1094,18 @@ exit;
 	}
 
 
+	/**
+	 * @param string $xml
+	 */
 	public function xml2array( $xml ) {
 		$sxi = new SimpleXmlIterator( $xml );
 
 		return $this->sxiToArray($sxi);
 	}
 
+	/**
+	 * @param SimpleXMLIterator $sxi
+	 */
 	public function sxiToArray($sxi){
 		$a = array();
 		for( $sxi->rewind(); $sxi->valid(); $sxi->next() ) {

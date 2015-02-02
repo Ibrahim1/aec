@@ -212,6 +212,7 @@ class AECToolbox
 
 	/**
 	 * @param string $type1
+	 * @param string $type2
 	 */
 	static function ISO3166_conversiontable( $type1, $type2 )
 	{

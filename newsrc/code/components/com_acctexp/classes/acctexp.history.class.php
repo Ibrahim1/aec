@@ -100,6 +100,9 @@ class logHistory extends serialParamDBTable
 		return false;
 	}
 
+	/**
+	 * @param Invoice $objInvoice
+	 */
 	public function entryFromInvoice( $objInvoice, $response, $pp )
 	{
 		$user = new cmsUser();

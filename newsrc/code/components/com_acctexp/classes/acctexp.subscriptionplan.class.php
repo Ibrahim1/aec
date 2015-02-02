@@ -13,6 +13,10 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class SubscriptionPlanList
 {
+	/**
+	 * @param integer $usage
+	 * @param integer $group
+	 */
 	public function __construct( $usage, $group, $metaUser, $recurring )
 	{
 		$this->metaUser = $metaUser;
@@ -119,6 +123,9 @@ class SubscriptionPlanList
 		return true;
 	}
 
+	/**
+	 * @param string $passthrough
+	 */
 	public function addButtons( $register, $passthrough )
 	{
 		global $aecConfig;
@@ -599,6 +606,9 @@ class SubscriptionPlan extends serialParamDBTable
 		return array( 'params', 'custom_params', 'restrictions', 'micro_integrations' );
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function getProperty( $name )
 	{
 		if ( isset( $this->$name ) ) {
@@ -879,6 +889,9 @@ class SubscriptionPlan extends serialParamDBTable
 		return $renew;
 	}
 
+	/**
+	 * @param boolean $recurring
+	 */
 	public function getTermsForUser( $recurring, $metaUser )
 	{
 		if ( $metaUser->hasSubscription ) {
@@ -995,6 +1008,9 @@ class SubscriptionPlan extends serialParamDBTable
 		return $return;
 	}
 
+	/**
+	 * @param SubscriptionPlan $plan
+	 */
 	public function compareToPlan( $plan )
 	{
 		$check = array( 'similar', 'equal' );
@@ -1268,6 +1284,9 @@ class SubscriptionPlan extends serialParamDBTable
 		return array( 'plan' => $milist, 'inherited' => $pmilist );
 	}
 
+	/**
+	 * @param string $action
+	 */
 	public function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
 	{
 		global $aecConfig;

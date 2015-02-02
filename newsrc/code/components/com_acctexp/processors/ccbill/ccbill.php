@@ -364,6 +364,9 @@ class processor_ccbill extends POSTprocessor
 		return $return;
 	}
 
+	/**
+	 * @param string $url
+	 */
 	public function fetchURL( $url ) {
 		$url_parsed = parse_url($url);
 

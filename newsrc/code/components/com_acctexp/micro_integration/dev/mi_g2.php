@@ -194,6 +194,9 @@ class mi_g2 extends MI
 		}
 	}
 
+	/**
+	 * @param boolean $parentid
+	 */
 	public function createAlbumInAlbum( $g2userid, $parentid, $albumname )
 	{
 		$db = JFactory::getDBO();

@@ -462,6 +462,9 @@ class tool_pretend
 		return implode( " ", $name );
 	}
 
+	/**
+	 * @param string $seed
+	 */
 	public function generateUsername( $seed )
 	{
 		$db = JFactory::getDBO();
@@ -481,6 +484,9 @@ class tool_pretend
 		return $username;
 	}
 
+	/**
+	 * @param string $seed
+	 */
 	public function generateEmail( $seed )
 	{
 		$db = JFactory::getDBO();
@@ -506,6 +512,11 @@ class tool_pretend
 	}
 
 	/* Inspired by d3 examples, in turn inspired by Lee Byron's test data generator. */
+
+	/**
+	 * @param double $samples
+	 * @param integer $step
+	 */
 	public function stream_layers( $layers, $samples, $step )
 	{
 		foreach ( $layers as $lid => $lc ) {

@@ -1332,6 +1332,9 @@ class metaUserDB extends serialParamDBTable
 		return $this->_db->loadResult();
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	public function createNew( $userid )
 	{
 		$this->userid			= $userid;

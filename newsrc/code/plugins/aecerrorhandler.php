@@ -125,6 +125,9 @@ class plgSystemAECerrorhandler extends JPlugin
 	}
 
 
+	/**
+	 * @param stdClass $error
+	 */
 	public function redirectNotAllowed( $error )
 	{
 		if ( $error->code == 403 ) {

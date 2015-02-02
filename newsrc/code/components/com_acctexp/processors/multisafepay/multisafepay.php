@@ -334,6 +334,9 @@ class processor_multisafepay extends XMLprocessor
 		return strtr( $str, array_flip( get_html_translation_table( HTML_SPECIALCHARS, ENT_COMPAT ) ) );
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function xml_array_to_xml( $arr, $name )
 	{
 		$data = '<' . $name . '>' . "\n";

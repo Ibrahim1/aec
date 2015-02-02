@@ -190,6 +190,10 @@ class processor_cybermut extends POSTprocessor
 		// return strtolower( $this->hmac( $k1 ^ $k2, $d ) );
 	}
 
+	/**
+	 * @param string $key
+	 * @param string $data
+	 */
 	public function hmac( $key, $data )
 	{
 		// RFC 2104 HMAC implementation for php.

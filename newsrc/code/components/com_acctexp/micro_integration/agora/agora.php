@@ -158,6 +158,9 @@ class mi_agora extends MI
 		return $db->loadResult();
 	}
 
+	/**
+	 * @param boolean $userid
+	 */
 	public function getUserGroupRole( $userid, $groupid )
 	{
 		$db = JFactory::getDBO();
@@ -194,6 +197,9 @@ class mi_agora extends MI
 		return $db->query();
 	}
 
+	/**
+	 * @param boolean $userid
+	 */
 	public function removeGroup( $userid, $groupid, $roleid )
 	{
 		$db = JFactory::getDBO();
@@ -212,6 +218,9 @@ class mi_agora extends MI
 		return $db->query();
 	}
 
+	/**
+	 * @param boolean $userid
+	 */
 	public function addGroup( $userid, $groupid, $roleid )
 	{
 		$db = JFactory::getDBO();
@@ -225,6 +234,9 @@ class mi_agora extends MI
 		return $db->query();
 	}
 
+	/**
+	 * @param boolean $userid
+	 */
 	public function updateRole( $userid, $groupid, $roleid )
 	{
 		$db = JFactory::getDBO();
