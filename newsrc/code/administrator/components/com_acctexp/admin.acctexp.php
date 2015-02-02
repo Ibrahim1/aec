@@ -360,8 +360,6 @@ function toggleProperty( $type, $id, $property )
 
 function addGroup( $type, $id, $groupid )
 {
-	$db = JFactory::getDBO();
-
 	if ( ItemGroupHandler::setChildren( $groupid, array( $id ), $type ) ) {
 		$group = new ItemGroup();
 		$group->load( $groupid );
@@ -386,8 +384,6 @@ function removeGroup( $type, $id, $groupid )
 
 function orderObject( $option, $type, $id, $up, $customreturn=null )
 {
-	$db = JFactory::getDBO();
-
 	$row = new $type();
 	$row->load( $id );
 	$row->move( $up ? -1 : 1 );
@@ -397,10 +393,8 @@ function orderObject( $option, $type, $id, $up, $customreturn=null )
 
 function copyObject( $option, $type, $id, $customreturn=null )
 {
-	$db = JFactory::getDBO();
-
 	foreach ( $id as $pid ) {
-		$row = new $type( $db, 1 );
+		$row = new $type();
 		$row->load( $pid );
 		$row->copy();
 	}
@@ -412,22 +406,22 @@ function aecCentral( $option, $searchresult=null, $searchcontent=null )
 {
 	$db = JFactory::getDBO();
 
-	$app = JFactory::getApplication();
+	$db->setQuery(
+		'SELECT COUNT(*)'
+		. ' FROM #__acctexp_eventlog'
+		. ' WHERE `notify` = \'1\''
+	);
 
-	$query = 'SELECT COUNT(*)'
-			. ' FROM #__acctexp_eventlog'
-			. ' WHERE `notify` = \'1\''
-			;
-	$db->setQuery( $query );
 	$furthernotices = $db->loadResult() - 10;
 
-	$query = 'SELECT *'
-			. ' FROM #__acctexp_eventlog'
-			. ' WHERE `notify` = \'1\''
-			. ' ORDER BY `datetime` DESC'
-			. ' LIMIT 0, 10'
-			;
-	$db->setQuery( $query	);
+	$db->setQuery(
+		'SELECT *'
+		. ' FROM #__acctexp_eventlog'
+		. ' WHERE `notify` = \'1\''
+		. ' ORDER BY `datetime` DESC'
+		. ' LIMIT 0, 10'
+	);
+
 	$notices = $db->loadObjectList();
 
 	HTML_AcctExp::central( $searchresult, $notices, $furthernotices, $searchcontent );
@@ -437,20 +431,22 @@ function getNotices()
 {
 	$db = JFactory::getDBO();
 
-	$query = 'SELECT COUNT(*)'
-			. ' FROM #__acctexp_eventlog'
-			. ' WHERE `notify` = \'1\''
-			;
-	$db->setQuery( $query );
+	$db->setQuery(
+		'SELECT COUNT(*)'
+		. ' FROM #__acctexp_eventlog'
+		. ' WHERE `notify` = \'1\''
+	);
+
 	$furthernotices = $db->loadResult() - 5;
 
-	$query = 'SELECT *'
-			. ' FROM #__acctexp_eventlog'
-			. ' WHERE `notify` = \'1\''
-			. ' ORDER BY `datetime` DESC'
-			. ' LIMIT 0, 5'
-			;
-	$db->setQuery( $query	);
+	$db->setQuery(
+		'SELECT *'
+		. ' FROM #__acctexp_eventlog'
+		. ' WHERE `notify` = \'1\''
+		. ' ORDER BY `datetime` DESC'
+		. ' LIMIT 0, 5'
+	);
+
 	$notices = $db->loadObjectList();
 
 	HTML_AcctExp::eventlogModal( $notices, $furthernotices );
@@ -472,13 +468,13 @@ function getNotice()
 {
 	$db = JFactory::getDBO();
 
-	$query = 'SELECT *'
-			. ' FROM #__acctexp_eventlog'
-			. ' WHERE `notify` = \'1\''
-			. ' ORDER BY `datetime` DESC'
-			. ' LIMIT 5, 1'
-			;
-	$db->setQuery( $query	);
+	$db->setQuery(
+		'SELECT *'
+		. ' FROM #__acctexp_eventlog'
+		. ' WHERE `notify` = \'1\''
+		. ' ORDER BY `datetime` DESC'
+		. ' LIMIT 5, 1'
+	);
 	$notice = $db->loadObject();
 
 	if ( empty( $notice->id ) ) {
@@ -593,8 +589,6 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 		$status = aecHTML::Icon( 'plus' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->created_date ) . '<br />';
 
-		$current_status = 'uncleared';
-
 		if ( isset( $invoice->params['deactivated'] ) ) {
 			$status .= aecHTML::Icon( 'remove-circle' ) . 'deactivated';
 		} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
@@ -695,6 +689,8 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 	$mi['profile_form']	= array();
 	$mi['admin_form']	= array();
 
+	$params = array();
+
 	foreach ( $userMIs as $m ) {
 		$pref = 'mi_'.$m->id.'_';
 
@@ -744,8 +740,6 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 function saveUser( $option, $apply=0 )
 {
-	$db = JFactory::getDBO();
-
 	$app = JFactory::getApplication();
 
 	$post = $_POST;
@@ -1706,12 +1700,9 @@ function editSettings( $option )
 
 function saveSettings( $option, $return=0 )
 {
-	$db		= JFactory::getDBO();
 	$user	= JFactory::getUser();
 
 	global $aecConfig;
-
-	$app = JFactory::getApplication();
 
 	unset( $_POST['id'] );
 	unset( $_POST['task'] );
@@ -1745,7 +1736,6 @@ function saveSettings( $option, $return=0 )
 	}
 
 	$diff = $aecConfig->diffParams( $general_settings, 'settings' );
-	$difference = '';
 
 	if ( is_array( $diff ) ) {
 		$newdiff = array();
@@ -1782,9 +1772,11 @@ function saveSettings( $option, $return=0 )
 	$short	= JText::_('AEC_LOG_SH_SETT_SAVED');
 	$event	= JText::_('AEC_LOG_LO_SETT_SAVED') . ' ' . $difference;
 	$tags	= 'settings,system';
-	$params = array(	'userid' => $user->id,
-						'ip' => $ip['ip'],
-						'isp' => $ip['isp'] );
+	$params = array(
+		'userid' => $user->id,
+		'ip' => $ip['ip'],
+		'isp' => $ip['isp']
+	);
 
 	$eventlog = new eventLog();
 	$eventlog->issue( $short, $tags, $event, 2, $params );
@@ -1802,9 +1794,11 @@ function saveSettings( $option, $return=0 )
 						. " will be getting it for free when they log in"
 						. " without having any membership";
 			$tags	= 'settings,system';
-			$params = array(	'userid' => $user->id,
-								'ip' => $ip['ip'],
-								'isp' => $ip['isp'] );
+			$params = array(
+				'userid' => $user->id,
+				'ip' => $ip['ip'],
+				'isp' => $ip['isp']
+			);
 
 			$eventlog = new eventLog();
 			$eventlog->issue( $short, $tags, $event, 32, $params );
@@ -1820,14 +1814,10 @@ function saveSettings( $option, $return=0 )
 
 function listTemplates( $option )
 {
-	$db = JFactory::getDBO();
-
 	$app = JFactory::getApplication();
 
  	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-	$orderby = $app->getUserStateFromRequest( "orderby_templates{$option}", 'orderby_templates', 'name ASC' );
 
 	$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
@@ -1890,32 +1880,30 @@ function editTemplate( $option, $name )
 
 function saveTemplate( $option, $name, $return=0 )
 {
-	$db = JFactory::getDBO();
-
 	$temp = new configTemplate();
 	$temp->loadName( $name );
 
-	$app = JFactory::getApplication();
-
 	if ( $_POST['default'] ) {
+		$db = JFactory::getDBO();
+
 		if ( $temp->id ) {
 			if ( !$temp->default ) {
 				// Reset all other items
-				$query = 'UPDATE #__acctexp_config_templates'
-						. ' SET `default` = 0'
-						. ' WHERE `id` > 0'
-						;
 				$db->setQuery( $query );
-				$db->query();
+				$db->query(
+					'UPDATE #__acctexp_config_templates'
+					. ' SET `default` = 0'
+					. ' WHERE `id` > 0'
+				);
 			}
 		} else {
 			// Reset all other items
-			$query = 'UPDATE #__acctexp_config_templates'
-					. ' SET `default` = 0'
-					. ' WHERE `id` > 0'
-					;
 			$db->setQuery( $query );
-			$db->query();
+			$db->query(
+				'UPDATE #__acctexp_config_templates'
+				. ' SET `default` = 0'
+				. ' WHERE `id` > 0'
+			);
 		}
 
 		$temp->default = 1;
@@ -1951,13 +1939,11 @@ function listProcessors( $option )
  	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$orderby = $app->getUserStateFromRequest( "orderby_processors{$option}", 'orderby_processors', 'name ASC' );
-
  	// get the total number of records
- 	$query = 'SELECT count(*)'
-		 	. ' FROM #__acctexp_config_processors'
-		 	;
- 	$db->setQuery( $query );
+ 	$db->setQuery(
+		'SELECT count(*)'
+		. ' FROM #__acctexp_config_processors'
+	);
  	$total = $db->loadResult();
 
  	if ( $limitstart > $total ) {
@@ -1991,8 +1977,6 @@ function listProcessors( $option )
 
 function editProcessor( $id, $option )
 {
-	$db = JFactory::getDBO();
-
 	$lang = JFactory::getLanguage();
 
 	if ( $id ) {
@@ -2004,6 +1988,8 @@ function editProcessor( $id, $option )
 
 		// Init Info and Settings
 		$pp->fullInit();
+
+		$lists = array();
 
 		// Get Backend Settings
 		$settings_array		= $pp->getBackendSettings();
@@ -2020,7 +2006,6 @@ function editProcessor( $id, $option )
 		}
 
 		$available_plans = SubscriptionPlanHandler::getActivePlanList();
-		$total_plans = count( $available_plans );
 
 		// Iterate through settings form assigning the db settings
 		foreach ( $settings_array as $name => $values ) {
@@ -2147,11 +2132,11 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 	$total	= count( $cid );
 	$cids	= implode( ',', $cid );
 
-	$query = 'UPDATE #__acctexp_config_processors'
-			. ' SET `' . $type . '` = \'' . $state . '\''
-			. ' WHERE `id` IN (' . $cids . ')'
-			;
-	$db->setQuery( $query );
+	$db->setQuery(
+		'UPDATE #__acctexp_config_processors'
+		. ' SET `' . $type . '` = \'' . $state . '\''
+		. ' WHERE `id` IN (' . $cids . ')'
+	);
 
 	if ( !$db->query() ) {
 		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -2171,8 +2156,6 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 
 function saveProcessor( $option, $return=0 )
 {
-	$db = JFactory::getDBO();
-
 	$pp = new PaymentProcessor();
 
 	if ( !empty( $_POST['id'] ) ) {
@@ -2236,8 +2219,7 @@ function saveProcessor( $option, $return=0 )
 				}
 			}
 
-			$pp->settings[$name] = $_POST[$postname];
-			unset( $_POST[$postname] );
+			$pp->settings[$name] = $val;
 		}
 	}
 
@@ -2805,14 +2787,12 @@ function editSubscriptionPlan( $id, $option )
 		$pps[] = $ppo;
 	}
 
-	$selected_gw = array();
 	$custompar = array();
 	foreach ( $pps as $ppobj ) {
 		if ( !$ppobj->active ) {
 			continue;
 		}
 
-		$pp = null;
 		$pp = new PaymentProcessor();
 
 		if ( !$pp->loadName( $ppobj->name ) ) {
@@ -3654,8 +3634,6 @@ function editItemGroup( $id, $option )
 
 function saveItemGroup( $option, $apply=0 )
 {
-	$db = JFactory::getDBO();
-
 	$row = new ItemGroup();
 	$row->load( $_POST['id'] );
 
@@ -3697,11 +3675,11 @@ function removeItemGroup( $id, $option )
 
 	$ids = implode( ',', $id );
 
-	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_itemgroups'
-			. ' WHERE `id` IN (' . $ids . ')'
-			;
-	$db->setQuery( $query );
+	$db->setQuery(
+		'SELECT count(*)'
+		. ' FROM #__acctexp_itemgroups'
+		. ' WHERE `id` IN (' . $ids . ')'
+	);
 	$total = $db->loadResult();
 
 	if ( $total == 0 ) {
@@ -3784,14 +3762,13 @@ function listMicroIntegrations( $option )
 	$filtered = !empty($filter_planid) || !empty($search);
 
 	// get the total number of records
-	$query = 'SELECT count(*)'
-		 	. ' FROM #__acctexp_microintegrations'
-		 	. ' WHERE `hidden` = \'0\''
-			. ( empty( $search ) ? '' : ' AND (`name` LIKE \'%'.$search.'%\' OR `desc` LIKE \'%'.$search.'%\' OR `class_name` LIKE \'%'.$search.'%\')' )
-		 	;
-	$db->setQuery( $query );
+	$db->setQuery(
+		'SELECT count(*)'
+		. ' FROM #__acctexp_microintegrations'
+		. ' WHERE `hidden` = \'0\''
+		. ( empty( $search ) ? '' : ' AND (`name` LIKE \'%'.$search.'%\' OR `desc` LIKE \'%'.$search.'%\' OR `class_name` LIKE \'%'.$search.'%\')' )
+	);
 	$total = $db->loadResult();
-	echo $db->getErrorMsg();
 
 	if ( $limitstart > $total ) {
 		$limitstart = 0;
@@ -3872,10 +3849,6 @@ function listMicroIntegrations( $option )
 
 function editMicroIntegration( $id, $option )
 {
-	$db = JFactory::getDBO();
-
-	$user = JFactory::getUser();
-
 	$lists	= array();
 	$mi		= new microIntegration();
 	$mi->load( $id );
@@ -4084,8 +4057,6 @@ function editMicroIntegration( $id, $option )
 
 function saveMicroIntegration( $option, $apply=0 )
 {
-	$db = JFactory::getDBO();
-
 	unset( $_POST['option'] );
 	unset( $_POST['task'] );
 
@@ -4101,7 +4072,12 @@ function saveMicroIntegration( $option, $apply=0 )
 	}
 
 	if ( $load ) {
-		$save = array( 'attach_to_plans' => array(), 'attached_to_plans' => array(), 'attach_to_groups' => array(), 'attached_to_groups' => array() );
+		$save = array(
+			'attach_to_plans' => array(),
+			'attached_to_plans' => array(),
+			'attach_to_groups' => array(),
+			'attached_to_groups' => array()
+		);
 
 		foreach ( $save as $pid => $v ) {
 			if ( isset( $_POST[$pid] ) ) {
@@ -4111,13 +4087,6 @@ function saveMicroIntegration( $option, $apply=0 )
 			} else {
 				$save[$pid] = array();
 			}
-		}
-
-		$group_attach = array();
-		if ( isset( $_POST['attach_to_groups'] ) ) {
-			$group_attach = $_POST['attach_to_groups'];
-
-			unset( $_POST['attach_to_groups'] );
 		}
 
 		$mi->savePostParams( $_POST );
@@ -4374,11 +4343,7 @@ function editCoupon( $id, $option, $new )
 {
 	$db = JFactory::getDBO();
 
-	$user = JFactory::getUser();
-
-	$lists					= array();
-	$params_values			= array();
-	$restrictions_values	= array();
+	$lists = array();
 
 	$cph = new couponHandler();
 
@@ -4395,6 +4360,7 @@ function editCoupon( $id, $option, $new )
 		$cph->coupon = new Coupon();
 		$cph->coupon->createNew();
 
+		$params_values			= array();
 		$discount_values		= array();
 		$restrictions_values	= array();
 	}
@@ -4468,18 +4434,18 @@ function editCoupon( $id, $option, $new )
 	// get available plans
 	$available_plans = array();
 
-	$query = 'SELECT `id` as value, `name` as text'
-			. ' FROM #__acctexp_plans'
-			;
-	$db->setQuery( $query );
+	$db->setQuery(
+		'SELECT `id` as value, `name` as text'
+		. ' FROM #__acctexp_plans'
+	);
 	$plans = $db->loadObjectList();
 
  	if ( is_array( $plans ) ) {
- 		$all_plans					= array_merge( $available_plans, $plans );
+ 		$all_plans = array_merge( $available_plans, $plans );
  	} else {
- 		$all_plans					= $available_plans;
+ 		$all_plans = $available_plans;
  	}
-	$total_all_plans			= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
+	$total_all_plans = min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
 
 	// get usages
 	if ( !empty( $restrictions_values['usage_plans'] ) ) {
@@ -4603,12 +4569,12 @@ function editCoupon( $id, $option, $new )
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
 	// Lets grab the data and fill it in.
-	$query = 'SELECT id'
-			. ' FROM #__acctexp_invoices'
-			. ' WHERE `coupons` <> \'\''
-			. ' ORDER BY `created_date` DESC'
-			;
-	$db->setQuery( $query );
+	$db->setQuery(
+		'SELECT id'
+		. ' FROM #__acctexp_invoices'
+		. ' WHERE `coupons` <> \'\''
+		. ' ORDER BY `created_date` DESC'
+	);
 	$rows = $db->loadObjectList();
 
 	if ( $db->getErrorNum() ) {
@@ -4656,8 +4622,6 @@ function editCoupon( $id, $option, $new )
 
 function saveCoupon( $option, $apply=0 )
 {
-	$db = JFactory::getDBO();
-
 	$new = 0;
 	$type = $_POST['type'];
 
@@ -4777,7 +4741,6 @@ function changeCoupon( $id=null, $state=0, $option )
 	}
 
 	$idx	= explode( ',', $id );
-	$total	= count( $id );
 
 	$rids = $sids = array();
 	foreach ( $idx as $ctype => $cid ) {
@@ -4788,28 +4751,25 @@ function changeCoupon( $id=null, $state=0, $option )
 		}
 	}
 
-	$total	= count( $id );
-	$cids	= implode( ',', $cid );
-
 	if ( !empty( $sids ) ) {
-		$query = 'UPDATE #__acctexp_coupons_static'
-				. ' SET `active` = IF (`active` = 1, 0, 1)'
-				. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
-				;
-		$db->setQuery( $query );
+		$db->setQuery(
+			'UPDATE #__acctexp_coupons_static'
+			. ' SET `active` = IF (`active` = 1, 0, 1)'
+			. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
+		);
 		$db->query();
 	}
 
 	if ( !empty( $rids ) ) {
-		$query = 'UPDATE #__acctexp_coupons'
-				. ' SET `active` = IF (`active` = 1, 0, 1)'
-				. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
-				;
-		$db->setQuery( $query );
+		$db->setQuery(
+			'UPDATE #__acctexp_coupons'
+			. ' SET `active` = IF (`active` = 1, 0, 1)'
+			. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
+		);
 		$db->query();
 	}
 
-	$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED');
+	$msg = count( $id ) . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED');
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
 }
@@ -4837,23 +4797,23 @@ function invoices( $option )
 	$orderby = $app->getUserStateFromRequest( "orderby_invoices{$option}", 'orderby_invoices', 'created_date DESC' );
 
 	// get the total number of records
-	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_invoices'
-			;
-	$db->setQuery( $query );
+	$db->setQuery(
+		'SELECT count(*)'
+		. ' FROM #__acctexp_invoices'
+	);
 	$total = $db->loadResult();
-	echo $db->getErrorMsg();
+
 
 	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 	// Lets grab the data and fill it in.
-	$query = 'SELECT id'
-			. ' FROM #__acctexp_invoices'
-			. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
-			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
-			;
-	$db->setQuery( $query );
+	$db->setQuery(
+		'SELECT id'
+		. ' FROM #__acctexp_invoices'
+		. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
+		. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
+		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+	);
 	$ids = xJ::getDBArray( $db );
 
 	if ( $db->getErrorNum() ) {
@@ -5007,10 +4967,6 @@ function editInvoice( $id, $option, $returnTask, $userid )
 
 function saveInvoice( $option, $return=0 )
 {
-	$db = JFactory::getDBO();
-
-	$user = JFactory::getUser();
-
 	$row = new Invoice();
 	$row->load( $_POST['id'] );
 
@@ -5072,13 +5028,10 @@ function saveInvoice( $option, $return=0 )
 
 function clearInvoice( $option, $invoice_number, $applyplan, $task )
 {
-	$db = JFactory::getDBO();
-
 	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
+	$userid = '';
 	if ( $invoiceid ) {
-		$db = JFactory::getDBO();
-
 		$objInvoice = new Invoice();
 		$objInvoice->load( $invoiceid );
 
@@ -5097,8 +5050,6 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 
 		if ( strcmp( $task, 'editMembership' ) == 0) {
 			$userid = '&userid=' . $objInvoice->userid;
-		} else {
-			$userid = '';
 		}
 	}
 
@@ -5107,10 +5058,9 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 
 function cancelInvoice( $option, $invoice_number, $task )
 {
-	$db = JFactory::getDBO();
-
 	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
+	$userid = '';
 	if ( $invoiceid ) {
 		$objInvoice = new Invoice();
 		$objInvoice->load( $invoiceid );
@@ -5119,8 +5069,6 @@ function cancelInvoice( $option, $invoice_number, $task )
 
 		if ( strcmp( $task, 'editMembership' ) == 0 ) {
 			$userid = '&userid=' . $objInvoice->userid;
-		} else {
-			$userid = '';
 		}
 	}
 
@@ -5239,8 +5187,6 @@ function eventlog( $option )
 		$where[] = 'LOWER(`event`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
 		$where[] = 'LOWER(`tags`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
 	}
-
-	$orderby = $app->getUserStateFromRequest( "orderby_eventlog{$option}", 'orderby_eventlog', 'id DESC' );
 
 	// get the total number of records
 	$query = 'SELECT count(*)'
@@ -5515,15 +5461,13 @@ function aec_statrequest( $option, $type, $start, $end )
 
 function quicklookup( $option )
 {
-	$db = JFactory::getDBO();
-
 	$searcc	= trim( aecGetParam( 'search', 0 ) );
 
 	if ( empty( $searcc ) ) {
 		return false;
 	}
 
-	$search = xJ::escape( $db, strtolower( $searcc ) );
+	$search = xJ::escape( JFactory::getDBO(), strtolower( $searcc ) );
 
 	$s = AECToolbox::searchUser( $search );
 
@@ -6034,7 +5978,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 					break;
 
 				case 'menuentry':
-					$count = 0;
 					$query = 'SELECT COUNT(*)'
 							. ' FROM #__menu'
 							. ' WHERE `link` = \'' . JURI::root()  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
@@ -6067,7 +6010,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 					fclose( $originalFileHandle );
 
 					if ( !$undohack ) { // hack
-						$newData			= str_replace( $hacks[$filename]['read'], $hacks[$filename]['insert'], $oldData );
+						$newData = str_replace( $hacks[$filename]['read'], $hacks[$filename]['insert'], $oldData );
 
 							//make a backup
 							if ( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
@@ -6131,8 +6074,6 @@ function importData( $option )
 
 	if ( !empty( $_FILES ) ) {
 		if ( strpos( $_FILES['import_file']['name'], '.csv' ) === false ) {
-			$len = strlen( $_FILES['import_file']['name'] );
-
 			$last = strrpos( $_FILES['import_file']['name'], '.' );
 
 			$filename = substr( $_FILES['import_file']['name'], 0, $last ) . '.csv';
@@ -6145,8 +6086,6 @@ function importData( $option )
 		if ( move_uploaded_file( $_FILES['import_file']['tmp_name'], $destination ) ) {
 			$file_select = $filename;
 		}
-	} else {
-
 	}
 
 	if ( empty( $file_select ) ) {

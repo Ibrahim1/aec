@@ -134,4 +134,29 @@ class FakeDBO
 	{
 		return false;
 	}
+
+	public function query()
+	{
+		return null;
+	}
+
+	public function stderr()
+	{
+		return null;
+	}
+
+	public function getErrorNum()
+	{
+		return null;
+	}
+
+	public function loadObjectList()
+	{
+		return null;
+	}
+
+	public function getErrorMsg()
+	{
+		return null;
+	}
 }

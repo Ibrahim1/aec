@@ -542,7 +542,6 @@ class InvoiceFactory
 			}
 
 			foreach ( $this->cart as $cid => $cartitem ) {
-				$mi_form = null;
 				if ( empty( $cartitem['obj'] ) ) {
 					continue;
 				}
@@ -681,11 +680,10 @@ class InvoiceFactory
 				$ex['desc'] .= "</ul>";
 
 				foreach ( $pgroup['processors'] as $pid => $pgproc ) {
-					$pgex = $pgproc;
+					$recurring = true;
 
 					if ( strpos( $pgproc, '_recurring' ) ) {
-						$pgex = str_replace( '_recurring', '', $pgproc );
-						$recurring = true;
+						$pgproc = str_replace( '_recurring', '', $pgproc );
 					} else {
 						$recurring = false;
 					}
@@ -751,7 +749,7 @@ class InvoiceFactory
 
 					foreach ( $pgroups as $pgr ) {
 						foreach ( $pgr['members'] as $member ) {
-							$r = $tempcart->addItem( array(), $this->cartobject->content[$member]['id'] );
+							$tempcart->addItem( array(), $this->cartobject->content[$member]['id'] );
 						}
 					}
 
@@ -777,6 +775,7 @@ class InvoiceFactory
 				}
 			}
 
+			$ex = array();
 			$ex['head'] = "Invoice split up";
 			$ex['desc'] = "The contents of your shopping cart cannot be processed in one go. This is why we have split up the invoice - you can pay for the first part right now and access the other parts as separate invoices later from your membership page.";
 			$ex['rows'] = array();
@@ -3895,8 +3894,6 @@ class Invoice extends serialParamDBTable
 		$data['invoice_date'] = aecTemplate::date( $InvoiceFactory->invoice->created_date );
 
 		$data['itemlist'] = array();
-		$total = 0;
-		$break = 0;
 		foreach ( $InvoiceFactory->items->itemlist as $iid => $item ) {
 			if ( isset( $item['obj'] ) ) {
 				$amt =  $item['terms']->nextterm->cost[0]->cost['amount'];

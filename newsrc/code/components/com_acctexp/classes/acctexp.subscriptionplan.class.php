@@ -176,14 +176,12 @@ class SubscriptionPlanList
 			);
 		}
 
-		if ( $register ) {
-			$iscb = aecComponentHelper::detect_component( 'anyCB' );
-			$isjs = aecComponentHelper::detect_component( 'JOMSOCIAL' );
-		}
-
 		$btnarray['view'] = '';
 
 		if ( $register ) {
+			$iscb = aecComponentHelper::detect_component( 'anyCB' );
+			$isjs = aecComponentHelper::detect_component( 'JOMSOCIAL' );
+
 			if ( $iscb ) {
 				$btnarray['option']	= 'com_comprofiler';
 				$btnarray['task']	= 'registers';
@@ -524,19 +522,17 @@ class SubscriptionPlanHandler
 	{
 		$db = JFactory::getDBO();
 
-		$query = 'SELECT `userid`'
-				. ' FROM #__acctexp_subscr'
-				. ' WHERE `plan` = \'' . xJ::escape( $db, $planid ) . '\' AND ( `status` = \'Active\' OR `status` = \'Trial\' ) '
-				;
-		$db->setQuery( $query );
+		$db->setQuery(
+			'SELECT `userid`'
+			. ' FROM #__acctexp_subscr'
+			. ' WHERE `plan` = \'' . xJ::escape( $db, $planid ) . '\' AND ( `status` = \'Active\' OR `status` = \'Trial\' )'
+		);
 
 		return xJ::getDBArray( $db );
 	}
 
 	static function PlanStatus( $planid )
 	{
-		$db = JFactory::getDBO();
-
 		$plan = new SubscriptionPlan();
 		$plan->load( $planid );
 
@@ -547,11 +543,11 @@ class SubscriptionPlanHandler
 	{
 		$db = JFactory::getDBO();
 
-		$query = 'SELECT name'
-				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` = \'' . $planid . '\''
-				;
-		$db->setQuery( $query );
+		$db->setQuery(
+			'SELECT name'
+			. ' FROM #__acctexp_plans'
+			. ' WHERE `id` = \'' . $planid . '\''
+		);
 		return $db->loadResult();
 	}
 
@@ -559,10 +555,10 @@ class SubscriptionPlanHandler
 	{
 		$db = JFactory::getDBO();
 
-		$query = 'SELECT id'
-				. ' FROM #__acctexp_plans'
-				;
-		$db->setQuery( $query );
+		$db->setQuery(
+			'SELECT id'
+			. ' FROM #__acctexp_plans'
+		);
 
 		return xJ::getDBArray( $db );
 	}
@@ -728,8 +724,6 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$lifetime		= $metaUser->focusSubscription->lifetime;
 
-		$amount = "0.00";
-
 		if ( ( $comparison['total_comparison'] === false ) || $is_pending ) {
 			// If user is using global trial period he still can use the trial period of a plan
 			if ( ( $this->params['trial_period'] > 0 ) && !$is_trial ) {
@@ -804,7 +798,6 @@ class SubscriptionPlan extends serialParamDBTable
 		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$metaUser->focusSubscription->type = $processor;
 
-		$recurring_choice = null;
 		if ( is_object( $invoice ) ) {
 			if ( !empty( $invoice->params ) ) {
 				$tempparam = array();
@@ -1297,8 +1290,6 @@ class SubscriptionPlan extends serialParamDBTable
 			if ( !$mi->callIntegration() ) {
 				continue;
 			}
-
-			$is_email = strcmp( $mi->class_name, 'mi_email' ) === 0;
 
 			// TODO: Only trigger if this is not email or made not silent
 			if ( method_exists( $metaUser, $action ) ) {

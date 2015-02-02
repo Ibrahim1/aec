@@ -106,7 +106,7 @@ class aecSuperCommand
 						. ' WHERE `userid` IN (' . $params[1] . ')'
 						;
 				$db->setQuery( $query );*/
-				return xJ::getDBArray( $db );
+				$userlist = xJ::getDBArray( $db );
 				break;
 			case 'subscribers':
 				$db = JFactory::getDBO();
@@ -132,14 +132,14 @@ class aecSuperCommand
 				}
 
 				$db->setQuery( $query );
-				return xJ::getDBArray( $db );
+				$userlist = xJ::getDBArray( $db );
 			default:
 				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
 
 				if ( method_exists( $this, $cmd ) ) {
 					$userlist = $this->$cmd( $this->audience['parameters'] );
 				} else {
-					return false;
+					$userlist = false;
 				}
 		}
 
@@ -224,13 +224,11 @@ class aecSuperCommand
 				return xJ::getDBArray( $db );
 				break;
 			case 'mi':
-				$db = JFactory::getDBO();
-
 				$mis = explode( ',', $params[1] );
 
 				$plans = array();
-				foreach ( $plans as $plan ) {
-					$plans = array_merge( $plans, microIntegrationHandler::getPlansbyMI( $params[1] ) );
+				foreach ( $mis as $mi ) {
+					$plans = array_merge( $plans, microIntegrationHandler::getPlansbyMI( $mi ) );
 				}
 
 				$plans = array_unique( $plans );
@@ -465,7 +463,7 @@ class aecImport
 				$plan = new SubscriptionPlan();
 				$plan->load( $pid );
 
-				$d = $metaUser->establishFocus( $plan, 'none', true );
+				$metaUser->establishFocus( $plan, 'none', true );
 
 				$metaUser->focusSubscription->applyUsage( $pid, 'none', 1 );
 
@@ -559,8 +557,6 @@ class aecExport extends serialParamDBTable
 
 	public function useExport()
 	{
-		$app = JFactory::getApplication();
-
 		$this->getHandler();
 
 		if ( $this->type ) {
@@ -677,7 +673,6 @@ class aecExport extends serialParamDBTable
 		}
 
 		$historylist = array();
-		$groups = array();
 		foreach ( $entries as $id ) {
 			$entry = new logHistory();
 			$entry->load( $id );
@@ -748,8 +743,6 @@ class aecExport extends serialParamDBTable
 				$line['plan-'.$col] = "Plan #$col: ".SubscriptionPlanHandler::planName( $col );
 			}
 		} elseif ( $this->options['breakdown'] == 'group' ) {
-			$grouplist = ItemGroupHandler::getTree();
-
 			foreach ( $collators as $col => $colplans ) {
 				$line['group-'.$col] = "Group #$col:".ItemGroupHandler::groupName( $col );
 			}
@@ -972,35 +965,31 @@ class aecExport extends serialParamDBTable
 
 	public function setUsedDate()
 	{
-		$app = JFactory::getApplication();
-
 		$this->lastused_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->storeload();
 	}
 
 	public function saveComplex( $name, $filter, $options, $params, $system=false, $is_test=false )
 	{
-		$app = JFactory::getApplication();
-
 		$db = JFactory::getDBO();
 
 		// Drop old system saves to always keep 10 records
 		if ( $system ) {
-			$query = 'SELECT count(*) '
-					. ' FROM ' . $this->_tbl
-					. ' WHERE `system` = \'1\''
-					;
-			$db->setQuery( $query );
+			$db->setQuery(
+				'SELECT count(*) '
+				. ' FROM ' . $this->_tbl
+				. ' WHERE `system` = \'1\''
+			);
 			$sysrows = $db->loadResult();
 
 			if ( $sysrows > 9 ) {
-				$query = 'DELETE'
-						. ' FROM ' . $this->_tbl
-						. ' WHERE `system` = \'1\''
-						. ' ORDER BY `id` ASC'
-						. ' LIMIT 1'
-						;
-				$db->setQuery( $query );
+				$db->setQuery(
+					'DELETE'
+					. ' FROM ' . $this->_tbl
+					. ' WHERE `system` = \'1\''
+					. ' ORDER BY `id` ASC'
+					. ' LIMIT 1'
+				);
 				$db->query();
 			}
 		}

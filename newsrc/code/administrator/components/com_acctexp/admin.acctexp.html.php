@@ -144,6 +144,7 @@ class HTML_myCommon
 	 */
 	static function getHeader( $page, $image, $extratext='', $search=false, $buttons=null, $object=false )
 	{
+		$value = $placeholder = '';
 		if ( $search !== false ) {
 			$placeholder = JText::_('AEC_CMN_SEARCH') . '...';
 
@@ -1153,7 +1154,7 @@ class HTML_AcctExp
 								<td colspan="3">
 									<div class="explain-block">
 										<h6>Invoices &amp; Payment</h6>
-										<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it - during registration,  col Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.<br />If a user has no membership record in AEC, the account shows up under <strong>Non Members</strong>.</p>
+										<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it - during registration, or afterwards. That invoice can then be paid using a <strong>Payment Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.<br />If a user has no membership record in AEC, the account shows up under <strong>Non Members</strong>.</p>
 									</div>
 								</td>
 								<td></td>
@@ -1286,7 +1287,6 @@ class HTML_AcctExp
 
 	static function hacks ( $option, $hacks )
 	{
-		$infohandler	= new aecComponentHelper();
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_HACKS', 'settings' );
 		?>
@@ -1723,8 +1723,6 @@ class HTML_AcctExp
 	static function listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action )
 	{
 		HTML_myCommon::startCommon('aec-wrap-geometry');
-
-		$document = JFactory::getDocument();
 
 		$th_list = array(
 			array('username', 'CNAME'),

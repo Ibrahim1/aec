@@ -757,8 +757,6 @@ function internalCheckout( $option, $invoice_number, $processor, $userid )
 
 function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 {
-	$db = JFactory::getDBO();
-
 	$user = JFactory::getUser();
 
 	// Always rewrite to session userid
@@ -820,8 +818,6 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 
 function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=null )
 {
-	$db = JFactory::getDBO();
-
 	$user = JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
@@ -863,8 +859,6 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 
 function planaction( $option, $action, $subscr )
 {
-	$db = JFactory::getDBO();
-
 	$user = JFactory::getUser();
 
 	if ( !empty( $user->id ) ) {
@@ -958,8 +952,6 @@ function InvoicePDF( $option, $invoice_number )
 
 function InvoiceAddParams( $option )
 {
-	$db = JFactory::getDBO();
-
 	$invoice = aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 	$objinvoice = new Invoice();
@@ -973,8 +965,6 @@ function InvoiceAddParams( $option )
 
 function InvoiceMakeGift( $option )
 {
-	$db = JFactory::getDBO();
-
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
@@ -996,8 +986,6 @@ function InvoiceMakeGift( $option )
 
 function InvoiceRemoveGift( $option )
 {
-	$db = JFactory::getDBO();
-
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 	$objinvoice = new Invoice();
@@ -1015,14 +1003,11 @@ function InvoiceRemoveGift( $option )
 
 function InvoiceRemoveGiftConfirm( $option )
 {
-	$db = JFactory::getDBO();
-
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-	$username	= aecGetParam( 'username', 0, true, array( 'string', 'clear_nonalnumwhitespace' ) );
 
 	$objinvoice = new Invoice();
 	$objinvoice->loadInvoiceNumber( $invoice );
@@ -1037,8 +1022,6 @@ function InvoiceRemoveGiftConfirm( $option )
 
 function InvoiceRemoveGiftCart( $option )
 {
-	$db = JFactory::getDBO();
-
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
@@ -1058,8 +1041,6 @@ function InvoiceRemoveGiftCart( $option )
 
 function InvoiceAddCoupon( $option )
 {
-	$db = JFactory::getDBO();
-
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
@@ -1075,8 +1056,6 @@ function InvoiceAddCoupon( $option )
 
 function InvoiceRemoveCoupon( $option )
 {
-	$db = JFactory::getDBO();
-
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
