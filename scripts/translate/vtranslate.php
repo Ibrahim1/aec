@@ -473,7 +473,7 @@ class vTranslate
 
 		return $content;
 	}
-	
+
 	function log( $thing, $log )
 	{
 		echo $thing;
@@ -481,4 +481,3 @@ class vTranslate
 		$log->fwrite( $thing );
 	}
 }
-?>

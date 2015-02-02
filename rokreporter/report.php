@@ -109,5 +109,3 @@ class AEC_subscribers_Report extends Report
 		        exit( 0 );
 		}
 }
-
-?>

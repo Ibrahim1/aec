@@ -17,7 +17,7 @@ Called by CallerService.php.
 
 /**
 # API user: The user that is identified as making the call. you can
-# also use your own API username that you created on PayPal’s sandbox
+# also use your own API username that you created on PayPalï¿½s sandbox
 # or the PayPal live site
 */
 
@@ -76,5 +76,3 @@ define('PAYPAL_URL', 'https://www.sandbox.paypal.com/webscr&cmd=_express-checkou
 */
 
 define('VERSION', '59.0');
-
-?>

@@ -137,4 +137,3 @@ class vTranslate
 		$log->fwrite( $thing );
 	}
 }
-?>

@@ -69,7 +69,7 @@ if(! isset($token)) {
 
 		   $currencyCodeType=$_REQUEST['currencyCodeType'];
 		   $paymentType=$_REQUEST['paymentType'];
-   
+
 
            $personName        = $_REQUEST['NAME'];
 		   $SHIPTOSTREET      = $_REQUEST['SHIPTOSTREET'];
@@ -158,5 +158,4 @@ if(! isset($token)) {
 				header("Location: $location");
 			  }
 }
-?>
 
