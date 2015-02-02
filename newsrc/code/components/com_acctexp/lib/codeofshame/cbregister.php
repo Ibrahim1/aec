@@ -11,6 +11,9 @@
 
 // Took out the checks for internal saves
 
+/**
+ * @param string $option
+ */
 function saveRegistrationNOCHECKSLOL( $option ) {
 	global $_CB_framework, $_CB_database, $ueConfig, $_POST, $_PLUGINS;
 

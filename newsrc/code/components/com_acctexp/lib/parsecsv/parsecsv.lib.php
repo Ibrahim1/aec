@@ -188,7 +188,7 @@ class parseCSV {
 	/**
 	 * Parse CSV file or string
 	 * @param   input   CSV file or string
-	 * @return  nothing
+	 * @return  boolean
 	 */
 	public function parse ($input = null, $offset = null, $limit = null, $conditions = null) {
 		if ( $input === null ) $input = $this->file;
@@ -213,7 +213,7 @@ class parseCSV {
 	 * @param   data     2D array with data
 	 * @param   append   append current data to end of target CSV if exists
 	 * @param   fields   field names
-	 * @return  true or false
+	 * @return  boolean or false
 	 */
 	public function save ($file = null, $data = array(), $append = false, $fields = array()) {
 		if ( empty($file) ) $file = &$this->file;
@@ -228,7 +228,7 @@ class parseCSV {
 	 * @param   data        2D array with data
 	 * @param   fields      field names
 	 * @param   delimiter   delimiter used to separate data
-	 * @return  CSV data using delimiter of choice, or default
+	 * @return  string data using delimiter of choice, or default
 	 */
 	public function output ($filename = null, $data = array(), $fields = array(), $delimiter = null) {
 		if ( empty($filename) ) $filename = $this->output_filename;
@@ -506,7 +506,7 @@ class parseCSV {
 	 * @param   is_php      if a php die() call should be put on the first
 	 *                      line of the file, this is later ignored when read.
 	 * @param   delimiter   field delimiter to use
-	 * @return  CSV data (text string)
+	 * @return  string data (text string)
 	 */
 	public function unparse ( $data = array(), $fields = array(), $append = false , $is_php = false, $delimiter = null) {
 		if ( !is_array($data) || empty($data) ) $data = &$this->data;
@@ -540,7 +540,7 @@ class parseCSV {
 	/**
 	 * Load local file or string
 	 * @param   input   local CSV file
-	 * @return  true or false
+	 * @return  boolean or false
 	 */
 	public function load_data ($input = null) {
 		$data = null;
@@ -574,7 +574,7 @@ class parseCSV {
 	 * Validate a row against specified conditions
 	 * @param   row          array with values from a row
 	 * @param   conditions   specified conditions that the row must match
-	 * @return  true of false
+	 * @return  boolean of false
 	 */
 	public function _validate_row_conditions ($row = array(), $conditions = null) {
 		if ( !empty($row) ) {
@@ -604,7 +604,7 @@ class parseCSV {
 	 * Validate a row against a single condition
 	 * @param   row          array with values from a row
 	 * @param   condition   specified condition that the row must match
-	 * @return  true of false
+	 * @return  string of false
 	 */
 	public function _validate_row_condition ($row, $condition) {
 		$operators = array(
@@ -662,8 +662,8 @@ class parseCSV {
 
 	/**
 	 * Validates if the row is within the offset or not if sorting is disabled
-	 * @param   current_row   the current row number being processed
-	 * @return  true of false
+	 * @param   current_row   integer current row number being processed
+	 * @return  boolean of false
 	 */
 	public function _validate_offset ($current_row) {
 		if ( $this->sort_by === null && $this->offset !== null && $current_row < $this->offset ) return false;
@@ -674,7 +674,7 @@ class parseCSV {
 	 * Enclose values if needed
 	 *  - only used by unparse()
 	 * @param   value   string to process
-	 * @return  Processed value
+	 * @return  null|string value
 	 */
 	public function _enclose_value ($value = null) {
 		if ( $value !== null && $value != '' ) {
@@ -691,7 +691,7 @@ class parseCSV {
 	/**
 	 * Check file data
 	 * @param   file   local filename
-	 * @return  true or false
+	 * @return  boolean or false
 	 */
 	public function _check_data ($file = null) {
 		if ( empty($this->file_data) ) {
@@ -705,6 +705,7 @@ class parseCSV {
 	/**
 	 * Check if passed info might be delimiter
 	 *  - only used by find_delimiter()
+	 * @param integer $depth
 	 * @return  special string used for delimiter selection, or false
 	 */
 	public function _check_count ($char, $array, $depth, $preferred) {
@@ -736,7 +737,7 @@ class parseCSV {
 	/**
 	 * Read local file
 	 * @param   file   local filename
-	 * @return  Data from file, or false on failure
+	 * @return  false|string from file, or false on failure
 	 */
 	public function _rfile ($file = null) {
 		if ( is_readable($file) ) {
@@ -754,7 +755,7 @@ class parseCSV {
 	 * @param   string   data to write to file
 	 * @param   mode     fopen() mode
 	 * @param   lock     flock() mode
-	 * @return  true or false
+	 * @return  boolean or false
 	 */
 	public function _wfile ($file, $string = '', $mode = 'wb', $lock = 2) {
 		if ( $fp = fopen($file, $mode) ) {

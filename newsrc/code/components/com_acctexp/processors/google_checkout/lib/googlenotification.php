@@ -143,6 +143,11 @@ class GoogleNotification {
     $this->proxy = $proxy;
   }
 
+  /**
+   * @param string $url
+   * @param string[] $header_arr
+   * @param null|string $postargs
+   */
   function sendRequest($url, $header_arr, $postargs) {
     $ch = curl_init($url);
     $this->log->LogRequest($postargs);

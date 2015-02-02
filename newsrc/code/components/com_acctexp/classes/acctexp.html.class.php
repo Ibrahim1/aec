@@ -410,6 +410,9 @@ class aecHTML
 		echo $this->returnFull( $notooltip );
 	}
 
+	/**
+	 * @param string $addin
+	 */
 	static function Icon( $icon='fire', $addin=null )
 	{
 		return '<i class="glyphicon glyphicon-'. $icon . $addin .'"></i>';

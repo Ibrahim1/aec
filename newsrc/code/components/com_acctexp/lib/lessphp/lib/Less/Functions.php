@@ -66,6 +66,11 @@ class Less_Functions{
 		}
 	}
 
+	/**
+	 * @param integer $r
+	 * @param integer $g
+	 * @param integer $b
+	 */
 	public function rgb ($r, $g, $b){
 		return $this->rgba($r, $g, $b, 1.0);
 	}

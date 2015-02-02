@@ -1159,6 +1159,9 @@ function deep_ksort( &$arr )
 	}
 }
 
+/**
+ * @param string $name
+ */
 function arrayValueDefault( $array, $name, $default )
 {
 	if ( is_object( $array ) ) {

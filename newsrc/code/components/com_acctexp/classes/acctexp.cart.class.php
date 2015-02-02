@@ -27,6 +27,9 @@ class aecCartHelper
 
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	static function getCartbyUserid( $userid )
 	{
 		$id = aecCartHelper::getCartidbyUserid( $userid );
@@ -63,6 +66,9 @@ class aecCartHelper
 		return null;
 	}
 
+	/**
+	 * @param aecCart $cart
+	 */
 	static function getFirstSortedCartItemObject( $cart )
 	{
 		$db = JFactory::getDBO();

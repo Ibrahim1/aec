@@ -211,6 +211,7 @@ class Less_Parser{
 	/**
 	 * Run pre-compile visitors
 	 *
+	 * @param Less_Tree_Ruleset $root
 	 */
 	private function PreVisitors($root){
 
@@ -227,6 +228,7 @@ class Less_Parser{
 	/**
 	 * Run post-compile visitors
 	 *
+	 * @param Less_Tree_Ruleset $evaldRoot
 	 */
 	private function PostVisitors($evaldRoot){
 
@@ -264,8 +266,7 @@ class Less_Parser{
 	 * Parse a Less string into css
 	 *
 	 * @param string $str The string to convert
-	 * @param string $uri_root The url of the file
-	 * @return Less_Tree_Ruleset|Less_Parser
+	 * @return Less_Parser
 	 */
 	public function parse( $str, $file_uri = null ){
 
@@ -558,6 +559,7 @@ class Less_Parser{
 	/**
 	 * Set up the input buffer
 	 *
+	 * @param string|null $file_path
 	 */
 	public function SetInput( $file_path ){
 
@@ -590,6 +592,9 @@ class Less_Parser{
 	}
 
 
+	/**
+	 * @param string|null $file_path
+	 */
 	public function CacheFile( $file_path ){
 
 		if( $file_path && $this->CacheEnabled() ){
@@ -645,7 +650,7 @@ class Less_Parser{
 	/**
 	 * Parse from a token, regexp or string, and move forward if match
 	 *
-	 * @param array $toks
+	 * @param string[] $toks
 	 * @return array
 	 */
 	private function match($toks){
@@ -952,6 +957,10 @@ class Less_Parser{
 	}
 
 	// duplicate of Less_Tree_Color::FromKeyword
+
+	/**
+	 * @param string $keyword
+	 */
 	private function FromKeyword( $keyword ){
 		$keyword = strtolower($keyword);
 
@@ -2430,6 +2439,9 @@ class Less_Parser{
 
 	}
 
+	/**
+	 * @param string $re
+	 */
 	private function rulePropertyMatch( $re, &$offset, &$length,  &$index, &$name ){
 		preg_match($re, $this->input, $a, 0, $offset);
 		if( $a ){
@@ -2495,6 +2507,9 @@ class Less_Parser{
 		return $obj;
 	}
 
+	/**
+	 * @param string $class
+	 */
 	public function NewObj1($class, $arg){
 		$obj = new $class( $arg );
 		if( $this->CacheEnabled() ){
@@ -2503,6 +2518,9 @@ class Less_Parser{
 		return $obj;
 	}
 
+	/**
+	 * @param string $class
+	 */
 	public function NewObj2($class, $args){
 		$obj = new $class( $args[0], $args[1] );
 		if( $this->CacheEnabled() ){
@@ -2511,6 +2529,9 @@ class Less_Parser{
 		return $obj;
 	}
 
+	/**
+	 * @param string $class
+	 */
 	public function NewObj3($class, $args){
 		$obj = new $class( $args[0], $args[1], $args[2] );
 		if( $this->CacheEnabled() ){
@@ -2519,6 +2540,9 @@ class Less_Parser{
 		return $obj;
 	}
 
+	/**
+	 * @param string $class
+	 */
 	public function NewObj4($class, $args){
 		$obj = new $class( $args[0], $args[1], $args[2], $args[3] );
 		if( $this->CacheEnabled() ){
@@ -2527,6 +2551,9 @@ class Less_Parser{
 		return $obj;
 	}
 
+	/**
+	 * @param string $class
+	 */
 	public function NewObj5($class, $args){
 		$obj = new $class( $args[0], $args[1], $args[2], $args[3], $args[4] );
 		if( $this->CacheEnabled() ){
@@ -2535,6 +2562,9 @@ class Less_Parser{
 		return $obj;
 	}
 
+	/**
+	 * @param string $class
+	 */
 	public function NewObj6($class, $args){
 		$obj = new $class( $args[0], $args[1], $args[2], $args[3], $args[4], $args[5] );
 		if( $this->CacheEnabled() ){
@@ -2543,6 +2573,9 @@ class Less_Parser{
 		return $obj;
 	}
 
+	/**
+	 * @param string $class
+	 */
 	public function NewObj7($class, $args){
 		$obj = new $class( $args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6] );
 		if( $this->CacheEnabled() ){

@@ -48,6 +48,9 @@
 		}
 	}
 
+	/**
+	 * @param string $data
+	 */
 	private function CalcHmacSha1($data) {
 		$key = $this->merchant_key;
 		$blocksize = 64;

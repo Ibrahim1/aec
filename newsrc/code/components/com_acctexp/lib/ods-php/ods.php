@@ -269,6 +269,10 @@ function parseOds($file) {
 	return $obj;
 }
 
+/**
+ * @param ods $obj
+ * @param string $file
+ */
 function saveOds($obj,$file) {
 	$charset = ini_get('default_charset');
 	ini_set('default_charset', 'UTF-8');

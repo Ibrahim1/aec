@@ -339,7 +339,7 @@ class DwollaRestClient
      * @param float $amount
      * @param string $destinationType Type of destination user. Can be Dwolla, Facebook, Twitter, Email, or Phone. Defaults to Dwolla.
      * @param string $notes Note to attach to the transaction. Limited to 250 characters.
-     * @param float $facilitatorAmount
+     * @param integer $facilitatorAmount
      * @param bool $assumeCosts Will sending user assume the Dwolla fee?
      * @param string $fundsSource Funding source ID to use. Defaults to Dwolla balance.
      * @return string Transaction Id 
@@ -384,7 +384,7 @@ class DwollaRestClient
      * @param float $amount
      * @param string $sourceType
      * @param string $notes
-     * @param float $facilitatorAmount
+     * @param integer $facilitatorAmount
      * @return int Request Id 
      */
     public function request($pin = false, $sourceId = false, $amount = false, $sourceType = 'Dwolla', $notes = '', $facilitatorAmount = 0)
@@ -526,9 +526,9 @@ class DwollaRestClient
      * 
      * @param string $destinationId
      * @param string $orderId
-     * @param float $discount
-     * @param float $shipping
-     * @param float $tax
+     * @param integer $discount
+     * @param integer $shipping
+     * @param integer $tax
      * @param string $notes
      * @param string $callback
      * @param boolean $allowFundingSources
@@ -627,7 +627,7 @@ class DwollaRestClient
      * @param string $signature
      * @param string $checkoutId
      * @param float $amount
-     * @return bool Is signature valid? 
+     * @return null|boolean Is signature valid? 
      */
     public function verifyGatewaySignature($signature = false, $checkoutId = false, $amount = false)
     {
@@ -661,7 +661,7 @@ class DwollaRestClient
     }
 
     /**
-     * @return string|bool Error message or false if error message does not exist
+     * @return false|string Error message or false if error message does not exist
      */
     public function getError()
     {
@@ -678,7 +678,7 @@ class DwollaRestClient
     /**
      * Returns properly formatted Dwolla Id
      * 
-     * @param string|int $id
+     * @param string $id
      * @return string Properly formatted Dwolla Id 
      */
     public function parseDwollaID($id)

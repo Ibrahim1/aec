@@ -385,6 +385,10 @@ function DIBSCancel($Merchant,$Transact,$OrderID,$Auth) {
 
 
 //!A function for asking DIBS for transaction information.
+/**
+ * @param string $Merchant
+ * @param string $Currency
+ */
 function DIBSTransInfo($OrderID,$Merchant,$Currency,$Amount) {
 
   //Set up post-variable string
@@ -602,6 +606,11 @@ function DIBSRefund($Merchant,$Amount,$Currency,$Transact,$OrderID,$Auth,$MD5=""
 
 
 //!Function for sending a 'within-php' post-request and receive the response-body as a string
+/**
+ * @param string $host
+ * @param string $path
+ * @param string $data
+ */
 function http_post($host, $path, $data, $auth="") {
 
   $sock = fsockopen("ssl://".$host, 443, $errno, $errstr, 30);

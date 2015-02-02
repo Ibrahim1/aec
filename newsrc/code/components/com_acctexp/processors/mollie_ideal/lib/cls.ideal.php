@@ -39,6 +39,9 @@ class iDEAL_Payment
 	protected $api_host        = 'ssl://secure.mollie.nl';
 	protected $api_port        = 443;
 
+	/**
+	 * @param string $partner_id
+	 */
 	public function __construct ($partner_id, $api_host = 'ssl://secure.mollie.nl', $api_port = 443)
 	{
 		$this->partner_id = $partner_id;
@@ -85,6 +88,11 @@ class iDEAL_Payment
 	}
 
 	// Zet een betaling klaar bij de bank en maak de betalings URL beschikbaar
+
+	/**
+	 * @param string $description
+	 * @param string $report_url
+	 */
 	public function createPayment ($bank_id, $amount, $description, $return_url, $report_url)
 	{
 		if (!$this->setBankId($bank_id) or
@@ -209,6 +217,12 @@ class iDEAL_Payment
 	PROTECTED FUNCTIONS
 */
 
+	/**
+	 * @param string $host
+	 * @param integer $port
+	 * @param string $path
+	 * @param string $data
+	 */
 	protected function _sendRequest ($host, $port, $path, $data)
 	{
 		if (function_exists('curl_init')) {
@@ -299,6 +313,9 @@ class iDEAL_Payment
 		return $xml_object;
 	}
 
+	/**
+	 * @param SimpleXMLElement $xml
+	 */
 	protected function _XMLisError($xml)
 	{
 		if (isset($xml->item))

@@ -356,8 +356,8 @@ class Datamatrix {
 	 * @param $a (int) first number to multiply.
 	 * @param $b (int) second number to multiply.
 	 * @param $log (array) Log table.
-	 * @param $alog (array) Anti-Log table.
-	 * @param $gf (array) Number of Factors of the Reed-Solomon polynomial.
+	 * @param integer[] $alog (array) Anti-Log table.
+	 * @param integer $gf (array) Number of Factors of the Reed-Solomon polynomial.
 	 * @return int product
 	 * @protected
 	 */
@@ -436,9 +436,9 @@ class Datamatrix {
 
 	/**
 	 * Return the 253-state codeword
-	 * @param $cwpad (int) Pad codeword.
-	 * @param $cwpos (int) Number of data codewords from the beginning of encoded data.
-	 * @return pad codeword
+	 * @param integer $cwpad (int) Pad codeword.
+	 * @param integer $cwpos (int) Number of data codewords from the beginning of encoded data.
+	 * @return integer codeword
 	 * @protected
 	 */
 	protected function get253StateCodeword($cwpad, $cwpos) {
@@ -451,9 +451,9 @@ class Datamatrix {
 
 	/**
 	 * Return the 255-state codeword
-	 * @param $cwpad (int) Pad codeword.
+	 * @param integer $cwpad (int) Pad codeword.
 	 * @param $cwpos (int) Number of data codewords from the beginning of encoded data.
-	 * @return pad codeword
+	 * @return integer codeword
 	 * @protected
 	 */
 	protected function get255StateCodeword($cwpad, $cwpos) {
@@ -466,8 +466,8 @@ class Datamatrix {
 
 	/**
 	 * Returns true if the char belongs to the selected mode
-	 * @param $chr (int) Character (byte) to check.
-	 * @param $mode (int) Current encoding mode.
+	 * @param integer $chr (int) Character (byte) to check.
+	 * @param integer $mode (int) Current encoding mode.
 	 * @return boolean true if the char is of the selected mode.
 	 * @protected
 	 */
@@ -513,8 +513,8 @@ class Datamatrix {
 	/**
 	 * The look-ahead test scans the data to be encoded to find the best mode (Annex P - steps from J to S).
 	 * @param $data (string) data to encode
-	 * @param $pos (int) current position
-	 * @param $mode (int) current encoding mode
+	 * @param integer $pos (int) current position
+	 * @param integer $mode (int) current encoding mode
 	 * @return int encoding mode
 	 * @protected
 	 */
@@ -644,7 +644,7 @@ class Datamatrix {
 
 	/**
 	 * Get the switching codeword to a new encoding mode (latch codeword)
-	 * @param $mode (int) New encoding mode.
+	 * @param integer $mode (int) New encoding mode.
 	 * @return (int) Switch codeword.
 	 * @protected
 	 */
@@ -680,7 +680,7 @@ class Datamatrix {
 
 	/**
 	 * Choose the minimum matrix size and return the max number of data codewords.
-	 * @param $numcw (int) Number of current codewords.
+	 * @param double $numcw (int) Number of current codewords.
 	 * @return number of data codewords in matrix
 	 * @protected
 	 */
@@ -947,7 +947,7 @@ class Datamatrix {
 	 * @param $row (int) Row number.
 	 * @param $col (int) Column number.
 	 * @param $chr (int) Char byte.
-	 * @param $bit (int) Bit.
+	 * @param integer $bit (int) Bit.
 	 * @return array
 	 * @protected
 	 */
@@ -968,11 +968,11 @@ class Datamatrix {
 	 * Places the 8 bits of a utah-shaped symbol character.
 	 * (Annex F - ECC 200 symbol character placement)
 	 * @param $marr (array) Array of symbols.
-	 * @param $nrow (int) Number of rows.
+	 * @param double $nrow (int) Number of rows.
 	 * @param $ncol (int) Number of columns.
 	 * @param $row (int) Row number.
-	 * @param $col (int) Column number.
-	 * @param $chr (int) Char byte.
+	 * @param integer $col (int) Column number.
+	 * @param integer $chr (int) Char byte.
 	 * @return array
 	 * @protected
 	 */
@@ -994,7 +994,7 @@ class Datamatrix {
 	 * @param $marr (array) Array of symbols.
 	 * @param $nrow (int) Number of rows.
 	 * @param $ncol (int) Number of columns.
-	 * @param $chr (int) Char byte.
+	 * @param integer $chr (int) Char byte.
 	 * @return array
 	 * @protected
 	 */
@@ -1016,7 +1016,7 @@ class Datamatrix {
 	 * @param $marr (array) Array of symbols.
 	 * @param $nrow (int) Number of rows.
 	 * @param $ncol (int) Number of columns.
-	 * @param $chr (int) Char byte.
+	 * @param integer $chr (int) Char byte.
 	 * @return array
 	 * @protected
 	 */
@@ -1038,7 +1038,7 @@ class Datamatrix {
 	 * @param $marr (array) Array of symbols.
 	 * @param $nrow (int) Number of rows.
 	 * @param $ncol (int) Number of columns.
-	 * @param $chr (int) Char byte.
+	 * @param integer $chr (int) Char byte.
 	 * @return array
 	 * @protected
 	 */
@@ -1058,9 +1058,9 @@ class Datamatrix {
 	 * Places the 8 bits of the fourth special corner case.
 	 * (Annex F - ECC 200 symbol character placement)
 	 * @param $marr (array) Array of symbols.
-	 * @param $nrow (int) Number of rows.
+	 * @param double $nrow (int) Number of rows.
 	 * @param $ncol (int) Number of columns.
-	 * @param $chr (int) Char byte.
+	 * @param integer $chr (int) Char byte.
 	 * @return array
 	 * @protected
 	 */

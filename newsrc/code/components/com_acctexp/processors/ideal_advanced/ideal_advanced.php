@@ -210,6 +210,9 @@ class IdealRequest
 	{
 	}
 
+	/**
+	 * @param string $settings
+	 */
 	public function initMerchant( $settings )
 	{
 		$this->setAcquirer		( $settings['acquirer'], $settings['testmode'] );
@@ -326,6 +329,10 @@ class IdealRequest
 	}
 
 	// Error functions
+
+	/**
+	 * @param string $sDesc
+	 */
 	protected function setError($sDesc, $sCode = false, $sFile = 0, $sLine = 0)
 	{
 		$this->aErrors[] = array('desc' => $sDesc, 'code' => $sCode, 'file' => $sFile, 'line' => $sLine);
@@ -371,6 +378,11 @@ class IdealRequest
 	}
 
 	// Send GET/POST data through sockets
+
+	/**
+	 * @param string $url
+	 * @param string $data
+	 */
 	protected function postToHost($url, $data, $timeout = 30)
 	{
 		$__url = $url;
@@ -410,6 +422,11 @@ class IdealRequest
 	}
 
 	// Get value within given XML tag
+
+	/**
+	 * @param string $key
+	 * @param string $xml
+	 */
 	protected function parseFromXml($key, $xml)
 	{
 		$begin = 0;
@@ -447,6 +464,10 @@ class IdealRequest
 	}
 
 	// Escape (replace/remove) special characters in string
+
+	/**
+	 * @return string
+	 */
 	protected function escapeSpecialChars($string)
 	{
 		$string = str_replace(array('à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ð', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', '§', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', '€', 'Ð', 'Ì', 'Í', 'Î', 'Ï', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', '§', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'Ÿ'), array('a', 'a', 'a', 'a', 'a', 'a', 'ae', 'c', 'e', 'e', 'e', 'e', 'ed', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 's', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'A', 'A', 'A', 'A', 'A', 'AE', 'C', 'E', 'E', 'E', 'E', 'EUR', 'ED', 'I', 'I', 'I', 'I', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'S', 'U', 'U', 'U', 'U', 'Y', 'Y'), $string);
@@ -463,6 +484,10 @@ class IdealRequest
 	}
 
 	// Unescape special XML characters
+
+	/**
+	 * @param string $string
+	 */
 	protected function unescapeXml($string)
 	{
 		return str_replace(array('&lt;', '&gt;', '&quot;', '&amp;'), array('<', '>', '"', '&'), utf8_decode($string));
@@ -521,6 +546,10 @@ class IdealRequest
 	}
 
 	// Validate signature for the given data
+
+	/**
+	 * @param string $sSignature
+	 */
 	protected function verifySignature($sData, $sSignature)
 	{
 		$bOk = false;
@@ -688,6 +717,9 @@ class TransactionRequest extends IdealRequest
 		$this->sOrderId = substr($sOrderId, 0, 16);
 	}
 
+	/**
+	 * @param string $sOrderDescription
+	 */
 	public function setOrderDescription($sOrderDescription)
 	{
 		$this->sOrderDescription = substr($this->escapeSpecialChars($sOrderDescription), 0, 32);
@@ -698,6 +730,9 @@ class TransactionRequest extends IdealRequest
 		$this->iOrderAmount = round($fOrderAmount * 100);
 	}
 
+	/**
+	 * @param string $sReturnUrl
+	 */
 	public function setReturnUrl($sReturnUrl)
 	{
 		// Fix for ING Bank, urlescape [ and ]
@@ -813,6 +848,10 @@ class StatusRequest extends IdealRequest
 	}
 
 	// Set transaction id
+
+	/**
+	 * @param string $sTransactionId
+	 */
 	public function setTransactionId($sTransactionId)
 	{
 		$this->sTransactionId = $sTransactionId;

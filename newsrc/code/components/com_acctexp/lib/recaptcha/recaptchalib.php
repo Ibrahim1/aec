@@ -102,6 +102,11 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 }
 
 
+/**
+ * @param string $url
+ * @param integer $port
+ * @param string $req
+ */
 function CAPTCHAdoTheCurl( $url, $port, $req )
 {
 	$ch = curl_init();
@@ -260,6 +265,9 @@ function _recaptcha_aes_pad($val) {
 
 /* Mailhide related code */
 
+/**
+ * @param string $ky
+ */
 function _recaptcha_aes_encrypt($val,$ky) {
 	if (! function_exists ("mcrypt_encrypt")) {
 		die ("To use reCAPTCHA Mailhide, you need to have the mcrypt php module installed.");
@@ -271,6 +279,9 @@ function _recaptcha_aes_encrypt($val,$ky) {
 }
 
 
+/**
+ * @param null|string $x
+ */
 function _recaptcha_mailhide_urlbase64 ($x) {
 	return strtr(base64_encode ($x), '+/', '-_');
 }

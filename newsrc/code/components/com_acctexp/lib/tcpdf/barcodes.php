@@ -167,7 +167,7 @@ class TCPDFBarcode {
 	 * @param $w (int) Width of a single bar element in pixels.
 	 * @param $h (int) Height of a single bar element in pixels.
 	 * @param $color (array) RGB (0-255) foreground color for bar elements (background is transparent).
- 	 * @return image or false in case of error.
+ 	 * @return false|null or false in case of error.
  	 * @public
 	 */
 	public function getBarcodePNG($w=2, $h=30, $color=array(0,0,0)) {
@@ -459,8 +459,8 @@ class TCPDFBarcode {
 
 	/**
 	 * Encode a string to be used for CODE 39 Extended mode.
-	 * @param $code (string) code to represent.
-	 * @return encoded string.
+	 * @param string $code (string) code to represent.
+	 * @return false|string string.
 	 * @protected
 	 */
 	protected function encode_code39_ext($code) {
@@ -511,7 +511,7 @@ class TCPDFBarcode {
 	/**
 	 * Calculate CODE 39 checksum (modulo 43).
 	 * @param $code (string) code to represent.
-	 * @return char checksum.
+	 * @return string checksum.
 	 * @protected
 	 */
 	protected function checksum_code39($code) {
@@ -661,7 +661,7 @@ class TCPDFBarcode {
 
 	/**
 	 * Calculate CODE 93 checksum (modulo 47).
-	 * @param $code (string) code to represent.
+	 * @param string $code (string) code to represent.
 	 * @return string checksum code.
 	 * @protected
 	 */
@@ -835,7 +835,7 @@ class TCPDFBarcode {
 
 	/**
 	 * Convert binary barcode sequence to TCPDF barcode array.
-	 * @param $seq (string) barcode as binary sequence.
+	 * @param string $seq (string) barcode as binary sequence.
 	 * @param $bararray (array) barcode array.
 	 * òparam array $bararray TCPDF barcode array to fill up
 	 * @return array barcode representation.
@@ -2153,7 +2153,7 @@ class TCPDFBarcode {
 	/**
 	 * Convert large integer number to hexadecimal representation.
 	 * (requires PHP bcmath extension)
-	 * @param $number (string) number to convert specified as a string
+	 * @param string $number (string) number to convert specified as a string
 	 * @return string hexadecimal representation
 	 */
 	public function dec_to_hex($number) {
@@ -2177,7 +2177,7 @@ class TCPDFBarcode {
 	/**
 	 * Convert large hexadecimal number to decimal representation (string).
 	 * (requires PHP bcmath extension)
-	 * @param $hex (string) hexadecimal number to convert specified as a string
+	 * @param string $hex (string) hexadecimal number to convert specified as a string
 	 * @return string hexadecimal representation
 	 */
 	public function hex_to_dec($hex) {
@@ -2229,7 +2229,7 @@ class TCPDFBarcode {
 
 	/**
 	 * Reverse unsigned short value
-	 * @param $num (int) value to reversr
+	 * @param integer $num (int) value to reversr
 	 * @return int reversed value
 	 * @protected
 	 */
@@ -2245,8 +2245,8 @@ class TCPDFBarcode {
 
 	/**
 	 * generate Nof13 tables used for Intelligent Mail Barcode
-	 * @param $n (int) is the type of table: 2 for 2of13 table, 5 for 5of13table
-	 * @param $size (int) size of table (78 for n=2 and 1287 for n=5)
+	 * @param integer $n (int) is the type of table: 2 for 2of13 table, 5 for 5of13table
+	 * @param integer $size (int) size of table (78 for n=2 and 1287 for n=5)
 	 * @return array requested table
 	 * @protected
 	 */

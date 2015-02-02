@@ -143,7 +143,7 @@ class TCPDF_FILTERS {
 	 * ASCIIHexDecode
 	 * Decodes data encoded in an ASCII hexadecimal representation, reproducing the original binary data.
 	 * @param $data (string) Data to decode.
-	 * @return Decoded data string.
+	 * @return string data string.
 	 * @public
 	 * @since 1.0.000 (2011-05-23)
 	 */
@@ -183,7 +183,7 @@ class TCPDF_FILTERS {
 	 * ASCII85Decode
 	 * Decodes data encoded in an ASCII base-85 representation, reproducing the original binary data.
 	 * @param $data (string) Data to decode.
-	 * @return Decoded data string.
+	 * @return string data string.
 	 * @public
 	 * @since 1.0.000 (2011-05-23)
 	 */
@@ -267,7 +267,7 @@ class TCPDF_FILTERS {
 	 * LZWDecode
 	 * Decompresses data encoded using the LZW (Lempel-Ziv-Welch) adaptive compression method, reproducing the original text or binary data.
 	 * @param $data (string) Data to decode.
-	 * @return Decoded data string.
+	 * @return string data string.
 	 * @public
 	 * @since 1.0.000 (2011-05-23)
 	 */
@@ -348,7 +348,7 @@ class TCPDF_FILTERS {
 	 * FlateDecode
 	 * Decompresses data encoded using the zlib/deflate compression method, reproducing the original text or binary data.
 	 * @param $data (string) Data to decode.
-	 * @return Decoded data string.
+	 * @return string data string.
 	 * @public
 	 * @since 1.0.000 (2011-05-23)
 	 */
@@ -461,7 +461,7 @@ class TCPDF_FILTERS {
 
 	/**
 	 * This method is automatically called in case of fatal error; it simply outputs the message and halts the execution.
-	 * @param $msg (string) The error message
+	 * @param string $msg (string) The error message
 	 * @public
 	 * @since 1.0.000 (2011-05-23)
 	 */

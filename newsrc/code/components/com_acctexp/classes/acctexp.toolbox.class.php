@@ -144,6 +144,9 @@ class AECToolbox
 		return '';
 	}
 
+	/**
+	 * @param string $string
+	 */
 	static function aecCurrencyExp( $string )
 	{
 		$iso4217exp8 = array( 'BTC' );
@@ -166,6 +169,9 @@ class AECToolbox
 		}
 	}
 
+	/**
+	 * @param string $format
+	 */
 	static function getCountryCodeList( $format=null )
 	{
 		global $aecConfig;
@@ -204,6 +210,9 @@ class AECToolbox
 		}
 	}
 
+	/**
+	 * @param string $type1
+	 */
 	static function ISO3166_conversiontable( $type1, $type2 )
 	{
 		$list1 = call_user_func( array( 'AECToolbox', 'getISO3166_1' . $type1 . '_codes' ) );
@@ -366,6 +375,7 @@ class AECToolbox
 	/**
 	 * Return a URL based on the sef and user settings
 	 * @parameter url
+	 * @param string $url
 	 * @return string
 	 */
 	static function deadsureURL( $url, $secure=false, $internal=false )
@@ -549,6 +559,9 @@ class AECToolbox
 		return AECToolbox::VerifyUserID( $id );
 	}
 
+	/**
+	 * @param boolean $userid
+	 */
 	static function VerifyUserID( $userid )
 	{
 		if ( empty( $userid ) ) {
@@ -778,6 +791,9 @@ class AECToolbox
 		return $formatted;
 	}
 
+	/**
+	 * @param InvoiceFactory $request
+	 */
 	static function formatAmountCustom( $request, $plan, $forcedefault=false, $proposed=null )
 	{
 		if ( empty( $plan->params['customamountformat'] ) || $forcedefault ) {
@@ -927,6 +943,9 @@ class AECToolbox
 		}
 	}
 
+	/**
+	 * @param integer $timestamp
+	 */
 	static function computeExpiration( $value, $unit, $timestamp )
 	{
 		return date( 'Y-m-d H:i:s', AECToolbox::offsetTime( $value, $unit, $timestamp ) );
@@ -974,6 +993,9 @@ class AECToolbox
 		}
 	}
 
+	/**
+	 * @param string $string
+	 */
 	static function visualstrlen( $string )
 	{
 		// Narrow Chars
@@ -1048,6 +1070,9 @@ class AECToolbox
 		}
 	}
 
+	/**
+	 * @param string $content
+	 */
 	static function rewriteEngineExplain( $content )
 	{
 		$rwEngine = new reWriteEngine();
@@ -1083,6 +1108,10 @@ class AECToolbox
 		return $status;
 	}
 
+	/**
+	 * @param double $val1
+	 * @param double $val2
+	 */
 	static function math( $sign, $val1, $val2 )
 	{
 		$result = false;

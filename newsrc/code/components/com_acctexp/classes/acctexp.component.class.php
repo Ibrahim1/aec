@@ -12,7 +12,8 @@ class aecComponentHelper
 {
 	/**
 	 * Check whether a component is installed
-	 * @return Bool
+	 * @param string $component
+	 * @return boolean|null
 	 */
 	static function detect_component( $component )
 	{

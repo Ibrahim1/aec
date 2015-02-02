@@ -46,8 +46,6 @@ class plgUserAECaccess extends JPlugin
 	 *
 	 * @access	public
 	 * @param   array 	$credentials Array holding the user credentials
-	 * @param 	array   $options     Array of extra options
-	 * @param	object	$response	 Authentication response object
 	 * @return	boolean
 	 * @since 1.5
 	 */

@@ -444,7 +444,7 @@ class TCPDF_PARSER {
 	/**
 	 * Decode the specified stream.
 	 * @param $sdic (array) Stream's dictionary array.
-	 * @param $stream (string) Stream to decode.
+	 * @param string $stream (string) Stream to decode.
 	 * @return array containing decoded stream data and remaining filters.
 	 * @protected
 	 * @since 1.0.000 (2011-06-22)
@@ -494,7 +494,7 @@ class TCPDF_PARSER {
 
 	/**
 	 * This method is automatically called in case of fatal error; it simply outputs the message and halts the execution.
-	 * @param $msg (string) The error message
+	 * @param string $msg (string) The error message
 	 * @public
 	 * @since 1.0.000 (2011-05-23)
 	 */
