@@ -239,7 +239,7 @@ class aecHTML
 				break;
 			case 'list':
 				$return .= '<div class="col-sm-8">';
-				if ( strpos( $this->lists[$name], '[]"' ) ) {
+				if ( isset($this->lists[$name]) && strpos( $this->lists[$name], '[]"' ) ) {
 					$return .= '<input type="hidden" name="' . $name . '" value="0" />';
 					$return .= str_replace( '<select', '<select class="select2-bootstrap"', $this->lists[$name] );
 				} else {
