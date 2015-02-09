@@ -5479,6 +5479,7 @@ function quicklookup( $option )
 	foreach ( $s as $user ) {
 		$JTableUser = new cmsUser();
 		$JTableUser->load( $user );
+
 		$userlink = '<div class="lookupresult">';
 		$userlink .= '<a href="';
 		$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $JTableUser->id;

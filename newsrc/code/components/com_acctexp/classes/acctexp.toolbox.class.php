@@ -673,7 +673,7 @@ class AECToolbox
 			$query = 'SELECT count(*) ' . $base_query;
 			$db->setQuery( $query );
 			$existing = $db->loadResult();
-
+//print_r($db);exit;
 			if ( $existing ) {
 				$query = 'SELECT `' . $qfields[$qid] . '` ' . $base_query;
 				$db->setQuery( $query );

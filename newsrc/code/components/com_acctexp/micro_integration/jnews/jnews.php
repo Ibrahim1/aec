@@ -224,9 +224,9 @@ class mi_jnews
 				$db->query();
 			}
 
-			$query  = 'INSERT INTO #__jnews_queue'
+			/*$query  = 'INSERT INTO #__jnews_queue'
 					. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
-					. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
+					. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'*/
 					;
 			$db->setQuery( $query );
 			$db->query();
@@ -251,12 +251,12 @@ class mi_jnews
 			$db->setQuery( $query );
 			$db->query();
 
-			$query = 'DELETE FROM #__jnews_queue'
+			/*$query = 'DELETE FROM #__jnews_queue'
 					. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
 					. ' AND `list_id` = \'' . $list_id . '\''
 					;
 			$db->setQuery( $query );
-			$db->query();
+			$db->query();*/
 		}
 	}
 
