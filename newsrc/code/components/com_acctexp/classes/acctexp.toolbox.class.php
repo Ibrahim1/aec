@@ -669,20 +669,21 @@ class AECToolbox
 		$qfields[$k] = 'userid';
 		$k++;
 
+		$ids = array();
 		foreach ( $queries as $qid => $base_query ) {
 			$query = 'SELECT count(*) ' . $base_query;
 			$db->setQuery( $query );
 			$existing = $db->loadResult();
-//print_r($db);exit;
+
 			if ( $existing ) {
 				$query = 'SELECT `' . $qfields[$qid] . '` ' . $base_query;
 				$db->setQuery( $query );
 
-				return xJ::getDBArray( $db );
+				$ids = array_merge($ids, xJ::getDBArray( $db ) );
 			}
 		}
 
-		return array();
+		return $ids;
 	}
 
 	static function randomstring( $length=16, $alphanum_only=false, $uppercase=false )

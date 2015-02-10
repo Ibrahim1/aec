@@ -5471,7 +5471,7 @@ function quicklookup( $option )
 
 	$s = AECToolbox::searchUser( $search );
 
-	if ( empty( $s ) || is_array( $s ) ) {
+	if ( empty( $s ) || !is_array( $s ) ) {
 		return false;
 	}
 
