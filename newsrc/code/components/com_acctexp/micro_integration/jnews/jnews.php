@@ -91,7 +91,9 @@ class mi_jnews
 
 		$acauser = $this->getSubscriberID( $request->metaUser->userid );
 
-		if ( !$acauser && $is_allowed ) {
+		$email_exist = $this->emailExists( $request->metaUser->email );
+
+		if ( !$acauser && $is_allowed && !$email_exist ) {
 			$this->createSubscriber( $request->metaUser->userid );
 			$acauser = $this->getSubscriberID( $request->metaUser->userid );
 		}
@@ -121,7 +123,9 @@ class mi_jnews
 
 		$acauser = $this->getSubscriberID( $request->metaUser->userid );
 
-		if ( !$acauser ) {
+		$email_exist = $this->emailExists( $request->metaUser->email );
+
+		if ( !$acauser && !$email_exist ) {
 			$this->createSubscriber( $request->metaUser->userid );
 			$acauser = $this->getSubscriberID( $request->metaUser->userid );
 		}
@@ -181,6 +185,7 @@ class mi_jnews
 				. ' AND `unsubscribe` = \'1\''
 				;
 		$db->setQuery( $query );
+
 		if ( $db->loadResult() ) {
 			return true;
 		} else {
@@ -196,6 +201,19 @@ class mi_jnews
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				;
 		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	public function emailExists( $email )
+	{
+		$db = JFactory::getDBO();
+		$query = 'SELECT `id`'
+			. ' FROM #__jnews_subscribers'
+			. ' WHERE `email` = \'' . $email . '\''
+		;
+		$db->setQuery( $query );
+
 		return $db->loadResult();
 	}
 
