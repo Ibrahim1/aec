@@ -78,70 +78,73 @@ class mi_docman
 		$settings['set_downloads']		= array( 'inputA' );
 		$settings['set_unlimited']		= array( 'toggle' );
 
-		$settings['delete_on_set']		= array( 'list' );
-		$settings['set_group']			= array( 'toggle' );
-		$settings['group']				= array( 'list' );
-		$settings['delete_on_exp'] 		= array( 'list' );
-		$settings['set_group_exp']		= array( 'toggle' );
-		$settings['group_exp']			= array( 'list' );
-		$settings['unset_unlimited']	= array( 'toggle' );
-		$settings['rebuild']			= array( 'toggle' );
-		$settings['remove']				= array( 'toggle' );
+		if ( !defined( 'JPATH_MANIFESTS' ) ) {
+			$settings['delete_on_set']		= array( 'list' );
+			$settings['set_group']			= array( 'toggle' );
+			$settings['group']				= array( 'list' );
+			$settings['delete_on_exp'] 		= array( 'list' );
+			$settings['set_group_exp']		= array( 'toggle' );
+			$settings['group_exp']			= array( 'list' );
 
-		$query = 'SELECT groups_id, groups_name, groups_description'
-			 	. ' FROM #__docman_groups'
-			 	;
-	 	$db->setQuery( $query );
-	 	$groups = $db->loadObjectList();
+			$query = 'SELECT groups_id, groups_name, groups_description'
+					. ' FROM #__docman_groups'
+					;
+			$db->setQuery( $query );
+			$groups = $db->loadObjectList();
 
-		$sg = array();
-		$sge = array();
+			$sg = array();
+			$sge = array();
 
-		$gr = array();
-		if ( !empty( $groups ) ) {
-			foreach( $groups as $group ) {
-				$desc = $group->groups_name . ' - ' . substr( strip_tags( $group->groups_description ), 0, 30 );
+			$gr = array();
+			if ( !empty( $groups ) ) {
+				foreach( $groups as $group ) {
+					$desc = $group->groups_name . ' - ' . substr( strip_tags( $group->groups_description ), 0, 30 );
 
-				$gr[] = JHTML::_('select.option', $group->groups_id, $desc );
+					$gr[] = JHTML::_('select.option', $group->groups_id, $desc );
 
-				if ( !empty( $this->settings['group'] ) ) {
-					if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
-						$sg[] = JHTML::_('select.option', $group->groups_id, $desc );
+					if ( !empty( $this->settings['group'] ) ) {
+						if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
+							$sg[] = JHTML::_('select.option', $group->groups_id, $desc );
+						}
 					}
-				}
 
-				if ( !empty( $this->settings['group_exp'] ) ) {
-					if ( in_array( $group->groups_id, $this->settings['group_exp'] ) ) {
-						$sge[] = JHTML::_('select.option', $group->groups_id, $desc );
+					if ( !empty( $this->settings['group_exp'] ) ) {
+						if ( in_array( $group->groups_id, $this->settings['group_exp'] ) ) {
+							$sge[] = JHTML::_('select.option', $group->groups_id, $desc );
+						}
 					}
 				}
 			}
+
+			$settings['lists']['group']			= JHTML::_('select.genericlist', $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
+			$settings['lists']['group_exp'] 	= JHTML::_('select.genericlist', $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
+
+			if ( !empty( $this->settings['delete_on_set'] ) ) {
+				$des = $this->settings['delete_on_set'];
+			} else {
+				$des = array();
+			}
+
+			if ( !empty( $this->settings['delete_on_exp'] ) ) {
+				$dee = $this->settings['delete_on_exp'];
+			} else {
+				$dee = array();
+			}
+
+			$del_opts = array();
+			$del_opts[] = JHTML::_('select.option', "No", "Just apply group(s) below." );
+			$del_opts[] = JHTML::_('select.option', "All", "Delete ALL, then apply group(s) below." );
+
+			$settings['lists']['delete_on_set']	= JHTML::_('select.genericlist', $del_opts, 'delete_on_set', 'size="3"', 'value', 'text', $des );
+
+			$del_opts[] = JHTML::_('select.option', "Set", "Delete group(s) selected above, then apply group(s) below." );
+
+			$settings['lists']['delete_on_exp']	= JHTML::_('select.genericlist', $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $dee );
 		}
 
-		$settings['lists']['group']			= JHTML::_('select.genericlist', $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
-		$settings['lists']['group_exp'] 	= JHTML::_('select.genericlist', $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
-
-		if ( !empty( $this->settings['delete_on_set'] ) ) {
-			$des = $this->settings['delete_on_set'];
-		} else {
-			$des = array();
-		}
-
-		if ( !empty( $this->settings['delete_on_exp'] ) ) {
-			$dee = $this->settings['delete_on_exp'];
-		} else {
-			$dee = array();
-		}
-
- 		$del_opts = array();
-		$del_opts[] = JHTML::_('select.option', "No", "Just apply group(s) below." );
-		$del_opts[] = JHTML::_('select.option', "All", "Delete ALL, then apply group(s) below." );
-
-		$settings['lists']['delete_on_set']	= JHTML::_('select.genericlist', $del_opts, 'delete_on_set', 'size="3"', 'value', 'text', $des );
-
-		$del_opts[] = JHTML::_('select.option', "Set", "Delete group(s) selected above, then apply group(s) below." );
-
-		$settings['lists']['delete_on_exp']	= JHTML::_('select.genericlist', $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $dee );
+		$settings['unset_unlimited']	= array( 'toggle' );
+		$settings['rebuild']			= array( 'toggle' );
+		$settings['remove']				= array( 'toggle' );
 
 		return $settings;
 	}
@@ -215,21 +218,23 @@ class mi_docman
 	{
 		$db = JFactory::getDBO();
 
- 		if ( $this->settings['delete_on_exp'] == "Set" ) {
-			foreach ( $this->settings['group'] as $tgroup ) {
-				$this->DeleteUserFromGroup( $request->metaUser->userid, $tgroup );
-			}
-		} elseif ( $this->settings['delete_on_exp'] == "All" ) {
-			$groups = $this->GetUserGroups( $request->metaUser->userid );
+		if ( !defined( 'JPATH_MANIFESTS' ) ) {
+			if ( $this->settings['delete_on_exp'] == "Set" ) {
+				foreach ( $this->settings['group'] as $tgroup ) {
+					$this->DeleteUserFromGroup( $request->metaUser->userid, $tgroup );
+				}
+			} elseif ( $this->settings['delete_on_exp'] == "All" ) {
+				$groups = $this->GetUserGroups( $request->metaUser->userid );
 
-			foreach ( $groups as $group ) {
-				$this->DeleteUserFromGroup( $request->metaUser->userid, $group );
+				foreach ( $groups as $group ) {
+					$this->DeleteUserFromGroup( $request->metaUser->userid, $group );
+				}
 			}
-		}
 
-		if ( $this->settings['set_group_exp'] && !empty( $this->settings['group_exp'] ) ) {
-			foreach ( $this->settings['group_exp'] as $group ) {
-				$this->AddUserToGroup( $request->metaUser->userid, $group );
+			if ( $this->settings['set_group_exp'] && !empty( $this->settings['group_exp'] ) ) {
+				foreach ( $this->settings['group_exp'] as $group ) {
+					$this->AddUserToGroup( $request->metaUser->userid, $group );
+				}
 			}
 		}
 
@@ -237,7 +242,6 @@ class mi_docman
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
-
 
 		if ( $mi_id ) {
 			if ( $this->settings['unset_unlimited'] ) {
@@ -253,8 +257,6 @@ class mi_docman
 
 	public function action( $request )
 	{
-		$db = JFactory::getDBO();
-
  		if ( $this->settings['delete_on_set'] == "All" ) {
 			$groups = $this->GetUserGroups( $request->metaUser->userid );
 
