@@ -3919,8 +3919,11 @@ jQuery(document).ready(function(jQuery) {
 			<div class="row">
 				<div class="col-sm-12">
 					<?php if ( !empty( $cmd ) ) { ?>
-						<h4><?php echo JText::_('Challenge'); ?></h4>
+						<section class="paper">
+							<h4><?php echo JText::_('Challenge'); ?></h4>
+						</section>
 					<?php } ?>
+
 					<?php if ( is_array( $result ) ) { ?>
 						<?php foreach ( $result as $x => $litem ) { ?>
 							<div class="col-sm-6 text-left">
@@ -3934,7 +3937,11 @@ jQuery(document).ready(function(jQuery) {
 								</div>
 							</div>
 						<?php } ?>
-					<?php } else { echo $result; } ?>
+					<?php } else { ?>
+						<section class="paper">
+							<?php echo $result; ?>
+						</section>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
