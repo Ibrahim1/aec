@@ -25,9 +25,9 @@ class mi_acl
 
 	public function Settings()
 	{
-		$user = JFactory::getUser();
-
 		$settings = array();
+
+		$rewriteswitches						= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$settings['set_gid']				= array( 'toggle' );
@@ -40,9 +40,11 @@ class mi_acl
 			$settings['aectab_exp']				= array( 'tab', 'Expiration Action', 'Expiration Action' );
 			$settings['set_gid_exp']			= array( 'toggle' );
 			$settings['gid_exp']				= array( 'list' );
-			$settings['gid_rw_exp']				= array( 'list' );
+			$settings['gid_rw_exp']				= array( 'inputD' );
 			$settings['set_removegid_exp']		= array( 'toggle' );
 			$settings['removegid_exp']			= array( 'list' );
+
+			$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 			$settings['aectab_preexp']			= array( 'tab', 'Pre-Expiration Action', 'Pre-Expiration Action' );
 			$settings['set_gid_pre_exp']		= array( 'toggle' );
@@ -51,6 +53,8 @@ class mi_acl
 			$settings['set_removegid_pre_exp']	= array( 'toggle' );
 			$settings['removegid_pre_exp']		= array( 'list' );
 			$settings['removegid_rw_pre_exp']	= array( 'inputD' );
+
+			$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 		} else {
 			$settings['jaclpluspro']			= array( 'toggle' );
 			$settings['delete_subgroups']		= array( 'toggle' );

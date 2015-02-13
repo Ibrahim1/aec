@@ -2043,7 +2043,7 @@ class HTML_AcctExp
 						<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
 						<?php foreach ( $aecHTML->customparams as $name ) { ?>
 							<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
-							</div></div></section>
+					</section></div></div>
 							<?php $tabs->nextPane( $name ); ?>
 								<div class="row">
 									<div class="col-sm-8 col-sm-offset-2">
