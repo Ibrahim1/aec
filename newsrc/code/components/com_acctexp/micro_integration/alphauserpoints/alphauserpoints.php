@@ -116,7 +116,7 @@ class mi_alphauserpoints extends MI
 		return true;
 	}
 
-	public function invoice_item_cost( $request )
+	public function invoice_item_cost( &$request )
 	{
 		if ( $this->settings['checkout_discount'] && !empty( $this->settings['checkout_conversion'] ) && !empty( $request->params['use_points'] ) ) {
 			return $this->modifyPrice( $request );
@@ -125,7 +125,7 @@ class mi_alphauserpoints extends MI
 		}
 	}
 
-	public function modifyPrice( $request )
+	public function modifyPrice( &$request )
 	{
 		$discount = AECToolbox::correctAmount( $request->params['use_points'] * $this->settings['checkout_conversion'] );
 
@@ -141,7 +141,9 @@ class mi_alphauserpoints extends MI
 			}
 		}
 
-		$request->add['terms']->nextterm->discount( $discount, null, array( 'details' => $request->params['use_points'] . " Points" ) );
+		$request->add['terms']->nextterm->discount(
+			$discount, null, array( 'details' => $request->params['use_points'] . " Points" )
+		);
 
 		return true;
 	}
