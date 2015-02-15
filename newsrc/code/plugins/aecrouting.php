@@ -66,12 +66,12 @@ class plgSystemAECrouting extends JPlugin
 			$vars['task']	= JRequest::getVar( 'task', null );
 		}
 
-		$vars['tcregs']			= $vars['task'] == 'saveregisters';
-		$vars['tregs']			= $vars['task'] == 'registers';
-		$vars['tsregs']			= $vars['task'] == 'saveRegistration';
-		$vars['tsue']			= $vars['task'] == 'saveUserEdit';
-		$vars['tsu']			= $vars['task'] == 'save';
-		$vars['lostpw']			= $vars['task'] == 'lostPassword';
+		$vars['tcregs']			= ($vars['task'] == 'saveregisters') || ($vars['view'] == 'saveregisters');
+		$vars['tregs']			= ($vars['task'] == 'registers') || ($vars['view'] == 'registers');
+		$vars['tsregs']			= ($vars['task'] == 'saveRegistration') || ($vars['view'] == 'saveRegistration');
+		$vars['tsue']			= ($vars['task'] == 'saveUserEdit') || ($vars['view'] == 'saveUserEdit');
+		$vars['tsu']			= ($vars['task'] == 'save') || ($vars['view'] == 'save');
+		$vars['lostpw']			= ($vars['task'] == 'lostPassword') || ($vars['view'] == 'lostPassword');
 
 		$vars['checkout']		= ( ( $vars['task'] == 'checkout' )
 									|| ( $vars['task'] == 'saveSubscription' )
@@ -273,11 +273,13 @@ class plgSystemAECrouting extends JPlugin
 				$this->redirectToken();
 			} elseif ( $vars['has_user'] && ( $vars['alpha_regsv'] || $vars['joms_regsv'] || $vars['cb_sregsv'] || $vars['k2_regsv'] ) ) {
 				if ( $vars['joms_regsv'] ) {
+					$name		= aecGetParam( 'jsname', "", true, array( 'string', 'clear_nonalnum' ) );
 					$username	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnumwhitespace' ) );
 					$password	= aecGetParam( 'jspassword', "", true, array( 'string' ) );
 					$password2	= aecGetParam( 'jspassword2', "", true, array( 'string' ) );
 					$email		= aecGetParam( 'jsemail', "", true, array( 'string', 'clear_nonemail' ) );
 				} else {
+					$name		= aecGetParam( 'name', "", true, array( 'string', 'clear_nonalnum' ) );
 					$username	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnumwhitespace' ) );
 					$password	= aecGetParam( 'password', "", true, array( 'string' ) );
 					$password2	= aecGetParam( 'password2', "", true, array( 'string' ) );
@@ -289,6 +291,7 @@ class plgSystemAECrouting extends JPlugin
 					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonemail' ) );
 
 					if ( empty( $username ) ) {
+						$name		= aecEscape( $_REQUEST['jform']['name'], array( 'string', 'clear_nonalnum' ) );
 						$username	= aecEscape( $_REQUEST['jform']['username'], array( 'string', 'clear_nonalnum' ) );
 						$password	= aecEscape( $_REQUEST['jform']['password1'], array( 'string', 'clear_nonalnum' ) );
 						$password2	= aecEscape( $_REQUEST['jform']['password2'], array( 'string', 'clear_nonalnum' ) );
@@ -313,6 +316,7 @@ class plgSystemAECrouting extends JPlugin
 						}
 					}
 
+					$temptoken->content['name']			= $name;
 					$temptoken->content['username']		= $username;
 					$temptoken->content['password']		= $password;
 					$temptoken->content['password2']	= $password2;

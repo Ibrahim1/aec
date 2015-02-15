@@ -160,7 +160,7 @@ class aecRegistration
 			}
 		}
 
-		if ( empty( $var['name'] ) ) {
+		if ( empty( $var['name'] ) && !empty($var['jform']) ) {
 			// Must be K2
 			$var['name'] = aecEscape( $var['jform']['name'], array( 'string', 'clear_nonalnum' ) );
 

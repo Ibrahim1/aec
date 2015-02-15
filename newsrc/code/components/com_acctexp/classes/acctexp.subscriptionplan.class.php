@@ -192,6 +192,7 @@ class SubscriptionPlanList
 			if ( $iscb ) {
 				$btnarray['option']	= 'com_comprofiler';
 				$btnarray['task']	= 'registers';
+				$btnarray['view']	= 'registers';
 			} elseif ( $isjs ) {
 				$btnarray['option']	= 'com_community';
 				$btnarray['view'] 	= 'register';

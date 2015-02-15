@@ -65,6 +65,7 @@ class aecTempToken extends serialParamDBTable
 	public function getToken()
 	{
 		$session = JFactory::getSession();
+
 		return $session->getToken();
 	}
 
@@ -105,7 +106,7 @@ class aecTempToken extends serialParamDBTable
 			. ' WHERE `ip` = \'' . $_SERVER['REMOTE_ADDR'] . '\''
 			;
 			$this->_db->setQuery( $query );
-			$id = $this->_db->loadResult();
+			//$id = $this->_db->loadResult();
 		}
 
 		if ( empty( $id ) ) {
