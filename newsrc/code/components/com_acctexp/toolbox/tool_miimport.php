@@ -24,8 +24,6 @@ class tool_miimport
 
 	public function Settings()
 	{
-		$db = JFactory::getDBO();
-
 		$settings = array();
 
 		if ( !empty( $_FILES ) ) {
@@ -36,8 +34,10 @@ class tool_miimport
 			$settings['count']	= array( 'hidden', count( $content ) );
 
 			foreach ( $content as $id => $mi ) {
-				$settings[]						= array( 'fieldset', 'Import #'.$id, '<h3>'.$mi->name.'</h3><p>'.$mi->desc.'</p>' );
-				$settings[$id.'_data_import']	= array( 'checkbox', 'Import this', '', 1 );
+				$settings[]						= array( 'section-head', 'Import #'.$id.' '.$mi->name);
+				$settings[]						= array( 'p', $mi->desc);
+
+				$settings[$id.'_data_import']	= array( 'toggle', 'Import this', '', 1 );
 				$settings[$id.'_data']			= array( 'hidden', base64_encode( serialize( $mi ) ) );
 			}
 		} else {
@@ -53,8 +53,6 @@ class tool_miimport
 		if ( empty( $_POST['count'] ) ) {
 			return null;
 		}
-
-		$db = JFactory::getDBO();
 
 		$count = 0;
 		for ( $i=0; $i<$_POST['count']; $i++ ) {

@@ -1700,7 +1700,9 @@ function editSettings( $option )
 
 function saveSettings( $option, $return=0 )
 {
-	$user	= JFactory::getUser();
+	$db = JFactory::getDBO();
+
+	$user= JFactory::getUser();
 
 	global $aecConfig;
 
@@ -1889,21 +1891,21 @@ function saveTemplate( $option, $name, $return=0 )
 		if ( $temp->id ) {
 			if ( !$temp->default ) {
 				// Reset all other items
-				$db->setQuery( $query );
-				$db->query(
+				$db->setQuery(
 					'UPDATE #__acctexp_config_templates'
 					. ' SET `default` = 0'
 					. ' WHERE `id` > 0'
 				);
+				$db->query();
 			}
 		} else {
 			// Reset all other items
-			$db->setQuery( $query );
-			$db->query(
+			$db->setQuery(
 				'UPDATE #__acctexp_config_templates'
 				. ' SET `default` = 0'
 				. ' WHERE `id` > 0'
 			);
+			$db->query();
 		}
 
 		$temp->default = 1;
@@ -5471,7 +5473,7 @@ function quicklookup( $option )
 
 	$s = AECToolbox::searchUser( $search );
 
-	if ( empty( $s ) || is_array( $s ) ) {
+	if ( empty( $s ) || !is_array( $s ) ) {
 		return false;
 	}
 
@@ -6715,9 +6717,9 @@ function toolBoxTool( $option, $cmd )
 
 		$return = '';
 		if ( !method_exists( $tool, 'Action' ) ) {
-			$return .= '<div id="aec-toolbox-result">' . '<p>Tool doesn\'t have an action to carry out!</p>' . '</div>';
+			$return .= '<section class="paper">' . '<p>Tool doesn\'t have an action to carry out!</p>' . '</section>';
 		} else {
-			$response = '</div><div class="aec-settings-container"><h4>' . JText::_('Response') . '</h4><div id="aec-toolbox-result">' . $tool->Action() . '</div></div>';
+			$response = '</section><section class="paper"><h4>' . JText::_('Response') . '</h4>' . $tool->Action() . '</section>';
 
 			if ( method_exists( $tool, 'Settings' ) ) {
 				$tb_settings = $tool->Settings();
@@ -6748,7 +6750,7 @@ function toolBoxTool( $option, $cmd )
 						$return .= $aecHTML->createSettingsParticle( $n );
 					}
 
-					$return .= '<input type="submit" class="btn btn-primary pull-right"/>';
+					$return .= '<input type="submit" class="btn btn-primary pull-right"/><br/><br/>';
 				}
 			}
 

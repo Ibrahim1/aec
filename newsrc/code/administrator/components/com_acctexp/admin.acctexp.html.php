@@ -1877,7 +1877,7 @@ class HTML_AcctExp
 		<?php if ( empty( $rows )  && !$filtered ) { ?>
 			<div class="clearfix"></div>
 			<div class="container" style="min-height: 50%; padding: 10% 0;">
-				<p style="text-align: center">There is no micro integration plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'MicroIntegration', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new micro integration' ), true )?></p>
+				<p style="text-align: center">There is no micro integration set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'MicroIntegration', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new micro integration' ), true )?></p>
 			</div>
 		<?php } else { ?>
 			<div class="container-fluid">
@@ -2043,7 +2043,7 @@ class HTML_AcctExp
 						<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
 						<?php foreach ( $aecHTML->customparams as $name ) { ?>
 							<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
-							</div></div></section>
+					</section></div></div>
 							<?php $tabs->nextPane( $name ); ?>
 								<div class="row">
 									<div class="col-sm-8 col-sm-offset-2">
@@ -3919,8 +3919,11 @@ jQuery(document).ready(function(jQuery) {
 			<div class="row">
 				<div class="col-sm-12">
 					<?php if ( !empty( $cmd ) ) { ?>
-						<h4><?php echo JText::_('Challenge'); ?></h4>
+						<section class="paper">
+							<h4><?php echo JText::_('Challenge'); ?></h4>
+						</section>
 					<?php } ?>
+
 					<?php if ( is_array( $result ) ) { ?>
 						<?php foreach ( $result as $x => $litem ) { ?>
 							<div class="col-sm-6 text-left">
@@ -3934,7 +3937,11 @@ jQuery(document).ready(function(jQuery) {
 								</div>
 							</div>
 						<?php } ?>
-					<?php } else { echo $result; } ?>
+					<?php } else { ?>
+						<section class="paper">
+							<?php echo $result; ?>
+						</section>
+					<?php } ?>
 				</div>
 			</div>
 		</div>

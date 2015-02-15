@@ -184,8 +184,10 @@ class processor_vcs extends POSTprocessor
 
 	public function parseNotification( $post )
 	{
+		$p2 = explode('-', $post['p2']);
+
 		$response = array();
-		$response['invoice'] = $post['p2'];
+		$response['invoice'] = $p2[0];
 		$response['amount_paid'] = $post['p6'];
 
 		return $response;
