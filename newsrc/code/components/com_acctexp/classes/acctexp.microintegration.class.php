@@ -995,19 +995,17 @@ class microIntegration extends serialParamDBTable
 			}
 
 			if ( !empty( $request->invoice->invoice_number ) ) {
-				$params = array( 'invoice_number' => $request->invoice->invoice_number );
+				$pparams = array( 'invoice_number' => $request->invoice->invoice_number );
 			} else {
-				$params = array();
+				$pparams = array();
 			}
 
 			$eventlog = new eventLog();
-			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, $error, $level, $params );
+			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, $error, $level, $pparams );
 		}
 
 		// If returning fatal error, issue additional entry
 		if ( $return === false ) {
-
-
 			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out due to errors, plan application was halted';
 
 			$err = $this->_db->getErrorMsg();
@@ -1016,13 +1014,13 @@ class microIntegration extends serialParamDBTable
 			}
 
 			if ( !empty( $request->invoice->invoice_number ) ) {
-				$params = array( 'invoice_number' => $request->invoice->invoice_number );
+				$pparams = array( 'invoice_number' => $request->invoice->invoice_number );
 			} else {
-				$params = array();
+				$pparams = array();
 			}
 
 			$eventlog = new eventLog();
-			$eventlog->issue( 'MI application failed', 'mi, failure, '.$this->class_name, $error, 128, $params );
+			$eventlog->issue( 'MI application failed', 'mi, failure, '.$this->class_name, $error, 128, $pparams );
 		}
 
 		return $return;
