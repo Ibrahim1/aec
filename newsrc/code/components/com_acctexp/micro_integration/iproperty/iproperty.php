@@ -342,7 +342,13 @@ class mi_iproperty
 		;
 		$db->setQuery( $query );
 
-		return $this->getCompany( $db->loadResult() );
+		$id = $db->loadResult();
+
+		if ( $db->getErrorNum() ) {
+			aecDebug( $db->getErrorNum() . $db->getErrorMsg() );
+		}
+
+		return $this->getCompany(  );
 	}
 
 	/**
@@ -357,6 +363,10 @@ class mi_iproperty
 		. ' WHERE `' . $field . '` = \'' . xJ::escape( $db, $id ) . '\''
 		;
 		$db->setQuery( $query );
+
+		if ( $db->getErrorNum() ) {
+			aecDebug( $db->getErrorNum() . $db->getErrorMsg() );
+		}
 
 		$object = $db->loadObject();
 
@@ -398,7 +408,13 @@ class mi_iproperty
 				. ' WHERE id = \'' .  xJ::escape( $db, $object->id ) . '\''
 				;
 		$db->setQuery( $query );
-		return $db->query();
+		$res = $db->query();
+
+		if ( $db->getErrorNum() ) {
+			aecDebug( $db->getErrorNum() . $db->getErrorMsg() );
+		}
+
+		return $res;
 	}
 
 	public function publishProperties( $agentid )
@@ -414,6 +430,10 @@ class mi_iproperty
 					;
 			$db->setQuery( $query );
 			$db->query();
+
+			if ( $db->getErrorNum() ) {
+				aecDebug( $db->getErrorNum() . $db->getErrorMsg() );
+			}
 		}
 	}
 
@@ -430,6 +450,10 @@ class mi_iproperty
 					;
 			$db->setQuery( $query );
 			$db->query();
+
+			if ( $db->getErrorNum() ) {
+				aecDebug( $db->getErrorNum() . $db->getErrorMsg() );
+			}
 		}
 	}
 
