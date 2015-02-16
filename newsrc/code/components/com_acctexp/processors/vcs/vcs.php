@@ -236,7 +236,13 @@ class processor_vcs extends POSTprocessor
 			$response['pending_reason'] = $post['p3'];
 		}
 
+		$response['customthanks'] = $this->notify_trail();
+
 		return $response;
 	}
 
+	public function notify_trail()
+	{
+		return "<CallbackResponse>Accepted</CallbackResponse>";
+	}
 }
