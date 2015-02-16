@@ -13,7 +13,8 @@ class processor_vcs extends POSTprocessor
 		$info['currencies']		= 'ZAR';
 		$info['cc_list']		= 'visa,mastercard';
 		$info['recurring']		= 2;
-		$info['notify_trail_thanks']	= 1;
+		$info['notify_trail_thanks']	= false;
+		$info['custom_notify_trail']	= true;
 
 		return $info;
 	}
