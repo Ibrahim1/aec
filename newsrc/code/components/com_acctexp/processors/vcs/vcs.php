@@ -187,7 +187,7 @@ class processor_vcs extends POSTprocessor
 		$p2 = explode('-', $post['p2']);
 
 		$response = array();
-		$response['invoice'] = $p2[0];
+		$response['invoice'] = substr($p2[0], 0, 15);
 		$response['amount_paid'] = $post['p6'];
 
 		return $response;
