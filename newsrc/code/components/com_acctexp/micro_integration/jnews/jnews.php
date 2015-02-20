@@ -150,24 +150,27 @@ class mi_jnews
 		$user = new cmsUser();
 		$user->load( $userid );
 
-		$query  = 'INSERT INTO #__jnews_subscribers'
-				. ' (user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params)'
-				. ' VALUES(\'' . $userid . '\', \'' . $user->name . '\', \'' . $user->email . '\', \'1\', \'1\', \'0\', \'00:00:00\', \'eng\', \'' . ( (int) gmdate('U') ) . '\', \'\' )'
-				;
-		$db->setQuery( $query );
+		$db->setQuery(
+			'INSERT INTO #__jnews_subscribers'
+			. ' (user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params)'
+			. ' VALUES(\'' . $userid . '\', \'' . $user->name . '\', \'' . $user->email . '\', \'1\', \'1\', \'0\', \'00:00:00\', \'eng\', \'' . ( (int) gmdate('U') ) . '\', \'\' )'
+		);
+
 		$db->query();
 	}
 
 	public function hasList( $subscriber_id, $listid )
 	{
 		$db = JFactory::getDBO();
-		$query = 'SELECT `list_id`'
-				. ' FROM #__jnews_listssubscribers'
-				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
-				. ' AND `list_id` = \'' . $listid . '\''
-				. ' AND `unsubscribe` <> \'1\''
-				;
-		$db->setQuery( $query );
+
+		$db->setQuery(
+			'SELECT `list_id`'
+			. ' FROM #__jnews_listssubscribers'
+			. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+			. ' AND `list_id` = \'' . $listid . '\''
+			. ' AND `unsubscribe` <> \'1\''
+		);
+
 		if ( $db->loadResult() ) {
 			return true;
 		} else {
@@ -178,13 +181,14 @@ class mi_jnews
 	public function hasListUnsub( $subscriber_id, $listid )
 	{
 		$db = JFactory::getDBO();
-		$query = 'SELECT `list_id`'
-				. ' FROM #__jnews_listssubscribers'
-				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
-				. ' AND `list_id` = \'' . $listid . '\''
-				. ' AND `unsubscribe` = \'1\''
-				;
-		$db->setQuery( $query );
+
+		$db->setQuery(
+			'SELECT `list_id`'
+			. ' FROM #__jnews_listssubscribers'
+			. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+			. ' AND `list_id` = \'' . $listid . '\''
+			. ' AND `unsubscribe` = \'1\''
+		);
 
 		if ( $db->loadResult() ) {
 			return true;
@@ -196,11 +200,12 @@ class mi_jnews
 	public function getSubscriberID( $userid )
 	{
 		$db = JFactory::getDBO();
-		$query = 'SELECT `id`'
-				. ' FROM #__jnews_subscribers'
-				. ' WHERE `user_id` = \'' . $userid . '\''
-				;
-		$db->setQuery( $query );
+
+		$db->setQuery(
+			'SELECT `id`'
+			. ' FROM #__jnews_subscribers'
+			. ' WHERE `user_id` = \'' . $userid . '\''
+		);
 
 		return $db->loadResult();
 	}
@@ -208,11 +213,12 @@ class mi_jnews
 	public function emailExists( $email )
 	{
 		$db = JFactory::getDBO();
-		$query = 'SELECT `id`'
+
+		$db->setQuery(
+			'SELECT `id`'
 			. ' FROM #__jnews_subscribers'
 			. ' WHERE `email` = \'' . $email . '\''
-		;
-		$db->setQuery( $query );
+		);
 
 		return $db->loadResult();
 	}
@@ -226,28 +232,29 @@ class mi_jnews
 			$db = JFactory::getDBO();
 
 			if ( $this->hasListUnsub( $subscriber_id, $list_id ) ) {
-				$query = 'UPDATE #__jnews_listssubscribers'
-						. ' SET `unsubscribe` = 0'
-						. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
-						. ' AND `list_id` = \'' . $list_id . '\''
-						;
-				$db->setQuery( $query );
+				$db->setQuery(
+					'UPDATE #__jnews_listssubscribers'
+					. ' SET `unsubscribe` = 0'
+					. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+					. ' AND `list_id` = \'' . $list_id . '\''
+				);
 				$db->query();
 			} else {
-				$query  = 'INSERT INTO #__jnews_listssubscribers'
-						. ' (list_id, subscriber_id, subdate)'
-						. ' VALUES(\'' . $list_id . '\', \'' . $subscriber_id . '\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\')'
-						;
-				$db->setQuery( $query );
+				$db->setQuery(
+					'INSERT INTO #__jnews_listssubscribers'
+					. ' (list_id, subscriber_id, subdate)'
+					. ' VALUES(\'' . $list_id . '\', \'' . $subscriber_id . '\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\')'
+					. ' ON DUPLICATE KEY UPDATE list_id = \'' . $list_id . '\''
+				);
 				$db->query();
 			}
 
 			/*$query  = 'INSERT INTO #__jnews_queue'
 					. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
-					. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'*/
+					. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
 					;
 			$db->setQuery( $query );
-			$db->query();
+			$db->query();*/
 		}
 
 		return true;
@@ -261,12 +268,13 @@ class mi_jnews
 		if ( $this->hasList( $subscriber_id, $list_id ) ) {
 			$db = JFactory::getDBO();
 
-			$query = 'UPDATE #__jnews_listssubscribers'
-					. ' SET `unsubscribe` = 1, `unsubdate` = ' . ( (int) gmdate('U') )
-					. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
-					. ' AND `list_id` = \'' . $list_id . '\''
-					;
-			$db->setQuery( $query );
+			$db->setQuery(
+				'UPDATE #__jnews_listssubscribers'
+				. ' SET `unsubscribe` = 1, `unsubdate` = ' . ( (int) gmdate('U') )
+				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+				. ' AND `list_id` = \'' . $list_id . '\''
+			);
+
 			$db->query();
 
 			/*$query = 'DELETE FROM #__jnews_queue'
