@@ -70,7 +70,7 @@ class processor_vcs extends POSTprocessor
 		}
 
 		$var['p1']	= $this->settings['merchant_id'];
-		$var['p2']	= $request->invoice->invoice_number;
+		$var['p2']	= $request->invoice->id . '-' . $request->invoice->invoice_number;
 		$var['p3']	= date("Y.m.d.G.i.s");
 
 		if ( is_array( $request->int_var['amount'] ) ) {
@@ -185,10 +185,16 @@ class processor_vcs extends POSTprocessor
 
 	public function parseNotification( $post )
 	{
-		$p2 = explode('-', $post['p2']);
+		$invoice = explode('-', $post['p2']);
+
+		$invoice_number = aecInvoiceHelper::InvoiceNumberfromId($invoice[0]);
+
+		if ( strpos($invoice_number, $invoice[1]) === false ) {
+
+		}
 
 		$response = array();
-		$response['invoice'] = substr($p2[0], 0, 15);
+		$response['invoice'] = $invoice_number;
 		$response['amount_paid'] = $post['p6'];
 
 		return $response;
