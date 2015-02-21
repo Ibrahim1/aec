@@ -103,9 +103,9 @@ class mi_aecpoints extends MI
 				$points = -$params['use_points'];
 
 				$this->updatePoints( $request, $points, 'mi_action_'.$request->action, $invoice );
-
+aecDebug($points);
 				unset( $params['use_points'] );
-
+				aecDebug($params);
 				$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $params, true );
 
 				$request->metaUser->meta->storeload();
@@ -138,7 +138,7 @@ class mi_aecpoints extends MI
 
 		if ( $discount > $original_price ) {
 			$discount = $original_price;
-
+			aecDebug($discount);
 			$request->params['use_points'] = (int) $discount / $this->settings['checkout_conversion'];
 
 			if ( ( $request->params['use_points'] * $this->settings['checkout_conversion'] ) < $original_price ) {
@@ -146,7 +146,7 @@ class mi_aecpoints extends MI
 			}
 
 			$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $request->params, true );
-
+			aecDebug($request->params);
 			$request->metaUser->meta->storeload();
 		}
 
@@ -178,14 +178,19 @@ class mi_aecpoints extends MI
 			$uparams['mi_aecpoints'] = array( 'points' => 0, 'history' => array() );
 		}
 
+		$history = array(
+			'time' => (int) gmdate('U'),
+			'event' => $event,
+			'invoice' => $invoice,
+			'from' => $uparams['mi_aecpoints']['points'],
+			'to' => $uparams['mi_aecpoints']['points'] + $points,
+			'change' => $points
+		);
+
 		$uparams['mi_aecpoints']['points'] = $uparams['mi_aecpoints']['points'] + $points;
 
-		$history = array(	'time' => (int) gmdate('U'),
-							'event' => $event,
-							'invoice' => $invoice  );
-
 		$uparams['mi_aecpoints']['history'][] = $history;
-
+		aecDebug($uparams);
 		$request->metaUser->meta->setCustomParams( $uparams );
 
 		$request->metaUser->meta->storeload();
