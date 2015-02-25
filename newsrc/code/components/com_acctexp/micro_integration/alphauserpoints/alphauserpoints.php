@@ -91,15 +91,32 @@ class mi_alphauserpoints extends MI
 			}
 		}
 
+		$invoice = "";
+		if ( !empty( $request->invoice->invoice_number ) ) {
+			$invoice = $request->invoice->invoice_number;
+		}
+
 		if ( $request->action == 'action' ) {
 			$params = $request->metaUser->meta->getMIParams( $request->parent->id, $request->plan->id );
 
-			if ( $params['use_points'] > 0 ) {
-				$points = -$params['use_points'];
+			if ( isset($params['use_points_final']) ) {
+				$points = $params['use_points_final'];
 
-				$this->updatePoints( $request->metaUser->userid, $points, $request->invoice->invoice_number );
+				unset( $params['use_points_final'] );
+
+				if ( isset($params['use_points']) ) {
+					unset( $params['use_points'] );
+				}
+			} elseif ( $params['use_points'] > 0 ) {
+				$points = $params['use_points'];
 
 				unset( $params['use_points'] );
+			}
+
+			if ( $points > 0 ) {
+				$points = -$points;
+
+				$this->updatePoints( $request, $points, 'mi_action_'.$request->action, $invoice );
 
 				$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $params, true );
 
@@ -111,7 +128,7 @@ class mi_alphauserpoints extends MI
 			return null;
 		}
 
-		$this->updatePoints( $request->metaUser->userid, $this->settings['change_points'.$request->area], $request->invoice->invoice_number );
+		$this->updatePoints( $request, $this->settings['change_points'.$request->area], 'mi_action_'.$request->action, $invoice );
 
 		return true;
 	}
@@ -125,7 +142,7 @@ class mi_alphauserpoints extends MI
 		}
 	}
 
-	public function modifyPrice( &$request )
+	public function modifyPrice( $request )
 	{
 		$discount = AECToolbox::correctAmount( $request->params['use_points'] * $this->settings['checkout_conversion'] );
 
@@ -140,14 +157,14 @@ class mi_alphauserpoints extends MI
 				$request->params['use_points']++;
 			}
 
+			$request->params['use_points_final'] = $request->params['use_points'];
+
 			$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $request->params, true );
 
 			$request->metaUser->meta->storeload();
 		}
 
-		$request->add['terms']->nextterm->discount(
-			$discount, null, array( 'details' => $request->params['use_points'] . " Points" )
-		);
+		$request->add['terms']->nextterm->discount( $discount, null, array( 'details' => $request->params['use_points'] . " Points" ) );
 
 		return true;
 	}

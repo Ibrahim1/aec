@@ -99,13 +99,25 @@ class mi_aecpoints extends MI
 		if ( $request->action == 'action' ) {
 			$params = $request->metaUser->meta->getMIParams( $request->parent->id, $request->plan->id );
 
-			if ( $params['use_points'] > 0 ) {
-				$points = -$params['use_points'];
+			if ( isset($params['use_points_final']) ) {
+				$points = $params['use_points_final'];
+
+				unset( $params['use_points_final'] );
+
+				if ( isset($params['use_points']) ) {
+					unset( $params['use_points'] );
+				}
+			} elseif ( $params['use_points'] > 0 ) {
+				$points = $params['use_points'];
+
+				unset( $params['use_points'] );
+			}
+
+			if ( $points > 0 ) {
+				$points = -$points;
 
 				$this->updatePoints( $request, $points, 'mi_action_'.$request->action, $invoice );
-aecDebug($points);
-				unset( $params['use_points'] );
-				aecDebug($params);
+
 				$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $params, true );
 
 				$request->metaUser->meta->storeload();
@@ -138,15 +150,17 @@ aecDebug($points);
 
 		if ( $discount > $original_price ) {
 			$discount = $original_price;
-			aecDebug($discount);
+
 			$request->params['use_points'] = (int) $discount / $this->settings['checkout_conversion'];
 
 			if ( ( $request->params['use_points'] * $this->settings['checkout_conversion'] ) < $original_price ) {
 				$request->params['use_points']++;
 			}
 
+			$request->params['use_points_final'] = $request->params['use_points'];
+
 			$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $request->params, true );
-			aecDebug($request->params);
+
 			$request->metaUser->meta->storeload();
 		}
 
@@ -190,7 +204,7 @@ aecDebug($points);
 		$uparams['mi_aecpoints']['points'] = $uparams['mi_aecpoints']['points'] + $points;
 
 		$uparams['mi_aecpoints']['history'][] = $history;
-		aecDebug($uparams);
+
 		$request->metaUser->meta->setCustomParams( $uparams );
 
 		$request->metaUser->meta->storeload();
