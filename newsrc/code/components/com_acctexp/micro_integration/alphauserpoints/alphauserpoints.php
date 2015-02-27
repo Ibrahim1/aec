@@ -113,7 +113,7 @@ class mi_alphauserpoints extends MI
 				unset( $params['use_points'] );
 			}
 
-			if ( $points > 0 ) {
+			if ( !empty($points) ) {
 				$points = -$points;
 
 				$this->updatePoints( $request, $points, 'mi_action_'.$request->action, $invoice );

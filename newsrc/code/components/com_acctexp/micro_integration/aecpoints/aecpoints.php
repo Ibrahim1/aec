@@ -113,7 +113,7 @@ class mi_aecpoints extends MI
 				unset( $params['use_points'] );
 			}
 
-			if ( $points > 0 ) {
+			if ( !empty($points) ) {
 				$points = -$points;
 
 				$this->updatePoints( $request, $points, 'mi_action_'.$request->action, $invoice );
@@ -158,7 +158,7 @@ class mi_aecpoints extends MI
 			}
 
 			$request->params['use_points_final'] = $request->params['use_points'];
-
+aecDebug($request->params);
 			$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $request->params, true );
 
 			$request->metaUser->meta->storeload();
@@ -206,7 +206,7 @@ class mi_aecpoints extends MI
 		$uparams['mi_aecpoints']['history'][] = $history;
 
 		$request->metaUser->meta->setCustomParams( $uparams );
-
+;
 		$request->metaUser->meta->storeload();
 	}
 }
