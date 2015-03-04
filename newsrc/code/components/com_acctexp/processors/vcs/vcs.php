@@ -225,7 +225,7 @@ class processor_vcs extends POSTprocessor
 
 			$str .= $this->settings['secret'];
 
-			if ( $str == $post['Hash'] ) {
+			if ( md5($str) == $post['Hash'] ) {
 				$response['valid'] = 1;
 			} else {
 				$response['pending_reason'] = 'hash error';
