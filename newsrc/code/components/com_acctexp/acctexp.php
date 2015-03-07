@@ -424,6 +424,14 @@ if ( !empty( $task ) ) {
 			apiCall( $app, $key, $request );
 			break;
 
+		case 'service':
+			$id			= aecGetParam( 'id', 0, true, array( 'word', 'string', 'clear_nonslug' ) );
+			$cmd		= aecGetParam( 'key', 0, true, array( 'word', 'string', 'clear_nonslug' ) );
+			$request	= aecGetParam( 'request' );
+
+			serviceCall( $id, $cmd, $request );
+			break;
+
 		case 'notallowed':
 			aecNotAuth();
 			break;

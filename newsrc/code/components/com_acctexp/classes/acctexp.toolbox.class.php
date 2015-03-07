@@ -1290,4 +1290,17 @@ class AECToolbox
 
 		return $adminlist;
 	}
+
+	static function camelize($string)
+	{
+		return strtr(
+			ucwords(
+				strtr(
+					$string,
+					array('_' => ' ', '-' => ' ')
+				)
+			),
+			array(' ' => '')
+		);
+	}
 }

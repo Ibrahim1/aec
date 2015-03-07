@@ -533,10 +533,10 @@ class serialParamDBTable extends paramDBTable
 
 	public function load( $id=null, $reset=true )
 	{
-		parent::load( $id );
+		$found = parent::load( $id );
 
 		if ( ( !method_exists( $this, 'declareParamFields' ) && !method_exists( $this, 'declareLangFields' ) ) || empty( $this->id ) ) {
-			return true;
+			return $found;
 		}
 
 		if ( method_exists( $this, 'declareParamFields' ) ) {
@@ -549,7 +549,7 @@ class serialParamDBTable extends paramDBTable
 			}
 		}
 
-		return true;
+		return $found;
 	}
 
 	public function clear()

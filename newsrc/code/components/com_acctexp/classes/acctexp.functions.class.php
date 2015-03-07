@@ -123,6 +123,10 @@ function aecEscape( $value, $safe_params )
 		$return = preg_replace( "/[^a-z0-9@._+-]/i", '', $return );
 	}
 
+	if ( in_array( 'clear_nonslug', $safe_params ) ) {
+		$return = preg_replace( "/[^a-z0-9_-]/i", '', $return );
+	}
+
 	if ( !empty( $safe_params ) ) {
 		foreach ( $safe_params as $param ) {
 			$r = $return;

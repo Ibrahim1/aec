@@ -223,6 +223,19 @@ switch( strtolower( $task ) ) {
 
 	case 'toolbox': toolBoxTool( $option, aecGetParam('cmd') ); break;
 
+	case 'showservices': listServices( $option ); break;
+	case 'newservice': editService( 0, $option ); break;
+	case 'editservice': editService( $id[0], $option ); break;
+	case 'copyservice': copyObject( $option, 'Service', $id ); break;
+	case 'saveservice': saveService( $option ); break;
+	case 'applyservice': saveService( $option, 1 ); break;
+	case 'publishservice': changeService( $id, 1, 'active', $option ); break;
+	case 'unpublishservice': changeService( $id, 0, 'active', $option ); break;
+	case 'visibleservice': changeService( $id, 1, 'visible', $option ); break;
+	case 'invisibleservice': changeService( $id, 0, 'visible', $option ); break;
+	case 'removeservice': removeService( $id, $option, $returnTask ); break;
+	case 'cancelservice': aecRedirect( 'index.php?option=' . $option . '&task=showServices', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+
 	case 'credits': HTML_AcctExp::credits(); break;
 
 	case 'quicklookup':

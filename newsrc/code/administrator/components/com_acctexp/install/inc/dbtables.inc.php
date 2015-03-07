@@ -335,3 +335,15 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_bucket` ('
 . ' PRIMARY KEY (`id`)'
 . ');'
 ;
+
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_services` ('
+	. '`id` int(11) NOT NULL auto_increment,'
+	. '`active` int(4) NOT NULL default \'1\','
+	. '`ordering` int(11) NOT NULL default \'999999\','
+	. '`name` varchar(40) NULL,'
+	. '`type` varchar(40) NULL,'
+	. '`params` text NULL,'
+	. '`data` text NULL,'
+	. ' PRIMARY KEY (`id`)'
+	. ');'
+;

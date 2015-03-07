@@ -3850,6 +3850,187 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param boolean $filtered
+	 * @param bsPagination $pageNav
+	 */
+	static function listServices( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
+	{
+		HTML_myCommon::startCommon('aec-wrap-maze'); ?>
+
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
+
+			<?php
+			HTML_myCommon::getHeader( 'AEC_SERVICE_TITLE', 'services', '', $search, 'list', 'Service' );
+
+			$th_list = array(
+				array('name', 'AEC_SERVICE_NAME'),
+				array('desc', 'AEC_SERVICE_DESC'),
+				array('active', 'AEC_SERVICE_ACTIVE', 'center'),
+				array('ordering', 'AEC_SERVICE_REORDER'),
+				array('type', 'AEC_SERVICE_TYPE')
+			);
+
+			?>
+			<input type="hidden" name="orderby_mi" value="<?php echo $orderby; ?>"/>
+			<?php if ( empty( $rows )  && !$filtered ) { ?>
+				<div class="clearfix"></div>
+				<div class="container" style="min-height: 50%; padding: 10% 0;">
+					<p style="text-align: center">There is no service set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Service', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new service' ), true )?></p>
+				</div>
+			<?php } else { ?>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="col-sm-12">
+								<table class="table table-hover table-striped table-selectable">
+									<thead><tr>
+										<th class="text-center">
+											ID
+											<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+										</th>
+										<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
+									</tr></thead>
+									<tbody>
+									<?php foreach ( $rows as $i => $row ) { ?>
+										<tr>
+											<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+											<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editService&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+											<td class="text-left">
+												<?php
+												echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
+											</td>
+											<td class="text-center">
+												<?php HTML_myCommon::toggleBtn( 'services', 'active', $row->id, $row->active ); ?>
+											</td>
+											<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
+											<td class="text-left"><?php echo $row->type; ?></td>
+										</tr>
+									<?php } ?>
+									</tbody>
+									<tfoot>
+									<tr>
+										<td colspan="9">
+											<?php echo $pageNav->getListFooter(); ?>
+										</td>
+									</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?php } ?>
+			<input type="hidden" name="option" value="<?php echo $option; ?>" />
+			<input type="hidden" name="task" value="showServices" />
+			<input type="hidden" name="returnTask" value="showServices" />
+			<input type="hidden" name="boxchecked" value="0" />
+		</form>
+		<?php
+		HTML_myCommon::endCommon();
+	}
+
+	/**
+	 * @param service $row
+	 * @param null|aecHTML $aecHTML
+	 */
+	static function editService( $option, $row, $lists, $aecHTML, $attached )
+	{
+		HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'services', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'Service' );
+
+		HTML_myCommon::startForm();
+
+		?><div class="col-sm-12"><?php
+
+		$tabs = new bsPaneTabs;
+		$tabs->startTabs();
+
+		$tabs->newTab( 'mi', JText::_('AEC_SERVICE_TITLE') );
+
+		if ( $aecHTML->hasSettings ) {
+			$tabs->newTab( 'settings', JText::_('AEC_SERVICE_SETTINGS') );
+		}
+
+		if ( !empty( $aecHTML->customparams ) ) {
+			foreach ( $aecHTML->customparams as $name ) {
+				if ( strpos( $name, 'aectab_' ) === 0 ) {
+					$tabs->newTab( $name, $aecHTML->rows[$name][1] );
+				}
+			}
+		}
+
+		$tabs->endTabs();
+		$tabs->startPanes();
+
+		$tabs->nextPane( 'mi', true ); ?>
+		<div class="row">
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('AEC_SERVICE_TITLE_LONG'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
+						<?php echo $aecHTML->createSettingsParticle( 'type_name' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'type_list' ); ?>
+					<?php } else { ?>
+						<div class="form-group">
+							<div class="col-sm-4">
+								<label for="class_name">Service Type</label>
+							</div>
+							<div class="col-sm-8">
+								<p class="form-control-static">
+									<strong><?php echo $row->type; ?></strong>
+								</p>
+							</div>
+						</div>
+					<?php } ?>
+					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+				</section>
+			</div>
+			<div class="col-sm-6">
+				<section class="paper">
+					<?php if ( $aecHTML->hasSettings ) {
+						$tabs->nextPane( 'settings' ); ?>
+						<div class="row">
+						<div class="col-sm-8 col-sm-offset-2">
+						<section class="paper">
+						<h4><?php echo JText::_('AEC_SERVICE_SETTINGS'); ?></h4>
+						<?php foreach ( $aecHTML->customparams as $name ) { ?>
+							<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
+								</section></div></div>
+								<?php $tabs->nextPane( $name ); ?>
+								<div class="row">
+								<div class="col-sm-8 col-sm-offset-2">
+								<section class="paper">
+								<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
+							<?php } else {
+								echo $aecHTML->createSettingsParticle( $name );
+							} ?>
+						<?php } ?>
+						</section>
+						</div>
+						</div>
+					<?php } else { ?>
+
+					<?php } ?>
+				</section>
+			</div>
+		</div>
+		<?php $tabs->endPanes(); ?>
+		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="task" value="" />
+		</form>
+
+		</div>
+
+		<?php
+		echo $aecHTML->loadJS();
+
+		HTML_myCommon::endCommon();
+	}
+
 	static function aecExtensions( $focus )
 	{
 		global $aecConfig;
