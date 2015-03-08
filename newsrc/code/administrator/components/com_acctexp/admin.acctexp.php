@@ -5158,7 +5158,7 @@ function editService( $id, $option )
 		// We need to convert the values that are set as object properties
 		$params_values['active']				= $row->active;
 		$params_values['visible']				= $row->visible;
-		$params_values['name']					= $row->getProperty( 'name' );
+		$params_values['name']					= $row->name;
 	}
 
 	// params and their type values
@@ -5166,6 +5166,7 @@ function editService( $id, $option )
 	$params['visible']					= array( 'toggle', 0 );
 
 	$params['name']						= array( 'inputC', '' );
+	$params['type']						= array( 'list', '' );
 
 	$params['params_remap']				= array( 'subarea_change', 'services' );
 
@@ -5174,16 +5175,13 @@ function editService( $id, $option )
 	$glist = array();
 
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
-	foreach ( $servicelist as $gid => $glisti ) {
-		$children = ServiceHandler::getParents( $glisti[0], 'service' );
+	foreach ( $servicelist as $service ) {
+		$info = $service->getInfo();
 
-
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text' );
-		} else {
-			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text' );
-		}
+		$glist[] = JHTML::_('select.option', $info['slug'], $info['name'], 'value', 'text' );
 	}
+
+	$lists['type'] = JHTML::_('select.genericlist', $glist, 'type', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
 	$settings = new aecSettings ( 'service', 'general' );
 
@@ -5192,15 +5190,22 @@ function editService( $id, $option )
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	HTML_AcctExp::editService( $option, $aecHTML, $row );
+	if ( $id ) {
+		$aecHTML->hasSettings = true;
+	}
+
+	HTML_AcctExp::editService( $option, $row, $aecHTML );
 }
 
 function saveService( $option, $apply=0 )
 {
-	$row = new Service();
-	$row->load( $_POST['id'] );
-
 	$post = AECToolbox::cleanPOST( $_POST, false );
+
+	if ( $id ) {
+		$row = aecService::getById($id);
+	} else {
+		$row = aecService::getByType($post['type']);
+	}
 
 	$row->savePOSTsettings( $post );
 
@@ -5221,10 +5226,6 @@ function saveService( $option, $apply=0 )
 		$id = $row->getMax();
 	}
 
-	if ( empty( $_POST['id'] ) ) {
-		ServiceHandler::setChildren( 1, array( $id ), 'service' );
-	}
-
 	if ( $apply ) {
 		aecRedirect( 'index.php?option=' . $option . '&task=editService&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	} else {
@@ -5243,6 +5244,7 @@ function removeService( $id, $option )
 		. ' FROM #__acctexp_services'
 		. ' WHERE `id` IN (' . $ids . ')'
 	);
+
 	$total = $db->loadResult();
 
 	if ( $total == 0 ) {
@@ -5250,23 +5252,17 @@ function removeService( $id, $option )
 		exit;
 	}
 
-	$total = 0;
-
-	foreach ( $id as $i ) {
-		$ig = new Service();
-		$ig->load( $i );
-
-		if ( $ig->delete() !== false ) {
-			ServiceHandler::removeChildren( $i, false, 'service' );
-
-			$total++;
-		}
-	}
-
 	if ( $total == 0 ) {
 		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
 		exit;
 	} else {
+		$db->setQuery(
+			'DELETE FROM #__acctexp_services'
+			. ' WHERE `id` IN (' . $ids . ')'
+		);
+
+		$db->query();
+
 		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
 
 		aecRedirect( 'index.php?option=' . $option . '&task=showServices', $msg );

@@ -3929,7 +3929,7 @@ jQuery(document).ready(function(jQuery) {
 	 * @param service $row
 	 * @param null|aecHTML $aecHTML
 	 */
-	static function editService( $option, $row, $lists, $aecHTML, $attached )
+	static function editService( $option, $row, $aecHTML )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
 
@@ -3965,9 +3965,9 @@ jQuery(document).ready(function(jQuery) {
 				<section class="paper">
 					<h4><?php echo JText::_('AEC_SERVICE_TITLE_LONG'); ?></h4>
 					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 					<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
-						<?php echo $aecHTML->createSettingsParticle( 'type_name' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'type_list' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
 					<?php } else { ?>
 						<div class="form-group">
 							<div class="col-sm-4">
@@ -3980,7 +3980,6 @@ jQuery(document).ready(function(jQuery) {
 							</div>
 						</div>
 					<?php } ?>
-					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 				</section>
 			</div>
 			<div class="col-sm-6">

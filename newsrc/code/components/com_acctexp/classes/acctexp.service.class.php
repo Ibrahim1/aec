@@ -15,7 +15,7 @@ function serviceCall( $type, $cmd, $request )
 {
 	global $aecConfig;
 
-	$list = aecServiceListe::getFlatList();
+	$list = aecServiceList::getFlatList();
 
 	$id = 0;
 	foreach ( $list as $li ) {
@@ -28,9 +28,9 @@ function serviceCall( $type, $cmd, $request )
 		header("HTTP/1.0 401 Unauthorized"); die; // die, die
 	}
 
-	$service = new aecService();
+	$service = aecService::getByType($type);
 
-	if ( !$service->loadByType($type) ) {
+	if ( empty($service->id) ) {
 		header("HTTP/1.0 401 Unauthorized"); die; // die, die
 	}
 
@@ -49,8 +49,6 @@ function serviceCall( $type, $cmd, $request )
 	$return = $service->execCmd($cmd, $request);
 
 	echo json_encode( $return ); die; // regular die
-
-
 }
 
 class aecServiceList
@@ -60,7 +58,7 @@ class aecServiceList
 		return JPATH_SITE . '/components/com_acctexp/services';
 	}
 
-	public static function getServicePath()
+	public static function getServicePath( $name )
 	{
 		return self::getDir() . '/' . $name;
 	}
@@ -83,11 +81,13 @@ class aecServiceList
 
 		$services_list = array();
 		foreach ( $list as $name ) {
-			if ( is_dir( self::getDir() . '/' . $name ) ) {
-				// Only add directories with the proper structure
-				if ( file_exists( self::getServicePath($name) . '/' . $name . '.php' ) ) {
-					$services_list[] = $name;
-				}
+			$path = self::getServicePath($name);
+
+			if ( !is_dir($path) ) continue;
+
+			// Only add directories with the proper structure
+			if ( file_exists( $path . '/' . $name . '.php' ) ) {
+				$services_list[] = $name;
 			}
 		}
 
@@ -170,6 +170,8 @@ class aecService extends serialParamDBTable
 		$type = $db->loadResult();
 
 		if ( $type ) {
+			include_once aecServiceList::getServicePath($type) . '/' . $type . '.php';
+
 			$name = 'service_' . $type;
 
 			$service = new $name;
@@ -198,6 +200,8 @@ class aecService extends serialParamDBTable
 
 		$id = $db->loadResult();
 
+		include_once aecServiceList::getServicePath($type) . '/' . $type . '.php';
+
 		if ( $id ) {
 			$name = 'service_' . $type;
 
@@ -206,7 +210,11 @@ class aecService extends serialParamDBTable
 
 			return $service;
 		} else {
-			return false;
+			$name = 'service_' . $type;
+
+			$service = new $name;
+
+			return $service;
 		}
 	}
 
@@ -264,6 +272,40 @@ class aecService extends serialParamDBTable
 	{
 		// TODO: FINISH
 		return array();
+	}
+
+
+	public function savePOSTsettings( $array )
+	{
+		// Strip out params that we don't need
+		$params = $this->stripNonParams( $array );
+
+		$this->restrictions = $restrictions;
+
+		// Check whether there is a custom function for saving params
+		$new_params = $this->stripNonParams($params);
+
+		$this->name		= $array['name'];
+		$this->active	= $array['active'];
+		$this->type		= $array['type'];
+
+		$this->params = $new_params;
+
+		return true;
+	}
+
+	public function stripNonParams( $array )
+	{
+		// All variables of the class have to be stripped out
+		$vars = get_class_vars( 'aecService' );
+
+		foreach ( $vars as $name => $blind ) {
+			if ( isset( $array[$name] ) ) {
+				unset( $array[$name] );
+			}
+		}
+
+		return $array;
 	}
 
 }

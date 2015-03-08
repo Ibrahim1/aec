@@ -426,7 +426,7 @@ if ( !empty( $task ) ) {
 
 		case 'service':
 			$id			= aecGetParam( 'id', 0, true, array( 'word', 'string', 'clear_nonslug' ) );
-			$cmd		= aecGetParam( 'key', 0, true, array( 'word', 'string', 'clear_nonslug' ) );
+			$cmd		= aecGetParam( 'cmd', 0, true, array( 'word', 'string', 'clear_nonslug' ) );
 			$request	= aecGetParam( 'request' );
 
 			serviceCall( $id, $cmd, $request );

@@ -1,15 +1,13 @@
 <?php
 
-namespace services\cashenvio;
-
-class service_cashenvio extends aecService
+class service_dolartoday extends aecService
 {
 	public function getInfo()
 	{
 		return array(
-			'slug' => 'cashenvio',
-			'name' => 'Cashenvio',
-			'description' => 'Exposes currency conversion rates as pulled from the Cashenvio DolarToday webservice.'
+			'slug' => 'dolartoday',
+			'name' => 'dolartoday',
+			'description' => 'Exposes currency conversion rates as pulled from the dolartoday.com webservice.'
 		);
 	}
 
@@ -21,7 +19,7 @@ class service_cashenvio extends aecService
 		return $settings;
 	}
 
-	private function cmdConvert( $amount )
+	protected function cmdConvert( $amount )
 	{
 		$rates = $this->getRates();
 
