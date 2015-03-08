@@ -5090,6 +5090,294 @@ function cancelInvoice( $option, $invoice_number, $task )
 	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('REMOVED') );
 }
 
+function listServices( $option )
+{
+	$db = JFactory::getDBO();
+
+	$app = JFactory::getApplication();
+
+	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+
+	$search = $app->getUserStateFromRequest( "search_services{$option}", 'search', '' );
+	$search = xJ::escape( $db, trim( strtolower( $search ) ) );
+
+	$orderby = $app->getUserStateFromRequest( "orderby_services{$option}", 'orderby_services', 'name ASC' );
+
+	// get the total number of records
+	$query = 'SELECT count(*)'
+		. ' FROM #__acctexp_services'
+		. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
+	;
+	$db->setQuery( $query );
+	$total = $db->loadResult();
+	echo $db->getErrorMsg();
+
+	if ( $limitstart > $total ) {
+		$limitstart = 0;
+	}
+
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
+
+	// get the subset (based on limits) of records
+	$query = 'SELECT *'
+		. ' FROM #__acctexp_services'
+		. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
+		. ' SERVICE BY `id`'
+		. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
+		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+	;
+	$db->setQuery( $query );
+
+	$rows = $db->loadObjectList();
+	if ( $db->getErrorNum() ) {
+		echo $db->stderr();
+		return false;
+	}
+
+	$gcolors = array();
+
+	HTML_AcctExp::listServices( $rows, $pageNav, $option, $orderby, $search );
+}
+
+function editService( $id, $option )
+{
+	$db = JFactory::getDBO();
+
+	$lists = array();
+	$params_values = array();
+
+	$row = new Service();
+	$row->load( $id );
+
+	$restrictionHelper = new aecRestrictionHelper();
+
+	if ( !$row->id ) {
+		$row->ordering	= 9999;
+
+		$params_values['active']	= 1;
+
+	} else {
+		$params_values = $row->params;
+
+		// We need to convert the values that are set as object properties
+		$params_values['active']				= $row->active;
+		$params_values['visible']				= $row->visible;
+		$params_values['name']					= $row->getProperty( 'name' );
+	}
+
+	// params and their type values
+	$params['active']					= array( 'toggle', 1 );
+	$params['visible']					= array( 'toggle', 0 );
+
+	$params['name']						= array( 'inputC', '' );
+
+	$params['params_remap']				= array( 'subarea_change', 'services' );
+
+	$services = ServiceHandler::parentServices( $row->id, 'service' );
+
+	$customparamsarray = new stdClass();
+	if ( !empty( $services ) ) {
+		$gs = array();
+		foreach ( $services as $serviceid ) {
+			$params['service_delete_'.$serviceid] = array( 'checkbox' );
+
+			$service = new Service();
+			$service->load( $serviceid );
+
+			$g = array();
+			$g['id']	= $service->id;
+			$g['name']	= $service->getProperty('name');
+			$g['color']	= $service->params['color'];
+
+			$g['service']	= '<strong>' . $serviceid . '</strong>';
+
+			$gs[$serviceid] = $g;
+		}
+
+
+		$customparamsarray->services = $gs;
+	} else {
+		$customparamsarray->services = null;
+	}
+
+	$servicelist = ServiceHandler::getTree();
+
+	$glist = array();
+
+	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
+	$serviceids = array();
+	foreach ( $servicelist as $gid => $glisti ) {
+		$children = ServiceHandler::getParents( $glisti[0], 'service' );
+
+		$disabled = in_array( $id, $children );
+
+		if ( $id ) {
+			$self = ( $glisti[0] == $id );
+			$existing = in_array( $glisti[0], $services );
+
+			$disabled = ( $disabled || $self || $existing );
+		}
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', $disabled );
+		} else {
+			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', $disabled );
+		}
+
+		$serviceids[$glisti[0]] = ServiceHandler::serviceColor( $glisti[0] );
+	}
+
+	$lists['add_service'] 			= JHTML::_('select.genericlist', $glist, 'add_service', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+
+	foreach ( $serviceids as $serviceid => $servicecolor ) {
+		$lists['add_service'] = str_replace( 'value="'.$serviceid.'"', 'value="'.$serviceid.'" style="background-color: #'.$servicecolor.' !important;"', $lists['add_service'] );
+	}
+
+	$params['add_service']	= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
+
+	$params['restr_remap']	= array( 'subarea_change', 'restrictions' );
+
+	$params = array_merge( $params, $restrictionHelper->getParams() );
+
+	$rewriteswitches		= array( 'cms', 'user' );
+	$params['rewriteInfo']	= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+	$settings = new aecSettings ( 'service', 'general' );
+	if ( is_array( $customparams_values ) ) {
+		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
+	} elseif( is_array( $restrictions_values ) ){
+		$settingsparams = array_merge( $params_values, $restrictions_values );
+	}
+	else {
+		$settingsparams = $params_values;
+	}
+
+	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
+
+	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+	// Call HTML Class
+	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+	if ( !empty( $customparamsarray ) ) {
+		$aecHTML->customparams = $customparamsarray;
+	}
+
+	HTML_AcctExp::editService( $option, $aecHTML, $row );
+}
+
+function saveService( $option, $apply=0 )
+{
+	$row = new Service();
+	$row->load( $_POST['id'] );
+
+	$post = AECToolbox::cleanPOST( $_POST, false );
+
+	$row->savePOSTsettings( $post );
+
+	if ( !$row->check() ) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
+		exit();
+	}
+	if ( !$row->store() ) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
+		exit();
+	}
+
+	$row->reorder();
+
+	if ( $_POST['id'] ) {
+		$id = $_POST['id'];
+	} else {
+		$id = $row->getMax();
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		ServiceHandler::setChildren( 1, array( $id ), 'service' );
+	}
+
+	if ( $apply ) {
+		aecRedirect( 'index.php?option=' . $option . '&task=editService&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+	} else {
+		aecRedirect( 'index.php?option=' . $option . '&task=showServices', JText::_('SAVED') );
+	}
+}
+
+function removeService( $id, $option )
+{
+	$db = JFactory::getDBO();
+
+	$ids = implode( ',', $id );
+
+	$db->setQuery(
+		'SELECT count(*)'
+		. ' FROM #__acctexp_services'
+		. ' WHERE `id` IN (' . $ids . ')'
+	);
+	$total = $db->loadResult();
+
+	if ( $total == 0 ) {
+		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	$total = 0;
+
+	foreach ( $id as $i ) {
+		$ig = new Service();
+		$ig->load( $i );
+
+		if ( $ig->delete() !== false ) {
+			ServiceHandler::removeChildren( $i, false, 'service' );
+
+			$total++;
+		}
+	}
+
+	if ( $total == 0 ) {
+		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
+		exit;
+	} else {
+		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+
+		aecRedirect( 'index.php?option=' . $option . '&task=showServices', $msg );
+	}
+}
+
+function changeService( $cid=null, $state=0, $type, $option )
+{
+	$db = JFactory::getDBO();
+
+	if ( count( $cid ) < 1 ) {
+		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	$total	= count( $cid );
+	$cids	= implode( ',', $cid );
+
+	$query = 'UPDATE #__acctexp_services'
+		. ' SET `' . $type . '` = \'' . $state . '\''
+		. ' WHERE `id` IN (' . $cids . ')'
+	;
+	$db->setQuery( $query );
+
+	if ( !$db->query() ) {
+		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+
+	if ( $state ) {
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
+	} else {
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
+	}
+
+	$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
+
+	aecRedirect( 'index.php?option=' . $option . '&task=showServices', $msg );
+}
+
 function AdminInvoicePrintout( $option, $invoice_number, $standalone=true )
 {
 	$invoice = new Invoice();

@@ -18,11 +18,15 @@ class service_cashenvio extends aecService
 
 		$amount = $amount/100;
 
+		$percentage =
 
+		return
 	}
 
-	private function updateRates()
+	private function getRates()
 	{
-
+		return json_decode(
+			file_get_contents('https://s3.amazonaws.com/dolartoday/data.json')
+		);
 	}
 }

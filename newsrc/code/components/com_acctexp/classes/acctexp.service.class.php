@@ -55,6 +55,11 @@ function serviceCall( $type, $cmd, $request )
 
 class aecServiceList
 {
+	public static function getDir()
+	{
+		return JPATH_SITE . '/components/com_acctexp/services';
+	}
+
 	public static function getList()
 	{
 		$db->setQuery(
@@ -63,7 +68,23 @@ class aecServiceList
 		);
 
 		$list = $db->loadObjectList();
+	}
 
+	public static function getAvailableServices()
+	{
+		$list = xJUtility::getFileArray( self::getDir(), null, true, true );
+
+		$services_list = array();
+		foreach ( $list as $name ) {
+			if ( is_dir( self::getDir() . '/' . $name ) ) {
+				// Only add directories with the proper structure
+				if ( file_exists( self::getDir() . '/' . $name . '/' . $name . '.php' ) ) {
+					$services_list[] = $name;
+				}
+			}
+		}
+
+		return $services_list;
 	}
 
 	public static function getFlatList()
@@ -137,7 +158,7 @@ class aecService extends serialParamDBTable
 			return false;
 		}
 
-		$this->$method($request);
+		return $this->$method($request);
 	}
 
 	public function getCmds( $cmd, $request )
