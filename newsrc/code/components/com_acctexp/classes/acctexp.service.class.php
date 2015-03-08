@@ -60,12 +60,17 @@ class aecServiceList
 		return JPATH_SITE . '/components/com_acctexp/services';
 	}
 
+	public static function getServicePath()
+	{
+		return self::getDir() . '/' . $name;
+	}
+
 	public static function getList()
 	{
 		$db = JFactory::getDBO();
 
 		$db->setQuery(
-			'SELECT `id`'
+			'SELECT `id`, `type`'
 			. ' FROM #__acctexp_services'
 		);
 
@@ -80,13 +85,36 @@ class aecServiceList
 		foreach ( $list as $name ) {
 			if ( is_dir( self::getDir() . '/' . $name ) ) {
 				// Only add directories with the proper structure
-				if ( file_exists( self::getDir() . '/' . $name . '/' . $name . '.php' ) ) {
+				if ( file_exists( self::getServicePath($name) . '/' . $name . '.php' ) ) {
 					$services_list[] = $name;
 				}
 			}
 		}
 
 		return $services_list;
+	}
+
+	public static function getAvailableServiceClasses( $noninstalled=false )
+	{
+		$installed = self::getFlatList();
+
+		$list = self::getAvailableServices();
+
+		foreach ( $list as $k => $name ) {
+			if ( $noninstalled && !empty($installed) ) {
+				foreach ( $installed as $service ) {
+					if ( $name == $service->type ) continue;
+				}
+			}
+
+			$class = 'service_' . $name;
+
+			include_once self::getServicePath($name) . '/' . $name . '.php';
+
+			$list[$k] = new $class();
+		}
+
+		return $list;
 	}
 
 	public static function getFlatList()

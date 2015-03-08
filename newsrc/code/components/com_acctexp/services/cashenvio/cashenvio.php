@@ -4,7 +4,16 @@ namespace services\cashenvio;
 
 class service_cashenvio extends aecService
 {
-	public function Settings()
+	public function getInfo()
+	{
+		return array(
+			'slug' => 'cashenvio',
+			'name' => 'Cashenvio',
+			'description' => 'Exposes currency conversion rates as pulled from the Cashenvio DolarToday webservice.'
+		);
+	}
+
+	public function getSettings()
 	{
 		$settings = array();
 		$settings['commission'] = array( 'toggle', 'Commission', 'Commission to add on top of conversation percentage.' );

@@ -5169,44 +5169,25 @@ function editService( $id, $option )
 
 	$params['params_remap']				= array( 'subarea_change', 'services' );
 
-	$servicelist = aecServiceList::getAvailableServices();
-var_dump($servicelist);exit;
+	$servicelist = aecServiceList::getAvailableServiceClasses(true);
+
 	$glist = array();
 
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
-	$serviceids = array();
 	foreach ( $servicelist as $gid => $glisti ) {
 		$children = ServiceHandler::getParents( $glisti[0], 'service' );
 
-		$disabled = in_array( $id, $children );
-
-		if ( $id ) {
-			$self = ( $glisti[0] == $id );
-			$existing = in_array( $glisti[0], $services );
-
-			$disabled = ( $disabled || $self || $existing );
-		}
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', $disabled );
+			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text' );
 		} else {
-			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', $disabled );
+			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text' );
 		}
-
-		$serviceids[$glisti[0]] = ServiceHandler::serviceColor( $glisti[0] );
 	}
 
 	$settings = new aecSettings ( 'service', 'general' );
-	if ( is_array( $customparams_values ) ) {
-		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
-	} elseif( is_array( $restrictions_values ) ){
-		$settingsparams = array_merge( $params_values, $restrictions_values );
-	}
-	else {
-		$settingsparams = $params_values;
-	}
 
-	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+	$settings->fullSettingsArray( $params, $params_values, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
