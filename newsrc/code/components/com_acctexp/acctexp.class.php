@@ -12,7 +12,7 @@
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 define( '_AEC_VERSION', '1.2' );
-define( '_AEC_REVISION', '6642' );
+define( '_AEC_REVISION', '6643' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
@@ -36,8 +36,9 @@ $aecclasses = array(
 	'eventlog',			'functions',		'heartbeat',		'history',
 	'html',				'invoice',			'itemgroup',		'itemterms',
 	'microintegration',	'paymentprocessor',	'registration',		'restriction',
-	'rewriteengine',	'settings',			'subscription',		'subscriptionplan',
-	'template',			'temptoken',		'toolbox',			'user'
+	'rewriteengine',	'service',			'settings',			'subscription',
+	'subscriptionplan',	'template',			'temptoken',		'toolbox',
+	'user'
 );
 
 foreach ( $aecclasses as $class ) {

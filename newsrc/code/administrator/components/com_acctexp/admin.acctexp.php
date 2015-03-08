@@ -5102,6 +5102,8 @@ function listServices( $option )
 	$search = $app->getUserStateFromRequest( "search_services{$option}", 'search', '' );
 	$search = xJ::escape( $db, trim( strtolower( $search ) ) );
 
+	$filtered = !empty($search);
+
 	$orderby = $app->getUserStateFromRequest( "orderby_services{$option}", 'orderby_services', 'name ASC' );
 
 	// get the total number of records
@@ -5123,7 +5125,6 @@ function listServices( $option )
 	$query = 'SELECT *'
 		. ' FROM #__acctexp_services'
 		. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-		. ' SERVICE BY `id`'
 		. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
 		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 	;
@@ -5135,9 +5136,7 @@ function listServices( $option )
 		return false;
 	}
 
-	$gcolors = array();
-
-	HTML_AcctExp::listServices( $rows, $pageNav, $option, $orderby, $search );
+	HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $orderby, $search );
 }
 
 function editService( $id, $option )
@@ -5147,16 +5146,12 @@ function editService( $id, $option )
 	$lists = array();
 	$params_values = array();
 
-	$row = new Service();
-	$row->load( $id );
-
-	$restrictionHelper = new aecRestrictionHelper();
+	$row = aecService::getById($id);
 
 	if ( !$row->id ) {
 		$row->ordering	= 9999;
 
 		$params_values['active']	= 1;
-
 	} else {
 		$params_values = $row->params;
 
@@ -5174,35 +5169,8 @@ function editService( $id, $option )
 
 	$params['params_remap']				= array( 'subarea_change', 'services' );
 
-	$services = ServiceHandler::parentServices( $row->id, 'service' );
-
-	$customparamsarray = new stdClass();
-	if ( !empty( $services ) ) {
-		$gs = array();
-		foreach ( $services as $serviceid ) {
-			$params['service_delete_'.$serviceid] = array( 'checkbox' );
-
-			$service = new Service();
-			$service->load( $serviceid );
-
-			$g = array();
-			$g['id']	= $service->id;
-			$g['name']	= $service->getProperty('name');
-			$g['color']	= $service->params['color'];
-
-			$g['service']	= '<strong>' . $serviceid . '</strong>';
-
-			$gs[$serviceid] = $g;
-		}
-
-
-		$customparamsarray->services = $gs;
-	} else {
-		$customparamsarray->services = null;
-	}
-
-	$servicelist = ServiceHandler::getTree();
-
+	$servicelist = aecServiceList::getAvailableServices();
+var_dump($servicelist);exit;
 	$glist = array();
 
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
@@ -5228,21 +5196,6 @@ function editService( $id, $option )
 		$serviceids[$glisti[0]] = ServiceHandler::serviceColor( $glisti[0] );
 	}
 
-	$lists['add_service'] 			= JHTML::_('select.genericlist', $glist, 'add_service', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
-
-	foreach ( $serviceids as $serviceid => $servicecolor ) {
-		$lists['add_service'] = str_replace( 'value="'.$serviceid.'"', 'value="'.$serviceid.'" style="background-color: #'.$servicecolor.' !important;"', $lists['add_service'] );
-	}
-
-	$params['add_service']	= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
-
-	$params['restr_remap']	= array( 'subarea_change', 'restrictions' );
-
-	$params = array_merge( $params, $restrictionHelper->getParams() );
-
-	$rewriteswitches		= array( 'cms', 'user' );
-	$params['rewriteInfo']	= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
-
 	$settings = new aecSettings ( 'service', 'general' );
 	if ( is_array( $customparams_values ) ) {
 		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
@@ -5253,15 +5206,10 @@ function editService( $id, $option )
 		$settingsparams = $params_values;
 	}
 
-	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
-
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-	if ( !empty( $customparamsarray ) ) {
-		$aecHTML->customparams = $customparamsarray;
-	}
 
 	HTML_AcctExp::editService( $option, $aecHTML, $row );
 }

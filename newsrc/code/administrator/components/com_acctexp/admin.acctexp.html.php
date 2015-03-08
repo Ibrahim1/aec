@@ -3861,11 +3861,10 @@ jQuery(document).ready(function(jQuery) {
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 
 			<?php
-			HTML_myCommon::getHeader( 'AEC_SERVICE_TITLE', 'services', '', $search, 'list', 'Service' );
+			HTML_myCommon::getHeader( 'AEC_SERVICE_TITLE', 'settings', '', $search, 'list', 'Service' );
 
 			$th_list = array(
 				array('name', 'AEC_SERVICE_NAME'),
-				array('desc', 'AEC_SERVICE_DESC'),
 				array('active', 'AEC_SERVICE_ACTIVE', 'center'),
 				array('ordering', 'AEC_SERVICE_REORDER'),
 				array('type', 'AEC_SERVICE_TYPE')
@@ -3896,10 +3895,6 @@ jQuery(document).ready(function(jQuery) {
 										<tr>
 											<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 											<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editService&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
-											<td class="text-left">
-												<?php
-												echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
-											</td>
 											<td class="text-center">
 												<?php HTML_myCommon::toggleBtn( 'services', 'active', $row->id, $row->active ); ?>
 											</td>

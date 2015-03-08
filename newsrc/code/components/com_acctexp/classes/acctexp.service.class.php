@@ -62,6 +62,8 @@ class aecServiceList
 
 	public static function getList()
 	{
+		$db = JFactory::getDBO();
+
 		$db->setQuery(
 			'SELECT `id`'
 			. ' FROM #__acctexp_services'
@@ -89,6 +91,8 @@ class aecServiceList
 
 	public static function getFlatList()
 	{
+		$db = JFactory::getDBO();
+
 		$db->setQuery(
 			'SELECT *'
 			. ' FROM #__acctexp_services'
@@ -120,12 +124,72 @@ class aecService extends serialParamDBTable
 		parent::__construct( '#__acctexp_services', 'id' );
 	}
 
-	public function loadByType( $type )
+	/**
+	 * @param int $id
+	 *
+	 * @return bool|aecService
+	 */
+	public static function getById( $id )
 	{
+		$db = JFactory::getDBO();
+
+		$db->setQuery(
+			'SELECT `type`'
+			. ' FROM #__acctexp_services'
+			. ' WHERE `id` = ' . $id . ' '
+		);
+
+		$type = $db->loadResult();
+
+		if ( $type ) {
+			$name = 'service_' . $type;
+
+			$service = new $name;
+			$service->load($id);
+
+			return $service;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @param string $type
+	 *
+	 * @return bool|aecService
+	 */
+	public static function getByType( $type )
+	{
+		$db = JFactory::getDBO();
+
 		$db->setQuery(
 			'SELECT `id`'
 			. ' FROM #__acctexp_services'
-			. 'WHERE `type` = \'' . $type . '\' '
+			. ' WHERE `type` = \'' . $type . '\' '
+		);
+
+		$id = $db->loadResult();
+
+		if ( $id ) {
+			$name = 'service_' . $type;
+
+			$service = new $name;
+			$service->load($id);
+
+			return $service;
+		} else {
+			return false;
+		}
+	}
+
+	public function loadByType( $type )
+	{
+		$db = JFactory::getDBO();
+
+		$db->setQuery(
+			'SELECT `id`'
+			. ' FROM #__acctexp_services'
+			. ' WHERE `type` = \'' . $type . '\' '
 		);
 
 		$id = $db->loadResult();
