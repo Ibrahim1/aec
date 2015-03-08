@@ -14,13 +14,19 @@ class service_cashenvio extends aecService
 
 	private function cmdConvert( $amount )
 	{
+		$rates = $this->getRates();
+
 		$amount = (int) $amount;
 
 		$amount = $amount/100;
 
-		$percentage =
+		$percentage = $rates->USDVEF->rate;
 
-		return
+		if ( !empty($this->params['commission']) ) {
+			$percentage += $this->params['commission'];
+		}
+
+		return $amount * $percentage;
 	}
 
 	private function getRates()

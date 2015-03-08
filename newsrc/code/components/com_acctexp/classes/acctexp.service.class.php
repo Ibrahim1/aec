@@ -144,8 +144,15 @@ class aecService extends serialParamDBTable
 
 	public function testCmd( $cmd, $request )
 	{
-		// TODO: FINISH
-		return true;
+		$cmd = AECToolbox::camelize($cmd);
+
+		$method = 'testCmd' . $cmd;
+
+		if ( !method_exists( $this, $method ) ) {
+			return true;
+		}
+
+		return $this->$method($request);
 	}
 
 	public function execCmd( $cmd, $request )
