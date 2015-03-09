@@ -32,7 +32,7 @@ class mi_aecuserdetails extends MI
 		$settings['display_emul']	= array( 'toggle' );
 		$settings['settings']		= array( 'inputB' );
 
-		$types = array( "p", "inputA", "inputB", "inputC", "inputD", "list", "list_language", "checkbox" );
+		$types = array( 'p', 'inputA', 'inputB', 'inputC', 'inputD', 'list', 'list_language', 'checkbox', 'hidden' );
 
 		$typetypes = count( $types );
 
@@ -41,16 +41,16 @@ class mi_aecuserdetails extends MI
  			$typelist[] = JHTML::_('select.option', $type, JText::_('AEC_MI_CUSTOMFIELD_TYPE_'.strtoupper($type)) );
  		}
 
-		$types = array( 0 => "No Skipping", 1 => "Skip if already existing", 2 => "Skip if existing, or default not empty" );
+		$types = array( 0 => 'No Skipping', 1 => 'Skip if already existing', 2 => 'Skip if existing, or default not empty' );
 
  		$xtypelist = array();
  		foreach ( $types as $type ) {
  			$xtypelist[] = JHTML::_('select.option', $type, $type );
  		}
 
-		$types = array(	"required", "email", "url", "date", "dateISO", "number", "digits", "creditcard",
-						"letterswithbasicpunc", "letterswithreducedpunc", "alphanumeric", "alphanumericwhitespace", "alphanumericwithbasicpunc", "alphanumericwithreducedpunc", "lettersonly", "nowhitespace",
-						"ziprange", "zipcodeUS", "integer" );
+		$types = array(	'required', 'email', 'url', 'date', 'dateISO', 'number', 'digits', 'creditcard',
+						'letterswithbasicpunc', 'letterswithreducedpunc', 'alphanumeric', 'alphanumericwhitespace', 'alphanumericwithbasicpunc', 'alphanumericwithreducedpunc', 'lettersonly', 'nowhitespace',
+						'ziprange', 'zipcodeUS', 'integer' );
 
  		$validationlist = array();
  		foreach ( $types as $type ) {
@@ -71,7 +71,7 @@ class mi_aecuserdetails extends MI
 
 				$settings[$p.'short']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_SHORT_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_SHORT_DESC') );
 
-				if ( $this->settings[$p.'type'] != "checkbox" ) {
+				if ( $this->settings[$p.'type'] != 'checkbox' ) {
 					$settings[$p.'mandatory']	= array( 'toggle', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC') );
 				}
 
@@ -80,13 +80,13 @@ class mi_aecuserdetails extends MI
 				$settings[$p.'desc']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_DESC_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_DESC_DESC') );
 				$settings[$p.'type']		= array( 'list', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_TYPE_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_TYPE_DESC') );
 
-				if ( $this->settings[$p.'type'] == "list" ) {
-					$settings[$p.'list']	= array( 'inputD', "List Items", "Provide a newline separated list with items like: item1|Description of first item" );
-					$settings[$p.'ltype']	= array( 'toggle', "Radio List", "Select Yes to display a radio button list instead of a dropdown box." );
+				if ( $this->settings[$p.'type'] == 'list' ) {
+					$settings[$p.'list']	= array( 'inputD', 'List Items', 'Provide a newline separated list with items like: item1|Description of first item' );
+					$settings[$p.'ltype']	= array( 'toggle', 'Radio List', 'Select Yes to display a radio button list instead of a dropdown box.' );
 				}
 
 				$settings[$p.'default']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC') );
-				$settings[$p.'fixed']		= array( 'toggle', "Fixed", "Fix this settings once it's filled in by the user - it will no longer show up as being editable afterwards." );
+				$settings[$p.'fixed']		= array( 'toggle', 'Fixed', 'Fix this settings once it\'s filled in by the user - it will no longer show up as being editable afterwards.' );
 
 				if ( empty( $this->settings[$p.'validationtype'] ) ) {
 					$this->settings[$p.'validationtype'] = array();
