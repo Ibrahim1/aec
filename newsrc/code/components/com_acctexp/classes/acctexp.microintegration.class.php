@@ -1077,6 +1077,7 @@ class microIntegration extends serialParamDBTable
 		$params		= array();
 		$lists		= array();
 		$validation	= array();
+		$formatting	= array();
 		if ( !empty( $mi_form ) ) {
 			$pref = 'mi_'.$this->id.'_';
 
@@ -1101,6 +1102,12 @@ class microIntegration extends serialParamDBTable
 				unset( $mi_form['validation'] );
 			}
 
+			if ( !empty( $mi_form['formatting'] ) ) {
+				$formatting = $mi_form['formatting'];
+
+				unset( $mi_form['formatting'] );
+			}
+
 			$params[$pref.'remap_area'] = array( 'subarea_change', $this->class_name );
 
 			if ( array_key_exists( $this->id, $errors ) ) {
@@ -1119,6 +1126,7 @@ class microIntegration extends serialParamDBTable
 
 		$params['lists'] = $lists;
 		$params['validation'] = $validation;
+		$params['formatting'] = $formatting;
 
 		return $params;
 	}

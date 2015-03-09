@@ -84,7 +84,7 @@ class mi_aecuserdetails extends MI
 					$settings[$p.'list']	= array( 'inputD', 'List Items', 'Provide a newline separated list with items like: item1|Description of first item' );
 					$settings[$p.'ltype']	= array( 'toggle', 'Radio List', 'Select Yes to display a radio button list instead of a dropdown box.' );
 				} elseif ( strpos($this->settings[$p.'type'], 'input') === 0 ) {
-					$settings[$p.'formatting']	= array( 'inputD', 'Formatting', 'Enforce a formatting pattern via formatter.js' );
+					$settings[$p.'formatting']	= array( 'inputC', 'Formatting', 'Enforce a formatting pattern via formatter.js' );
 				}
 
 				$settings[$p.'default']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC') );
@@ -196,7 +196,9 @@ class mi_aecuserdetails extends MI
 			$hasregistration = false;
 		}
 
+		$settings['validation'] = array();
 		$settings['validation']['rules'] = array();
+		$settings['formatting'] = array();
 
 		if ( !empty( $this->settings['emulate_reg'] ) && ( ( empty( $request->metaUser->userid ) && !$hasregistration ) || !$checkout ) ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
@@ -328,8 +330,8 @@ class mi_aecuserdetails extends MI
 
 					if ( !empty($this->settings[$p.'formatting']) ) {
 						$settings['formatting'][] = array(
-							'mi_'.$this->id.'_'.$this->settings[$p.'short'],
-							$this->settings[$p.'formatting']
+							'id' => 'mi_'.$this->id.'_'.$this->settings[$p.'short'],
+							'pattern' => $this->settings[$p.'formatting']
 						);
 					}
 
