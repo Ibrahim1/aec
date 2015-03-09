@@ -19,15 +19,29 @@ class service_dolartoday extends aecService
 		return $settings;
 	}
 
-	protected function cmdConvert( $amount )
+	protected function cmdConvert( $request )
 	{
+		if ( is_object($amount) ) {
+			$amount = $request->amount;
+
+			$mode = $request->mode;
+		} else {
+			$amount = $request;
+
+			$mode = 'USDVEF';
+		}
+
 		$rates = $this->getRates();
+
+		if ( !property_exists($rates, $mode) ) {
+			$mode = 'USDVEF';
+		}
 
 		$amount = (int) $amount;
 
 		$amount = $amount/100;
 
-		$percentage = $rates->USDVEF->rate;
+		$percentage = $rates->$mode->rate;
 
 		if ( !empty($this->params['commission']) ) {
 			$percentage += $this->params['commission'];

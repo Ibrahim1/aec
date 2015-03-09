@@ -40,7 +40,7 @@ class aecHTML
 				$value = '';
 			}
 
-			$return = '<div class="form-group">';
+			$return = '<div id="wrap_' . $name . '" class="form-group">';
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
