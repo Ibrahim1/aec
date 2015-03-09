@@ -31,6 +31,19 @@ if ( !empty( $InvoiceFactory->jsvalidation ) ) {
 	$tmpl->enqueueValidation( $InvoiceFactory->jsvalidation );
 }
 
+if ( !empty($InvoiceFactory->formatting) ) {
+	$tmpl->enqueueJQueryExtension( 'jquery/jquery.formatter.min' );
+
+	foreach ( $InvoiceFactory->formatting as $formatting ) {
+		$tmpl->enqueueJQueryCode(
+			"jQuery('#" . $formatting['id'] . "').formatter({
+  'pattern': '" . $formatting['pattern'] . "',
+  'persistent': true
+});"
+		);
+	}
+}
+
 $tmpl->setTitle( JText::_('CONFIRM_TITLE') );
 
 $tmpl->defaultHeader();
