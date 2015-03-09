@@ -1032,7 +1032,11 @@ class HTML_AcctExp
 
 					'div',
 
-					array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') )
+					array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
+
+					'div',
+
+					array( 'services', 'services', JText::_('AEC_CENTR_SERVICES') )
 				)
 			),
 
