@@ -223,6 +223,7 @@ switch( strtolower( $task ) ) {
 
 	case 'toolbox': toolBoxTool( $option, aecGetParam('cmd') ); break;
 
+	case 'services':
 	case 'showservices': listServices( $option ); break;
 	case 'newservice': editService( 0, $option ); break;
 	case 'editservice': editService( $id[0], $option ); break;
