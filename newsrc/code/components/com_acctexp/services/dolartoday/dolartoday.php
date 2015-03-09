@@ -15,13 +15,14 @@ class service_dolartoday extends aecService
 	{
 		$settings = array();
 		$settings['commission'] = array( 'toggle', 'Commission', 'Commission to add on top of conversation percentage.' );
+		$settings['cache_age'] = array( 'inputB', 'Cache Age', 'Number of minutes that you want to keep a cache of the ' );
 
 		return $settings;
 	}
 
 	protected function cmdConvert( $request )
 	{
-		if ( is_object($amount) ) {
+		if ( is_object($request) ) {
 			$amount = $request->amount;
 
 			$mode = $request->mode;
@@ -52,8 +53,27 @@ class service_dolartoday extends aecService
 
 	private function getRates()
 	{
-		return json_decode(
+		if (
+			isset($this->data->timestamp)
+			&& !empty($this->data->cache)
+			&& !empty($this->params['cache_age'])
+		) {
+			if ( (time() - $this->data->timestamp) > ($this->params['cache_age']*60) ) {
+				return $this->data->cache;
+			}
+		}
+
+		$data = json_decode(
 			file_get_contents('https://s3.amazonaws.com/dolartoday/data.json')
 		);
+
+		if ( !empty($data) ) {
+			$this->data->timestamp = time();
+			$this->data->cache = $data;
+
+			$this->storeload();
+		}
+
+		return $data;
 	}
 }
