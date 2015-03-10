@@ -36,20 +36,11 @@
 	}
 	.alert {
 		padding: 8px 24px;
-		float: left;
-		width: 92%;
 	}
 	#confirmation {
 		&-tos {
 			margin: 3% 3% 1% 2%;
 			width: 90%;
-		}
-		&-info,
-		&-form,
-		&-extra,
-		&-exception {
-			margin: 0 3%;
-			width: 94%;
 		}
 	}
 
@@ -150,9 +141,7 @@
 	}
 
 	.well {
-		float: left;
-		width: 92%;
-		margin: 12px 1% 48px;
+		margin: 12px 0px 48px;
 		-webkit-transition: background 0.5s ease-in, -webkit-box-shadow 0.5s ease-in;
 		transition: background 0.5s ease-in, -webkit-box-shadow 0.5s ease-in;
 		p {
@@ -240,7 +229,6 @@
 		margin-bottom: 16px;
 		margin-top: 6px;
 		padding: 12px 12px 12px 24px;
-		width: 95%;
 		background: #fff;
 		-webkit-border-radius: 10px;
 		-moz-border-radius: 10px;
@@ -333,7 +321,6 @@
 
 	label.control-label {
 		display: inline-block;
-		width: 45%;
 		padding-right: 12px;
 		line-height: 16px;
 		padding-top: 8px;
@@ -342,6 +329,11 @@
 	}
 
 	div.form-group {
+		input[type="radio"],
+		input[type="checkbox"] {
+			margin: -2px 8px 0px;
+		}
+
 		.controls {
 			display: inline-block;
 			width: 50%;
@@ -372,6 +364,7 @@
 		width: 100%;
 		margin-bottom: 16px;
 		clear: both;
+		float: left;
 	}
 
 }
