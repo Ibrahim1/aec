@@ -25,8 +25,17 @@ jQuery(document).ready(function(jQuery) {
 	jQuery('#module-status span.multilanguage a').removeClass('modal');
 
 	if ( jQuery("#system-message li").length != 0 ) {
-		jQuery("div.container").before('<span class="nav-msg label label-warning">'+jQuery("#system-message li").html()+'</span>')
-			.parent().children(".nav-msg").fadeIn(500,function(){jQuery(".nav-msg").addClass("nav-msg-transition");});
+		jQuery("div.container")[0]
+			.before(
+				'<span class="nav-msg label label-warning">'
+					+ jQuery("#system-message li").html()
+					+ '</span>'
+			)
+			.parent()
+			.children(".nav-msg")
+			.fadeIn(500,function(){
+				jQuery(".nav-msg").addClass("nav-msg-transition");
+			});
 	}
 
 	jQuery('#quicksearch').focus(function() {
