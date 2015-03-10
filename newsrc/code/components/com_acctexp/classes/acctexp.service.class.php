@@ -237,6 +237,30 @@ class aecService extends serialParamDBTable
 		}
 	}
 
+	public function load( $id )
+	{
+		$return = parent::load($id);
+
+		//$this->loadLanguage();
+
+		return $return;
+	}
+
+	private function loadLanguage()
+	{
+		$basepath = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $this->type;
+
+		if ( empty( $this->id ) ) {
+			$this->copyAssets();
+		} elseif ( $override ) {
+			xJLanguageHandler::loadList( array( 'com_acctexp.mi.' . $this->type => $basepath ) );
+		}
+
+		if ( !$override ) {
+			xJLanguageHandler::loadList( array(	'com_acctexp.mi.' . $this->type => JPATH_SITE ) );
+		}
+	}
+
 	public function declareParamFields()
 	{
 		return array( 'params', 'data' );
@@ -279,8 +303,6 @@ class aecService extends serialParamDBTable
 	{
 		// Strip out params that we don't need
 		$params = $this->stripNonParams( $array );
-
-		$this->restrictions = $restrictions;
 
 		// Check whether there is a custom function for saving params
 		$new_params = $this->stripNonParams($params);
