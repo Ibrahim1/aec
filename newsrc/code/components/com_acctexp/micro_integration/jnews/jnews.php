@@ -215,12 +215,12 @@ class mi_jnews
 		$db = JFactory::getDBO();
 
 		$db->setQuery(
-			'SELECT `id`'
+			'SELECT `email`'
 			. ' FROM #__jnews_subscribers'
 			. ' WHERE `email` = \'' . $email . '\''
 		);
 
-		return $db->loadResult();
+		return $db->loadResult() == $email;
 	}
 
 	/**

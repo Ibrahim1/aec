@@ -1698,6 +1698,7 @@ class InvoiceFactory
 		}
 
 		$this->jsvalidation = array();
+		$this->formatting = array();
 		if ( !empty( $this->mi_form ) && is_array( $this->passthrough ) ) {
 			$params = $this->plan->getMIformParams( $this->metaUser );
 
@@ -1707,6 +1708,12 @@ class InvoiceFactory
 				} elseif ( $mik == 'validation' ) {
 					if ( !empty( $miv ) ) {
 						$this->jsvalidation = array_merge( $this->jsvalidation, $miv );
+					}
+
+					continue;
+				} elseif ( $mik == 'formatting' ) {
+					if ( !empty( $miv ) ) {
+						$this->formatting = array_merge( $this->formatting, $miv );
 					}
 
 					continue;

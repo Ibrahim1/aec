@@ -4978,6 +4978,8 @@ function editInvoice( $id, $option, $returnTask, $userid )
 		$aecHTML->customparams = $customparamsarray;
 	}
 
+	$aecHTML->params = $row->params;
+
 	HTML_AcctExp::editInvoice( $option, $aecHTML, $id );
 }
 
