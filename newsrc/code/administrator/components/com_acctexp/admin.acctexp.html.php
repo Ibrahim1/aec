@@ -3206,6 +3206,11 @@ class HTML_AcctExp
 					} ?>
 				</section>
 			</div>
+			<div class="col-sm-8 col-sm-offset-2">
+				<section class="paper">
+					<pre><?php echo print_r($aecHTML->params, true); ?></pre>
+				</section>
+			</div>
 		</div>
 
 		<?php
