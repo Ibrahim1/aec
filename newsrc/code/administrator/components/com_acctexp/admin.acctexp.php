@@ -5137,13 +5137,13 @@ function listServices( $option )
 		return false;
 	}
 
-	HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $orderby, $search );
+	$lists = array();
+
+	HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $lists, $orderby, $search );
 }
 
 function editService( $id, $option )
 {
-	$db = JFactory::getDBO();
-
 	$lists = array();
 	$params_values = array();
 
@@ -5186,10 +5186,24 @@ function editService( $id, $option )
 
 	$settings = new aecSettings ( 'service', 'general' );
 
+	if ( $row->id ) {
+		$service_params = $row->getSettings();
+
+		$params = array_merge($params, $service_params);
+	} else {
+		$service_params = array();
+	}
+
 	$settings->fullSettingsArray( $params, $params_values, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+	if ( !empty($service_params) ) {
+		foreach ( $service_params as $n => $v ) {
+			$aecHTML->customparams[] = $n;
+		}
+	}
 
 	if ( $id ) {
 		$aecHTML->hasSettings = true;
