@@ -14,8 +14,8 @@ class service_dolartoday extends aecService
 	public function getSettings()
 	{
 		$settings = array();
-		$settings['commission'] = array( 'toggle', 'Commission', 'Commission to add on top of conversation percentage.' );
-		$settings['cache_age'] = array( 'inputB', 'Cache Age', 'Number of minutes that you want to keep a cache of the ' );
+		$settings['multiplier'] = array( 'inputB', 'Multiplier', 'Change the conversion by this multiplier (for instance if you want to add a commission).' );
+		$settings['cache_age'] = array( 'inputB', 'Cache Age', 'Number of minutes that you want to keep a cache of the conversion list' );
 
 		return $settings;
 	}
@@ -44,11 +44,13 @@ class service_dolartoday extends aecService
 
 		$percentage = $rates->$mode->rate;
 
-		if ( !empty($this->params['commission']) ) {
-			$percentage += $this->params['commission'];
+		$amount *= $percentage;
+
+		if ( !empty($this->params['multiplier']) ) {
+			$amount *= $this->params['multiplier'];
 		}
 
-		return $amount * $percentage;
+		return round($amount, 2);
 	}
 
 	private function getRates()

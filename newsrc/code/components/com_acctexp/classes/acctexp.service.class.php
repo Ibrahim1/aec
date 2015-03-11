@@ -280,8 +280,6 @@ class aecService extends serialParamDBTable
 		// Strip out params that we don't need
 		$params = $this->stripNonParams( $array );
 
-		$this->restrictions = $restrictions;
-
 		// Check whether there is a custom function for saving params
 		$new_params = $this->stripNonParams($params);
 
