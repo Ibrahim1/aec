@@ -29,20 +29,20 @@ class service_dolartoday extends aecService
 		} else {
 			$amount = $request;
 
-			$mode = 'USDVEF';
+			$mode = 'USD';
 		}
 
 		$rates = $this->getRates();
 
 		if ( !property_exists($rates, $mode) ) {
-			$mode = 'USDVEF';
+			$mode = 'USD';
 		}
 
 		$amount = (int) $amount;
 
 		$amount = $amount/100;
 
-		$percentage = $rates->$mode->rate;
+		$percentage = $rates->$mode->dolartoday;
 
 		if ( !empty($this->params['commission']) ) {
 			$percentage += $this->params['commission'];
