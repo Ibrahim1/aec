@@ -5218,8 +5218,8 @@ function saveService( $option, $apply=0 )
 {
 	$post = AECToolbox::cleanPOST( $_POST, false );
 
-	if ( $id ) {
-		$row = aecService::getById($id);
+	if ( $_POST['id'] ) {
+		$row = aecService::getById($_POST['id']);
 	} else {
 		$row = aecService::getByType($post['type']);
 	}
