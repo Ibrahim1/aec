@@ -298,7 +298,6 @@ class aecService extends serialParamDBTable
 		return array();
 	}
 
-
 	public function savePOSTsettings( $array )
 	{
 		// Strip out params that we don't need
@@ -329,5 +328,4 @@ class aecService extends serialParamDBTable
 
 		return $array;
 	}
-
 }
