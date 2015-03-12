@@ -237,6 +237,20 @@ switch( strtolower( $task ) ) {
 	case 'removeservice': removeService( $id, $option, $returnTask ); break;
 	case 'cancelservice': aecRedirect( 'index.php?option=' . $option . '&task=showServices', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
 
+	case 'events':
+	case 'showevents': listEvents( $option ); break;
+	case 'newevent': editEvent( 0, $option ); break;
+	case 'editevent': editEvent( $id[0], $option ); break;
+	case 'copyevent': copyObject( $option, 'Event', $id ); break;
+	case 'saveevent': saveEvent( $option ); break;
+	case 'applyevent': saveEvent( $option, 1 ); break;
+	case 'publishevent': changeEvent( $id, 1, 'active', $option ); break;
+	case 'unpublishevent': changeEvent( $id, 0, 'active', $option ); break;
+	case 'visibleevent': changeEvent( $id, 1, 'visible', $option ); break;
+	case 'invisibleevent': changeEvent( $id, 0, 'visible', $option ); break;
+	case 'removeevent': removeEvent( $id, $option, $returnTask ); break;
+	case 'cancelevent': aecRedirect( 'index.php?option=' . $option . '&task=showEvents', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+
 	case 'credits': HTML_AcctExp::credits(); break;
 
 	case 'quicklookup':
