@@ -237,15 +237,6 @@ class aecService extends serialParamDBTable
 		}
 	}
 
-	public function load( $id )
-	{
-		$return = parent::load($id);
-
-		//$this->loadLanguage();
-
-		return $return;
-	}
-
 	private function loadLanguage()
 	{
 		$basepath = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $this->type;
