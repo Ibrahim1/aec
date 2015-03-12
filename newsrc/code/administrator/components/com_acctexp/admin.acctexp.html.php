@@ -3954,7 +3954,7 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->newTab( 'mi', JText::_('AEC_SERVICE_TITLE') );
 
 		if ( $aecHTML->hasSettings ) {
-			$tabs->newTab( 'settings', JText::_('AEC_SERVICE_SETTINGS') );
+			//$tabs->newTab( 'settings', JText::_('AEC_SERVICE_SETTINGS') );
 		}
 
 		if ( !empty( $aecHTML->customparams ) ) {
@@ -3993,11 +3993,7 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 			<div class="col-sm-6">
 				<section class="paper">
-					<?php if ( $aecHTML->hasSettings ) {
-						$tabs->nextPane( 'settings' ); ?>
-						<div class="row">
-						<div class="col-sm-8 col-sm-offset-2">
-						<section class="paper">
+					<?php if ( $aecHTML->hasSettings ) { ?>
 						<h4><?php echo JText::_('AEC_SERVICE_SETTINGS'); ?></h4>
 						<?php foreach ( $aecHTML->customparams as $name ) { ?>
 							<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
@@ -4011,9 +4007,6 @@ jQuery(document).ready(function(jQuery) {
 								echo $aecHTML->createSettingsParticle( $name );
 							} ?>
 						<?php } ?>
-						</section>
-						</div>
-						</div>
 					<?php } else { ?>
 
 					<?php } ?>
@@ -4022,6 +4015,7 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
+		<input type="hidden" name="type" value="<?php echo $row->type; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />
 		</form>
