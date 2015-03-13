@@ -29,9 +29,23 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 	</div>
 	<?php
 
+	if ( !empty($InvoiceFactory->processorSelect) ) { ?>
+		<div class="col-sm-12">
+			<p>I want to pay with:</p>
+			<input id="processor" name="processor" value="" type="hidden">
+			<?php foreach ( $InvoiceFactory->processorSelect as $processor ) { ?>
+				<div class="form-group">
+					<label for="processor_<?php echo $processor->id; ?>_select">
+						<input id="processor_<?php echo $processor->id; ?>_select" name="processor"<?php echo $processor->selected ? ' checked="checked"' : ''; ?> value="<?php echo $processor->id; ?>" type="radio">
+					</label><?php echo $processor->name; ?>
+				</div>
+			<?php } ?>
+		</div>
+	<?php }
+
 	@include( $tmpl->tmpl( 'btn' ) );
 
 	@include( $tmpl->tmpl( 'processorinfo' ) );
-	
+
 	echo JHTML::_( 'form.token' ) ?>
 </form>

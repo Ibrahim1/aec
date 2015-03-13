@@ -821,6 +821,7 @@ class InvoiceFactory
 		switch ( $this->processor ) {
 			case 'free': $this->payment->method_name = JText::_('AEC_PAYM_METHOD_FREE'); break;
 			case 'none': break;
+			case 'select': break;
 			default:
 				$this->pp = new PaymentProcessor();
 				if ( $this->pp->loadName( $this->processor ) ) {
@@ -1757,6 +1758,44 @@ class InvoiceFactory
 			if ( !empty( $this->metaUser->cmsUser->$k ) ) {
 				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_'.strtoupper($k))
 									. "&nbsp;" . $this->metaUser->cmsUser->$k . '</p>';
+			}
+		}
+
+		$this->processorSelect = false;
+		if (
+			($this->processor == 'select' && !empty($this->plan->params['processor_selectmode']) && ($this->plan->params['processor_selectmode'] == 1))
+			|| (!empty($this->plan->params['processor_selectmode']) && ($this->plan->params['processor_selectmode'] == 2))
+		) {
+			$this->processorSelect = array();
+
+			$processors = array_reverse( $this->plan->params['processors'] );
+
+			foreach ( $processors as $kn => $n ) {
+				$pp = new PaymentProcessor();
+
+				if ( !$pp->loadId( $n ) ) {
+					continue;
+				}
+
+				if ( !$pp->processor->active ) {
+					continue;
+				}
+
+				$pp->init();
+				$pp->getInfo();
+
+				if ($this->processor == 'select') {
+					$selected = $kn == 0;
+				} else {
+					$selected = $this->processor == $pp->info['name'];
+				}
+
+				$this->processorSelect[] = (object) array(
+					'id' => $pp->processor->id,
+					'handle' => $pp->info['name'],
+					'name' => $pp->info['longname'],
+					'selected' => $selected
+				);
 			}
 		}
 

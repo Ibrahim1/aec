@@ -156,9 +156,11 @@ class mi_aecmodifycost
 		$options = $this->getOption( $request );
 
 		foreach ( $options as $option ) {
-			if ( !empty( $option ) ) {
-				$request = $this->addCost( $request, $request->add, $option );
-			}
+			if ( empty( $option ) ) continue;
+
+			$request = $this->addCost( $request, $request->add, $option );
+
+			if ( empty($this->settings['multi_select']) ) break;
 		}
 
 		return true;

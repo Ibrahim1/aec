@@ -447,6 +447,12 @@ class ItemGroupHandler
 	 */
 	static function getItemListItem( $plan )
 	{
+		if ( empty($plan->params['processor_selectmode']) ) {
+			$select_mode = '0';
+		} else {
+			$select_mode = $plan->params['processor_selectmode'];
+		}
+
 		$details = array(
 			'type'		=> 'item',
 			'id'		=> $plan->id,
@@ -455,6 +461,7 @@ class ItemGroupHandler
 			'desc'		=> $plan->getProperty( 'desc' ),
 			'ordering'	=> $plan->ordering,
 			'lifetime'	=> $plan->params['lifetime'],
+			'select_mode'	=> $select_mode,
 			'meta'		=> array()
 		);
 

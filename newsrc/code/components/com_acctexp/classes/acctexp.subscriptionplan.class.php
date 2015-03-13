@@ -183,6 +183,17 @@ class SubscriptionPlanList
 			);
 		}
 
+		if ( strtolower( $pp->processor_name ) == 'select' ) {
+			return array_merge( $btnarray, array(
+					'option' => 'com_acctexp',
+					'task' => 'subscribe',
+					'class' => 'btn btn-processor',
+					'content' => JText::_('BUTTON_SELECT'),
+					'returngroup' => $return,
+				)
+			);
+		}
+
 		$btnarray['view'] = '';
 
 		if ( $register ) {
@@ -323,6 +334,29 @@ class SubscriptionPlanList
 
 				$plans[$pid]['gw'][0]						= new stdClass();
 				$plans[$pid]['gw'][0]->processor_name		= 'add_to_cart';
+				$plans[$pid]['gw'][0]->info['statement']	= '';
+				$plans[$pid]['gw'][0]->recurring			= 0;
+
+				continue;
+			}
+
+			if ( empty($plan['select_mode']) ) {
+				$select_mode = '0';
+			} else {
+				$select_mode = $plan['select_mode'];
+			}
+
+			if ( $select_mode == 1 ) {
+				// We want to only select the processors on confirmation
+
+				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
+					if ( !$plan['plan']->params['full_free'] ) {
+						continue;
+					}
+				}
+
+				$plans[$pid]['gw'][0]						= new stdClass();
+				$plans[$pid]['gw'][0]->processor_name		= 'select';
 				$plans[$pid]['gw'][0]->info['statement']	= '';
 				$plans[$pid]['gw'][0]->recurring			= 0;
 
@@ -1564,6 +1598,8 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$processors = array();
 		foreach ( $post as $key => $value ) {
+			if ( $key == 'processor_selectmode' ) continue;
+
 			if ( ( strpos( $key, 'processor_' ) === 0 ) && $value ) {
 				$ppid = str_replace( 'processor_', '', $key );
 
@@ -1582,7 +1618,7 @@ class SubscriptionPlan extends serialParamDBTable
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
 						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
 						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout', 'addtocart_redirect',
-						'addtocart_max', 'cart_behavior', 'notes', 'meta'
+						'addtocart_max', 'cart_behavior', 'notes', 'meta', 'processor_selectmode'
 						);
 
 		$params = array();

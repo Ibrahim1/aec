@@ -27,7 +27,10 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 	<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0 ?>" />
 	<input type="hidden" name="task" value="saveSubscription" />
 	<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage ?>" />
-	<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor ?>" />
+	<?php if ( empty( $InvoiceFactory->processorSelect ) ) { ?>
+		<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor ?>" />
+	<?php } ?>
+
 	<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
 		<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring ?>" />
 	<?php } ?>
