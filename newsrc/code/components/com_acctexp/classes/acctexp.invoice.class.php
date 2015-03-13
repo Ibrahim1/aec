@@ -992,6 +992,19 @@ class InvoiceFactory
 		getView( 'exception', array( 'InvoiceFactory' => $this, 'aecHTML' => $aecHTML, 'hasform' => $hasform ) );
 	}
 
+	public function isActualProcessor()
+	{
+		return self::isActualProcessorName($this->method);
+	}
+
+	public static function isActualProcessorName( $name )
+	{
+		return !empty($name) && !in_array(
+			$name,
+			array('none', 'free', 'select')
+		);
+	}
+
 	public function isCart()
 	{
 		return ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) !== false ) );
@@ -2655,7 +2668,7 @@ class Invoice extends serialParamDBTable
 			$recurring_choice = null;
 		}
 
-		if ( ( $this->method !== 'none' ) && ( $this->method !== 'free' ) ) {
+		if ( $this->isActualProcessor() ) {
 			$pp = new PaymentProcessor();
 			if ( $pp->loadName( $this->method ) ) {
 				$pp->fullInit();
@@ -2689,38 +2702,32 @@ class Invoice extends serialParamDBTable
 
 		$recurring = 0;
 
-		if ( !empty( $this->method ) ) {
-			switch ( $this->method ) {
-				case 'none':
-				case 'free':
-					break;
-				default:
-					if ( empty( $InvoiceFactory->pp ) ) {
-						$pp = new PaymentProcessor();
-						if ( !$pp->loadName( $this->method ) ) {
-							$short	= 'processor loading failure';
-							$event	= 'When computing invoice amount, tried to load processor: ' . $this->method;
-							$tags	= 'processor,loading,error';
-							$params = array();
+		if ( InvoiceFactory::isActualProcessorName($this->method) ) {
+			if ( empty( $InvoiceFactory->pp ) ) {
+				$pp = new PaymentProcessor();
+				if ( !$pp->loadName( $this->method ) ) {
+					$short	= 'processor loading failure';
+					$event	= 'When computing invoice amount, tried to load processor: ' . $this->method;
+					$tags	= 'processor,loading,error';
+					$params = array();
 
-							$eventlog = new eventLog();
-							$eventlog->issue( $short, $tags, $event, 128, $params );
+					$eventlog = new eventLog();
+					$eventlog->issue( $short, $tags, $event, 128, $params );
 
-							return;
-						}
+					return;
+				}
 
-						$pp->fullInit();
-					} else {
-						$pp = $InvoiceFactory->pp;
-					}
+				$pp->fullInit();
+			} else {
+				$pp = $InvoiceFactory->pp;
+			}
 
-					if ( $pp->is_recurring( $recurring_choice ) ) {
-						$recurring = $pp->is_recurring( $recurring_choice );
-					}
+			if ( $pp->is_recurring( $recurring_choice ) ) {
+				$recurring = $pp->is_recurring( $recurring_choice );
+			}
 
-					if ( empty( $this->currency ) ) {
-						$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
-					}
+			if ( empty( $this->currency ) ) {
+				$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
 			}
 		}
 
