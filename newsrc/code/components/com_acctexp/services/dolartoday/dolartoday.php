@@ -22,10 +22,10 @@ class service_dolartoday extends aecService
 
 	protected function cmdConvert( $request )
 	{
-		if ( is_object($request) ) {
-			$amount = $request->amount;
+		if ( is_array($request) ) {
+			$amount = $request['amount'];
 
-			$mode = $request->mode;
+			$mode = $request['mode'];
 		} else {
 			$amount = $request;
 
@@ -44,10 +44,10 @@ class service_dolartoday extends aecService
 
 		$percentage = $rates->$mode->dolartoday;
 
-		$amount *= $percentage;
+		$amount = $amount * $percentage;
 
 		if ( !empty($this->params['multiplier']) ) {
-			$amount *= $this->params['multiplier'];
+			$amount = $amount * $this->params['multiplier'];
 		}
 
 		return round($amount, 2);
