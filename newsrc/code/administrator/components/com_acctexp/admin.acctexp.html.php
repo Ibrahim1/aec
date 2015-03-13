@@ -2392,6 +2392,8 @@ class HTML_AcctExp
 				<div class="row">
 					<div class="col-sm-4 col-sm-offset-4">
 						<br/>
+						<?php echo $aecHTML->createSettingsParticle( 'processor_selectmode' ); ?>
+						<br/>
 						<input type="button" class="btn btn-success btn-block enable-sorting" value="Unlock Sorting"/>
 						<p>&nbsp;</p>
 						<p class="text-center">

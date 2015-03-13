@@ -183,6 +183,17 @@ class SubscriptionPlanList
 			);
 		}
 
+		if ( strtolower( $pp->processor_name ) == 'select' ) {
+			return array_merge( $btnarray, array(
+					'option' => 'com_acctexp',
+					'task' => 'subscribe',
+					'class' => 'btn btn-processor',
+					'content' => JText::_('BUTTON_SELECT'),
+					'returngroup' => $return,
+				)
+			);
+		}
+
 		$btnarray['view'] = '';
 
 		if ( $register ) {
@@ -1587,6 +1598,8 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$processors = array();
 		foreach ( $post as $key => $value ) {
+			if ( $key == 'processor_selectmode' ) continue;
+
 			if ( ( strpos( $key, 'processor_' ) === 0 ) && $value ) {
 				$ppid = str_replace( 'processor_', '', $key );
 
@@ -1605,7 +1618,7 @@ class SubscriptionPlan extends serialParamDBTable
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
 						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
 						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout', 'addtocart_redirect',
-						'addtocart_max', 'cart_behavior', 'notes', 'meta'
+						'addtocart_max', 'cart_behavior', 'notes', 'meta', 'processor_selectmode'
 						);
 
 		$params = array();
