@@ -2754,6 +2754,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['gid']					= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
 	$params['lifetime']				= array( 'toggle', 0 );
 	$params['processors']			= array( 'list', '' );
+	$params['processor_selectmode']	= array( 'list', '' );
 	$params['standard_parent']		= array( 'list', '' );
 	$params['fallback']				= array( 'list', '' );
 	$params['fallback_req_parent']	= array( 'toggle', 0 );
@@ -2791,6 +2792,13 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists['trial_periodunit'] = JHTML::_('select.genericlist', $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
 	$lists['full_periodunit'] = JHTML::_('select.genericlist', $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
+
+	// make the select list for first trial period units
+	$selectmode[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_LIST') );
+	$selectmode[] = JHTML::_('select.option', '1', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_CONFIRMATION') );
+	$selectmode[] = JHTML::_('select.option', '2', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_BOTH') );
+
+	$lists['processor_selectmode'] = JHTML::_('select.genericlist', $selectmode, 'processor_selectmode', 'size="3"', 'value', 'text', arrayValueDefault($params_values, 'processor_selectmode', "0") );
 
 	$params['processors_remap'] = array("subarea_change", "plan_params");
 

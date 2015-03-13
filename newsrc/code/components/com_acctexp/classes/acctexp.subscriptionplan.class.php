@@ -329,6 +329,29 @@ class SubscriptionPlanList
 				continue;
 			}
 
+			if ( empty($plan['select_mode']) ) {
+				$select_mode = '0';
+			} else {
+				$select_mode = $plan['select_mode'];
+			}
+
+			if ( $select_mode == 1 ) {
+				// We want to only select the processors on confirmation
+
+				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
+					if ( !$plan['plan']->params['full_free'] ) {
+						continue;
+					}
+				}
+
+				$plans[$pid]['gw'][0]						= new stdClass();
+				$plans[$pid]['gw'][0]->processor_name		= 'select';
+				$plans[$pid]['gw'][0]->info['statement']	= '';
+				$plans[$pid]['gw'][0]->recurring			= 0;
+
+				continue;
+			}
+
 			if ( $plan['plan']->params['full_free'] ) {
 				$plans[$pid]['gw'][0]						= new stdClass();
 				$plans[$pid]['gw'][0]->processor_name		= 'free';
