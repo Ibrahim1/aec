@@ -4017,7 +4017,9 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
-		<input type="hidden" name="type" value="<?php echo $row->type; ?>" />
+		<?php if ( !empty( $row->type ) ) { ?>
+			<input type="hidden" name="type" value="<?php echo $row->type; ?>" />
+		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />
 		</form>

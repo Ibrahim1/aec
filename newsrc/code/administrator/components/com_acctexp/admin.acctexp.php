@@ -1331,6 +1331,8 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	}
 
 	foreach ( $rows as $k => $row ) {
+		if ( !isset($rows[$k]->type) ) continue;
+
 		$rows[$k]->type = $procs[$rows[$k]->type];
 	}
 
@@ -5163,7 +5165,7 @@ function listServices( $option )
 
 	$lists = array();
 
-	HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $lists, $orderby, $search );
+	HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
 }
 
 function editService( $id, $option )
