@@ -58,6 +58,7 @@ class service_dolartoday extends aecService
 		if (
 			isset($this->data->timestamp)
 			&& !empty($this->data->cache)
+			&& is_object($this->data->cache)
 			&& !empty($this->params['cache_age'])
 		) {
 			if ( (time() - $this->data->timestamp) > ($this->params['cache_age']*60) ) {
@@ -65,9 +66,11 @@ class service_dolartoday extends aecService
 			}
 		}
 
-		$data = json_decode(
-			file_get_contents('https://s3.amazonaws.com/dolartoday/data.json')
-		);
+		$url = 'https://s3.amazonaws.com/dolartoday/data.json';
+
+		$data = utf8_encode( file_get_contents($url) );
+
+		$data = json_decode($data);
 
 		if ( !empty($data) ) {
 			$this->data->timestamp = time();
