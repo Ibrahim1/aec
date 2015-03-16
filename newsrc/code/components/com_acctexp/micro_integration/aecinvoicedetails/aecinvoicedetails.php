@@ -53,7 +53,9 @@ class mi_aecinvoicedetails extends mi_aecuserdetails
 
 	public function action( $request, $jprofile=false )
 	{
-		$request->invoice->addParams( $request->params );
-		$request->invoice->storeload();
+		if ( is_object($request->invoice) && !empty($request->params) ) {
+			$request->invoice->addParams( $request->params );
+			$request->invoice->storeload();
+		}
 	}
 }
