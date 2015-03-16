@@ -25,7 +25,7 @@ jQuery(document).ready(function(jQuery) {
 	jQuery('#module-status span.multilanguage a').removeClass('modal');
 
 	if ( jQuery("#system-message li").length != 0 ) {
-		jQuery("div.container")[0]
+		jQuery(".aec-navbar .container")
 			.before(
 				'<span class="nav-msg label label-warning">'
 					+ jQuery("#system-message li").html()
