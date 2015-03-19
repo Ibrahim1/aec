@@ -153,12 +153,12 @@ class mi_aecpoints extends MI
 
 			$request->params['use_points'] = (int) $discount / $this->settings['checkout_conversion'];
 
-			if ( ( $request->params['use_points'] * $this->settings['checkout_conversion'] ) < $original_price ) {
+			while ( ( $request->params['use_points'] * $this->settings['checkout_conversion'] ) < $original_price ) {
 				$request->params['use_points']++;
 			}
 
 			$request->params['use_points_final'] = $request->params['use_points'];
-aecDebug($request->params);
+
 			$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $request->params, true );
 
 			$request->metaUser->meta->storeload();

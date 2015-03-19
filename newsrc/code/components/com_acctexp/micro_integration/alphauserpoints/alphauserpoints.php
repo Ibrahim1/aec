@@ -116,7 +116,7 @@ class mi_alphauserpoints extends MI
 			if ( !empty($points) ) {
 				$points = -$points;
 
-				$this->updatePoints( $request, $points, 'mi_action_'.$request->action, $invoice );
+				$this->updatePoints( $request->metaUser->userid, $points, 'mi_action_'.$request->action, $invoice );
 
 				$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $params, true );
 
@@ -128,7 +128,7 @@ class mi_alphauserpoints extends MI
 			return null;
 		}
 
-		$this->updatePoints( $request, $this->settings['change_points'.$request->area], 'mi_action_'.$request->action, $invoice );
+		$this->updatePoints( $request->metaUser->userid, $this->settings['change_points'.$request->area], 'mi_action_'.$request->action, $invoice );
 
 		return true;
 	}
@@ -153,7 +153,7 @@ class mi_alphauserpoints extends MI
 
 			$request->params['use_points'] = (int) $discount / $this->settings['checkout_conversion'];
 
-			if ( ( $request->params['use_points'] * $this->settings['checkout_conversion'] ) < $original_price ) {
+			while ( ( $request->params['use_points'] * $this->settings['checkout_conversion'] ) < $original_price ) {
 				$request->params['use_points']++;
 			}
 
@@ -181,6 +181,10 @@ class mi_alphauserpoints extends MI
 
 	public function updatePoints( $userid, $points, $comment )
 	{
+		if ( empty( $points ) ) {
+			return;
+		}
+
 		$db	   = JFactory::getDBO();
 
 		$query = "SELECT id, userid, referreid, points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
