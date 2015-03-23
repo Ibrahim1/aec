@@ -128,7 +128,7 @@ class PaymentProcessorHandler
 	 * @param bool	$active		get only active objects
 	 * @return array of (active) payment processors
 	 */
-	public static  function getInstalledObjectList( $active = false, $simple = false )
+	public static function getInstalledObjectList( $active = false, $simple = false )
 	{
 		$db = JFactory::getDBO();
 
@@ -138,6 +138,7 @@ class PaymentProcessorHandler
 		if ( $active ) {
 			$query .= ' WHERE `active` = \'1\'';
 		}
+
 		$db->setQuery( $query );
 
 		if ( $simple ) {
@@ -175,7 +176,7 @@ class PaymentProcessorHandler
 			$pp = new PaymentProcessor();
 
 			if ( $pp->loadName( $ppname ) ) {
-				$pp->init();
+				$pp->init(false);
 
 				if ( $getinfo ) {
 					$pp->getInfo();
@@ -335,9 +336,9 @@ class PaymentProcessor
 		}
 	}
 
-	public function fullInit()
+	public function fullInit( $install=false )
 	{
-		if ( $this->init() ) {
+		if ( $this->init($install) ) {
 			$this->getInfo();
 			$this->getSettings();
 
@@ -347,13 +348,13 @@ class PaymentProcessor
 		}
 	}
 
-	public function init()
+	public function init( $install=false )
 	{
-		if ( !$this->id ) {
+		if ( !$this->id && $install ) {
 			// Install and recurse
 			$this->install();
 			$this->init();
-		} else {
+		} elseif ( $this->id ) {
 			xJLanguageHandler::loadList( array(	'com_acctexp.processors.' . $this->processor_name => JPATH_SITE ) );
 
 			// Initiate processor from db
@@ -362,6 +363,8 @@ class PaymentProcessor
 			} else {
 				return true;
 			}
+		} else {
+			return false;
 		}
 	}
 
