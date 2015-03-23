@@ -424,8 +424,6 @@ class aecReadout
 
 	public function readProcessors()
 	{
-		$db = JFactory::getDBO();
-
 		$lang = JFactory::getLanguage();
 
 		$readout = array();

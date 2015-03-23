@@ -2707,7 +2707,7 @@ class Invoice extends serialParamDBTable
 			$recurring_choice = null;
 		}
 
-		if ( $this->isActualProcessor() ) {
+		if ( InvoiceFactory::isActualProcessorName($this->method) ) {
 			$pp = new PaymentProcessor();
 			if ( $pp->loadName( $this->method ) ) {
 				$pp->fullInit();

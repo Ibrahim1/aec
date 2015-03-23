@@ -2019,7 +2019,7 @@ function editProcessor( $id, $option )
 		}
 
 		// Init Info and Settings
-		$pp->fullInit();
+		$pp->fullInit(true);
 
 		$lists = array();
 
@@ -2204,7 +2204,7 @@ function saveProcessor( $option, $return=0 )
 		$procname = $_POST['processor'];
 	}
 
-	$pp->fullInit();
+	$pp->fullInit(true);
 
 	$active			= $procname . '_active';
 	$longname		= $procname . '_info_longname';
