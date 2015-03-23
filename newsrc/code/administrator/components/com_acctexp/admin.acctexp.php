@@ -2823,10 +2823,6 @@ function editSubscriptionPlan( $id, $option )
 		}
 	}
 
-	foreach ( $pps as $ppo ) {
-		$pps[] = $ppo;
-	}
-
 	$custompar = array();
 	foreach ( $pps as $ppobj ) {
 		if ( !$ppobj->active ) {
