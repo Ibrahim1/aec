@@ -3041,14 +3041,14 @@ function editSubscriptionPlan( $id, $option )
 
 	foreach ( $mi_list as $mi_details ) {
 		$mi_details->inherited = false;
-		if ( in_array( $mi_details->id, $attached_mis['inherited'] ) ) {
+		if ( !empty($attached_mis['inherited']) && in_array( $mi_details->id, $attached_mis['inherited'] ) ) {
 			$mi_details->inherited = true;
 
 			$mi_settings['inherited'][] = $mi_details;
 		}
 
 		$mi_details->attached = false;
-		if ( in_array( $mi_details->id, $attached_mis['plan'] ) ) {
+		if ( !empty($attached_mis['plan']) && in_array( $mi_details->id, $attached_mis['plan'] ) ) {
 			$mi_details->attached = true;
 		}
 
