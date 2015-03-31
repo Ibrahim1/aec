@@ -454,7 +454,7 @@ class SubscriptionPlanHandler
 		if ( $select ) {
 			$query = 'SELECT `id` AS value, `name` AS text FROM #__acctexp_plans';
 		} else {
-			$query = 'SELECT id FROM #__acctexp_plans';
+			$query = 'SELECT `id` FROM #__acctexp_plans';
 		}
 
 		if ( !empty( $filter ) ) {
