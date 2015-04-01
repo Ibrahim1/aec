@@ -68,7 +68,7 @@ class plgUserAECaccess extends JPlugin
 
 	public function onUserLoginFailure( $response, $options=null )
 	{
-		$this->onLoginFailure( $response, $options );
+		return $this->onLoginFailure( $response, $options );
 	}
 
 	public function onLoginFailure( $response, $options=null )
@@ -84,19 +84,26 @@ class plgUserAECaccess extends JPlugin
 
 		$redirect = false;
 
+		$aec_root = JURI::root() . 'index.php?option=com_acctexp&task=';
+
 		switch ( AEC_AUTH_ERROR_MSG ) {
 			case 'pending':
 			case 'open_invoice':
-				$redirect = JURI::root() . 'index.php?option=com_acctexp&task=pending&userid=' . $id;
+				$redirect = $aec_root . 'pending&userid=' . $id;
 				break;
 			case 'expired':
-				$redirect = JURI::root() . 'index.php?option=com_acctexp&task=expired&userid=' . $id ;
+				$redirect = $aec_root . 'expired&userid=' . $id;
 				break;
 			case 'hold':
-				$redirect = JURI::root() . 'index.php?option=com_acctexp&task=hold&userid=' . $id ;
+				$redirect = $aec_root . 'hold&userid=' . $id;
 				break;
 			case 'subscribe':
-				$redirect = JURI::root() . 'index.php?option=com_acctexp&task=subscribe&userid=' . $id ;
+				$redirect = $aec_root . 'subscribe&userid=' . $id;
+				break;
+			case 'blocked':
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_('JERROR_NOLOGIN_BLOCKED'));
+
+				return false;
 				break;
 		}
 
@@ -107,6 +114,8 @@ class plgUserAECaccess extends JPlugin
 		if ( $redirect ) {
 			$app->redirect( $redirect );
 		}
+
+		return true;
 	}
 
 	public function verify( $credentials )
