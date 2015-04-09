@@ -2114,9 +2114,11 @@ class InvoiceFactory
 			return getView( 'access_denied' );
 		}
 
-		if ( $this->pp->requireSSLcheckout() && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
-			aecRedirect( AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ) . '&'. xJ::token() .'=1', true, true ) );
-			exit();
+		if ( !empty($this->pp) ) {
+			if ( $this->pp->requireSSLcheckout() && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
+				aecRedirect( AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ) . '&'. xJ::token() .'=1', true, true ) );
+				exit();
+			}
 		}
 
 		$this->loadItems();

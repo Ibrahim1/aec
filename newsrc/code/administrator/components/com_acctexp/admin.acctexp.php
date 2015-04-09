@@ -681,8 +681,13 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		$invoices[$inv_id]['invoice_number']	= $is_formatted;
 		$invoices[$inv_id]['amount']			= $invoice->amount . '&nbsp;' . $invoice->currency;
 		$invoices[$inv_id]['status']			= $status;
-		$invoices[$inv_id]['processor']			= $invoice->method;
-		$invoices[$inv_id]['processor']			= $procs[$invoice->method];
+
+		if ( $procs[$invoice->method] ) {
+			$invoices[$inv_id]['processor']		= $invoice->method;
+		} else {
+			$invoices[$inv_id]['processor']		= $procs[$invoice->method];
+		}
+
 		$invoices[$inv_id]['usage']				= $invoice->usage;
 		$invoices[$inv_id]['actions']			= $actionlist;
 	}
