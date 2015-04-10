@@ -168,15 +168,13 @@ class mi_aecmodifycost
 
 	public function addCost( $request, $item, $option )
 	{
-		$total = $item['terms']->terms[0]->renderTotal();
-
 		if ( $option['mode'] == 'basic' ) {
 			$extracost = $option['amount'];
 		} else {
-			$extracost = AECToolbox::correctAmount( $total * ( $option['amount']/100 ) );
+			$extracost = AECToolbox::correctAmount(
+				$item['terms']->terms[0]->renderTotal() * ( $option['amount']/100 )
+			);
 		}
-
-		$newtotal = AECToolbox::correctAmount( $total + $option['amount'] );
 
 		$item['terms']->terms[0]->addCost( $extracost, array( 'details' => $option['extra'] ) );
 		$item['cost'] = $item['terms']->renderTotal();

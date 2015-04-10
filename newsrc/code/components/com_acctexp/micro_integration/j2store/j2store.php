@@ -30,36 +30,52 @@ class mi_j2store
 
 	public function invoice_item_cost( $request )
 	{
-		$results= $dispatcher->trigger('onJ2StoreGetLatestUserOrder',array($user_id)) ;
-		$results[0] // will give you the order id of that user
+		$dispatcher = new JEventDispatcher();
 
-		$request = $this->addCost( $request, $request->add, $option );
+		$results= $dispatcher->trigger(
+			'onJ2StoreGetLatestUserOrder',
+			array($request->metaUser->userid)
+		);
+
+		$order = $this->fetchOrder($results[0]);
+
+		$request = $this->addCost( $request, $request->add, $order->cost, $order->id );
+
+		if ( is_object($request->invoice) ) {
+			$request->invoice->addParams( array('j2store_orderid' => $order->id) );
+			$request->invoice->storeload();
+		}
 
 		return true;
 	}
 
-	public function addCost( $request, $item, $option )
+	private function fetchOrder( $id )
 	{
-		$total = $item['terms']->terms[0]->renderTotal();
+		return new stdClass();
+	}
 
-		if ( $option['mode'] == 'basic' ) {
-			$extracost = $option['amount'];
-		} else {
-			$extracost = AECToolbox::correctAmount( $total * ( $option['amount']/100 ) );
-		}
+	public function addCost( $request, $item, $amount, $info )
+	{
+		$item['terms']->terms[0]->addCost( $amount, array( 'details' => $info ) );
 
-		$newtotal = AECToolbox::correctAmount( $total + $option['amount'] );
-
-		$item['terms']->terms[0]->addCost( $extracost, array( 'details' => $option['extra'] ) );
 		$item['cost'] = $item['terms']->renderTotal();
 
 		return $request;
 	}
 
-	public function action()
+	public function action( $request )
 	{
+		$dispatcher = new JEventDispatcher();
 
+		$params = $request->invoice->getParams();
 
-		$results = $dispatcher->trigger('onJ2StoreUpdateOrderStatus',array($order_id,$status='')) ;
+		if ( isset($params['j2store_orderid']) ) {
+			return $dispatcher->trigger(
+				'onJ2StoreUpdateOrderStatus',
+				array($params['j2store_orderid'], 'cleared')
+			);
+		}
+
+		return null;
 	}
 }
