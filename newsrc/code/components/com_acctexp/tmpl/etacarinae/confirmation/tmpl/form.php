@@ -36,7 +36,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 			<?php foreach ( $InvoiceFactory->processorSelect as $processor ) { ?>
 				<div class="form-group">
 					<label for="processor_<?php echo $processor->id; ?>_select">
-						<input id="processor_<?php echo $processor->id; ?>_select" name="processor"<?php echo $processor->selected ? ' checked="checked"' : ''; ?> value="<?php echo $processor->id; ?>" type="radio">
+						<input id="processor_<?php echo $processor->id; ?>_select" name="processor"<?php echo $processor->selected ? ' checked="checked"' : ''; ?> value="<?php echo $processor->handle; ?>" type="radio">
 					</label><?php echo $processor->name; ?>
 				</div>
 			<?php } ?>
