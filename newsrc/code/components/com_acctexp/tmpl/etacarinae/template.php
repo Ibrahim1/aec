@@ -200,16 +200,18 @@ class template_etacarinae extends aecTemplate
 		$this->enqueueJQueryExtension( 'jquery/jquery.validate' );
 		$this->enqueueJQueryExtension( 'jquery/jquery.validate.additional-methods' );
 
-		$msgs = array(	'required' => 0, 'remote' => 0, 'email' => 0, 'url' => 0, 'date' => 0,
-						'dateISO' => 0, 'number' => 0, 'digits' => 0, 'creditcard' => 0, 'equalTo' => 0,
-						'maxlength' => 1, 'minlength' => 1, 'rangelength' => 2, 'range' => 2, 'max' => 1,
-						'min' => 1, 'maxwords' => 1, 'minwords' => 1, 'rangewords' => 2, 'letterswithbasicpunc' => 0,
-						'alphanumeric' => 0, 'alphanumericwithbasicpunc' => 0, 'lettersonly' => 0, 'nowhitespace' => 0, 'ziprange' => 0,
-						'zipcodeus' => 0, 'integer' => 0, 'vinus' => 0, 'dateita' => 0, 'datenl' => 0,
-						'time' => 0, 'time12h' => 0, 'phoneus' => 0, 'phoneuk' => 0, 'mobileuk' => 0,
-						'phonesuk' => 0, 'postcodeuk' => 0, 'strippedminlength' => 1, 'email2' => 0, 'url2' => 0,
-						'creditcardtypes' => 0, 'ipv4' => 0, 'ipv6' => 0, 'pattern' => 0, 'require_from_group' => 1,
-						'skip_or_fill_minimum' => 1, 'accept' => 0, 'extension' => 0 );
+		$msgs = array(
+			'required' => 0, 'remote' => 0, 'email' => 0, 'url' => 0, 'date' => 0,
+			'dateISO' => 0, 'number' => 0, 'digits' => 0, 'creditcard' => 0, 'equalTo' => 0,
+			'maxlength' => 1, 'minlength' => 1, 'rangelength' => 2, 'range' => 2, 'max' => 1,
+			'min' => 1, 'maxwords' => 1, 'minwords' => 1, 'rangewords' => 2, 'letterswithbasicpunc' => 0,
+			'alphanumeric' => 0, 'alphanumericwithbasicpunc' => 0, 'lettersonly' => 0, 'nowhitespace' => 0, 'ziprange' => 0,
+			'zipcodeus' => 0, 'integer' => 0, 'vinus' => 0, 'dateita' => 0, 'datenl' => 0,
+			'time' => 0, 'time12h' => 0, 'phoneus' => 0, 'phoneuk' => 0, 'mobileuk' => 0,
+			'phonesuk' => 0, 'postcodeuk' => 0, 'strippedminlength' => 1, 'email2' => 0, 'url2' => 0,
+			'creditcardtypes' => 0, 'ipv4' => 0, 'ipv6' => 0, 'pattern' => 0, 'require_from_group' => 1,
+			'skip_or_fill_minimum' => 1, 'accept' => 0, 'extension' => 0
+		);
 
 		$messages = array();
 		foreach( $msgs as $k => $i ) {
@@ -220,8 +222,7 @@ class template_etacarinae extends aecTemplate
 			}
 		}
 
-		$js = "
-		jQuery(document).ready(function(){
+		$js = "jQuery(document).ready(function(){
 
 			jQuery.extend(jQuery.validator.messages, {" . implode( ",\n", $messages ) . "} );
 
@@ -257,8 +258,7 @@ class template_etacarinae extends aecTemplate
 				}
 			}
 			});
-		});
-		";
+		});";
 
 		$this->enqueueJQueryCode( $js );
 	}

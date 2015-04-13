@@ -206,11 +206,15 @@ if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
 	}
 }
 
-if ( strpos( $var, 'class="tab-content"' ) ) {
-	/*$tmpl->enqueueValidation( array( 'rules' => array(
-													'cardNumber' => array( 'creditcard' => true, 'required' => true ),
-													'cardVV2' => array( 'required' => true )
-												) ) );*/
+if ( strpos( $var, 'name="cardNumber"' ) && strpos( $var, 'name="cardVV2"' ) ) {
+	$tmpl->enqueueValidation(
+		array(
+			'rules' => array(
+				'cardNumber' => array( 'creditcard' => true, 'required' => true ),
+				'cardVV2' => array( 'required' => true )
+			)
+		)
+	);
 
 	$tmpl->enqueueJQueryExtension( 'bootstrap/bootstrap.2.1.1.min' );
 
