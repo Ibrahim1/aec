@@ -215,7 +215,9 @@ if ( strpos( $var, 'name="cardNumber"' ) && strpos( $var, 'name="cardVV2"' ) ) {
 			)
 		)
 	);
+}
 
+if ( strpos( $var, 'class="tab-content"' ) ) {
 	$tmpl->enqueueJQueryExtension( 'bootstrap/bootstrap.2.1.1.min' );
 
 	$js = "jQuery('.nav-tabs a:first').tab('show');";
