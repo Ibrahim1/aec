@@ -38,7 +38,9 @@ function serviceCall( $type, $cmd, $request )
 		$request = stripslashes($request);
 	}
 
-	$req = json_decode( $request );
+    if ( strpos($request, '{') ) {
+        $request = json_decode( $request );
+    }
 
 	if ( !$service->testCmd($cmd, $request) ) {
 		header("HTTP/1.0 401 Unauthorized"); die; // die, die
@@ -72,7 +74,7 @@ class aecServiceList
 			. ' FROM #__acctexp_services'
 		);
 
-		$list = $db->loadObjectList();
+		return $db->loadObjectList();
 	}
 
 	public static function getAvailableServices()
@@ -236,6 +238,12 @@ class aecService extends serialParamDBTable
 			return false;
 		}
 	}
+
+    public function overloadByPlan( $plan )
+    {
+        // Get list of service MIs
+        // Pass in Service Settings and overload
+    }
 
 	private function loadLanguage()
 	{
