@@ -43,14 +43,10 @@ class service_dolartoday extends aecService
 		$amount = $amount/100;
 
 		if ( $mode != 'USD' ) {
-			$mode = 'USD';
-
-			$percentage = $rates->USDEUR->rate;
-
-			$amount = $amount * $percentage;
+			$mode = 'EUR';
 		}
 
-		$percentage = $rates->USDVEF->rate;
+		$percentage = $rates->$mode->rate;
 
 		$amount = $amount * $percentage;
 
