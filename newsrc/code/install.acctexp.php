@@ -27,9 +27,6 @@ if ( version_compare(phpversion(), '5.0') < 0 ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
 }
 
-// Joomla 1.7 - throwing errors like there's /no/ tomorrow
-ini_set('display_errors', 'off');
-
 if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 	class Com_AcctexpInstallerScript
 	{

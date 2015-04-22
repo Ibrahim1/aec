@@ -11,9 +11,7 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-$pph = new PaymentProcessorHandler;
-
-$testprocs = xJUtility::getFileArray( $pph->pp_dir, false, false );
+$testprocs = xJUtility::getFileArray( PaymentProcessorHandler::pp_dir(), false, false );
 
 // Check if there are old processor files
 if ( count( $testprocs ) > 5 ) {
@@ -43,7 +41,7 @@ if ( count( $testprocs ) > 5 ) {
 	);
 
 	// Figure out existing processors
-	$iprocs = $pph->getInstalledObjectList( false, true );
+	$iprocs = PaymentProcessorHandler::getInstalledObjectList( false, true );
 
 	// Remove all assets of non-existing processors
 	$noninstalled = array_diff( $images, $iprocs );
@@ -58,8 +56,8 @@ if ( count( $testprocs ) > 5 ) {
 
 	// Copy possible ideal_advanced certificates in /processors
 	if ( in_array( "ideal_advanced", $iprocs ) ) {
-		$oldidealssl = $pph->pp_dir . '/ideal_advanced/ssl';
-		$newidealssl = $pph->pp_dir . '/ideal_advanced/lib/ssl';
+		$oldidealssl = PaymentProcessorHandler::pp_dir() . '/ideal_advanced/ssl';
+		$newidealssl = PaymentProcessorHandler::pp_dir() . '/ideal_advanced/lib/ssl';
 
 		$eucaInstall->rrmdir( $newidealssl );
 
@@ -70,7 +68,7 @@ if ( count( $testprocs ) > 5 ) {
 	$crappy = array( 'cybermut', 'ideal_advanced', 'google_checkout', 'vcs' );
 
 	foreach ( $crappy as $ccproc ) {
-		$ibase = $pph->pp_dir . '/' . $ccproc;
+		$ibase = PaymentProcessorHandler::pp_dir() . '/' . $ccproc;
 
 		if ( is_dir( $ibase ) ) {
 			$idir = xJUtility::getFileArray( $ibase, false, true );
@@ -101,27 +99,27 @@ if ( count( $testprocs ) > 5 ) {
 	$olddirs = array( 'authorizenet_cim', 'dibs', 'mollie', 'pp_example' );
 
 	foreach( $olddirs as $olddir ) {
-		$eucaInstall->rrmdir( $pph->pp_dir . '/' . $olddir );
+		$eucaInstall->rrmdir( PaymentProcessorHandler::pp_dir() . '/' . $olddir );
 	}
 
 	// Remove old processor integrations
 	foreach ( $oldprocs as $proc ) {
-		$ppath = $pph->pp_dir . '/' . $proc . '.php';
+		$ppath = PaymentProcessorHandler::pp_dir() . '/' . $proc . '.php';
 
 		if ( file_exists( $ppath ) ) {
 			unlink( $ppath );
 		}
 	}
 
-	$customprocs = xJUtility::getFileArray( $pph->pp_dir, false, false );
+	$customprocs = xJUtility::getFileArray( PaymentProcessorHandler::pp_dir(), false, false );
 
 	foreach( $customprocs as $cproc ) {
 		if ( strpos( $cproc, '.php' ) ) {
-			$newdir = $pph->pp_dir . '/' . str_replace( '.php', '', $cproc );
+			$newdir = PaymentProcessorHandler::pp_dir() . '/' . str_replace( '.php', '', $cproc );
 
 			mkdir( $newdir );
 
-			rename( $pph->pp_dir . '/' . $cproc, $newdir . '/' . $cproc );
+			rename( PaymentProcessorHandler::pp_dir() . '/' . $cproc, $newdir . '/' . $cproc );
 		}
 	}
 

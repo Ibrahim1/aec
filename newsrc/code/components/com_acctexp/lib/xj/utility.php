@@ -6,6 +6,10 @@ class xJUtility
 		$dirArray	= array();
 		$handle		= dir( $dir );
 
+		if ( empty($handle) ) {
+			return null;
+		}
+
 		while ( ( $file = $handle->read() ) !== false ) {
 			if ( ( $file != '.' && $file != '..' ) || $keepDots ) {
 				if ( !$listDirectories ) {
