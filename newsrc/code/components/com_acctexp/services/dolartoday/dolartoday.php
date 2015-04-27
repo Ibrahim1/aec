@@ -46,7 +46,7 @@ class service_dolartoday extends aecService
 			$mode = 'EUR';
 		}
 
-		$percentage = $rates->$mode->rate;
+		$percentage = $rates->$mode->dolartoday;
 
 		$amount = $amount * $percentage;
 
