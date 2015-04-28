@@ -65,7 +65,7 @@ class service_dolartoday extends aecService
 			&& is_object($this->data->cache)
 			&& !empty($this->params['cache_age'])
 		) {
-			if ( (time() - $this->data->timestamp) > ($this->params['cache_age']*60) ) {
+			if ( ($this->data->timestamp - time()) > ($this->params['cache_age']*60) ) {
 				return $this->data->cache;
 			}
 		}
