@@ -46,6 +46,16 @@ class mi_aecinvoicedetails extends mi_aecuserdetails
 		return $params;
 	}
 
+	public function admin_form( $request )
+	{
+		return null;
+	}
+
+    public function profile_form( $request )
+	{
+		return null;
+	}
+
 	public function before_invoice_confirm( $request )
 	{
 		return true;

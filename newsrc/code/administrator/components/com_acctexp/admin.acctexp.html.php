@@ -754,9 +754,11 @@ class HTML_AcctExp
 					<tbody>
 					<?php
 					if ( !empty( $invoices ) ) {
-						foreach ( $invoices as $invoice ) { ?>
+						foreach ( $invoices as $invoice_id => $invoice ) { ?>
 							<tr<?php echo $invoice['rowstyle']; ?>>
-								<td><?php echo $invoice['invoice_number']; ?></td>
+								<td>
+									<a href="index.php?option=com_acctexp&amp;task=editInvoice&amp;returnTask=invoices&amp;id=<?php echo $invoice_id; ?>"><?php echo $invoice['invoice_number']; ?></a>
+								</td>
 								<td><?php echo $invoice['amount']; ?></td>
 								<td><?php echo $invoice['status']; ?></td>
 								<td><?php echo $invoice['processor']; ?></td>
