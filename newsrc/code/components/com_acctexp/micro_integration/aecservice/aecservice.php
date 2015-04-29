@@ -18,7 +18,7 @@ class mi_aecservice extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECSERVICE');
 		$info['desc'] = JText::_('AEC_MI_DESC_AECSERVICE');
-		$info['type'] = array( 'ecommerce.credits', 'vendor.valanx' );
+		$info['type'] = array( 'aec.system', 'vendor.valanx' );
 
 		return $info;
 	}
