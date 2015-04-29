@@ -38,13 +38,13 @@ function serviceCall( $type, $cmd, $request )
 		$request = stripslashes($request);
 	}
 
-    if ( strpos($request, '{') ) {
-        $request = json_decode( $request );
-    }
+	if ( strpos($request, '{') ) {
+		$request = json_decode( $request );
+	}
 
-    if ( is_object($request) && isset($request->plan) ) {
-        $service->overloadByPlan((int)$request->plan);
-    }
+	if ( is_object($request) && isset($request->plan) ) {
+		$service->overloadByPlan((int)$request->plan);
+	}
 
 	if ( !$service->testCmd($cmd, $request) ) {
 		header("HTTP/1.0 401 Unauthorized"); die; // die, die
@@ -243,20 +243,20 @@ class aecService extends serialParamDBTable
 		}
 	}
 
-    public function overloadByPlan( $plan )
-    {
-        // Get list of service MIs
-        $mis = microIntegrationHandler::getMIsbyPlan($plan);
+	public function overloadByPlan( $plan )
+	{
+		// Get list of service MIs
+		$mis = microIntegrationHandler::getMIsbyPlan($plan);
 
-        foreach ( $mis as $miid ) {
-            $mi = new microIntegration();
-            $mi->load($miid);
+		foreach ( $mis as $miid ) {
+			$mi = new microIntegration();
+			$mi->load($miid);
 
-            if ( method_exists($mi, 'serviceOverload') ) {
-                $mi->serviceOverload($this);
-            }
-        }
-    }
+			if ( method_exists($mi->mi_class, 'serviceOverload') ) {
+				$mi->serviceOverload($this);
+			}
+		}
+	}
 
 	private function loadLanguage()
 	{
