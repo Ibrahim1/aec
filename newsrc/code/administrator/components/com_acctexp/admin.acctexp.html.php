@@ -3732,9 +3732,9 @@ class HTML_AcctExp
 				<div class="col-sm-6 col-sm-offset-3">
 					<section class="paper">
 						<?php if ( $aecHTML->done ) { ?>
-							<p>Import ran through successfully.</p>
+							<p>The Import has been completed.</p>
 							<?php if ( !empty( $aecHTML->errors ) ) {?>
-								<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
+								<p>However, the import failed on <?php $aecHTML->errors ?> entries. This might mean it wasn\'t successful at all.</p>';
 							<?php } ?>
 						<?php } else { ?>
 							<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
