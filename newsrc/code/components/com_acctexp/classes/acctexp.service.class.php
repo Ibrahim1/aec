@@ -81,6 +81,18 @@ class aecServiceList
 		return $db->loadObjectList();
 	}
 
+	public static function getSelectList()
+	{
+		$db = JFactory::getDBO();
+
+		$query = 'SELECT `id` AS value, `name` AS text'
+			. ' FROM #__acctexp_plans'
+			. ' WHERE `active` = 1'
+		;
+		$db->setQuery( $query );
+		return $db->loadObjectList();
+	}
+
 	public static function getAvailableServices()
 	{
 		$list = xJUtility::getFileArray( self::getDir(), null, true, true );

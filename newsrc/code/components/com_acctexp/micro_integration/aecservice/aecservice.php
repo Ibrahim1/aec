@@ -27,8 +27,22 @@ class mi_aecservice extends MI
 	{
 		$settings = array();
 
-		$settings['change_points'] = array('list');
+		$settings['list'] = array(
+			'selected_service' => aecServiceList::getSelectList()
+		);
 
+		$settings['selected_service'] = array('list');
+
+		if ( $this->settings['selected_service'] ) {
+			$service = aecService::getByType(
+				$this->settings['selected_service']
+			);
+
+			$settings = array_merge(
+				$settings,
+				$service->getSettings()
+			);
+		}
 
 		return $settings;
 	}
