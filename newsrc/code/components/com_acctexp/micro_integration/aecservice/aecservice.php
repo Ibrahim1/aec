@@ -27,15 +27,10 @@ class mi_aecservice extends MI
 	{
 		$settings = array();
 
-		$settings['change_points']			= array( 'inputB' );
+		$settings['change_points'] = array('list');
 
-		$settings = $this->autoduplicatesettings( $settings );
 
-		$xsettings = array();
-		$xsettings['checkout_discount']			= array( 'toggle' );
-		$xsettings['checkout_conversion']		= array( 'inputB' );
-
-		return array_merge( $xsettings, $settings );
+		return $settings;
 	}
 
 	public function overrideService( &$service )
