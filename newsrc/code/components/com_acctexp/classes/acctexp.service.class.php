@@ -86,7 +86,7 @@ class aecServiceList
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id` AS value, `name` AS text'
-			. ' FROM #__acctexp_plans'
+			. ' FROM #__acctexp_services'
 			. ' WHERE `active` = 1'
 		;
 		$db->setQuery( $query );

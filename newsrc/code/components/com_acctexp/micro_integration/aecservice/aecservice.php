@@ -27,13 +27,21 @@ class mi_aecservice extends MI
 	{
 		$settings = array();
 
-		$settings['list'] = array(
-			'selected_service' => aecServiceList::getSelectList()
-		);
+		if ( empty($this->settings['selected_service']) ) {
+			$settings['lists'] = array(
+				'selected_service' => JHTML::_(
+					'select.genericlist',
+					aecServiceList::getSelectList(),
+					'type',
+					'size="1"',
+					'value',
+					'text',
+					0
+				)
+			);
 
-		$settings['selected_service'] = array('list');
-
-		if ( $this->settings['selected_service'] ) {
+			$settings['selected_service'] = array('list');
+		} else {
 			$service = aecService::getByType(
 				$this->settings['selected_service']
 			);

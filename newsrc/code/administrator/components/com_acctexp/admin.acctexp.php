@@ -5176,7 +5176,8 @@ function editService( $id, $option )
 
 	$row = aecService::getById($id);
 
-	if ( !$row->id ) {
+	if ( empty($row->id) ) {
+		$row = new aecService();
 		$row->ordering	= 9999;
 
 		$params_values['active']	= 1;
@@ -5185,7 +5186,6 @@ function editService( $id, $option )
 
 		// We need to convert the values that are set as object properties
 		$params_values['active']				= $row->active;
-		$params_values['visible']				= $row->visible;
 		$params_values['name']					= $row->name;
 	}
 
@@ -5211,7 +5211,7 @@ function editService( $id, $option )
 
 	$lists['type'] = JHTML::_('select.genericlist', $glist, 'type', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
-	$settings = new aecSettings ( 'service', 'general' );
+	$settings = new aecSettings( 'service', 'general' );
 
 	if ( $row->id ) {
 		$service_params = $row->getSettings();
@@ -5232,9 +5232,7 @@ function editService( $id, $option )
 		}
 	}
 
-	if ( $id ) {
-		$aecHTML->hasSettings = true;
-	}
+	$aecHTML->hasSettings = $id ? true : false;
 
 	HTML_AcctExp::editService( $option, $row, $aecHTML );
 }
