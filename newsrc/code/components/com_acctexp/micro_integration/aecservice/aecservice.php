@@ -32,7 +32,7 @@ class mi_aecservice extends MI
 				'selected_service' => JHTML::_(
 					'select.genericlist',
 					aecServiceList::getSelectList(),
-					'type',
+					'selected_service',
 					'size="1"',
 					'value',
 					'text',
@@ -41,10 +41,13 @@ class mi_aecservice extends MI
 			);
 
 			$settings['selected_service'] = array('list');
+			$settings['notice'] = array('p', 'test', 'test');
 		} else {
-			$service = aecService::getByType(
+			$service = aecService::getById(
 				$this->settings['selected_service']
 			);
+
+			$settings['notice'] = array('p', $service->name, $service->name);
 
 			$settings = array_merge(
 				$settings,
