@@ -41,13 +41,13 @@ class mi_aecservice extends MI
 			);
 
 			$settings['selected_service'] = array('list');
-			$settings['notice'] = array('p', 'test', 'test');
+			$settings['notice'] = array('p', 'Save once to show settings of the service');
 		} else {
 			$service = aecService::getById(
 				$this->settings['selected_service']
 			);
 
-			$settings['notice'] = array('p', $service->name, $service->name);
+			$settings['notice'] = array('p', $service->name);
 
 			$settings = array_merge(
 				$settings,
