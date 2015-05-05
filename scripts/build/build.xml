@@ -1,22 +1,22 @@
 <?xml version="1.0" ?>
 <!-- $Id$ -->
-<project name="AEC" basedir="/home/skore/workspace/aec" default="build">
+<project name="AEC" basedir="../.." default="build">
 	<target name="build" description="Build all installable packages">
-		<property name="self.root" value="/home/skore/workspace/aec/scripts/build" />
+		<property name="self.root" value="scripts/build" />
 
-		<property file="./scripts/build/properties/allpackages.properties" override="true" />
+		<property file="scripts/build/properties/allpackages.properties" override="true" />
 
 		<property name="git.lastrevision" value="6712" />
 		<exec command="git rev-parse --abbrev-ref HEAD" outputProperty="git.branch" />
 
-		<property file="./scripts/build/properties/com.properties" override="true" />
+		<property file="scripts/build/properties/com.properties" override="true" />
 
 		<property name="file.dist_package" value="AEC" />
 		<property name="file.dist_version" value="${file.version}" />
 
-		<phing phingfile="./scripts/build/build_packages.xml" inheritRefs="true">
-			<property file="./scripts/build/properties/allpackages_compression_zip.properties" override="true" />
-			<property file="./scripts/build/properties/allpackages_packing.properties" override="true" />
+		<phing phingfile="scripts/build/build_packages.xml" inheritRefs="true">
+			<property file="scripts/build/properties/allpackages_compression_zip.properties" override="true" />
+			<property file="scripts/build/properties/allpackages_packing.properties" override="true" />
 		</phing>
 	</target>
 </project>
