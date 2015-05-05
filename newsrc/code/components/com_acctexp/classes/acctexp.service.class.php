@@ -264,6 +264,8 @@ class aecService extends serialParamDBTable
 			$mi = new microIntegration();
 			$mi->load($miid);
 
+			if ( !$mi->callIntegration() ) continue;
+
 			if ( method_exists($mi->mi_class, 'serviceOverload') ) {
 				$mi->serviceOverload($this);
 			}
@@ -272,16 +274,35 @@ class aecService extends serialParamDBTable
 
 	private function loadLanguage()
 	{
-		$basepath = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $this->type;
+		$basepath = JPATH_SITE . '/components/com_acctexp/services/' . $this->type;
 
-		if ( empty( $this->id ) ) {
-			$this->copyAssets();
-		} elseif ( $override ) {
-			xJLanguageHandler::loadList( array( 'com_acctexp.mi.' . $this->type => $basepath ) );
-		}
+		if ( empty( $this->id ) ) $this->copyAssets();
 
-		if ( !$override ) {
-			xJLanguageHandler::loadList( array(	'com_acctexp.mi.' . $this->type => JPATH_SITE ) );
+		xJLanguageHandler::loadList( array(	'com_acctexp.services.' . $this->type => JPATH_SITE ) );
+	}
+
+	public function copyAssets()
+	{
+		$syslangpath = JPATH_SITE . '/language';
+
+		$languages = xJLanguageHandler::getSystemLanguages();
+
+		$langpath = JPATH_SITE . '/components/com_acctexp/services/' . $this->type . '/language';
+
+		foreach ( $languages as $l ) {
+			$lpath = $langpath . '/' . $l;
+
+			if ( !is_dir( $lpath ) || !is_dir( $syslangpath . '/' . $l ) ) continue;
+
+			$filename = $l . '.com_acctexp.services.' . $this->type . '.ini';
+
+			$source = $lpath . '/' . $filename;
+
+			if ( !file_exists( $source ) ) continue;
+
+			$dest = $syslangpath . '/' . $l . '/' . $filename;
+
+			copy( $source, $dest );
 		}
 	}
 

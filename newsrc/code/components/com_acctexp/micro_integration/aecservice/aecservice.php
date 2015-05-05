@@ -60,5 +60,10 @@ class mi_aecservice extends MI
 
 	public function overrideService( &$service )
 	{
+		foreach ( $this->settings as $k => $v ) {
+			if ( isset($service->params[$k]) ) {
+				$service->params[$k] = $v;
+			}
+		}
 	}
 }
