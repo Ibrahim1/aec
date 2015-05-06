@@ -43,6 +43,8 @@ class mi_aecservice extends MI
 			$settings['selected_service'] = array('list');
 			$settings['notice'] = array('p', 'Save once to show settings of the service');
 		} else {
+			$settings['selected_service'] = array('hidden');
+
 			$service = aecService::getById(
 				$this->settings['selected_service']
 			);
@@ -60,6 +62,8 @@ class mi_aecservice extends MI
 
 	public function overrideService( &$service )
 	{
+		if ( $service->id !== $this->settings['selected_service'] ) return;
+
 		foreach ( $this->settings as $k => $v ) {
 			if ( isset($service->params[$k]) && !empty($service->params[$k]) ) {
 				$service->params[$k] = $v;

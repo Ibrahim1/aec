@@ -77,14 +77,17 @@ class service_dolartoday extends aecService
 		$data = json_decode($data);
 
 		if ( !empty($data) ) {
-			if ( empty($this->data) ) {
-				$this->data = new stdClass();
+			$service = new aecService();
+			$service->getById($this->id);
+
+			if ( empty($service->data) ) {
+				$service->data = new stdClass();
 			}
 
-			$this->data->timestamp = time();
-			$this->data->cache = $data;
+			$service->data->timestamp = time();
+			$service->data->cache = $data;
 
-			$this->storeload();
+			$service->storeload();
 		}
 
 		return $data;

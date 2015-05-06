@@ -220,6 +220,8 @@ class aecService extends serialParamDBTable
 
 		$id = $db->loadResult();
 
+		if ( empty($id) ) return false;
+
 		include_once aecServiceList::getServicePath($type) . '/' . $type . '.php';
 
 		if ( $id ) {
@@ -263,7 +265,7 @@ class aecService extends serialParamDBTable
 		$mis = microIntegrationHandler::getMIsbyPlan($plan);
 
 		if ( empty($mis) ) return;
-print_r($this);
+
 		foreach ( $mis as $miid ) {
 			$mi = new microIntegration();
 			$mi->load($miid);
@@ -273,7 +275,7 @@ print_r($this);
 			if ( method_exists($mi->mi_class, 'overrideService') ) {
 				$mi->mi_class->overrideService($this);
 			}
-		}print_r($this);
+		}
 	}
 
 	private function loadLanguage()
