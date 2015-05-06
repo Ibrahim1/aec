@@ -22,10 +22,10 @@ class service_dolartoday extends aecService
 
 	protected function cmdConvert( $request )
 	{
-		if ( is_array($request) ) {
-			$amount = $request['amount'];
+		if ( is_object($request) ) {
+			$amount = $request->amount;
 
-			$mode = $request['mode'];
+			$mode = isset($request->mode) ? $request->mode : 'USD';
 		} else {
 			$amount = $request;
 
@@ -77,6 +77,10 @@ class service_dolartoday extends aecService
 		$data = json_decode($data);
 
 		if ( !empty($data) ) {
+			if ( empty($this->data) ) {
+				$this->data = new stdClass();
+			}
+
 			$this->data->timestamp = time();
 			$this->data->cache = $data;
 

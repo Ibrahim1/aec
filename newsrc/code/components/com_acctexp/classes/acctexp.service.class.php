@@ -13,8 +13,6 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 function serviceCall( $type, $cmd, $request )
 {
-	global $aecConfig;
-
 	$list = aecServiceList::getFlatList();
 
 	$id = 0;
@@ -34,12 +32,16 @@ function serviceCall( $type, $cmd, $request )
 		header("HTTP/1.0 401 Unauthorized"); die; // die, die
 	}
 
-	if ( get_magic_quotes_gpc() ) {
-		$request = stripslashes($request);
-	}
+	if ( !is_array($request) ) {
+		if ( get_magic_quotes_gpc() ) {
+			$request = stripslashes($request);
+		}
 
-	if ( strpos($request, '{') ) {
-		$request = json_decode( $request );
+		if ( strpos($request, '{') ) {
+			$request = json_decode( $request );
+		}
+	} elseif ( !is_object($request) ) {
+		$request = (object) $request;
 	}
 
 	if ( is_object($request) && isset($request->plan) ) {
@@ -260,16 +262,18 @@ class aecService extends serialParamDBTable
 		// Get list of service MIs
 		$mis = microIntegrationHandler::getMIsbyPlan($plan);
 
+		if ( empty($mis) ) return;
+print_r($this);
 		foreach ( $mis as $miid ) {
 			$mi = new microIntegration();
 			$mi->load($miid);
 
 			if ( !$mi->callIntegration() ) continue;
 
-			if ( method_exists($mi->mi_class, 'serviceOverload') ) {
-				$mi->serviceOverload($this);
+			if ( method_exists($mi->mi_class, 'overrideService') ) {
+				$mi->mi_class->overrideService($this);
 			}
-		}
+		}print_r($this);
 	}
 
 	private function loadLanguage()
