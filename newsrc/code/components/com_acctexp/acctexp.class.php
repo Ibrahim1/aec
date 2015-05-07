@@ -3,7 +3,7 @@
  * @version $Id: acctexp.class.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Core Class
- * @copyright 2006-2013 Copyright (C) David Deutsch
+ * @copyright 2006-2015 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -12,7 +12,7 @@
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 define( '_AEC_VERSION', '1.2' );
-define( '_AEC_REVISION', '6718' );
+define( '_AEC_REVISION', '6719' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
