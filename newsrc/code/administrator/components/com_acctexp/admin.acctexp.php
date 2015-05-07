@@ -1099,8 +1099,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 	}
 
-	$expire = trim( aecGetParam( 'set_expiration', null ) );
-	if ( !is_null( $expire ) && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
+	$set_status = trim( aecGetParam( 'set_status', null ) );
+	$set_expire = trim( aecGetParam( 'set_status', null ) );
+	if (
+		( !is_null( $set_status ) || !is_null( $set_expire ) )
+		&& is_array( $subscriptionid )
+		&& count( $subscriptionid ) > 0
+	) {
 		foreach ( $subscriptionid as $k ) {
 			$subscriptionHandler = new Subscription();
 
@@ -1110,37 +1115,37 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				$subscriptionHandler->createNew( $k, '', 1 );
 			}
 
-			if ( strcmp( $expire, 'now' ) === 0) {
+			if ( strcmp( $set_status, 'now' ) === 0) {
 				$subscriptionHandler->expire();
 
 				if ( !in_array( 'expired', $groups ) ) {
 					$groups[] = 'expired';
 				}
-			} elseif ( strcmp( $expire, 'exclude' ) === 0 ) {
+			} elseif ( strcmp( $set_status, 'exclude' ) === 0 ) {
 				$subscriptionHandler->setStatus( 'Excluded' );
 
 				if ( !in_array( 'excluded', $groups ) ) {
 					$groups[] = 'excluded';
 				}
-			} elseif ( strcmp( $expire, 'close' ) === 0 ) {
+			} elseif ( strcmp( $set_status, 'close' ) === 0 ) {
 				$subscriptionHandler->setStatus( 'Closed' );
 
 				if ( !in_array( 'closed', $groups ) ) {
 					$groups[] = 'closed';
 				}
-			} elseif ( strcmp( $expire, 'hold' ) === 0 ) {
+			} elseif ( strcmp( $set_status, 'hold' ) === 0 ) {
 				$subscriptionHandler->setStatus( 'Hold' );
 
 				if ( !in_array( 'hold', $groups ) ) {
 					$groups[] = 'hold';
 				}
-			} elseif ( strcmp( $expire, 'include' ) === 0 ) {
+			} elseif ( strcmp( $set_status, 'include' ) === 0 ) {
 				$subscriptionHandler->setStatus( 'Active' );
 
 				if ( !in_array( 'active', $groups ) ) {
 					$groups[] = 'active';
 				}
-			} elseif ( strcmp( $expire, 'lifetime' ) === 0 ) {
+			} elseif ( strcmp( $set_status, 'lifetime' ) === 0 ) {
 				if ( !$subscriptionHandler->isLifetime() ) {
 					$subscriptionHandler->expiration = '9999-12-31 00:00:00';
 					$subscriptionHandler->lifetime = 1;
@@ -1151,27 +1156,29 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				if ( !in_array( 'active', $groups ) ) {
 					$groups[] = 'active';
 				}
-			} elseif ( strpos( $expire, 'set' ) === 0 ) {
-				$subscriptionHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
+			}
 
-				$subscriptionHandler->lifetime = 0;
-				$subscriptionHandler->setStatus( 'Active' );
+			if ( $set_status !== 'lifetime' ) {
+				if ( strpos( $set_expire, 'set' ) === 0 ) {
+					$subscriptionHandler->setExpiration( 'M', substr( $set_expire, 4 ), 0 );
 
-				if ( !in_array( 'active', $groups ) ) {
-					$groups[] = 'active';
-				}
-			} elseif ( strpos( $expire, 'add' ) === 0 ) {
-				if ( $subscriptionHandler->lifetime) {
-					$subscriptionHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
-				} else {
-					$subscriptionHandler->setExpiration( 'M', substr( $expire, 4 ), 1 );
-				}
+					$subscriptionHandler->lifetime = 0;
 
-				$subscriptionHandler->lifetime = 0;
-				$subscriptionHandler->setStatus( 'Active' );
+					if ( !in_array( 'active', $groups ) ) {
+						$groups[] = 'active';
+					}
+				} elseif ( strpos( $set_expire, 'add' ) === 0 ) {
+					if ( $subscriptionHandler->lifetime) {
+						$subscriptionHandler->setExpiration( 'M', substr( $set_expire, 4 ), 0 );
+					} else {
+						$subscriptionHandler->setExpiration( 'M', substr( $set_expire, 4 ), 1 );
+					}
 
-				if ( !in_array( 'active', $groups ) ) {
-					$groups[] = 'active';
+					$subscriptionHandler->lifetime = 0;
+
+					if ( !in_array( 'active', $groups ) ) {
+						$groups[] = 'active';
+					}
 				}
 			}
 		}
@@ -1373,15 +1380,16 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	}
 	$lists['filter_group'] .= '</select>';
 
-	$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
-						'pending'	=> JText::_('AEC_SEL_PENDING'),
-						'active'	=> JText::_('AEC_SEL_ACTIVE'),
-						'expired'	=> JText::_('AEC_SEL_EXPIRED'),
-						'closed'	=> JText::_('AEC_SEL_CLOSED'),
-						'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
-						'hold'		=> JText::_('AEC_SEL_HOLD'),
-						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
-						);
+	$status = array(
+		'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
+		'pending'	=> JText::_('AEC_SEL_PENDING'),
+		'active'	=> JText::_('AEC_SEL_ACTIVE'),
+		'expired'	=> JText::_('AEC_SEL_EXPIRED'),
+		'closed'	=> JText::_('AEC_SEL_CLOSED'),
+		'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
+		'hold'		=> JText::_('AEC_SEL_HOLD'),
+		'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
+	);
 
 	$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';
 	foreach ( $status as $id => $txt ) {
@@ -1390,21 +1398,22 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$lists['groups'] .= '</select>';
 
 	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
+	$group_selection[] = JHTML::_('select.option', '',			JText::_('Set Status') );
 	$group_selection[] = JHTML::_('select.option', 'now',		JText::_('EXPIRE_NOW') );
 	$group_selection[] = JHTML::_('select.option', 'exclude',	JText::_('EXPIRE_EXCLUDE') );
 	$group_selection[] = JHTML::_('select.option', 'lifetime',	JText::_('AEC_CMN_LIFETIME') );
 	$group_selection[] = JHTML::_('select.option', 'include',	JText::_('EXPIRE_INCLUDE') );
 	$group_selection[] = JHTML::_('select.option', 'close',		JText::_('EXPIRE_CLOSE') );
 	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
-	$group_selection[] = JHTML::_('select.option', 'add_1',		JText::_('EXPIRE_ADD01MONTH') );
-	$group_selection[] = JHTML::_('select.option', 'add_3',		JText::_('EXPIRE_ADD03MONTH') );
-	$group_selection[] = JHTML::_('select.option', 'add_12',	JText::_('EXPIRE_ADD12MONTH') );
-	$group_selection[] = JHTML::_('select.option', 'set_1',		JText::_('EXPIRE_01MONTH') );
-	$group_selection[] = JHTML::_('select.option', 'set_3',		JText::_('EXPIRE_03MONTH') );
-	$group_selection[] = JHTML::_('select.option', 'set_12',	JText::_('EXPIRE_12MONTH') );
 
-	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
+	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox" size="1"', 'value', 'text', "");
+
+	$group_selection = array();
+	$group_selection[] = JHTML::_('select.option', 'add',		JText::_('Add') );
+	$group_selection[] = JHTML::_('select.option', 'set',		JText::_('Set') );
+
+	$lists['add_or_set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'add_or_set_expiration', 'class="inputbox" size="1"', 'value', 'text', "");
+
 
 	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
 }

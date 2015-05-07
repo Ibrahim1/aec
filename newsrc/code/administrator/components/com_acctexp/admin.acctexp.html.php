@@ -291,9 +291,18 @@ class HTML_myCommon
 						)
 					);
 					break;
+				case 'bulk-edit':
+					$buttons = array(
+						'edit' => array(
+							'style' => 'success',
+							'modal' => 'bulk-edit',
+							'text' => JText::_('Bulk Edit'),
+							'actionable' => true,
+							'icon' => 'pencil'
+						)
+					);
 			}
 		}
-
 
 		?><div class="aec-buttons"><?php
 		foreach ( $buttons as $action => $button ) {
@@ -317,17 +326,21 @@ class HTML_myCommon
 	{
 		$v = new JVersion();
 
-		return '<a'
+		if ( !empty($button['modal']) ) {
+			return '<a href="#' . $button['modal'] . '" id="' . $button['modal'] . '-trigger" class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . '" data-toggle="modal" class="toolbar-notify">' . aecHTML::Icon( $button['icon'] ) . ' ' . ( $fulltext ? '' : $button['text'] ) . '</a>';
+		} else {
+			return '<a'
 			. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . '"'
 			. ' onclick="javascript: '
-				. ( $v->isCompatible('2.5') ? 'Joomla.' : '' )
-				. 'submitbutton(\'' . $action . $object . '\')"'
+			. ( $v->isCompatible('2.5') ? 'Joomla.' : '' )
+			. 'submitbutton(\'' . $action . $object . '\')"'
 			. ( !empty($button['actionable']) ? ' disabled="disabled"' : '' )
 			. ' href="#"'
 			. ' rel="tooltip"'
 			. ' data-original-title="' . ( $fulltext ? '' : $button['text'] ) . '">'
 			. aecHTML::Icon( $button['icon'] ) . ( $fulltext ? ' ' . $button['text'] : '' )
 			. '</a>';
+		}
 	}
 
 	/**
@@ -1757,23 +1770,17 @@ class HTML_AcctExp
 
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<?php HTML_myCommon::getHeader( $action[1], '' . $action[0], '', $search ); ?>
+			<?php
+
+			HTML_myCommon::getHeader( $action[1], '' . $action[0], '', $search, 'bulk-edit', 'Subscription' );
+
+			?>
 			<input type="hidden" name="orderby_subscr" value="<?php echo $orderby; ?>"/>
 
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="col-sm-12">
-							<!--<div class="table-attachment table-attachment-top">
-								<div class="filter-sub">
-									<label class="col-sm-4 control-label">With selected users:</label>
-									<div class="control"><?php echo $lists['planid']; ?></div>
-									<div class="control"><?php echo $lists['set_expiration']; ?></div>
-								</div>
-								<div style="float: right; width: 40%;">
-									<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
-								</div>
-							</div>-->
 							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
 									<th class="text-center">
@@ -1849,6 +1856,26 @@ class HTML_AcctExp
 			<input type="hidden" name="task" value="showActive" />
 			<input type="hidden" name="returnTask" value="showActive" />
 			<input type="hidden" name="boxchecked" value="0" />
+
+			<div class="modal fade" id="bulk-edit">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							<h3>Bulk Edit Subscriptions</h3>
+						</div>
+						<div class="modal-body">
+							<label class="control-label">With selected users:</label>
+							<div class="control"><?php echo $lists['planid']; ?></div>
+							<div class="control"><?php echo $lists['set_status']; ?></div>
+							<!-- TODO: Ctrls for expiration add/set, time, period -->
+						</div>
+						<div class="modal-footer">
+							<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
+						</div>
+					</div>
+				</div>
+			</div>
 		</form>
 
 		</div>
