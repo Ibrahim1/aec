@@ -1406,13 +1406,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = JHTML::_('select.option', 'close',		JText::_('EXPIRE_CLOSE') );
 	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
 
-	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox" size="1"', 'value', 'text', "");
+	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="form-control inputbox" size="1"', 'value', 'text', "");
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', 'add',		JText::_('Add') );
 	$group_selection[] = JHTML::_('select.option', 'set',		JText::_('Set') );
 
-	$lists['add_or_set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'add_or_set_expiration', 'class="inputbox" size="1"', 'value', 'text', "");
+	$lists['add_or_set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'add_or_set_expiration', 'class="form-control inputbox" size="1"', 'value', 'text', "");
 
 
 	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );

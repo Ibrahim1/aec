@@ -327,7 +327,7 @@ class HTML_myCommon
 		$v = new JVersion();
 
 		if ( !empty($button['modal']) ) {
-			return '<a href="#' . $button['modal'] . '" id="' . $button['modal'] . '-trigger" class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . '" data-toggle="modal" class="toolbar-notify">' . aecHTML::Icon( $button['icon'] ) . ' ' . ( $fulltext ? '' : $button['text'] ) . '</a>';
+			return '<a href="#' . $button['modal'] . '" id="' . $button['modal'] . '-trigger" class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . '" data-toggle="modal" class="toolbar-notify">' . aecHTML::Icon( $button['icon'] ) . '&nbsp;&nbsp;' . ( $fulltext ? '' : $button['text'] ) . '</a>';
 		} else {
 			return '<a'
 			. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . '"'
@@ -1865,9 +1865,27 @@ class HTML_AcctExp
 							<h3>Bulk Edit Subscriptions</h3>
 						</div>
 						<div class="modal-body">
-							<label class="control-label">With selected users:</label>
-							<div class="control"><?php echo $lists['planid']; ?></div>
-							<div class="control"><?php echo $lists['set_status']; ?></div>
+							<div class="form-group">
+								<label class="control-label">With selected users:</label>
+								<?php echo $lists['planid']; ?>
+							</div>
+							<div class="form-group">
+								<div class="form-group">
+									<?php echo $lists['set_status']; ?>
+								</div>
+							</div>
+							<div class="form-inline">
+								<div class="form-group">
+									<?php echo $lists['add_or_set_expiration']; ?>
+								</div>
+								<div class="form-group">
+									<input type="set_time" class="form-control" id="set_time" placeholder="">
+								</div>
+								<div class="form-group">
+									<?php echo $lists['set_time_unit']; ?>
+								</div>
+
+							</div>
 							<!-- TODO: Ctrls for expiration add/set, time, period -->
 						</div>
 						<div class="modal-footer">
