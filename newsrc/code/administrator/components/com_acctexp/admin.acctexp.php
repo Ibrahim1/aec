@@ -1100,9 +1100,12 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	}
 
 	$set_status = trim( aecGetParam( 'set_status', null ) );
-	$set_expire = trim( aecGetParam( 'set_status', null ) );
+	$add_or_set_expiration = trim( aecGetParam( 'add_or_set_expiration', null ) );
+	$set_time = trim( aecGetParam( 'set_time', null ) );
+	$set_time_unit = trim( aecGetParam( 'set_time_unit', null ) );
+
 	if (
-		( !is_null( $set_status ) || !is_null( $set_expire ) )
+		( !empty( $set_status ) || !empty( $add_or_set_expiration ) )
 		&& is_array( $subscriptionid )
 		&& count( $subscriptionid ) > 0
 	) {
@@ -1158,23 +1161,32 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				}
 			}
 
-			if ( $set_status !== 'lifetime' ) {
-				if ( strpos( $set_expire, 'set' ) === 0 ) {
-					$subscriptionHandler->setExpiration( 'M', substr( $set_expire, 4 ), 0 );
+			if (
+				$set_status !== 'lifetime'
+				&& !empty($add_or_set_expiration)
+				&& !empty($set_time)
+				&& !empty($set_time_unit)
+			) {
+				if ( $add_or_set_expiration == 'set' ) {
+					$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 0 );
 
 					$subscriptionHandler->lifetime = 0;
+
+					$subscriptionHandler->storeload();
 
 					if ( !in_array( 'active', $groups ) ) {
 						$groups[] = 'active';
 					}
-				} elseif ( strpos( $set_expire, 'add' ) === 0 ) {
+				} elseif ( $add_or_set_expiration == 'add' ) {
 					if ( $subscriptionHandler->lifetime) {
-						$subscriptionHandler->setExpiration( 'M', substr( $set_expire, 4 ), 0 );
+						$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 0 );
 					} else {
-						$subscriptionHandler->setExpiration( 'M', substr( $set_expire, 4 ), 1 );
+						$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 1 );
 					}
 
 					$subscriptionHandler->lifetime = 0;
+
+					$subscriptionHandler->storeload();
 
 					if ( !in_array( 'active', $groups ) ) {
 						$groups[] = 'active';
@@ -1360,7 +1372,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	if ( is_array( $db_plans ) ) {
 		$plans2 = array_merge( $plans2, $db_plans );
 	}
-	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
+	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="form-control inputbox" size="1"', 'id', 'name', 0 );
 
 	$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
 	foreach ( $db_plans as $plan ) {
@@ -1406,7 +1418,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = JHTML::_('select.option', 'close',		JText::_('EXPIRE_CLOSE') );
 	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
 
-	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="form-control inputbox" size="1"', 'value', 'text', "");
+	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="form-control inputbox" size="1"', 'value', 'text', "");
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', 'add',		JText::_('Add') );
@@ -1414,6 +1426,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$lists['add_or_set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'add_or_set_expiration', 'class="form-control inputbox" size="1"', 'value', 'text', "");
 
+	// make the select list for first trial period units
+	$perunit[] = JHTML::_('select.option', 'D', JText::_('PAYPLAN_PERUNIT1') );
+	$perunit[] = JHTML::_('select.option', 'W', JText::_('PAYPLAN_PERUNIT2') );
+	$perunit[] = JHTML::_('select.option', 'M', JText::_('PAYPLAN_PERUNIT3') );
+	$perunit[] = JHTML::_('select.option', 'Y', JText::_('PAYPLAN_PERUNIT4') );
+
+	$lists['set_time_unit'] = JHTML::_('select.genericlist', $perunit, 'set_time_unit', 'class="form-control inputbox" size="1"', 'value', 'text');
 
 	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
 }

@@ -1816,7 +1816,7 @@ class HTML_AcctExp
 									$rowstyle = '';
 									if ( is_array( $subscriptionid ) ) {
 										if ( in_array( $row->id, $subscriptionid ) ) {
-											$rowstyle = ' style="border: 2px solid #DD0;"';
+											$rowstyle = ' class="warning"';
 										}
 									} ?>
 									<tr<?php echo $rowstyle; ?>>
@@ -1865,8 +1865,8 @@ class HTML_AcctExp
 							<h3>Bulk Edit Subscriptions</h3>
 						</div>
 						<div class="modal-body">
+							<p>With selected users:</p>
 							<div class="form-group">
-								<label class="control-label">With selected users:</label>
 								<?php echo $lists['planid']; ?>
 							</div>
 							<div class="form-group">
@@ -1874,12 +1874,13 @@ class HTML_AcctExp
 									<?php echo $lists['set_status']; ?>
 								</div>
 							</div>
+							<label class="control-label">Change Expiration:</label>
 							<div class="form-inline">
 								<div class="form-group">
 									<?php echo $lists['add_or_set_expiration']; ?>
 								</div>
 								<div class="form-group">
-									<input type="set_time" class="form-control" id="set_time" placeholder="">
+									<input type="text" name="set_time" class="form-control" id="set_time" placeholder="">
 								</div>
 								<div class="form-group">
 									<?php echo $lists['set_time_unit']; ?>

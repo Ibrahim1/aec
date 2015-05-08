@@ -520,7 +520,7 @@ jQuery(document).ready(function(jQuery) {
 			toggleButtons();
 		};
 
-		jQuery("table.table-selectable tbody tr td").on("click", function(event){
+		jQuery("table.table-selectable tbody tr td, table.table-selectable tbody tr.warning td").on("click", function(event){
 			selectRow(this);
 		}).children().click(function(e) {
 			var el = jQuery(this);
