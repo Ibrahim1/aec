@@ -557,6 +557,8 @@ jQuery(document).ready(function(jQuery) {
 			toggleButtons();
 		});
 
+		toggleButtons();
+
 		var searchTimer;
 
 		function searchDelToggle() {
