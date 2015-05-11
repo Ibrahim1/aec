@@ -109,7 +109,7 @@ switch( strtolower( $task ) ) {
 	case 'showsubscriptionplans': listSubscriptionPlans( $option ); break;
 	case 'getsubscriptionplans': getSubscriptionPlans(); break;
 	case 'newsubscriptionplan': editSubscriptionPlan( 0, $option ); break;
-	case 'editsubscriptionplan': editSubscriptionPlan( $id[0], $option ); break;
+	case 'editsubscriptionplan': editSubscriptionPlan( $id, $option ); break;
 	case 'copysubscriptionplan': copyObject( $option, 'SubscriptionPlan', $id ); break;
 	case 'savesubscriptionplan': saveSubscriptionPlan( $option ); break;
 	case 'applysubscriptionplan': saveSubscriptionPlan( $option, 1 ); break;
@@ -119,12 +119,12 @@ switch( strtolower( $task ) ) {
 	case 'invisiblesubscriptionplan': changeSubscriptionPlan( $id, 0, 'visible', $option ); break;
 	case 'removesubscriptionplan': removeSubscriptionPlan( $id, $option, $returnTask ); break;
 	case 'cancelsubscriptionplan': aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-	case 'orderplanup': orderObject( $option, 'SubscriptionPlan', $id[0], 1 ); break;
-	case 'orderplandown': orderObject( $option, 'SubscriptionPlan', $id[0], 0 ); break;
+	case 'orderplanup': orderObject( $option, 'SubscriptionPlan', $id, 1 ); break;
+	case 'orderplandown': orderObject( $option, 'SubscriptionPlan', $id, 0 ); break;
 
 	case 'showitemgroups': listItemGroups( $option ); break;
 	case 'newitemgroup': editItemGroup( 0, $option ); break;
-	case 'edititemgroup': editItemGroup( $id[0], $option ); break;
+	case 'edititemgroup': editItemGroup( $id, $option ); break;
 	case 'copyitemgroup': copyObject( $option, 'ItemGroup', $id ); break;
 	case 'saveitemgroup': saveItemGroup( $option ); break;
 	case 'applyitemgroup': saveItemGroup( $option, 1 ); break;
@@ -134,12 +134,12 @@ switch( strtolower( $task ) ) {
 	case 'invisibleitemgroup': changeItemGroup( $id, 0, 'visible', $option ); break;
 	case 'removeitemgroup': removeItemGroup( $id, $option, $returnTask ); break;
 	case 'cancelitemgroup': aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-	case 'ordergroupup': orderObject( $option, 'ItemGroup', $id[0], 1 ); break;
-	case 'ordergroupdown': orderObject( $option, 'ItemGroup', $id[0], 0 ); break;
+	case 'ordergroupup': orderObject( $option, 'ItemGroup', $id, 1 ); break;
+	case 'ordergroupdown': orderObject( $option, 'ItemGroup', $id, 0 ); break;
 
 	case 'showmicrointegrations': listMicroIntegrations( $option ); break;
 	case 'newmicrointegration': editMicroIntegration( 0, $option ); break;
-	case 'editmicrointegration': editMicroIntegration( $id[0], $option ); break;
+	case 'editmicrointegration': editMicroIntegration( $id, $option ); break;
 	case 'savemicrointegration': saveMicroIntegration( $option ); break;
 	case 'applymicrointegration': saveMicroIntegration( $option, 1 ); break;
 	case 'copymicrointegration': copyObject( $option, 'microIntegration', $id ); break;
@@ -147,8 +147,8 @@ switch( strtolower( $task ) ) {
 	case 'unpublishmicrointegration': changeMicroIntegration( $id, 0, $option ); break;
 	case 'removemicrointegration': removeMicroIntegration( $id, $option, $returnTask ); break;
 	case 'cancelmicrointegration': cancelMicroIntegration( $option ); break;
-	case 'ordermiup': orderObject( $option, 'microIntegration', $id[0], 1 ); break;
-	case 'ordermidown': orderObject( $option, 'microIntegration', $id[0], 0 ); break;
+	case 'ordermiup': orderObject( $option, 'microIntegration', $id, 1 ); break;
+	case 'ordermidown': orderObject( $option, 'microIntegration', $id, 0 ); break;
 
 	case 'showcoupons': listCoupons( $option ); break;
 
@@ -167,7 +167,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'newcoupon': editCoupon( 0, $option, 1 ); break;
-	case 'editcoupon': editCoupon( $id[0], $option, 0 ); break;
+	case 'editcoupon': editCoupon( $id, $option, 0 ); break;
 	case 'savecoupon': saveCoupon( $option, 0 ); break;
 	case 'applycoupon': saveCoupon( $option, 1 ); break;
 	case 'publishcoupon': changeCoupon( $id, 1, $option ); break;
@@ -187,7 +187,7 @@ switch( strtolower( $task ) ) {
 
 	case 'invoices': invoices( $option ); break;
 	case 'newinvoice': editInvoice( 0, $option, $returnTask, $userid ); break;
-	case 'editinvoice': editInvoice( $id[0], $option, $returnTask, $userid ); break;
+	case 'editinvoice': editInvoice( $id, $option, $returnTask, $userid ); break;
 	case 'applyinvoice': saveInvoice( $option, 1 ); break;
 	case 'saveinvoice': saveInvoice( $option ); break;
 
@@ -528,1431 +528,1448 @@ function cancel( $option )
 	$app->redirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('CANCELED') );
 }
 
-function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
+class aecAdminSettings
 {
-	if ( !empty( $subscriptionid ) ) {
-		$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
-	}
+	function edit( $option )
+	{
+		$db = JFactory::getDBO();
 
-	$lang = JFactory::getLanguage();
+		global $aecConfig;
 
-	if ( !empty( $subscriptionid ) ) {
-		$sid = $subscriptionid;
-	} else {
-		$sid = 0;
-	}
-
-	$lists = array();
-
-	$metaUser = new metaUser( $userid );
-
-	if ( !empty( $sid ) ) {
-		$metaUser->moveFocus( $sid );
-	} else {
-		if ( $metaUser->hasSubscription ) {
-			$sid = $metaUser->focusSubscription->id;
-		}
-	}
-
-	if ( $metaUser->loadSubscriptions() && !empty( $sid ) ) {
-		foreach ( $metaUser->allSubscriptions as $s_id => $s_c ) {
-			if ( $s_c->id == $sid ) {
-				$metaUser->allSubscriptions[$s_id]->current_focus = true;
-				continue;
-			}
-		}
-	}
-
-	$invoices_limit = 15;
-
-	$invoice_ids = aecInvoiceHelper::InvoiceIdList( $metaUser->userid, $page*$invoices_limit, $invoices_limit );
-
-	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
-	$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('EXPIRE_NOW') );
-	$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('EXPIRE_EXCLUDE') );
-	$group_selection[] = JHTML::_('select.option', 'active',	JText::_('EXPIRE_INCLUDE') );
-	$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('EXPIRE_CLOSE') );
-	$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('EXPIRE_CANCEL') );
-	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
-
-	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
-
-	$invoices = array();
-	$couponsh = array();
-	$invoice_counter = 0;
-
-	$processors = PaymentProcessorHandler::getObjectList(
-		PaymentProcessorHandler::getProcessorList()
-	);
-
-	$procs = array(
-		'free' => 'Free',
-		'none' => 'None'
-	);
-
-	foreach ( $processors as $processor ) {
-		$procs[$processor->processor_name] = $processor->processor->info['longname'];
-	}
-
-	foreach ( $invoice_ids as $inv_id ) {
-		$invoice = new Invoice();
-		$invoice->load ($inv_id );
-
-		if ( !empty( $invoice->coupons ) ) {
-			foreach( $invoice->coupons as $coupon_code ) {
-				if ( !isset( $couponsh[$coupon_code] ) ) {
-					$couponsh[$coupon_code] = couponHandler::idFromCode( $coupon_code );
-				}
-
-				$couponsh[$coupon_code]['invoices'][] = $invoice->invoice_number;
-			}
+		// See whether we have a duplication
+		if ( $aecConfig->RowDuplicationCheck() ) {
+			// Clean out duplication and reload settings
+			$aecConfig->CleanDuplicatedRows();
+			$aecConfig = new aecConfig();
 		}
 
-		if ( $invoice_counter >= $invoices_limit && ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
-			continue;
+		$lists = array();
+
+		$currency_code_list	= AECToolbox::aecCurrencyField( true, true, true );
+		$lists['currency_code_general'] = JHTML::_('select.genericlist', $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
+
+		$available_plans = SubscriptionPlanHandler::getActivePlanList( true, false );
+
+		if ( !isset( $aecConfig->cfg['entry_plan'] ) ) {
+			$aecConfig->cfg['entry_plan'] = 0;
+		}
+
+		$lists['entry_plan'] = JHTML::_('select.genericlist', $available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $aecConfig->cfg['entry_plan'] );
+
+		$gtree = xJACLhandler::getGroupTree( array( 28, 29, 30 ) );
+
+		if ( !isset( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+			$aecConfig->cfg['checkout_as_gift_access'] = 0;
+		}
+
+		// Create GID related Lists
+		$lists['checkout_as_gift_access'] 		= JHTML::_('select.genericlist', $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
+
+		$tab_data = array();
+
+		$params = array();
+		$params[] = array( 'page-head', JText::_('General Configuration') );
+		$params[] = array( 'section', 'access' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_ACCESS') );
+		$params['require_subscription']			= array( 'toggle', 0 );
+		$params['adminaccess']					= array( 'toggle', 0 );
+		$params['manageraccess']				= array( 'toggle', 0 );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
+		$params['gwlist']						= array( 'list', 0 );
+		$params['standard_currency']			= array( 'list_currency', 0 );
+		$params[] = array( 'section-end' );
+
+		$params[] = array( 'page-head', JText::_('Registration Flow') );
+		$params[] = array( 'section', 'plans' );
+		$params['plans_first']					= array( 'toggle', 0 );
+		$params['integrate_registration']		= array( 'toggle', 0 );
+		$params['skip_confirmation']			= array( 'toggle', 0 );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'plans' );
+		$params[] = array( 'section-head', JText::_('Plan List') );
+		$params['root_group']					= array( 'list', 0 );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'cart' );
+		$params[] = array( 'section-head', 'Shopping Cart' );
+		$params['enable_shoppingcart']			= array( 'toggle', '' );
+		$params['additem_stayonpage']			= array( 'toggle', '' );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'checkout' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
+		$params['checkout_coupons']				= array( 'toggle', 0 );
+		$params['user_checkout_prefill']		= array( 'inputD', 0 );
+
+		$rewriteswitches						= array( 'cms', 'user', 'expiration', 'subscription' );
+		$params									= AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+
+		$params[] = array( 'section-end' );
+
+		$params[] = array( 'page-head', JText::_('Inner workings') );
+		$params[] = array( 'section', 'heartbeat' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SYSTEM') );
+		$params['heartbeat_cycle']					= array( 'inputA', 0 );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_EMAIL') );
+		$params['noemails']							= array( 'toggle', 0 );
+		$params['noemails_adminoverride']			= array( 'toggle', 0 );
+		$params['nojoomlaregemails']				= array( 'toggle', 0 );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_DEBUG') );
+		$params['curl_default']						= array( 'toggle', 0 );
+		$params['simpleurls']						= array( 'toggle', 0 );
+		$params['debug_processor_notifications']	= array( 'toggle', 0 );
+		$params['error_notification_level']			= array( 'list', 0 );
+		$params['email_notification_level']			= array( 'list', 0 );
+		$params[] = array( 'section-end' );
+
+		@end( $params );
+		$tab_data[] = array( JText::_('CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB1_SUBTITLE') . '</h2>' );
+
+		$params[] = array( 'page-head', JText::_('CFG_TAB_CUSTOMIZATION_TITLE') );
+		$params[] = array( 'section', 'customredirect' );
+		$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_CREDIRECT') );
+		$params['customintro']						= array( 'inputC', '' );
+		$params['customintro_userid']				= array( 'toggle', '' );
+		$params['customintro_always']				= array( 'toggle', '' );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'invoice-number' );
+		$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_INUM') );
+		$params['invoicenum_doformat']				= array( 'toggle', '' );
+		$params['invoicenum_formatting']			= array( 'inputD', '' );
+
+		$rewriteswitches							= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$params										= AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'captcha' );
+		$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
+		$params['use_recaptcha']					= array( 'toggle', '' );
+		$params['recaptcha_privatekey']				= array( 'inputC', '' );
+		$params['recaptcha_publickey']				= array( 'inputC', '' );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'proxy' );
+		$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_PROXY') );
+		$params['use_proxy']						= array( 'toggle', '' );
+		$params['proxy']							= array( 'inputC', '' );
+		$params['proxy_port']						= array( 'inputC', '' );
+		$params['proxy_username']					= array( 'inputC', '' );
+		$params['proxy_password']					= array( 'inputC', '' );
+		$params['gethostbyaddr']					= array( 'toggle', '' );
+		$params[] = array( 'section-end' );
+
+		$params[] = array( 'section', 'date' );
+		$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
+		$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
+		$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
+		$params['setlocale_date']					= array( 'inputD', '' );
+		$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
+		$params['amount_currency_symbol']			= array( 'toggle', 0 );
+		$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
+		$params['amount_use_comma']					= array( 'toggle', 0 );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'itemid' );
+		$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
+
+		$itemidlist = array(
+			'cart' => array( 'view' => 'cart', 'params' => false ),
+			'checkout' => array( 'view' => 'checkout', 'params' => false ),
+			'confirmation' => array( 'view' => 'confirmation', 'params' => false ),
+			'subscribe' => array( 'view' => 'subscribe', 'params' => false ),
+			'exception' => array( 'view' => 'exception', 'params' => false ),
+			'thanks' => array( 'view' => 'thanks', 'params' => false ),
+			'expired' => array( 'view' => 'expired', 'params' => false ),
+			'hold' => array( 'view' => 'hold', 'params' => false ),
+			'notallowed' => array( 'view' => 'notallowed', 'params' => false ),
+			'pending' => array( 'view' => 'pending', 'params' => false ),
+			'subscriptiondetails' => array( 'view' => 'subscriptiondetails', 'params' => false ),
+			'subscriptiondetails_invoices' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=invoices' ),
+			'subscriptiondetails_details' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=details' )
+		);
+
+		foreach ( $itemidlist as $param => $xparams ) {
+			$params['itemid_'.$param]				= array( 'inputA', '' );
+		}
+
+		$params['itemid_cb']						= array( 'inputA', '' );
+		$params['itemid_joomlauser']				= array( 'inputA', '' );
+
+		$params[] = array( 'section-end' );
+
+		@end( $params );
+		$tab_data[] = array( JText::_('CFG_TAB_CUSTOMIZATION_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMIZATION_SUBTITLE') . '</h2>' );
+
+		$params[] = array( 'page-head', JText::_('CFG_TAB_EXPERT_SUBTITLE') );
+		$params[] = array( 'section', 'system' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SYSTEM') );
+		$params['alertlevel2']					= array( 'inputA', 0 );
+		$params['alertlevel1']					= array( 'inputA', 0 );
+		$params['expiration_cushion']			= array( 'inputA', 0 );
+		$params['invoice_cushion']				= array( 'inputA', 0 );
+		$params['invoice_spawn_new']			= array( 'toggle', 0 );
+		$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
+		$params['allow_frontend_heartbeat']		= array( 'toggle', 0 );
+		$params['disable_regular_heartbeat']	= array( 'toggle', 0 );
+		$params['custom_heartbeat_securehash']	= array( 'inputC', '' );
+		$params['countries_available']			= array( 'list_country_full', 0 );
+		$params['countries_top']				= array( 'list_country_full', 0 );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'api' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_API') );
+		$params['apiapplist']					= array( 'inputD', '' );
+		$params[] = array( 'section-end' );
+
+		$params[] = array( 'section', 'registration' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_REGFLOW') );
+		$params['show_fixeddecision']			= array( 'toggle', 0 );
+		$params['temp_auth_exp']				= array( 'inputC', '' );
+		$params['intro_expired']				= array( 'toggle', 0 );
+		$params['skip_registration']			= array( 'toggle', 0 );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
+		$params['confirmation_coupons']			= array( 'toggle', 0 );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
+		$params['checkoutform_jsvalidation']	= array( 'toggle', '' );
+		$params['checkout_coupons']				= array( 'toggle', 1 );
+		$params['checkout_as_gift']				= array( 'toggle', '' );
+		$params['checkout_as_gift_access']		= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
+		$params['confirm_as_gift']				= array( 'toggle', '' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_PLANS') );
+		$params['root_group_rw']				= array( 'inputD', 0 );
+		$params['entry_plan']					= array( 'list', 0 );
+		$params['per_plan_mis']					= array( 'toggle', 0 );
+		$params[] = array( 'section-end' );
+
+		$params[] = array( 'section', 'security' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SECURITY') );
+		$params['ssl_signup']					= array( 'toggle', 0 );
+		$params['ssl_profile']					= array( 'toggle', 0 );
+		$params['override_reqssl']				= array( 'toggle', 0 );
+		$params['altsslurl']					= array( 'inputC', '' );
+		$params['ssl_verifypeer']				= array( 'toggle', 0 );
+		$params['ssl_verifyhost']				= array( 'inputC', '' );
+		$params['ssl_cainfo']					= array( 'inputC', '' );
+		$params['ssl_capath']					= array( 'inputC', '' );
+		$params['allow_invoice_unpublished_item']				= array( 'toggle', 0 );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'debug' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_DEBUG') );
+		$params['bypassintegration']			= array( 'inputC', '' );
+		$params['breakon_mi_error']				= array( 'toggle', 0 );
+		$params['email_default_admins']			= array( 'toggle', 1 );
+		$params['email_extra_admins']			= array( 'inputD', '' );
+		$params[] = array( 'section-end' );
+		$params[] = array( 'section', 'uninstall' );
+		$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_UNINSTALL') );
+		$params['delete_tables']				= array( 'toggle', 0 );
+		$params['delete_tables_sure']			= array( 'toggle', 0 );
+		$params[] = array( 'section-end' );
+
+		@end( $params );
+		$tab_data[] = array( JText::_('CFG_TAB_EXPERT_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_EXPERT_SUBTITLE') . '</h2>' );
+
+		$error_reporting_notices[] = JHTML::_('select.option', 512, JText::_('AEC_NOTICE_NUMBER_512') );
+		$error_reporting_notices[] = JHTML::_('select.option', 128, JText::_('AEC_NOTICE_NUMBER_128') );
+		$error_reporting_notices[] = JHTML::_('select.option', 32, JText::_('AEC_NOTICE_NUMBER_32') );
+		$error_reporting_notices[] = JHTML::_('select.option', 8, JText::_('AEC_NOTICE_NUMBER_8') );
+		$error_reporting_notices[] = JHTML::_('select.option', 2, JText::_('AEC_NOTICE_NUMBER_2') );
+		$lists['error_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'error_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['error_notification_level'] );
+		$lists['email_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'email_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['email_notification_level'] );
+
+		// Display Processor descriptions?
+		if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
+			$desc_list = $aecConfig->cfg['gwlist'];
 		} else {
-			$invoice_counter++;
+			$desc_list = array();
 		}
 
-		$status = aecHTML::Icon( 'plus' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->created_date ) . '<br />';
+		$lists['gwlist'] = PaymentProcessorHandler::getProcessorSelectList( true, $desc_list );
 
-		if ( isset( $invoice->params['deactivated'] ) ) {
-			$status .= aecHTML::Icon( 'remove-circle' ) . 'deactivated';
-		} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-			if ( isset( $invoice->params['pending_reason'] ) ) {
-				if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
-					$status .= aecHTML::Icon( 'warning-sign' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
-				} else {
-					$status .= aecHTML::Icon( 'warning-sign' ) . $invoice->params['pending_reason'];
-				}
+		$grouplist = ItemGroupHandler::getTree();
+
+		$glist = array();
+
+		foreach ( $grouplist as $id => $glisti ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
 			} else {
-				$status .= aecHTML::Icon( 'time' ) . 'uncleared';
+				$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
 			}
 		}
 
-		$actions	= array();
-		$rowstyle	= '';
+		$lists['root_group'] 		= JHTML::_('select.genericlist', $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', $aecConfig->cfg['root_group'] );
 
-		if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-			$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number );
+		foreach ( $itemidlist as $idk => $idkp ) {
+			if ( empty( $aecConfig->cfg['itemid_' . $idk] ) ) {
+				$query = 'SELECT `id`'
+					. ' FROM #__menu'
+					. ' WHERE ( LOWER( `link` ) = \'index.php?option=com_acctexp&view=' . $idkp['view'] . '\''
+					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idkp['view'] . '%\' )'
+					. ' AND published = \'1\''
+				;
+				$db->setQuery( $query );
 
-			$actions = array(
-								array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info', '', $checkoutlink ),
-								array( 'cancel', 'remove', 'USERINVOICE_ACTION_CANCEL', 'danger' ),
-								array( 'clear', 'ok', 'USERINVOICE_ACTION_CLEAR_APPLY', 'success', '&applyplan=1' ),
-								array( 'clear', 'check', 'USERINVOICE_ACTION_CLEAR', 'warning' ),
-			);
-
-			$rowstyle = ' style="background-color:#fee;"';
-		} else {
-			$status .= aecHTML::Icon( 'shopping-cart' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
-		}
-
-		$actions[] = array( 'print', 'print', 'HISTORY_ACTION_PRINT', '', '&tmpl=component" target="_blank' );
-		$actions[] = array( 'pdf', 'file', 'PDF', '', '' );
-
-		$actionlist = '<div class="btn-group">';
-		foreach ( $actions as $action ) {
-			if ( !empty( $action[5] ) ) {
-				$alink = $action[5];
-			} else {
-				$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=editMembership&userid=' . $metaUser->userid;
-
-				if ( !empty( $action[4] ) ) {
-					$alink .= $action[4];
-				}
-			}
-
-			$actionlist .= aecHTML::Button( $action[1], $action[2], $action[3], $alink );
-		}
-		$actionlist .= '</div>';
-
-		$non_formatted = $invoice->invoice_number;
-		$invoice->formatInvoiceNumber();
-		$is_formatted = $invoice->invoice_number;
-
-		if ( $non_formatted != $is_formatted ) {
-			$is_formatted = $non_formatted . "\n" . '(' . $is_formatted . ')';
-		}
-
-		$invoices[$inv_id] = array();
-		$invoices[$inv_id]['rowstyle']			= $rowstyle;
-		$invoices[$inv_id]['invoice_number']	= $is_formatted;
-		$invoices[$inv_id]['amount']			= $invoice->amount . '&nbsp;' . $invoice->currency;
-		$invoices[$inv_id]['status']			= $status;
-
-		if ( $procs[$invoice->method] ) {
-			$invoices[$inv_id]['processor']		= $invoice->method;
-		} else {
-			$invoices[$inv_id]['processor']		= $procs[$invoice->method];
-		}
-
-		$invoices[$inv_id]['usage']				= $invoice->usage;
-		$invoices[$inv_id]['actions']			= $actionlist;
-	}
-
-	$coupons = array();
-
-	$coupon_counter = 0;
-	foreach ( $couponsh as $coupon_code => $coupon ) {
-		if ( $coupon_counter >= 10 ) {
-			continue;
-		} else {
-			$coupon_counter++;
-		}
-
-		$cc = array();
-		$cc['coupon_code']	= '<a href="index.php?option=com_acctexp&amp;task=editCoupon&id=' . $coupon['type'].'.'.$coupon['id'] . '">' . $coupon_code . '</a>';
-		$cc['invoices']		= implode( ", ", $coupon['invoices'] );
-
-		$coupons[] = $cc;
-	}
-
-	// get available plans
-	$available_plans	= SubscriptionPlanHandler::getActivePlanList(false);
-
-	$lists['assignto_plan'] = JHTML::_('select.genericlist', $available_plans, 'assignto_plan[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', 0 );
-
-	$userMIs = $metaUser->getUserMIs();
-
-	$mi					= array();
-	$mi['profile']		= array();
-	$mi['admin']		= array();
-	$mi['profile_form']	= array();
-	$mi['admin_form']	= array();
-
-	$params = array();
-
-	foreach ( $userMIs as $m ) {
-		$pref = 'mi_'.$m->id.'_';
-
-		$ui = $m->profile_info( $metaUser );
-		if ( !empty( $ui ) ) {
-			$mi['profile'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ui );
-		}
-
-		$uf = $m->profile_form( $metaUser, true );
-		if ( !empty( $uf ) ) {
-			foreach ( $uf as $k => $v ) {
-				$mi['profile_form'][] = $pref.$k;
-				$params[$pref.$k] = $v;
-			}
-		}
-
-		$ai = $m->admin_info( $metaUser );
-		if ( !empty( $ai ) ) {
-			$mi['admin'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ai );
-		}
-
-		$af = $m->admin_form( $metaUser );
-		if ( !empty( $af ) ) {
-			foreach ( $af as $k => $v ) {
-				$mi['admin_form'][] = $pref.$k;
-				$params[$pref.$k] = $v;
-			}
-		}
-	}
-
-	if ( !empty( $params ) ) {
-		$settings = new aecSettings ( 'userForm', 'mi' );
-		$settings->fullSettingsArray( $params, array(), $lists ) ;
-
-		// Call HTML Class
-		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-	} else {
-		$aecHTML = new stdClass();
-	}
-
-	$aecHTML->invoice_pages	= (int) ( aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid ) / $invoices_limit );
-	$aecHTML->invoice_page	= $page;
-	$aecHTML->sid			= $sid;
-
-	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
-}
-
-function saveUser( $option, $apply=0 )
-{
-	$app = JFactory::getApplication();
-
-	$post = $_POST;
-
-	if ( $post['assignto_plan'][0] == 0 ) {
-		unset( $post['assignto_plan'][0] );
-	}
-
-	$metaUser = new metaUser( $post['userid'] );
-
-	if ( $metaUser->hasSubscription && !empty( $post['subscriptionid'] ) ) {
-		$metaUser->moveFocus( $post['subscriptionid'] );
-	}
-
-	$ck_primary = aecGetParam( 'ck_primary' );
-
-	if ( $ck_primary && !$metaUser->focusSubscription->primary ) {
-		$metaUser->focusSubscription->makePrimary();
-	}
-
-	if ( !empty( $post['assignto_plan'] ) && is_array( $post['assignto_plan'] ) ) {
-		foreach ( $post['assignto_plan'] as $assign_planid ) {
-			$plan = new SubscriptionPlan();
-			$plan->load( $assign_planid );
-
-			$metaUser->establishFocus( $plan );
-
-			$metaUser->focusSubscription->applyUsage( $assign_planid, 'none', 1 );
-
-			// We have to reload the metaUser object because of the changes
-			$metaUser = new metaUser( $post['userid'] );
-		}
-	}
-
-	$ck_lifetime = aecGetParam( 'ck_lifetime' );
-
-	$set_status = trim( aecGetParam( 'set_status', null ) );
-
-	if ( !$metaUser->hasSubscription ) {
-		if ( $set_status == 'excluded' ) {
-			$metaUser->focusSubscription = new Subscription();
-			$metaUser->focusSubscription->createNew( $metaUser->userid, 'none', 0 );
-
-			$metaUser->hasSubscription = true;
-		} else {
-			echo "<script> alert('".JText::_('AEC_ERR_NO_SUBSCRIPTION')."'); window.history.go(-1); </script>\n";
-			exit();
-		}
-	}
-
-	if ( empty( $post['assignto_plan'] ) ) {
-		if ( $ck_lifetime ) {
-			$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
-			$metaUser->focusSubscription->status		= 'Active';
-			$metaUser->focusSubscription->lifetime	= 1;
-		} elseif ( !empty( $post['expiration'] ) ) {
-			if ( $post['expiration'] != $post['expiration_check'] ) {
-				if ( strpos( $post['expiration'], ':' ) === false ) {
-					$metaUser->focusSubscription->expiration = $post['expiration'] . ' 00:00:00';
+				$mid = 0;
+				if ( empty( $idkp['params'] ) ) {
+					$mid = $db->loadResult();
 				} else {
-					$metaUser->focusSubscription->expiration = $post['expiration'];
-				}
+					$mids = xJ::getDBArray( $db );
 
-				if ( $metaUser->focusSubscription->status == 'Trial' ) {
-					$metaUser->focusSubscription->status = 'Trial';
-				} else {
-					$metaUser->focusSubscription->status = 'Active';
-				}
+					if ( !empty( $mids ) ) {
+						$query = 'SELECT `id`'
+							. ' FROM #__menu'
+							. ' WHERE `id` IN (' . implode( ',', $mids ) . ')'
+							. ' AND `params` LIKE \'%' . $idkp['params'] . '%\''
+							. ' AND published = \'1\''
+						;
+						$db->setQuery( $query );
 
-				$metaUser->focusSubscription->lifetime = 0;
-			}
-		}
-	}
-
-	if ( !empty( $set_status ) ) {
-		switch ( $set_status ) {
-			case 'expired':
-				$metaUser->focusSubscription->expire();
-				break;
-			case 'cancelled':
-				$metaUser->focusSubscription->cancel();
-				break;
-			default:
-				$metaUser->focusSubscription->setStatus( ucfirst( $set_status ) );
-				break;
-		}
-	}
-
-	if ( !empty( $post['notes'] ) ) {
-		$metaUser->focusSubscription->customparams['notes'] = $post['notes'];
-
-		unset( $post['notes'] );
-	}
-
-	if ( $metaUser->hasSubscription ) {
-		$metaUser->focusSubscription->storeload();
-	}
-
-	$userMIs = $metaUser->getUserMIs();
-
-	if ( !empty( $userMIs ) ) {
-		foreach ( $userMIs as $m ) {
-			$params = array();
-
-			$pref = 'mi_'.$m->id.'_';
-
-			$uf = $m->profile_form( $metaUser );
-			if ( !empty( $uf ) ) {
-				foreach ( $uf as $k => $v ) {
-					if ( isset( $post[$pref.$k] ) ) {
-						$params[$k] = $post[$pref.$k];
+						$mid = $db->loadResult();
 					}
 				}
 
-				$m->profile_form_save( $metaUser, $params );
+				if ( $mid ) {
+					$aecConfig->cfg['itemid_' . $idk] = $mid;
+				}
+			}
+		}
+
+		if ( !empty( $aecConfig->cfg['apiapplist'] ) ) {
+			$string = "";
+
+			foreach ( $aecConfig->cfg['apiapplist'] as $app => $key ) {
+				$string .= $app . "=" . $key . "\n";
 			}
 
-			$admin_params = array();
+			$aecConfig->cfg['apiapplist'] = $string;
+		} else {
+			$aecConfig->cfg['apiapplist'] = "";
+		}
+
+		$settings = new aecSettings ( 'cfg', 'general' );
+		$settings->fullSettingsArray( $params, $aecConfig->cfg, $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+		if ( !empty( $customparamsarray ) ) {
+			$aecHTML->customparams = $customparamsarray;
+		}
+
+		HTML_AcctExp::Settings( $option, $aecHTML, $params, $tab_data );
+	}
+
+	function save( $option, $return=0 )
+	{
+		$db = JFactory::getDBO();
+
+		$user= JFactory::getUser();
+
+		global $aecConfig;
+
+		unset( $_POST['id'] );
+		unset( $_POST['task'] );
+		unset( $_POST['option'] );
+
+		$general_settings = $_POST;
+
+		if ( !empty( $general_settings['apiapplist'] ) ) {
+			$list = explode( "\n", $general_settings['apiapplist'] );
+
+			$array = array();
+			foreach ( $list as $item ) {
+				$li = explode( "=", $item, 2 );
+
+				$k = $li[0];
+
+				if ( !empty( $k ) ) {
+					if ( !empty( $li[1] ) ) {
+						$v = $li[1];
+					} else {
+						$v = AECToolbox::randomstring( 32, true, true );
+					}
+
+					$array[$k] = $v;
+				}
+			}
+
+			$general_settings['apiapplist'] = $array;
+		} else {
+			$general_settings['apiapplist'] = array();
+		}
+
+		$diff = $aecConfig->diffParams( $general_settings, 'settings' );
+
+		if ( is_array( $diff ) ) {
+			$newdiff = array();
+			foreach ( $diff as $value => $change ) {
+				$newdiff[] = $value . '(' . implode( ' -> ', $change ) . ')';
+			}
+			$difference = implode( ',', $newdiff );
+		} else {
+			$difference = 'none';
+		}
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			if ( $aecConfig->cfg['manageraccess'] !== $general_settings['manageraccess'] ) {
+				if ( $general_settings['manageraccess'] ) {
+					$set = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+				} else {
+					$set = '{}';
+				}
+
+				$query = 'UPDATE #__assets'
+					. ' SET `rules` = \'' . xJ::escape( $db, $set ) . '\''
+					. ' WHERE `name` = \'com_acctexp\''
+				;
+				$db->setQuery( $query );
+				$db->query();
+			}
+		}
+
+		$aecConfig->cfg = $general_settings;
+		$aecConfig->saveSettings();
+
+		$ip = AECToolbox::aecIP();
+
+		$short	= JText::_('AEC_LOG_SH_SETT_SAVED');
+		$event	= JText::_('AEC_LOG_LO_SETT_SAVED') . ' ' . $difference;
+		$tags	= 'settings,system';
+		$params = array(
+			'userid' => $user->id,
+			'ip' => $ip['ip'],
+			'isp' => $ip['isp']
+		);
+
+		$eventlog = new eventLog();
+		$eventlog->issue( $short, $tags, $event, 2, $params );
+
+		if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
+			$plan = new SubscriptionPlan();
+			$plan->load( $aecConfig->cfg['entry_plan'] );
+
+			$terms = $plan->getTerms();
+
+			if ( !$terms->checkFree() ) {
+				$short	= "Settings Warning";
+				$event	= "You have selected a non-free plan as Entry Plan."
+					. " Please keep in mind that this means that users"
+					. " will be getting it for free when they log in"
+					. " without having any membership";
+				$tags	= 'settings,system';
+				$params = array(
+					'userid' => $user->id,
+					'ip' => $ip['ip'],
+					'isp' => $ip['isp']
+				);
+
+				$eventlog = new eventLog();
+				$eventlog->issue( $short, $tags, $event, 32, $params );
+			}
+		}
+
+		if ( $return ) {
+			aecRedirect( 'index.php?option=' . $option . '&task=showSettings', JText::_('AEC_CONFIG_SAVED') );
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_SAVED') );
+		}
+	}
+}
+
+class aecAdminSubscription
+{
+	function edit( $option, $userid, $subscriptionid, $task, $page=0 )
+	{
+		if ( !empty( $subscriptionid ) ) {
+			$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
+		}
+
+		$lang = JFactory::getLanguage();
+
+		if ( !empty( $subscriptionid ) ) {
+			$sid = $subscriptionid;
+		} else {
+			$sid = 0;
+		}
+
+		$lists = array();
+
+		$metaUser = new metaUser( $userid );
+
+		if ( !empty( $sid ) ) {
+			$metaUser->moveFocus( $sid );
+		} else {
+			if ( $metaUser->hasSubscription ) {
+				$sid = $metaUser->focusSubscription->id;
+			}
+		}
+
+		if ( $metaUser->loadSubscriptions() && !empty( $sid ) ) {
+			foreach ( $metaUser->allSubscriptions as $s_id => $s_c ) {
+				if ( $s_c->id == $sid ) {
+					$metaUser->allSubscriptions[$s_id]->current_focus = true;
+					continue;
+				}
+			}
+		}
+
+		$invoices_limit = 15;
+
+		$invoice_ids = aecInvoiceHelper::InvoiceIdList( $metaUser->userid, $page*$invoices_limit, $invoices_limit );
+
+		$group_selection = array();
+		$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
+		$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('EXPIRE_NOW') );
+		$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('EXPIRE_EXCLUDE') );
+		$group_selection[] = JHTML::_('select.option', 'active',	JText::_('EXPIRE_INCLUDE') );
+		$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('EXPIRE_CLOSE') );
+		$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('EXPIRE_CANCEL') );
+		$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
+
+		$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
+
+		$invoices = array();
+		$couponsh = array();
+		$invoice_counter = 0;
+
+		$processors = PaymentProcessorHandler::getObjectList(
+			PaymentProcessorHandler::getProcessorList()
+		);
+
+		$procs = array(
+			'free' => 'Free',
+			'none' => 'None'
+		);
+
+		foreach ( $processors as $processor ) {
+			$procs[$processor->processor_name] = $processor->processor->info['longname'];
+		}
+
+		foreach ( $invoice_ids as $inv_id ) {
+			$invoice = new Invoice();
+			$invoice->load ($inv_id );
+
+			if ( !empty( $invoice->coupons ) ) {
+				foreach( $invoice->coupons as $coupon_code ) {
+					if ( !isset( $couponsh[$coupon_code] ) ) {
+						$couponsh[$coupon_code] = couponHandler::idFromCode( $coupon_code );
+					}
+
+					$couponsh[$coupon_code]['invoices'][] = $invoice->invoice_number;
+				}
+			}
+
+			if ( $invoice_counter >= $invoices_limit && ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
+				continue;
+			} else {
+				$invoice_counter++;
+			}
+
+			$status = aecHTML::Icon( 'plus' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->created_date ) . '<br />';
+
+			if ( isset( $invoice->params['deactivated'] ) ) {
+				$status .= aecHTML::Icon( 'remove-circle' ) . 'deactivated';
+			} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+				if ( isset( $invoice->params['pending_reason'] ) ) {
+					if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
+						$status .= aecHTML::Icon( 'warning-sign' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
+					} else {
+						$status .= aecHTML::Icon( 'warning-sign' ) . $invoice->params['pending_reason'];
+					}
+				} else {
+					$status .= aecHTML::Icon( 'time' ) . 'uncleared';
+				}
+			}
+
+			$actions	= array();
+			$rowstyle	= '';
+
+			if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+				$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number );
+
+				$actions = array(
+					array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info', '', $checkoutlink ),
+					array( 'cancel', 'remove', 'USERINVOICE_ACTION_CANCEL', 'danger' ),
+					array( 'clear', 'ok', 'USERINVOICE_ACTION_CLEAR_APPLY', 'success', '&applyplan=1' ),
+					array( 'clear', 'check', 'USERINVOICE_ACTION_CLEAR', 'warning' ),
+				);
+
+				$rowstyle = ' style="background-color:#fee;"';
+			} else {
+				$status .= aecHTML::Icon( 'shopping-cart' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
+			}
+
+			$actions[] = array( 'print', 'print', 'HISTORY_ACTION_PRINT', '', '&tmpl=component" target="_blank' );
+			$actions[] = array( 'pdf', 'file', 'PDF', '', '' );
+
+			$actionlist = '<div class="btn-group">';
+			foreach ( $actions as $action ) {
+				if ( !empty( $action[5] ) ) {
+					$alink = $action[5];
+				} else {
+					$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=editMembership&userid=' . $metaUser->userid;
+
+					if ( !empty( $action[4] ) ) {
+						$alink .= $action[4];
+					}
+				}
+
+				$actionlist .= aecHTML::Button( $action[1], $action[2], $action[3], $alink );
+			}
+			$actionlist .= '</div>';
+
+			$non_formatted = $invoice->invoice_number;
+			$invoice->formatInvoiceNumber();
+			$is_formatted = $invoice->invoice_number;
+
+			if ( $non_formatted != $is_formatted ) {
+				$is_formatted = $non_formatted . "\n" . '(' . $is_formatted . ')';
+			}
+
+			$invoices[$inv_id] = array();
+			$invoices[$inv_id]['rowstyle']			= $rowstyle;
+			$invoices[$inv_id]['invoice_number']	= $is_formatted;
+			$invoices[$inv_id]['amount']			= $invoice->amount . '&nbsp;' . $invoice->currency;
+			$invoices[$inv_id]['status']			= $status;
+
+			if ( $procs[$invoice->method] ) {
+				$invoices[$inv_id]['processor']		= $invoice->method;
+			} else {
+				$invoices[$inv_id]['processor']		= $procs[$invoice->method];
+			}
+
+			$invoices[$inv_id]['usage']				= $invoice->usage;
+			$invoices[$inv_id]['actions']			= $actionlist;
+		}
+
+		$coupons = array();
+
+		$coupon_counter = 0;
+		foreach ( $couponsh as $coupon_code => $coupon ) {
+			if ( $coupon_counter >= 10 ) {
+				continue;
+			} else {
+				$coupon_counter++;
+			}
+
+			$cc = array();
+			$cc['coupon_code']	= '<a href="index.php?option=com_acctexp&amp;task=editCoupon&id=' . $coupon['type'].'.'.$coupon['id'] . '">' . $coupon_code . '</a>';
+			$cc['invoices']		= implode( ", ", $coupon['invoices'] );
+
+			$coupons[] = $cc;
+		}
+
+		// get available plans
+		$available_plans	= SubscriptionPlanHandler::getActivePlanList(false);
+
+		$lists['assignto_plan'] = JHTML::_('select.genericlist', $available_plans, 'assignto_plan[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', 0 );
+
+		$userMIs = $metaUser->getUserMIs();
+
+		$mi					= array();
+		$mi['profile']		= array();
+		$mi['admin']		= array();
+		$mi['profile_form']	= array();
+		$mi['admin_form']	= array();
+
+		$params = array();
+
+		foreach ( $userMIs as $m ) {
+			$pref = 'mi_'.$m->id.'_';
+
+			$ui = $m->profile_info( $metaUser );
+			if ( !empty( $ui ) ) {
+				$mi['profile'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ui );
+			}
+
+			$uf = $m->profile_form( $metaUser, true );
+			if ( !empty( $uf ) ) {
+				foreach ( $uf as $k => $v ) {
+					$mi['profile_form'][] = $pref.$k;
+					$params[$pref.$k] = $v;
+				}
+			}
+
+			$ai = $m->admin_info( $metaUser );
+			if ( !empty( $ai ) ) {
+				$mi['admin'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ai );
+			}
 
 			$af = $m->admin_form( $metaUser );
 			if ( !empty( $af ) ) {
 				foreach ( $af as $k => $v ) {
-					if ( isset( $post[$pref.$k] ) ) {
-						$admin_params[$k] = $post[$pref.$k];
-					}
+					$mi['admin_form'][] = $pref.$k;
+					$params[$pref.$k] = $v;
 				}
-
-				$m->admin_form_save( $metaUser, $admin_params );
-			}
-
-			if ( empty( $params ) ) {
-				continue;
-			}
-
-			$metaUser->meta->setMIParams( $m->id, null, $params, true );
-		}
-
-		$metaUser->meta->storeload();
-	}
-
- 	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart	= $app->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
-
-	$nexttask	= aecGetParam( 'nexttask', 'showSubscriptions' ) ;
-
-	if ( empty( $nexttask ) ) {
-		$nexttask = 'showSubscriptions';
-	}
-
-	if ( $apply ) {
-		$subID = !empty($post['subscriptionid']) ? $post['subscriptionid'] : $metaUser->focusSubscription->id;
-
-		if ( empty( $subID ) ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $metaUser->userid, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		}
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('SAVED') );
-	}
-}
-
-function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(), $planid=null )
-{
-	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
-	$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-	$orderby		= $app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
-	$groups			= $app->getUserStateFromRequest( "groups{$option}", 'groups', 'active' );
-	$search			= $app->getUserStateFromRequest( "search{$option}_subscr", 'search', '' );
-	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
-
-	if ( empty( $planid ) ) {
-		$filter_plan	= $app->getUserStateFromRequest( "filter_plan{$option}", 'filter_plan', 0 );
-	} else {
-		$filter_plan	= $planid;
-	}
-
-	if ( !is_array( $filter_plan ) ) {
-		$filter_plan = array( $filter_plan );
-	}
-
-	$filter_group	= $app->getUserStateFromRequest( "filter_group{$option}", 'filter_group', 0 );
-
-	if ( !is_array( $filter_group ) && !empty( $filter_group ) ) {
-		$filter_group = array( $filter_group );
-	} elseif ( empty( $filter_group ) ) {
-		$filter_group = array();
-	}
-
-	if ( !empty( $set_group ) && empty( $_REQUEST['groups'] ) ) {
-		if ( is_array( $set_group ) ) {
-			$groups		= $set_group;
-		} else {
-			$groups		= array();
-			$groups[]	= $set_group;
-		}
-	} else {
-		if ( $groups ) {
-			if ( is_array($groups ) ) {
-				if ( count( $groups ) == 1 ) {
-					if ( $groups[0] == 'all' ) {
-						$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
-					}
-				}
-			} else {
-				$groups		= array( $groups );
 			}
 		}
-	}
 
-	if ( array_search( 'notconfig', $groups ) ) {
-		$set_group	= 'notconfig';
-	} else {
-		$set_group	= $groups[0];
-	}
+		if ( !empty( $params ) ) {
+			$settings = new aecSettings ( 'userForm', 'mi' );
+			$settings->fullSettingsArray( $params, array(), $lists ) ;
 
-	if ( !empty( $orderby ) ) {
-		if ( $set_group == "notconfig" ) {
-			$forder = array(
-				'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
-				'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-				);
+			// Call HTML Class
+			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 		} else {
-			$forder = array(
-				'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-				'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
-				'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-				'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC', 'type ASC', 'type DESC'
-				);
+			$aecHTML = new stdClass();
 		}
 
-		if ( !in_array( $orderby, $forder ) ) {
-			$orderby = 'name ASC';
+		$aecHTML->invoice_pages	= (int) ( aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid ) / $invoices_limit );
+		$aecHTML->invoice_page	= $page;
+		$aecHTML->sid			= $sid;
+
+		HTML_AcctExp::userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
+	}
+
+	function save( $option, $apply=0 )
+	{
+		$app = JFactory::getApplication();
+
+		$post = $_POST;
+
+		if ( $post['assignto_plan'][0] == 0 ) {
+			unset( $post['assignto_plan'][0] );
 		}
-	}
 
-	// define displaying at html
-	$action = array();
-	switch( $set_group ){
-		case 'active':
-			$action[0]	= 'active';
-			$action[1]	= JText::_('AEC_HEAD_ACTIVE_SUBS');
-			break;
+		$metaUser = new metaUser( $post['userid'] );
 
-		case 'excluded':
-			$action[0]	= 'excluded';
-			$action[1]	= JText::_('AEC_HEAD_EXCLUDED_SUBS');
-			break;
+		if ( $metaUser->hasSubscription && !empty( $post['subscriptionid'] ) ) {
+			$metaUser->moveFocus( $post['subscriptionid'] );
+		}
 
-		case 'expired':
-			$action[0]	= 'expired';
-			$action[1]	= JText::_('AEC_HEAD_EXPIRED_SUBS');
-			break;
+		$ck_primary = aecGetParam( 'ck_primary' );
 
-		case 'pending':
-			$action[0]	= 'pending';
-			$action[1]	= JText::_('AEC_HEAD_PENDING_SUBS');
-			break;
+		if ( $ck_primary && !$metaUser->focusSubscription->primary ) {
+			$metaUser->focusSubscription->makePrimary();
+		}
 
-		case 'cancelled':
-			$action[0]	= 'cancelled';
-			$action[1]	= JText::_('AEC_HEAD_CANCELLED_SUBS');
-			break;
-
-		case 'hold':
-			$action[0]	= 'hold';
-			$action[1]	= JText::_('AEC_HEAD_HOLD_SUBS');
-			break;
-
-		case 'closed':
-			$action[0]	= 'closed';
-			$action[1]	= JText::_('AEC_HEAD_CLOSED_SUBS');
-		break;
-
-		case 'notconfig':
-			$action[0]	= 'manual';
-			$action[1]	= JText::_('AEC_HEAD_MANUAL_SUBS');
-			break;
-	}
-
-	$filter		= '';
-	$where		= array();
-	$where_or	= array();
-	$notconfig	= false;
-
-	$planid = trim( aecGetParam( 'assign_planid', null ) );
-
-	$users_selected = ( ( is_array( $subscriptionid ) && count( $subscriptionid ) ) || ( is_array( $userid ) && count( $userid ) ) );
-
-	if ( !empty( $planid ) && $users_selected ) {
-		$plan = new SubscriptionPlan();
-		$plan->load( $planid );
-
-		if ( !empty( $subscriptionid ) ) {
-			foreach ( $subscriptionid as $sid ) {
-				$metaUser = new metaUser( false, $sid );
+		if ( !empty( $post['assignto_plan'] ) && is_array( $post['assignto_plan'] ) ) {
+			foreach ( $post['assignto_plan'] as $assign_planid ) {
+				$plan = new SubscriptionPlan();
+				$plan->load( $assign_planid );
 
 				$metaUser->establishFocus( $plan );
 
-				$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+				$metaUser->focusSubscription->applyUsage( $assign_planid, 'none', 1 );
+
+				// We have to reload the metaUser object because of the changes
+				$metaUser = new metaUser( $post['userid'] );
 			}
 		}
 
-		if ( !empty( $userid ) ) {
-			foreach ( $userid as $uid ) {
-				$metaUser = new metaUser( $uid );
+		$ck_lifetime = aecGetParam( 'ck_lifetime' );
 
-				$metaUser->establishFocus( $plan );
+		$set_status = trim( aecGetParam( 'set_status', null ) );
 
-				$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+		if ( !$metaUser->hasSubscription ) {
+			if ( $set_status == 'excluded' ) {
+				$metaUser->focusSubscription = new Subscription();
+				$metaUser->focusSubscription->createNew( $metaUser->userid, 'none', 0 );
 
-				$subscriptionid[] = $metaUser->focusSubscription->id;
-			}
-		}
-
-		// Also show active users now
-		if ( !in_array( 'active', $groups ) ) {
-			$groups[] = 'active';
-		}
-	}
-
-	$set_status = trim( aecGetParam( 'set_status', null ) );
-	$add_or_set_expiration = trim( aecGetParam( 'add_or_set_expiration', null ) );
-	$set_time = trim( aecGetParam( 'set_time', null ) );
-	$set_time_unit = trim( aecGetParam( 'set_time_unit', null ) );
-
-	if (
-		( !empty( $set_status ) || !empty( $add_or_set_expiration ) )
-		&& is_array( $subscriptionid )
-		&& count( $subscriptionid ) > 0
-	) {
-		foreach ( $subscriptionid as $k ) {
-			$subscriptionHandler = new Subscription();
-
-			if ( !empty( $k ) ) {
-				$subscriptionHandler->load( $k );
+				$metaUser->hasSubscription = true;
 			} else {
-				$subscriptionHandler->createNew( $k, '', 1 );
+				echo "<script> alert('".JText::_('AEC_ERR_NO_SUBSCRIPTION')."'); window.history.go(-1); </script>\n";
+				exit();
 			}
+		}
 
-			if ( strcmp( $set_status, 'now' ) === 0) {
-				$subscriptionHandler->expire();
-
-				if ( !in_array( 'expired', $groups ) ) {
-					$groups[] = 'expired';
-				}
-			} elseif ( strcmp( $set_status, 'exclude' ) === 0 ) {
-				$subscriptionHandler->setStatus( 'Excluded' );
-
-				if ( !in_array( 'excluded', $groups ) ) {
-					$groups[] = 'excluded';
-				}
-			} elseif ( strcmp( $set_status, 'close' ) === 0 ) {
-				$subscriptionHandler->setStatus( 'Closed' );
-
-				if ( !in_array( 'closed', $groups ) ) {
-					$groups[] = 'closed';
-				}
-			} elseif ( strcmp( $set_status, 'hold' ) === 0 ) {
-				$subscriptionHandler->setStatus( 'Hold' );
-
-				if ( !in_array( 'hold', $groups ) ) {
-					$groups[] = 'hold';
-				}
-			} elseif ( strcmp( $set_status, 'include' ) === 0 ) {
-				$subscriptionHandler->setStatus( 'Active' );
-
-				if ( !in_array( 'active', $groups ) ) {
-					$groups[] = 'active';
-				}
-			} elseif ( strcmp( $set_status, 'lifetime' ) === 0 ) {
-				if ( !$subscriptionHandler->isLifetime() ) {
-					$subscriptionHandler->expiration = '9999-12-31 00:00:00';
-					$subscriptionHandler->lifetime = 1;
-				}
-
-				$subscriptionHandler->setStatus( 'Active' );
-
-				if ( !in_array( 'active', $groups ) ) {
-					$groups[] = 'active';
-				}
-			}
-
-			if (
-				$set_status !== 'lifetime'
-				&& !empty($add_or_set_expiration)
-				&& !empty($set_time)
-				&& !empty($set_time_unit)
-			) {
-				if ( $add_or_set_expiration == 'set' ) {
-					$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 0 );
-
-					$subscriptionHandler->lifetime = 0;
-
-					$subscriptionHandler->storeload();
-
-					if ( !in_array( 'active', $groups ) ) {
-						$groups[] = 'active';
-					}
-				} elseif ( $add_or_set_expiration == 'add' ) {
-					if ( $subscriptionHandler->lifetime) {
-						$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 0 );
+		if ( empty( $post['assignto_plan'] ) ) {
+			if ( $ck_lifetime ) {
+				$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
+				$metaUser->focusSubscription->status		= 'Active';
+				$metaUser->focusSubscription->lifetime	= 1;
+			} elseif ( !empty( $post['expiration'] ) ) {
+				if ( $post['expiration'] != $post['expiration_check'] ) {
+					if ( strpos( $post['expiration'], ':' ) === false ) {
+						$metaUser->focusSubscription->expiration = $post['expiration'] . ' 00:00:00';
 					} else {
-						$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 1 );
+						$metaUser->focusSubscription->expiration = $post['expiration'];
 					}
 
-					$subscriptionHandler->lifetime = 0;
+					if ( $metaUser->focusSubscription->status == 'Trial' ) {
+						$metaUser->focusSubscription->status = 'Trial';
+					} else {
+						$metaUser->focusSubscription->status = 'Active';
+					}
 
-					$subscriptionHandler->storeload();
+					$metaUser->focusSubscription->lifetime = 0;
+				}
+			}
+		}
+
+		if ( !empty( $set_status ) ) {
+			switch ( $set_status ) {
+				case 'expired':
+					$metaUser->focusSubscription->expire();
+					break;
+				case 'cancelled':
+					$metaUser->focusSubscription->cancel();
+					break;
+				default:
+					$metaUser->focusSubscription->setStatus( ucfirst( $set_status ) );
+					break;
+			}
+		}
+
+		if ( !empty( $post['notes'] ) ) {
+			$metaUser->focusSubscription->customparams['notes'] = $post['notes'];
+
+			unset( $post['notes'] );
+		}
+
+		if ( $metaUser->hasSubscription ) {
+			$metaUser->focusSubscription->storeload();
+		}
+
+		$userMIs = $metaUser->getUserMIs();
+
+		if ( !empty( $userMIs ) ) {
+			foreach ( $userMIs as $m ) {
+				$params = array();
+
+				$pref = 'mi_'.$m->id.'_';
+
+				$uf = $m->profile_form( $metaUser );
+				if ( !empty( $uf ) ) {
+					foreach ( $uf as $k => $v ) {
+						if ( isset( $post[$pref.$k] ) ) {
+							$params[$k] = $post[$pref.$k];
+						}
+					}
+
+					$m->profile_form_save( $metaUser, $params );
+				}
+
+				$admin_params = array();
+
+				$af = $m->admin_form( $metaUser );
+				if ( !empty( $af ) ) {
+					foreach ( $af as $k => $v ) {
+						if ( isset( $post[$pref.$k] ) ) {
+							$admin_params[$k] = $post[$pref.$k];
+						}
+					}
+
+					$m->admin_form_save( $metaUser, $admin_params );
+				}
+
+				if ( empty( $params ) ) {
+					continue;
+				}
+
+				$metaUser->meta->setMIParams( $m->id, null, $params, true );
+			}
+
+			$metaUser->meta->storeload();
+		}
+
+		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart	= $app->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
+
+		$nexttask	= aecGetParam( 'nexttask', 'showSubscriptions' ) ;
+
+		if ( empty( $nexttask ) ) {
+			$nexttask = 'showSubscriptions';
+		}
+
+		if ( $apply ) {
+			$subID = !empty($post['subscriptionid']) ? $post['subscriptionid'] : $metaUser->focusSubscription->id;
+
+			if ( empty( $subID ) ) {
+				aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $metaUser->userid, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			} else {
+				aecRedirect( 'index.php?option=' . $option . '&task=editMembership&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			}
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('SAVED') );
+		}
+	}
+
+	function browse( $option, $set_group, $subscriptionid, $userid=array(), $planid=null )
+	{
+		$db = JFactory::getDBO();
+
+		$app = JFactory::getApplication();
+
+		$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+
+		$orderby		= $app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
+		$groups			= $app->getUserStateFromRequest( "groups{$option}", 'groups', 'active' );
+		$search			= $app->getUserStateFromRequest( "search{$option}_subscr", 'search', '' );
+		$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
+
+		if ( empty( $planid ) ) {
+			$filter_plan	= $app->getUserStateFromRequest( "filter_plan{$option}", 'filter_plan', 0 );
+		} else {
+			$filter_plan	= $planid;
+		}
+
+		if ( !is_array( $filter_plan ) ) {
+			$filter_plan = array( $filter_plan );
+		}
+
+		$filter_group	= $app->getUserStateFromRequest( "filter_group{$option}", 'filter_group', 0 );
+
+		if ( !is_array( $filter_group ) && !empty( $filter_group ) ) {
+			$filter_group = array( $filter_group );
+		} elseif ( empty( $filter_group ) ) {
+			$filter_group = array();
+		}
+
+		if ( !empty( $set_group ) && empty( $_REQUEST['groups'] ) ) {
+			if ( is_array( $set_group ) ) {
+				$groups		= $set_group;
+			} else {
+				$groups		= array();
+				$groups[]	= $set_group;
+			}
+		} else {
+			if ( $groups ) {
+				if ( is_array($groups ) ) {
+					if ( count( $groups ) == 1 ) {
+						if ( $groups[0] == 'all' ) {
+							$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
+						}
+					}
+				} else {
+					$groups		= array( $groups );
+				}
+			}
+		}
+
+		if ( array_search( 'notconfig', $groups ) ) {
+			$set_group	= 'notconfig';
+		} else {
+			$set_group	= $groups[0];
+		}
+
+		if ( !empty( $orderby ) ) {
+			if ( $set_group == "notconfig" ) {
+				$forder = array(
+					'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
+					'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+				);
+			} else {
+				$forder = array(
+					'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+					'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
+					'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+					'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC', 'type ASC', 'type DESC'
+				);
+			}
+
+			if ( !in_array( $orderby, $forder ) ) {
+				$orderby = 'name ASC';
+			}
+		}
+
+		// define displaying at html
+		$action = array();
+		switch( $set_group ){
+			case 'active':
+				$action[0]	= 'active';
+				$action[1]	= JText::_('AEC_HEAD_ACTIVE_SUBS');
+				break;
+
+			case 'excluded':
+				$action[0]	= 'excluded';
+				$action[1]	= JText::_('AEC_HEAD_EXCLUDED_SUBS');
+				break;
+
+			case 'expired':
+				$action[0]	= 'expired';
+				$action[1]	= JText::_('AEC_HEAD_EXPIRED_SUBS');
+				break;
+
+			case 'pending':
+				$action[0]	= 'pending';
+				$action[1]	= JText::_('AEC_HEAD_PENDING_SUBS');
+				break;
+
+			case 'cancelled':
+				$action[0]	= 'cancelled';
+				$action[1]	= JText::_('AEC_HEAD_CANCELLED_SUBS');
+				break;
+
+			case 'hold':
+				$action[0]	= 'hold';
+				$action[1]	= JText::_('AEC_HEAD_HOLD_SUBS');
+				break;
+
+			case 'closed':
+				$action[0]	= 'closed';
+				$action[1]	= JText::_('AEC_HEAD_CLOSED_SUBS');
+				break;
+
+			case 'notconfig':
+				$action[0]	= 'manual';
+				$action[1]	= JText::_('AEC_HEAD_MANUAL_SUBS');
+				break;
+		}
+
+		$filter		= '';
+		$where		= array();
+		$where_or	= array();
+		$notconfig	= false;
+
+		$planid = trim( aecGetParam( 'assign_planid', null ) );
+
+		$users_selected = ( ( is_array( $subscriptionid ) && count( $subscriptionid ) ) || ( is_array( $userid ) && count( $userid ) ) );
+
+		if ( !empty( $planid ) && $users_selected ) {
+			$plan = new SubscriptionPlan();
+			$plan->load( $planid );
+
+			if ( !empty( $subscriptionid ) ) {
+				foreach ( $subscriptionid as $sid ) {
+					$metaUser = new metaUser( false, $sid );
+
+					$metaUser->establishFocus( $plan );
+
+					$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+				}
+			}
+
+			if ( !empty( $userid ) ) {
+				foreach ( $userid as $uid ) {
+					$metaUser = new metaUser( $uid );
+
+					$metaUser->establishFocus( $plan );
+
+					$metaUser->focusSubscription->applyUsage( $planid, 'none', 1 );
+
+					$subscriptionid[] = $metaUser->focusSubscription->id;
+				}
+			}
+
+			// Also show active users now
+			if ( !in_array( 'active', $groups ) ) {
+				$groups[] = 'active';
+			}
+		}
+
+		$set_status = trim( aecGetParam( 'set_status', null ) );
+		$add_or_set_expiration = trim( aecGetParam( 'add_or_set_expiration', null ) );
+		$set_time = trim( aecGetParam( 'set_time', null ) );
+		$set_time_unit = trim( aecGetParam( 'set_time_unit', null ) );
+
+		if (
+			( !empty( $set_status ) || !empty( $add_or_set_expiration ) )
+			&& is_array( $subscriptionid )
+			&& count( $subscriptionid ) > 0
+		) {
+			foreach ( $subscriptionid as $k ) {
+				$subscriptionHandler = new Subscription();
+
+				if ( !empty( $k ) ) {
+					$subscriptionHandler->load( $k );
+				} else {
+					$subscriptionHandler->createNew( $k, '', 1 );
+				}
+
+				if ( strcmp( $set_status, 'now' ) === 0) {
+					$subscriptionHandler->expire();
+
+					if ( !in_array( 'expired', $groups ) ) {
+						$groups[] = 'expired';
+					}
+				} elseif ( strcmp( $set_status, 'exclude' ) === 0 ) {
+					$subscriptionHandler->setStatus( 'Excluded' );
+
+					if ( !in_array( 'excluded', $groups ) ) {
+						$groups[] = 'excluded';
+					}
+				} elseif ( strcmp( $set_status, 'close' ) === 0 ) {
+					$subscriptionHandler->setStatus( 'Closed' );
+
+					if ( !in_array( 'closed', $groups ) ) {
+						$groups[] = 'closed';
+					}
+				} elseif ( strcmp( $set_status, 'hold' ) === 0 ) {
+					$subscriptionHandler->setStatus( 'Hold' );
+
+					if ( !in_array( 'hold', $groups ) ) {
+						$groups[] = 'hold';
+					}
+				} elseif ( strcmp( $set_status, 'include' ) === 0 ) {
+					$subscriptionHandler->setStatus( 'Active' );
+
+					if ( !in_array( 'active', $groups ) ) {
+						$groups[] = 'active';
+					}
+				} elseif ( strcmp( $set_status, 'lifetime' ) === 0 ) {
+					if ( !$subscriptionHandler->isLifetime() ) {
+						$subscriptionHandler->expiration = '9999-12-31 00:00:00';
+						$subscriptionHandler->lifetime = 1;
+					}
+
+					$subscriptionHandler->setStatus( 'Active' );
 
 					if ( !in_array( 'active', $groups ) ) {
 						$groups[] = 'active';
 					}
 				}
+
+				if (
+					$set_status !== 'lifetime'
+					&& !empty($add_or_set_expiration)
+					&& !empty($set_time)
+					&& !empty($set_time_unit)
+				) {
+					if ( $add_or_set_expiration == 'set' ) {
+						$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 0 );
+
+						$subscriptionHandler->lifetime = 0;
+
+						$subscriptionHandler->storeload();
+
+						if ( !in_array( 'active', $groups ) ) {
+							$groups[] = 'active';
+						}
+					} elseif ( $add_or_set_expiration == 'add' ) {
+						if ( $subscriptionHandler->lifetime) {
+							$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 0 );
+						} else {
+							$subscriptionHandler->setExpiration( $set_time_unit, $set_time, 1 );
+						}
+
+						$subscriptionHandler->lifetime = 0;
+
+						$subscriptionHandler->storeload();
+
+						if ( !in_array( 'active', $groups ) ) {
+							$groups[] = 'active';
+						}
+					}
+				}
 			}
 		}
-	}
 
-	if ( is_array( $groups ) ) {
-		if ( in_array( 'notconfig', $groups ) ) {
- 			$notconfig = true;
- 			$groups = array( 'notconfig' );
-		} else {
-			if ( in_array( 'excluded', $groups ) ) {
-				$where_or[] = "a.status = 'Excluded'";
-			}
-			if ( in_array( 'expired', $groups ) ) {
-				$where_or[] = "a.status = 'Expired'";
-			}
-			if ( in_array( 'active', $groups ) ) {
-				$where_or[] = "(a.status = 'Active' || a.status = 'Trial')";
-			}
-			if ( in_array( 'pending', $groups ) ) {
-				$where_or[] = "a.status = 'Pending'";
-			}
-			if ( in_array( 'cancelled', $groups ) ) {
-				$where_or[] = "a.status = 'Cancelled'";
-			}
-			if ( in_array( 'hold', $groups ) ) {
-				$where_or[] = "a.status = 'Hold'";
-			}
-			if ( in_array( 'closed', $groups ) ) {
-	 			$where_or[] = "a.status = 'Closed'";
+		if ( is_array( $groups ) ) {
+			if ( in_array( 'notconfig', $groups ) ) {
+				$notconfig = true;
+				$groups = array( 'notconfig' );
+			} else {
+				if ( in_array( 'excluded', $groups ) ) {
+					$where_or[] = "a.status = 'Excluded'";
+				}
+				if ( in_array( 'expired', $groups ) ) {
+					$where_or[] = "a.status = 'Expired'";
+				}
+				if ( in_array( 'active', $groups ) ) {
+					$where_or[] = "(a.status = 'Active' || a.status = 'Trial')";
+				}
+				if ( in_array( 'pending', $groups ) ) {
+					$where_or[] = "a.status = 'Pending'";
+				}
+				if ( in_array( 'cancelled', $groups ) ) {
+					$where_or[] = "a.status = 'Cancelled'";
+				}
+				if ( in_array( 'hold', $groups ) ) {
+					$where_or[] = "a.status = 'Hold'";
+				}
+				if ( in_array( 'closed', $groups ) ) {
+					$where_or[] = "a.status = 'Closed'";
+				}
 			}
 		}
-	}
 
-	if ( isset( $search ) && $search!= '' ) {
+		if ( isset( $search ) && $search!= '' ) {
+			if ( $notconfig ) {
+				$where[] = "(username LIKE '%$search%' OR name LIKE '%$search%')";
+			} else {
+				$where[] = "(b.username LIKE '%$search%' OR b.name LIKE '%$search%')";
+			}
+		}
+
+		$group_plans = ItemGroupHandler::getChildren( $filter_group, 'item' );
+
+		if ( !empty( $filter_plan ) || !empty( $group_plans ) ) {
+			$plan_selection = array();
+
+			if ( !empty( $filter_plan ) ) {
+				$plan_selection = $filter_plan;
+			}
+
+			if ( !empty( $group_plans ) ) {
+				$plan_selection = array_merge( $plan_selection, $group_plans );
+			}
+
+			if ( empty( $plan_selection[0] ) ) {
+				unset( $plan_selection[0] );
+			}
+
+			$plan_selection = array_unique( $plan_selection );
+
+			if ( !$notconfig && !empty( $plan_selection ) ) {
+				$where[] = "a.plan IN (" . implode( ',', $plan_selection ) . ")";
+			}
+		}
+
+		// get the total number of records
 		if ( $notconfig ) {
-			$where[] = "(username LIKE '%$search%' OR name LIKE '%$search%')";
-		} else {
-			$where[] = "(b.username LIKE '%$search%' OR b.name LIKE '%$search%')";
-		}
-	}
+			$where[] = 'b.status is null';
 
-	$group_plans = ItemGroupHandler::getChildren( $filter_group, 'item' );
-
-	if ( !empty( $filter_plan ) || !empty( $group_plans ) ) {
-		$plan_selection = array();
-
-		if ( !empty( $filter_plan ) ) {
-			$plan_selection = $filter_plan;
-		}
-
-		if ( !empty( $group_plans ) ) {
-			$plan_selection = array_merge( $plan_selection, $group_plans );
-		}
-
-		if ( empty( $plan_selection[0] ) ) {
-			unset( $plan_selection[0] );
-		}
-
-		$plan_selection = array_unique( $plan_selection );
-
-		if ( !$notconfig && !empty( $plan_selection ) ) {
-			$where[] = "a.plan IN (" . implode( ',', $plan_selection ) . ")";
-		}
-	}
-
-	// get the total number of records
-	if ( $notconfig ) {
-		$where[] = 'b.status is null';
-
-		$query = 'SELECT count(*)'
+			$query = 'SELECT count(*)'
 				. ' FROM #__users AS a'
 				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
 				. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-				;
-	} else {
-		$query = 'SELECT count(*)'
+			;
+		} else {
+			$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_subscr AS a'
 				. ' INNER JOIN #__users AS b ON a.userid = b.id'
-				;
+			;
 
-		if ( count( $where_or ) ) {
-			$where[] = ( count( $where_or ) ? '(' . implode( ' OR ', $where_or ) . ')' : '' );
+			if ( count( $where_or ) ) {
+				$where[] = ( count( $where_or ) ? '(' . implode( ' OR ', $where_or ) . ')' : '' );
+			}
+
+			$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
 		}
 
-		$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
-	}
+		$db->setQuery( $query );
+		$total = $db->loadResult();
 
-	$db->setQuery( $query );
-	$total = $db->loadResult();
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
+		// get the subset (based on limits) of required records
+		if ( $notconfig ) {
+			$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
+				'signup_date ASC', 'signup_date DESC' );
 
-	// get the subset (based on limits) of required records
-	if ( $notconfig ) {
-		$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
-							'signup_date ASC', 'signup_date DESC' );
+			if ( !in_array( $orderby, $forder ) ) {
+				$orderby = 'name ASC';
+			}
 
-		if ( !in_array( $orderby, $forder ) ) {
-			$orderby = 'name ASC';
-		}
+			if ( strpos( $orderby, 'lastname' ) !== false ) {
+				$orderby = str_replace( 'lastname', 'SUBSTRING_INDEX(name, \' \', -1)', $orderby );
+			}
 
-		if ( strpos( $orderby, 'lastname' ) !== false ) {
-			$orderby = str_replace( 'lastname', 'SUBSTRING_INDEX(name, \' \', -1)', $orderby );
-		}
-
-		$query = 'SELECT a.id, a.name, a.username, a.registerDate as signup_date'
+			$query = 'SELECT a.id, a.name, a.username, a.registerDate as signup_date'
 				. ' FROM #__users AS a'
 				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
 				. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 				. ' ORDER BY ' . str_replace( 'signup_date', 'registerDate', $orderby )
 				. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-				;
+			;
 
-		if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
-			$orderby = str_replace( 'SUBSTRING_INDEX(name, \' \', -1)', 'lastname', $orderby );
-		}
-	} else {
-		if ( strpos( $orderby, 'lastname' ) !== false ) {
-			$orderby = str_replace( 'lastname', 'SUBSTRING_INDEX(b.name, \' \', -1)', $orderby );
-		}
+			if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
+				$orderby = str_replace( 'SUBSTRING_INDEX(name, \' \', -1)', 'lastname', $orderby );
+			}
+		} else {
+			if ( strpos( $orderby, 'lastname' ) !== false ) {
+				$orderby = str_replace( 'lastname', 'SUBSTRING_INDEX(b.name, \' \', -1)', $orderby );
+			}
 
-		$query = 'SELECT a.*, b.name, b.username, b.email, c.name AS plan_name'
+			$query = 'SELECT a.*, b.name, b.username, b.email, c.name AS plan_name'
 				. ' FROM #__acctexp_subscr AS a'
 				. ' INNER JOIN #__users AS b ON a.userid = b.id'
 				. ' LEFT JOIN #__acctexp_plans AS c ON a.plan = c.id'
 				. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 				. ' ORDER BY ' . $orderby
 				. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-				;
+			;
 
-		if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
-			$orderby = str_replace( 'SUBSTRING_INDEX(b.name, \' \', -1)', 'lastname', $orderby );
+			if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
+				$orderby = str_replace( 'SUBSTRING_INDEX(b.name, \' \', -1)', 'lastname', $orderby );
+			}
 		}
-	}
 
-	$db->setQuery( 'SET SQL_BIG_SELECTS=1');
-	$db->query();
+		$db->setQuery( 'SET SQL_BIG_SELECTS=1');
+		$db->query();
 
-	$db->setQuery( $query );
-	$rows = $db->loadObjectList();
+		$db->setQuery( $query );
+		$rows = $db->loadObjectList();
 
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
 
-	$db->setQuery( 'SET SQL_BIG_SELECTS=0');
-	$db->query();
+		$db->setQuery( 'SET SQL_BIG_SELECTS=0');
+		$db->query();
 
-	$processors = PaymentProcessorHandler::getObjectList(
-		PaymentProcessorHandler::getProcessorList()
-	);
+		$processors = PaymentProcessorHandler::getObjectList(
+			PaymentProcessorHandler::getProcessorList()
+		);
 
-	$procs = array(
-		'free' => 'Free',
-		'none' => 'None'
-	);
+		$procs = array(
+			'free' => 'Free',
+			'none' => 'None'
+		);
 
-	foreach ( $processors as $processor ) {
-		$procs[$processor->processor_name] = $processor->processor->info['longname'];
-	}
+		foreach ( $processors as $processor ) {
+			$procs[$processor->processor_name] = $processor->processor->info['longname'];
+		}
 
-	foreach ( $rows as $k => $row ) {
-		if ( !isset($rows[$k]->type) ) continue;
+		foreach ( $rows as $k => $row ) {
+			if ( !isset($rows[$k]->type) ) continue;
 
-		$rows[$k]->type = $procs[$rows[$k]->type];
-	}
+			$rows[$k]->type = $procs[$rows[$k]->type];
+		}
 
-	// Get list of plans for filter
-	$query = 'SELECT `id`, `name`'
+		// Get list of plans for filter
+		$query = 'SELECT `id`, `name`'
 			. ' FROM #__acctexp_plans'
 			. ' ORDER BY `ordering`'
-			;
-	$db->setQuery( $query );
-	$db_plans = $db->loadObjectList();
+		;
+		$db->setQuery( $query );
+		$db_plans = $db->loadObjectList();
 
-	$plans2[] = JHTML::_('select.option', '0', JText::_('BIND_USER'), 'id', 'name' );
-	if ( is_array( $db_plans ) ) {
-		$plans2 = array_merge( $plans2, $db_plans );
-	}
-	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="form-control inputbox" size="1"', 'id', 'name', 0 );
-
-	$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
-	foreach ( $db_plans as $plan ) {
-		$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected"' : '' ) . '>' . $plan->name . '</option>';
-	}
-	$lists['filter_plan'] .= '</select>';
-
-	$grouplist = ItemGroupHandler::getTree();
-
-	$lists['filter_group'] = '<select id="group-filter-select" name="filter_group[]" multiple="multiple" size="5">';
-	foreach ( $grouplist as $glisti ) {
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
-		} else {
-			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '>' . $glisti[1] . '</option>';
+		$plans2[] = JHTML::_('select.option', '0', JText::_('BIND_USER'), 'id', 'name' );
+		if ( is_array( $db_plans ) ) {
+			$plans2 = array_merge( $plans2, $db_plans );
 		}
+		$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="form-control inputbox" size="1"', 'id', 'name', 0 );
+
+		$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
+		foreach ( $db_plans as $plan ) {
+			$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected"' : '' ) . '>' . $plan->name . '</option>';
+		}
+		$lists['filter_plan'] .= '</select>';
+
+		$grouplist = ItemGroupHandler::getTree();
+
+		$lists['filter_group'] = '<select id="group-filter-select" name="filter_group[]" multiple="multiple" size="5">';
+		foreach ( $grouplist as $glisti ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
+			} else {
+				$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '>' . $glisti[1] . '</option>';
+			}
+		}
+		$lists['filter_group'] .= '</select>';
+
+		$status = array(
+			'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
+			'pending'	=> JText::_('AEC_SEL_PENDING'),
+			'active'	=> JText::_('AEC_SEL_ACTIVE'),
+			'expired'	=> JText::_('AEC_SEL_EXPIRED'),
+			'closed'	=> JText::_('AEC_SEL_CLOSED'),
+			'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
+			'hold'		=> JText::_('AEC_SEL_HOLD'),
+			'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
+		);
+
+		$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';
+		foreach ( $status as $id => $txt ) {
+			$lists['groups'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected"' : '' ) . '>' . $txt . '</option>';
+		}
+		$lists['groups'] .= '</select>';
+
+		$group_selection = array();
+		$group_selection[] = JHTML::_('select.option', '',			JText::_('Set Status') );
+		$group_selection[] = JHTML::_('select.option', 'now',		JText::_('EXPIRE_NOW') );
+		$group_selection[] = JHTML::_('select.option', 'exclude',	JText::_('EXPIRE_EXCLUDE') );
+		$group_selection[] = JHTML::_('select.option', 'lifetime',	JText::_('AEC_CMN_LIFETIME') );
+		$group_selection[] = JHTML::_('select.option', 'include',	JText::_('EXPIRE_INCLUDE') );
+		$group_selection[] = JHTML::_('select.option', 'close',		JText::_('EXPIRE_CLOSE') );
+		$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
+
+		$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="form-control inputbox" size="1"', 'value', 'text', "");
+
+		$group_selection = array();
+		$group_selection[] = JHTML::_('select.option', 'add',		JText::_('Add') );
+		$group_selection[] = JHTML::_('select.option', 'set',		JText::_('Set') );
+
+		$lists['add_or_set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'add_or_set_expiration', 'class="form-control inputbox" size="1"', 'value', 'text', "");
+
+		// make the select list for first trial period units
+		$perunit[] = JHTML::_('select.option', 'D', JText::_('PAYPLAN_PERUNIT1') );
+		$perunit[] = JHTML::_('select.option', 'W', JText::_('PAYPLAN_PERUNIT2') );
+		$perunit[] = JHTML::_('select.option', 'M', JText::_('PAYPLAN_PERUNIT3') );
+		$perunit[] = JHTML::_('select.option', 'Y', JText::_('PAYPLAN_PERUNIT4') );
+
+		$lists['set_time_unit'] = JHTML::_('select.genericlist', $perunit, 'set_time_unit', 'class="form-control inputbox" size="1"', 'value', 'text');
+
+		HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
 	}
-	$lists['filter_group'] .= '</select>';
-
-	$status = array(
-		'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
-		'pending'	=> JText::_('AEC_SEL_PENDING'),
-		'active'	=> JText::_('AEC_SEL_ACTIVE'),
-		'expired'	=> JText::_('AEC_SEL_EXPIRED'),
-		'closed'	=> JText::_('AEC_SEL_CLOSED'),
-		'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
-		'hold'		=> JText::_('AEC_SEL_HOLD'),
-		'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
-	);
-
-	$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';
-	foreach ( $status as $id => $txt ) {
-		$lists['groups'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected"' : '' ) . '>' . $txt . '</option>';
-	}
-	$lists['groups'] .= '</select>';
-
-	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', '',			JText::_('Set Status') );
-	$group_selection[] = JHTML::_('select.option', 'now',		JText::_('EXPIRE_NOW') );
-	$group_selection[] = JHTML::_('select.option', 'exclude',	JText::_('EXPIRE_EXCLUDE') );
-	$group_selection[] = JHTML::_('select.option', 'lifetime',	JText::_('AEC_CMN_LIFETIME') );
-	$group_selection[] = JHTML::_('select.option', 'include',	JText::_('EXPIRE_INCLUDE') );
-	$group_selection[] = JHTML::_('select.option', 'close',		JText::_('EXPIRE_CLOSE') );
-	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
-
-	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="form-control inputbox" size="1"', 'value', 'text', "");
-
-	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', 'add',		JText::_('Add') );
-	$group_selection[] = JHTML::_('select.option', 'set',		JText::_('Set') );
-
-	$lists['add_or_set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'add_or_set_expiration', 'class="form-control inputbox" size="1"', 'value', 'text', "");
-
-	// make the select list for first trial period units
-	$perunit[] = JHTML::_('select.option', 'D', JText::_('PAYPLAN_PERUNIT1') );
-	$perunit[] = JHTML::_('select.option', 'W', JText::_('PAYPLAN_PERUNIT2') );
-	$perunit[] = JHTML::_('select.option', 'M', JText::_('PAYPLAN_PERUNIT3') );
-	$perunit[] = JHTML::_('select.option', 'Y', JText::_('PAYPLAN_PERUNIT4') );
-
-	$lists['set_time_unit'] = JHTML::_('select.genericlist', $perunit, 'set_time_unit', 'class="form-control inputbox" size="1"', 'value', 'text');
-
-	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
 }
 
-function editSettings( $option )
+class aecAdminTemplate
 {
-	$db = JFactory::getDBO();
+	function browse( $option )
+	{
+		$app = JFactory::getApplication();
 
-	global $aecConfig;
+		$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	// See whether we have a duplication
-	if ( $aecConfig->RowDuplicationCheck() ) {
-		// Clean out duplication and reload settings
-		$aecConfig->CleanDuplicatedRows();
-		$aecConfig = new aecConfig();
-	}
+		$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
-	$lists = array();
-
-	$currency_code_list	= AECToolbox::aecCurrencyField( true, true, true );
-	$lists['currency_code_general'] = JHTML::_('select.genericlist', $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
-
-	$available_plans = SubscriptionPlanHandler::getActivePlanList( true, false );
-
-	if ( !isset( $aecConfig->cfg['entry_plan'] ) ) {
-		$aecConfig->cfg['entry_plan'] = 0;
-	}
-
-	$lists['entry_plan'] = JHTML::_('select.genericlist', $available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $aecConfig->cfg['entry_plan'] );
-
-	$gtree = xJACLhandler::getGroupTree( array( 28, 29, 30 ) );
-
-	if ( !isset( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-		$aecConfig->cfg['checkout_as_gift_access'] = 0;
-	}
-
-	// Create GID related Lists
-	$lists['checkout_as_gift_access'] 		= JHTML::_('select.genericlist', $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
-
-	$tab_data = array();
-
-	$params = array();
-	$params[] = array( 'page-head', JText::_('General Configuration') );
-	$params[] = array( 'section', 'access' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_ACCESS') );
-	$params['require_subscription']			= array( 'toggle', 0 );
-	$params['adminaccess']					= array( 'toggle', 0 );
-	$params['manageraccess']				= array( 'toggle', 0 );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
-	$params['gwlist']						= array( 'list', 0 );
-	$params['standard_currency']			= array( 'list_currency', 0 );
-	$params[] = array( 'section-end' );
-
-	$params[] = array( 'page-head', JText::_('Registration Flow') );
-	$params[] = array( 'section', 'plans' );
-	$params['plans_first']					= array( 'toggle', 0 );
-	$params['integrate_registration']		= array( 'toggle', 0 );
-	$params['skip_confirmation']			= array( 'toggle', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'plans' );
-	$params[] = array( 'section-head', JText::_('Plan List') );
-	$params['root_group']					= array( 'list', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'cart' );
-	$params[] = array( 'section-head', 'Shopping Cart' );
-	$params['enable_shoppingcart']			= array( 'toggle', '' );
-	$params['additem_stayonpage']			= array( 'toggle', '' );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'checkout' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
-	$params['checkout_coupons']				= array( 'toggle', 0 );
-	$params['user_checkout_prefill']		= array( 'inputD', 0 );
-
-	$rewriteswitches						= array( 'cms', 'user', 'expiration', 'subscription' );
-	$params									= AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
-
-	$params[] = array( 'section-end' );
-
-	$params[] = array( 'page-head', JText::_('Inner workings') );
-	$params[] = array( 'section', 'heartbeat' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SYSTEM') );
-	$params['heartbeat_cycle']					= array( 'inputA', 0 );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_EMAIL') );
-	$params['noemails']							= array( 'toggle', 0 );
-	$params['noemails_adminoverride']			= array( 'toggle', 0 );
-	$params['nojoomlaregemails']				= array( 'toggle', 0 );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_DEBUG') );
-	$params['curl_default']						= array( 'toggle', 0 );
-	$params['simpleurls']						= array( 'toggle', 0 );
-	$params['debug_processor_notifications']	= array( 'toggle', 0 );
-	$params['error_notification_level']			= array( 'list', 0 );
-	$params['email_notification_level']			= array( 'list', 0 );
-	$params[] = array( 'section-end' );
-
-	@end( $params );
-	$tab_data[] = array( JText::_('CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB1_SUBTITLE') . '</h2>' );
-
-	$params[] = array( 'page-head', JText::_('CFG_TAB_CUSTOMIZATION_TITLE') );
-	$params[] = array( 'section', 'customredirect' );
-	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_CREDIRECT') );
-	$params['customintro']						= array( 'inputC', '' );
-	$params['customintro_userid']				= array( 'toggle', '' );
-	$params['customintro_always']				= array( 'toggle', '' );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'invoice-number' );
-	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_INUM') );
-	$params['invoicenum_doformat']				= array( 'toggle', '' );
-	$params['invoicenum_formatting']			= array( 'inputD', '' );
-
-	$rewriteswitches							= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-	$params										= AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
-
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'captcha' );
-	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
-	$params['use_recaptcha']					= array( 'toggle', '' );
-	$params['recaptcha_privatekey']				= array( 'inputC', '' );
-	$params['recaptcha_publickey']				= array( 'inputC', '' );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'proxy' );
-	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_PROXY') );
-	$params['use_proxy']						= array( 'toggle', '' );
-	$params['proxy']							= array( 'inputC', '' );
-	$params['proxy_port']						= array( 'inputC', '' );
-	$params['proxy_username']					= array( 'inputC', '' );
-	$params['proxy_password']					= array( 'inputC', '' );
-	$params['gethostbyaddr']					= array( 'toggle', '' );
-	$params[] = array( 'section-end' );
-
-	$params[] = array( 'section', 'date' );
-	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
-	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params['setlocale_date']					= array( 'inputD', '' );
-	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
-	$params['amount_currency_symbol']			= array( 'toggle', 0 );
-	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
-	$params['amount_use_comma']					= array( 'toggle', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'itemid' );
-	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
-
-	$itemidlist = array(
-		'cart' => array( 'view' => 'cart', 'params' => false ),
-		'checkout' => array( 'view' => 'checkout', 'params' => false ),
-		'confirmation' => array( 'view' => 'confirmation', 'params' => false ),
-		'subscribe' => array( 'view' => 'subscribe', 'params' => false ),
-		'exception' => array( 'view' => 'exception', 'params' => false ),
-		'thanks' => array( 'view' => 'thanks', 'params' => false ),
-		'expired' => array( 'view' => 'expired', 'params' => false ),
-		'hold' => array( 'view' => 'hold', 'params' => false ),
-		'notallowed' => array( 'view' => 'notallowed', 'params' => false ),
-		'pending' => array( 'view' => 'pending', 'params' => false ),
-		'subscriptiondetails' => array( 'view' => 'subscriptiondetails', 'params' => false ),
-		'subscriptiondetails_invoices' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=invoices' ),
-		'subscriptiondetails_details' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=details' )
-	);
-
-	foreach ( $itemidlist as $param => $xparams ) {
-		$params['itemid_'.$param]				= array( 'inputA', '' );
-	}
-
-	$params['itemid_cb']						= array( 'inputA', '' );
-	$params['itemid_joomlauser']				= array( 'inputA', '' );
-
-	$params[] = array( 'section-end' );
-
-	@end( $params );
-	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMIZATION_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMIZATION_SUBTITLE') . '</h2>' );
-
-	$params[] = array( 'page-head', JText::_('CFG_TAB_EXPERT_SUBTITLE') );
-	$params[] = array( 'section', 'system' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SYSTEM') );
-	$params['alertlevel2']					= array( 'inputA', 0 );
-	$params['alertlevel1']					= array( 'inputA', 0 );
-	$params['expiration_cushion']			= array( 'inputA', 0 );
-	$params['invoice_cushion']				= array( 'inputA', 0 );
-	$params['invoice_spawn_new']			= array( 'toggle', 0 );
-	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
-	$params['allow_frontend_heartbeat']		= array( 'toggle', 0 );
-	$params['disable_regular_heartbeat']	= array( 'toggle', 0 );
-	$params['custom_heartbeat_securehash']	= array( 'inputC', '' );
-	$params['countries_available']			= array( 'list_country_full', 0 );
-	$params['countries_top']				= array( 'list_country_full', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'api' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_API') );
-	$params['apiapplist']					= array( 'inputD', '' );
-	$params[] = array( 'section-end' );
-
-	$params[] = array( 'section', 'registration' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_REGFLOW') );
-	$params['show_fixeddecision']			= array( 'toggle', 0 );
-	$params['temp_auth_exp']				= array( 'inputC', '' );
-	$params['intro_expired']				= array( 'toggle', 0 );
-	$params['skip_registration']			= array( 'toggle', 0 );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
-	$params['confirmation_coupons']			= array( 'toggle', 0 );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
-	$params['checkoutform_jsvalidation']	= array( 'toggle', '' );
-	$params['checkout_coupons']				= array( 'toggle', 1 );
-	$params['checkout_as_gift']				= array( 'toggle', '' );
-	$params['checkout_as_gift_access']		= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
-	$params['confirm_as_gift']				= array( 'toggle', '' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_PLANS') );
-	$params['root_group_rw']				= array( 'inputD', 0 );
-	$params['entry_plan']					= array( 'list', 0 );
-	$params['per_plan_mis']					= array( 'toggle', 0 );
-	$params[] = array( 'section-end' );
-
-	$params[] = array( 'section', 'security' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SECURITY') );
-	$params['ssl_signup']					= array( 'toggle', 0 );
-	$params['ssl_profile']					= array( 'toggle', 0 );
-	$params['override_reqssl']				= array( 'toggle', 0 );
-	$params['altsslurl']					= array( 'inputC', '' );
-	$params['ssl_verifypeer']				= array( 'toggle', 0 );
-	$params['ssl_verifyhost']				= array( 'inputC', '' );
-	$params['ssl_cainfo']					= array( 'inputC', '' );
-	$params['ssl_capath']					= array( 'inputC', '' );
-	$params['allow_invoice_unpublished_item']				= array( 'toggle', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'debug' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_DEBUG') );
-	$params['bypassintegration']			= array( 'inputC', '' );
-	$params['breakon_mi_error']				= array( 'toggle', 0 );
-	$params['email_default_admins']			= array( 'toggle', 1 );
-	$params['email_extra_admins']			= array( 'inputD', '' );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'uninstall' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_UNINSTALL') );
-	$params['delete_tables']				= array( 'toggle', 0 );
-	$params['delete_tables_sure']			= array( 'toggle', 0 );
-	$params[] = array( 'section-end' );
-
-	@end( $params );
-	$tab_data[] = array( JText::_('CFG_TAB_EXPERT_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_EXPERT_SUBTITLE') . '</h2>' );
-
-	$error_reporting_notices[] = JHTML::_('select.option', 512, JText::_('AEC_NOTICE_NUMBER_512') );
-	$error_reporting_notices[] = JHTML::_('select.option', 128, JText::_('AEC_NOTICE_NUMBER_128') );
-	$error_reporting_notices[] = JHTML::_('select.option', 32, JText::_('AEC_NOTICE_NUMBER_32') );
-	$error_reporting_notices[] = JHTML::_('select.option', 8, JText::_('AEC_NOTICE_NUMBER_8') );
-	$error_reporting_notices[] = JHTML::_('select.option', 2, JText::_('AEC_NOTICE_NUMBER_2') );
-	$lists['error_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'error_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['error_notification_level'] );
-	$lists['email_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'email_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['email_notification_level'] );
-
-	// Display Processor descriptions?
-	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
-		$desc_list = $aecConfig->cfg['gwlist'];
-	} else {
-		$desc_list = array();
-	}
-
-	$lists['gwlist'] = PaymentProcessorHandler::getProcessorSelectList( true, $desc_list );
-
-	$grouplist = ItemGroupHandler::getTree();
-
-	$glist = array();
-
-	foreach ( $grouplist as $id => $glisti ) {
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
-		} else {
-			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		foreach ( $list as $id => $name ) {
+			if ( ( $name == 'default' ) || ( $name == 'classic' ) ) {
+				unset( $list[$id] );
+			}
 		}
-	}
 
-	$lists['root_group'] 		= JHTML::_('select.genericlist', $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', $aecConfig->cfg['root_group'] );
+		$total = count($list);
 
-	foreach ( $itemidlist as $idk => $idkp ) {
-		if ( empty( $aecConfig->cfg['itemid_' . $idk] ) ) {
-			$query = 'SELECT `id`'
-					. ' FROM #__menu'
-					. ' WHERE ( LOWER( `link` ) = \'index.php?option=com_acctexp&view=' . $idkp['view'] . '\''
-					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idkp['view'] . '%\' )'
-					. ' AND published = \'1\''
-					;
-			$db->setQuery( $query );
+		if ( $limitstart > $total ) {
+			$limitstart = 0;
+		}
 
-			$mid = 0;
-			if ( empty( $idkp['params'] ) ) {
-				$mid = $db->loadResult();
-			} else {
-				$mids = xJ::getDBArray( $db );
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
-				if ( !empty( $mids ) ) {
-					$query = 'SELECT `id`'
-							. ' FROM #__menu'
-							. ' WHERE `id` IN (' . implode( ',', $mids ) . ')'
-							. ' AND `params` LIKE \'%' . $idkp['params'] . '%\''
-							. ' AND published = \'1\''
-							;
-					$db->setQuery( $query );
+		$names = array_slice( $list, $limitstart, $limit );
 
-					$mid = $db->loadResult();
+		$rows = array();
+		foreach ( $names as $name ) {
+			$t = new configTemplate();
+			$t->loadName( $name );
+
+			if ( !$t->id ){
+				$t->default = 0;
+
+				if ( $name == 'helix' ) {
+					continue;
 				}
 			}
 
-			if ( $mid ) {
-				$aecConfig->cfg['itemid_' . $idk] = $mid;
-			}
-		}
-	}
-
-	if ( !empty( $aecConfig->cfg['apiapplist'] ) ) {
-		$string = "";
-
-		foreach ( $aecConfig->cfg['apiapplist'] as $app => $key ) {
-			$string .= $app . "=" . $key . "\n";
+			$rows[] = $t;
 		}
 
-		$aecConfig->cfg['apiapplist'] = $string;
-	} else {
-		$aecConfig->cfg['apiapplist'] = "";
+		HTML_AcctExp::listTemplates( $rows, $pageNav, $option );
 	}
 
-	$settings = new aecSettings ( 'cfg', 'general' );
-	$settings->fullSettingsArray( $params, $aecConfig->cfg, $lists ) ;
+	function edit( $option, $name )
+	{
+		$temp = new configTemplate();
+		$temp->loadName( $name );
 
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-	if ( !empty( $customparamsarray ) ) {
-		$aecHTML->customparams = $customparamsarray;
+		$tempsettings = $temp->template->settings();
+		$temp->settings['default'] = $temp->default;
+
+		$lists = array();
+
+		$settings = new aecSettings ( 'cfg', 'general' );
+		$settings->fullSettingsArray( $tempsettings['params'], $temp->settings, $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+		$aecHTML->tempname	= $name;
+		$aecHTML->name		= $temp->info['longname'];
+
+		HTML_AcctExp::editTemplate( $option, $aecHTML, $tempsettings['tab_data'] );
 	}
 
-	HTML_AcctExp::Settings( $option, $aecHTML, $params, $tab_data );
-}
+	function save( $option, $name, $return=0 )
+	{
+		$temp = new configTemplate();
+		$temp->loadName( $name );
 
-function saveSettings( $option, $return=0 )
-{
-	$db = JFactory::getDBO();
+		if ( $_POST['default'] ) {
+			$db = JFactory::getDBO();
 
-	$user= JFactory::getUser();
-
-	global $aecConfig;
-
-	unset( $_POST['id'] );
-	unset( $_POST['task'] );
-	unset( $_POST['option'] );
-
-	$general_settings = $_POST;
-
-	if ( !empty( $general_settings['apiapplist'] ) ) {
-		$list = explode( "\n", $general_settings['apiapplist'] );
-
-		$array = array();
-		foreach ( $list as $item ) {
-			$li = explode( "=", $item, 2 );
-
-			$k = $li[0];
-
-			if ( !empty( $k ) ) {
-				if ( !empty( $li[1] ) ) {
-					$v = $li[1];
-				} else {
-					$v = AECToolbox::randomstring( 32, true, true );
+			if ( $temp->id ) {
+				if ( !$temp->default ) {
+					// Reset all other items
+					$db->setQuery(
+						'UPDATE #__acctexp_config_templates'
+						. ' SET `default` = 0'
+						. ' WHERE `id` > 0'
+					);
+					$db->query();
 				}
-
-				$array[$k] = $v;
-			}
-		}
-
-		$general_settings['apiapplist'] = $array;
-	} else {
-		$general_settings['apiapplist'] = array();
-	}
-
-	$diff = $aecConfig->diffParams( $general_settings, 'settings' );
-
-	if ( is_array( $diff ) ) {
-		$newdiff = array();
-		foreach ( $diff as $value => $change ) {
-			$newdiff[] = $value . '(' . implode( ' -> ', $change ) . ')';
-		}
-		$difference = implode( ',', $newdiff );
-	} else {
-		$difference = 'none';
-	}
-
-	if ( defined( 'JPATH_MANIFESTS' ) ) {
-		if ( $aecConfig->cfg['manageraccess'] !== $general_settings['manageraccess'] ) {
-			if ( $general_settings['manageraccess'] ) {
-				$set = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
 			} else {
-				$set = '{}';
-			}
-
-			$query = 'UPDATE #__assets'
-					. ' SET `rules` = \'' . xJ::escape( $db, $set ) . '\''
-					. ' WHERE `name` = \'com_acctexp\''
-					;
-			$db->setQuery( $query );
-			$db->query();
-		}
-	}
-
-	$aecConfig->cfg = $general_settings;
-	$aecConfig->saveSettings();
-
-	$ip = AECToolbox::aecIP();
-
-	$short	= JText::_('AEC_LOG_SH_SETT_SAVED');
-	$event	= JText::_('AEC_LOG_LO_SETT_SAVED') . ' ' . $difference;
-	$tags	= 'settings,system';
-	$params = array(
-		'userid' => $user->id,
-		'ip' => $ip['ip'],
-		'isp' => $ip['isp']
-	);
-
-	$eventlog = new eventLog();
-	$eventlog->issue( $short, $tags, $event, 2, $params );
-
-	if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
-		$plan = new SubscriptionPlan();
-		$plan->load( $aecConfig->cfg['entry_plan'] );
-
-		$terms = $plan->getTerms();
-
-		if ( !$terms->checkFree() ) {
-			$short	= "Settings Warning";
-			$event	= "You have selected a non-free plan as Entry Plan."
-						. " Please keep in mind that this means that users"
-						. " will be getting it for free when they log in"
-						. " without having any membership";
-			$tags	= 'settings,system';
-			$params = array(
-				'userid' => $user->id,
-				'ip' => $ip['ip'],
-				'isp' => $ip['isp']
-			);
-
-			$eventlog = new eventLog();
-			$eventlog->issue( $short, $tags, $event, 32, $params );
-		}
-	}
-
-	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=showSettings', JText::_('AEC_CONFIG_SAVED') );
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_SAVED') );
-	}
-}
-
-function listTemplates( $option )
-{
-	$app = JFactory::getApplication();
-
- 	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-	$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
-
-	foreach ( $list as $id => $name ) {
-		if ( ( $name == 'default' ) || ( $name == 'classic' ) ) {
-			unset( $list[$id] );
-		}
-	}
-
- 	$total = count($list);
-
- 	if ( $limitstart > $total ) {
- 		$limitstart = 0;
- 	}
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
-	$names = array_slice( $list, $limitstart, $limit );
-
-	$rows = array();
-	foreach ( $names as $name ) {
-		$t = new configTemplate();
-		$t->loadName( $name );
-
-		if ( !$t->id ){
-			$t->default = 0;
-
-			if ( $name == 'helix' ) {
-				continue;
-			}
-		}
-
-		$rows[] = $t;
-	}
-
-	HTML_AcctExp::listTemplates( $rows, $pageNav, $option );
-}
-
-function editTemplate( $option, $name )
-{
-	$temp = new configTemplate();
-	$temp->loadName( $name );
-
-	$tempsettings = $temp->template->settings();
-	$temp->settings['default'] = $temp->default;
-
-	$lists = array();
-
-	$settings = new aecSettings ( 'cfg', 'general' );
-	$settings->fullSettingsArray( $tempsettings['params'], $temp->settings, $lists ) ;
-
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-	$aecHTML->tempname	= $name;
-	$aecHTML->name		= $temp->info['longname'];
-
-	HTML_AcctExp::editTemplate( $option, $aecHTML, $tempsettings['tab_data'] );
-}
-
-function saveTemplate( $option, $name, $return=0 )
-{
-	$temp = new configTemplate();
-	$temp->loadName( $name );
-
-	if ( $_POST['default'] ) {
-		$db = JFactory::getDBO();
-
-		if ( $temp->id ) {
-			if ( !$temp->default ) {
 				// Reset all other items
 				$db->setQuery(
 					'UPDATE #__acctexp_config_templates'
@@ -1961,3798 +1978,3823 @@ function saveTemplate( $option, $name, $return=0 )
 				);
 				$db->query();
 			}
+
+			$temp->default = 1;
 		} else {
-			// Reset all other items
-			$db->setQuery(
-				'UPDATE #__acctexp_config_templates'
-				. ' SET `default` = 0'
-				. ' WHERE `id` > 0'
-			);
-			$db->query();
+			$temp->default = 0;
 		}
 
-		$temp->default = 1;
-	} else {
-		$temp->default = 0;
-	}
+		unset( $_POST['id'] );
+		unset( $_POST['task'] );
+		unset( $_POST['option'] );
+		unset( $_POST['name'] );
+		unset( $_POST['default'] );
 
-	unset( $_POST['id'] );
-	unset( $_POST['task'] );
-	unset( $_POST['option'] );
-	unset( $_POST['name'] );
-	unset( $_POST['default'] );
+		$temp->template->cfg = $temp->settings;
 
-	$temp->template->cfg = $temp->settings;
+		$temp->settings = $_POST;
 
-	$temp->settings = $_POST;
+		$temp->storeload();
 
-	$temp->storeload();
-
-	if ( $return ) {
-		editTemplate( $option, $name );
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showTemplates', JText::_('AEC_CONFIG_SAVED') );
+		if ( $return ) {
+			editTemplate( $option, $name );
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=showTemplates', JText::_('AEC_CONFIG_SAVED') );
+		}
 	}
 }
 
-function listProcessors( $option )
+class aecAdminProcessor
 {
- 	$db = JFactory::getDBO();
+	function browse( $option )
+	{
+		$db = JFactory::getDBO();
 
-	$app = JFactory::getApplication();
+		$app = JFactory::getApplication();
 
- 	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
- 	// get the total number of records
- 	$db->setQuery(
-		'SELECT count(*)'
-		. ' FROM #__acctexp_config_processors'
-	);
- 	$total = $db->loadResult();
+		// get the total number of records
+		$db->setQuery(
+			'SELECT count(*)'
+			. ' FROM #__acctexp_config_processors'
+		);
+		$total = $db->loadResult();
 
- 	if ( $limitstart > $total ) {
- 		$limitstart = 0;
- 	}
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
- 	// get the subset (based on limits) of records
- 	$query = 'SELECT name'
-		 	. ' FROM #__acctexp_config_processors'
-		 	. ' GROUP BY `id`'
-		 	//. ' ORDER BY `ordering`'
-		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		 	;
-	$db->setQuery( $query );
-	$names = xJ::getDBArray( $db );
-
-	$rows = array();
-	foreach ( $names as $name ) {
-		$pp = new PaymentProcessor();
-		$pp->loadName( $name );
-
-		if ( $pp->fullInit() ) {
-			$rows[] = $pp;
+		if ( $limitstart > $total ) {
+			$limitstart = 0;
 		}
+
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
+
+		// get the subset (based on limits) of records
+		$query = 'SELECT name'
+			. ' FROM #__acctexp_config_processors'
+			. ' GROUP BY `id`'
+			//. ' ORDER BY `ordering`'
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		;
+		$db->setQuery( $query );
+		$names = xJ::getDBArray( $db );
+
+		$rows = array();
+		foreach ( $names as $name ) {
+			$pp = new PaymentProcessor();
+			$pp->loadName( $name );
+
+			if ( $pp->fullInit() ) {
+				$rows[] = $pp;
+			}
+		}
+
+		HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
 	}
 
-	HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
-}
+	function edit( $id, $option )
+	{
+		$lang = JFactory::getLanguage();
 
-function editProcessor( $id, $option )
-{
-	$lang = JFactory::getLanguage();
+		if ( $id ) {
+			$pp = new PaymentProcessor();
 
-	if ( $id ) {
-		$pp = new PaymentProcessor();
-
-		if ( !$pp->loadId( $id ) ) {
-			return false;
-		}
-
-		// Init Info and Settings
-		$pp->fullInit(true);
-
-		$lists = array();
-
-		// Get Backend Settings
-		$settings_array		= $pp->getBackendSettings();
-		$original_settings	= $pp->processor->settings();
-
-		if ( isset( $settings_array['lists'] ) ) {
-			foreach ( $settings_array['lists'] as $lname => $lvalue ) {
-				$list_name = $pp->processor_name . '_' . $lname;
-
-				$lists[$list_name] = str_replace( 'name="' . $lname . '"', 'name="' . $list_name . '"', $lvalue );
+			if ( !$pp->loadId( $id ) ) {
+				return false;
 			}
 
-			unset( $settings_array['lists'] );
-		}
+			// Init Info and Settings
+			$pp->fullInit(true);
 
-		$available_plans = SubscriptionPlanHandler::getActivePlanList();
+			$lists = array();
 
-		// Iterate through settings form assigning the db settings
-		foreach ( $settings_array as $name => $values ) {
-			$setting_name = $pp->processor_name . '_' . $name;
+			// Get Backend Settings
+			$settings_array		= $pp->getBackendSettings();
+			$original_settings	= $pp->processor->settings();
 
-			switch( $settings_array[$name][0] ) {
-				case 'list_currency':
-					// Get currency list
-					if ( is_array( $pp->info['currencies'] ) ) {
-						$currency_array	= $pp->info['currencies'];
-					} else {
-						$currency_array	= explode( ',', $pp->info['currencies'] );
-					}
+			if ( isset( $settings_array['lists'] ) ) {
+				foreach ( $settings_array['lists'] as $lname => $lvalue ) {
+					$list_name = $pp->processor_name . '_' . $lname;
 
-					// Transform currencies into OptionArray
-					$currency_code_list = array();
-					foreach ( $currency_array as $currency ) {
-						if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, $currency . ' - ' . JText::_( 'CURRENCY_' . $currency ) );
+					$lists[$list_name] = str_replace( 'name="' . $lname . '"', 'name="' . $list_name . '"', $lvalue );
+				}
+
+				unset( $settings_array['lists'] );
+			}
+
+			$available_plans = SubscriptionPlanHandler::getActivePlanList();
+
+			// Iterate through settings form assigning the db settings
+			foreach ( $settings_array as $name => $values ) {
+				$setting_name = $pp->processor_name . '_' . $name;
+
+				switch( $settings_array[$name][0] ) {
+					case 'list_currency':
+						// Get currency list
+						if ( is_array( $pp->info['currencies'] ) ) {
+							$currency_array	= $pp->info['currencies'];
+						} else {
+							$currency_array	= explode( ',', $pp->info['currencies'] );
 						}
-					}
 
-					$size = min( count($currency_array), 10 );
+						// Transform currencies into OptionArray
+						$currency_code_list = array();
+						foreach ( $currency_array as $currency ) {
+							if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
+								$currency_code_list[] = JHTML::_('select.option', $currency, $currency . ' - ' . JText::_( 'CURRENCY_' . $currency ) );
+							}
+						}
 
-					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="' . $size . '"', 'value', 'text', $pp->settings[$name] );
+						$size = min( count($currency_array), 10 );
 
-					$settings_array[$name][0] = 'list';
-					break;
-				case 'list_language':
-					// Get language list
-					if ( is_array( $pp->info['languages'] ) ) {
-						$language_array	= $pp->info['languages'];
-					} else {
-						$language_array	= explode( ',', $pp->info['languages'] );
-					}
+						// Create list
+						$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="' . $size . '"', 'value', 'text', $pp->settings[$name] );
 
-					// Transform languages into OptionArray
-					$language_code_list = array();
-					foreach ( $language_array as $language ) {
-						$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'LANGUAGECODE_' . strtoupper( $language ) ) );
-					}
-					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-					$settings_array[$name][0] = 'list';
-					break;
-				case 'list_plan':
-					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $available_plans, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-					$settings_array[$name][0] = 'list';
-					break;
-				default:
-					break;
-			}
+						$settings_array[$name][0] = 'list';
+						break;
+					case 'list_language':
+						// Get language list
+						if ( is_array( $pp->info['languages'] ) ) {
+							$language_array	= $pp->info['languages'];
+						} else {
+							$language_array	= explode( ',', $pp->info['languages'] );
+						}
 
-			if ( !isset( $settings_array[$name][1] ) ) {
-				$settings_array[$name][1] = $pp->getParamLang( $name . '_NAME' );
-				$settings_array[$name][2] = $pp->getParamLang( $name . '_DESC' );
-			}
-
-			// It might be that the processor has got some new properties, so we need to double check here
-			if ( isset( $pp->settings[$name] ) ) {
-				$content = $pp->settings[$name];
-			} elseif ( isset( $original_settings[$name] ) ) {
-				$content = $original_settings[$name];
-			} else {
-				$content = null;
-			}
-
-			// Set the settings value
-			$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $content ) );
-
-			// unload the original value
-			unset( $settings_array[$name] );
-		}
-
-		$longname = $pp->processor_name . '_info_longname';
-		$description = $pp->processor_name . '_info_description';
-
-		$settingsparams = $pp->settings;
-
-		$params = array();
-		$params[$pp->processor_name.'_active'] = array( 'toggle', JText::_('PP_GENERAL_ACTIVE_NAME'), JText::_('PP_GENERAL_ACTIVE_DESC'), $pp->processor->active);
-
-		if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
-			$params = array_merge( $params, $settings_array );
-		}
-
-		$params[$longname] = array( 'inputC', JText::_('CFG_PROCESSOR_NAME_NAME'), JText::_('CFG_PROCESSOR_NAME_DESC'), $pp->info['longname'], $longname);
-		$params[$description] = array( 'editor', JText::_('CFG_PROCESSOR_DESC_NAME'), JText::_('CFG_PROCESSOR_DESC_DESC'), $pp->info['description'], $description);
-	} else {
-		$lists['processor']		= PaymentProcessorHandler::getSelectList();
-
-		$params['processor']	= array( 'list' );
-
-		$settingsparams = array();
-
-		$pp = null;
-	}
-
-	$settings = new aecSettings ( 'pp', 'general' );
-	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
-
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-	if ( !empty( $customparamsarray ) ) {
-		$aecHTML->customparams = $customparamsarray;
-	}
-
-	$aecHTML->pp = $pp;
-
-	HTML_AcctExp::editProcessor( $option, $aecHTML );
-}
-
-function changeProcessor( $cid=null, $state=0, $type, $option )
-{
-	$db = JFactory::getDBO();
-
-	if ( count( $cid ) < 1 ) {
-		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	$total	= count( $cid );
-	$cids	= implode( ',', $cid );
-
-	$db->setQuery(
-		'UPDATE #__acctexp_config_processors'
-		. ' SET `' . $type . '` = \'' . $state . '\''
-		. ' WHERE `id` IN (' . $cids . ')'
-	);
-
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
-
-	if ( $state ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
-	} else {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
-	}
-
-	$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', $msg );
-}
-
-function saveProcessor( $option, $return=0 )
-{
-	$pp = new PaymentProcessor();
-
-	if ( !empty( $_POST['id'] ) ) {
-		$pp->loadId( $_POST['id'] );
-
-		if ( empty( $pp->id ) ) {
-			cancel($option);
-		}
-
-		$procname = $pp->processor_name;
-	} elseif ( isset( $_POST['processor'] ) ) {
-		$pp->loadName( $_POST['processor'] );
-
-		$procname = $_POST['processor'];
-	}
-
-	$pp->fullInit(true);
-
-	$active			= $procname . '_active';
-	$longname		= $procname . '_info_longname';
-	$description	= $procname . '_info_description';
-
-	if ( isset( $_POST[$longname] ) ) {
-		$pp->info['longname'] = $_POST[$longname];
-		unset( $_POST[$longname] );
-	}
-
-	if ( isset( $_POST[$description] ) ) {
-		$pp->info['description'] = $_POST[$description];
-		unset( $_POST[$description] );
-	}
-
-	if ( isset( $_POST[$active] ) ) {
-		$pp->processor->active = $_POST[$active];
-		unset( $_POST[$active] );
-	}
-
-	$settings = $pp->getBackendSettings();
-
-	if ( is_int( $pp->is_recurring() ) ) {
-		$settings['recurring'] = 2;
-	}
-
-	foreach ( $settings as $name => $value ) {
-		if ( $name == 'lists' ) {
-			continue;
-		}
-
-		$postname = $procname  . '_' . $name;
-
-		if ( isset( $_POST[$postname] ) ) {
-			$val = $_POST[$postname];
-
-			if ( empty( $val ) ) {
-				switch( $name ) {
-					case 'currency':
-						$val = 'USD';
+						// Transform languages into OptionArray
+						$language_code_list = array();
+						foreach ( $language_array as $language ) {
+							$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'LANGUAGECODE_' . strtoupper( $language ) ) );
+						}
+						// Create list
+						$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+						$settings_array[$name][0] = 'list';
+						break;
+					case 'list_plan':
+						// Create list
+						$lists[$setting_name] = JHTML::_('select.genericlist', $available_plans, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+						$settings_array[$name][0] = 'list';
 						break;
 					default:
 						break;
 				}
+
+				if ( !isset( $settings_array[$name][1] ) ) {
+					$settings_array[$name][1] = $pp->getParamLang( $name . '_NAME' );
+					$settings_array[$name][2] = $pp->getParamLang( $name . '_DESC' );
+				}
+
+				// It might be that the processor has got some new properties, so we need to double check here
+				if ( isset( $pp->settings[$name] ) ) {
+					$content = $pp->settings[$name];
+				} elseif ( isset( $original_settings[$name] ) ) {
+					$content = $original_settings[$name];
+				} else {
+					$content = null;
+				}
+
+				// Set the settings value
+				$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $content ) );
+
+				// unload the original value
+				unset( $settings_array[$name] );
 			}
 
-			$pp->settings[$name] = $val;
+			$longname = $pp->processor_name . '_info_longname';
+			$description = $pp->processor_name . '_info_description';
+
+			$settingsparams = $pp->settings;
+
+			$params = array();
+			$params[$pp->processor_name.'_active'] = array( 'toggle', JText::_('PP_GENERAL_ACTIVE_NAME'), JText::_('PP_GENERAL_ACTIVE_DESC'), $pp->processor->active);
+
+			if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
+				$params = array_merge( $params, $settings_array );
+			}
+
+			$params[$longname] = array( 'inputC', JText::_('CFG_PROCESSOR_NAME_NAME'), JText::_('CFG_PROCESSOR_NAME_DESC'), $pp->info['longname'], $longname);
+			$params[$description] = array( 'editor', JText::_('CFG_PROCESSOR_DESC_NAME'), JText::_('CFG_PROCESSOR_DESC_DESC'), $pp->info['description'], $description);
+		} else {
+			$lists['processor']		= PaymentProcessorHandler::getSelectList();
+
+			$params['processor']	= array( 'list' );
+
+			$settingsparams = array();
+
+			$pp = null;
 		}
+
+		$settings = new aecSettings ( 'pp', 'general' );
+		$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+		if ( !empty( $customparamsarray ) ) {
+			$aecHTML->customparams = $customparamsarray;
+		}
+
+		$aecHTML->pp = $pp;
+
+		HTML_AcctExp::editProcessor( $option, $aecHTML );
 	}
 
-	$pp->storeload();
+	function change( $cid=null, $state=0, $type, $option )
+	{
+		$db = JFactory::getDBO();
 
-	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->processor->id, JText::_('AEC_CONFIG_SAVED') );
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
+		if ( count( $cid ) < 1 ) {
+			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		$total	= count( $cid );
+		$cids	= implode( ',', $cid );
+
+		$db->setQuery(
+			'UPDATE #__acctexp_config_processors'
+			. ' SET `' . $type . '` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+		);
+
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
+
+		if ( $state ) {
+			$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
+		} else {
+			$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
+		}
+
+		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
+
+		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', $msg );
+	}
+
+	function save( $option, $return=0 )
+	{
+		$pp = new PaymentProcessor();
+
+		if ( !empty( $_POST['id'] ) ) {
+			$pp->loadId( $_POST['id'] );
+
+			if ( empty( $pp->id ) ) {
+				cancel($option);
+			}
+
+			$procname = $pp->processor_name;
+		} elseif ( isset( $_POST['processor'] ) ) {
+			$pp->loadName( $_POST['processor'] );
+
+			$procname = $_POST['processor'];
+		}
+
+		$pp->fullInit(true);
+
+		$active			= $procname . '_active';
+		$longname		= $procname . '_info_longname';
+		$description	= $procname . '_info_description';
+
+		if ( isset( $_POST[$longname] ) ) {
+			$pp->info['longname'] = $_POST[$longname];
+			unset( $_POST[$longname] );
+		}
+
+		if ( isset( $_POST[$description] ) ) {
+			$pp->info['description'] = $_POST[$description];
+			unset( $_POST[$description] );
+		}
+
+		if ( isset( $_POST[$active] ) ) {
+			$pp->processor->active = $_POST[$active];
+			unset( $_POST[$active] );
+		}
+
+		$settings = $pp->getBackendSettings();
+
+		if ( is_int( $pp->is_recurring() ) ) {
+			$settings['recurring'] = 2;
+		}
+
+		foreach ( $settings as $name => $value ) {
+			if ( $name == 'lists' ) {
+				continue;
+			}
+
+			$postname = $procname  . '_' . $name;
+
+			if ( isset( $_POST[$postname] ) ) {
+				$val = $_POST[$postname];
+
+				if ( empty( $val ) ) {
+					switch( $name ) {
+						case 'currency':
+							$val = 'USD';
+							break;
+						default:
+							break;
+					}
+				}
+
+				$pp->settings[$name] = $val;
+			}
+		}
+
+		$pp->storeload();
+
+		if ( $return ) {
+			aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->processor->id, JText::_('AEC_CONFIG_SAVED') );
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
+		}
 	}
 }
 
-function getSubscriptionPlans()
+class aecAdminSubscriptionPlan
 {
-	$db = JFactory::getDBO();
+	function getList()
+	{
+		$db = JFactory::getDBO();
 
-	$rows = SubscriptionPlanHandler::getFullPlanList();
+		$rows = SubscriptionPlanHandler::getFullPlanList();
 
-	$totals = array();
-	$query = 'SELECT count(*)'
+		$totals = array();
+		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_subscr'
 			. ' WHERE (status = \'Active\' OR status = \'Trial\')'
-		 	. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
-			;
-	$db->setQuery( $query );
+			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
+		;
+		$db->setQuery( $query );
 
- 	$totals['active'] = $db->loadResult();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
+		$totals['active'] = $db->loadResult();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
 
- 	$query = 'SELECT count(*)'
+		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_subscr'
 			. ' WHERE (status = \'Expired\')'
 			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
+		;
+		$db->setQuery( $query );
+
+		$totals['expired'] = $db->loadResult();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		$gcolors = array();
+
+		foreach ( $rows as $n => $row ) {
+			$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE plan = ' . $row->id
+				. ' AND (status = \'Active\' OR status = \'Trial\')'
 			;
-	$db->setQuery( $query );
+			$db->setQuery( $query );
 
- 	$totals['expired'] = $db->loadResult();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
-
-	$gcolors = array();
-
-	foreach ( $rows as $n => $row ) {
-		$query = 'SELECT count(*)'
-				. ' FROM #__acctexp_subscr'
-				. ' WHERE plan = ' . $row->id
-				. ' AND (status = \'Active\' OR status = \'Trial\')'
-				;
-		$db->setQuery( $query );
-
-	 	$rows[$n]->usercount = $db->loadResult();
-	 	if ( $db->getErrorNum() ) {
-	 		echo $db->stderr();
-	 		return false;
-	 	}
-
-	 	$query = 'SELECT count(*)'
-				. ' FROM #__acctexp_subscr'
-				. ' WHERE plan = ' . $row->id
-				. ' AND (status = \'Expired\')'
-				;
-		$db->setQuery( $query );
-
-	 	$rows[$n]->expiredcount = $db->loadResult();
-	 	if ( $db->getErrorNum() ) {
-	 		echo $db->stderr();
-	 		return false;
-	 	}
-
-	 	$query = 'SELECT group_id'
-				. ' FROM #__acctexp_itemxgroup'
-				. ' WHERE type = \'item\''
-				. ' AND item_id = \'' . $rows[$n]->id . '\''
-				;
-		$db->setQuery( $query	);
-		$g = (int) $db->loadResult();
-
-		$group = empty( $g ) ? 0 : $g;
-
-		if ( !isset( $gcolors[$group] ) ) {
-			$gcolors[$group] = array();
-			$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
-		}
-
-		$rows[$n]->group = $group;
-		$rows[$n]->color = $gcolors[$group]['color'];
-
-		$rows[$n]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=all';
-		$rows[$n]->link_active = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=active';
-		$rows[$n]->link_expired = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=expired';
-
-		if ( $totals['expired'] ) {
-			$rows[$n]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
-		} else {
-			$rows[$n]->expired_percentage = 0;
-		}
-
-		$rows[$n]->expired_inner = false;
-		if ( $rows[$n]->expired_percentage > 45 ) {
-			$rows[$n]->expired_inner = true;
-		}
-
-		$row->activecount = $row->usercount;
-
-		if ( $totals['active'] ) {
-			$rows[$n]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
-		} else {
-			$rows[$n]->active_percentage = 0;
-		}
-
-		$rows[$n]->active_inner = false;
-		if ( $rows[$n]->active_percentage > 45 ) {
-			$rows[$n]->active_inner = true;
-		}
-
-		$row->totalcount = $row->expiredcount+$row->usercount;
-
-		if ( $totals['active']+$totals['expired'] ) {
-			$rows[$n]->total_percentage = ($row->expiredcount+$row->usercount) / ( ($totals['active']+$totals['expired']) / 100 );
-		} else {
-			$rows[$n]->total_percentage = 0;
-		}
-
-		$rows[$n]->total_inner = false;
-		if ( $rows[$n]->total_percentage > 20 ) {
-			$rows[$n]->total_inner = true;
-		}
-
-		if ( !empty( $row->desc ) ) {
-			$rows[$n]->desc = stripslashes( strip_tags( $row->desc ) );
-			if ( strlen( $rows[$n]->desc ) > 50 ) {
-				$rows[$n]->desc = substr( $rows[$n]->desc, 0, 50) . ' ...';
+			$rows[$n]->usercount = $db->loadResult();
+			if ( $db->getErrorNum() ) {
+				echo $db->stderr();
+				return false;
 			}
-		}
-	}
 
-	$ret = new stdClass();
-	$ret->aaData = $rows;
-
-	echo json_encode( $ret );exit;
-}
-
-function listSubscriptionPlans( $option )
-{
- 	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
- 	$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-	$filter_group	= $app->getUserStateFromRequest( "filter_group", 'filter_group', array() );
-
-	$filtered = !empty($filter_group);
-
-	if ( !empty( $filter_group ) ) {
-		$subselect = ItemGroupHandler::getChildren( $filter_group, 'item' );
-	} else {
-		$subselect = array();
-	}
-
-	$search			= $app->getUserStateFromRequest( "search_subscr{$option}", 'search', '' );
-	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
-
-	$orderby = $app->getUserStateFromRequest( "orderby_plans{$option}", 'orderby_plans', 'name ASC' );
-
- 	// get the total number of records
- 	$query = 'SELECT count(*)'
-		 	. ' FROM #__acctexp_plans'
-		 	. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
-		 	;
- 	$db->setQuery( $query );
- 	$total = $db->loadResult();
-
- 	if ( $limitstart > $total ) {
- 		$limitstart = 0;
- 	}
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
- 	// get the subset (based on limits) of records
-	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect, $orderby, $search );
-
-	$gcolors = array();
-
-	foreach ( $rows as $n => $row ) {
-		$query = 'SELECT count(*)'
-				. ' FROM #__acctexp_subscr'
-				. ' WHERE plan = ' . $row->id
-				. ' AND (status = \'Active\' OR status = \'Trial\')'
-				;
-		$db->setQuery( $query );
-
-	 	$rows[$n]->usercount = $db->loadResult();
-	 	if ( $db->getErrorNum() ) {
-	 		echo $db->stderr();
-	 		return false;
-	 	}
-
-	 	$query = 'SELECT count(*)'
+			$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE plan = ' . $row->id
 				. ' AND (status = \'Expired\')'
-				;
-		$db->setQuery( $query );
+			;
+			$db->setQuery( $query );
 
-	 	$rows[$n]->expiredcount = $db->loadResult();
-	 	if ( $db->getErrorNum() ) {
-	 		echo $db->stderr();
-	 		return false;
-	 	}
+			$rows[$n]->expiredcount = $db->loadResult();
+			if ( $db->getErrorNum() ) {
+				echo $db->stderr();
+				return false;
+			}
 
-	 	$query = 'SELECT group_id'
+			$query = 'SELECT group_id'
 				. ' FROM #__acctexp_itemxgroup'
 				. ' WHERE type = \'item\''
 				. ' AND item_id = \'' . $rows[$n]->id . '\''
-				;
-		$db->setQuery( $query );
+			;
+			$db->setQuery( $query	);
+			$g = (int) $db->loadResult();
 
-		$groups = xJ::getDBArray( $db );
-
-		$rows[$n]->groups = array();
-		foreach ( $groups as $group ) {
-			if ( empty($group) ) continue;
+			$group = empty( $g ) ? 0 : $g;
 
 			if ( !isset( $gcolors[$group] ) ) {
 				$gcolors[$group] = array();
 				$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
 			}
 
-			$rows[$n]->groups[] = (object) array(
-				'id' => $group,
-				'color' => $gcolors[$group]['color']
-			);
-		}
-	}
+			$rows[$n]->group = $group;
+			$rows[$n]->color = $gcolors[$group]['color'];
 
-	$grouplist = ItemGroupHandler::getTree();
+			$rows[$n]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=all';
+			$rows[$n]->link_active = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=active';
+			$rows[$n]->link_expired = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=expired';
 
-	$glist		= array();
-	$sel_groups	= array();
-
-	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
-
-	if ( empty( $filter_group ) ) {
-		$sel_groups[] = JHTML::_('select.option', 0, '- - - - - -' );
-	}
-
-	foreach ( $grouplist as $id => $glisti ) {
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
-		} else {
-			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
-		}
-
-		if ( !empty( $filter_group ) ) {
-			if ( in_array( $glisti[0], $filter_group ) ) {
-				$sel_groups[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+			if ( $totals['expired'] ) {
+				$rows[$n]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
+			} else {
+				$rows[$n]->expired_percentage = 0;
 			}
-		}
-	}
 
-	$lists['filter_group'] = JHTML::_('select.genericlist', $glist, 'filter_group[]', 'size="4" multiple="multiple"', 'value', 'text', $sel_groups );
-
-	$totals = array();
-	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_subscr'
-			. ' WHERE (status = \'Active\' OR status = \'Trial\')'
-		 	. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
-			;
-	$db->setQuery( $query );
-
- 	$totals['active'] = $db->loadResult();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
-
- 	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_subscr'
-			. ' WHERE (status = \'Expired\')'
-			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
-			;
-	$db->setQuery( $query );
-
- 	$totals['expired'] = $db->loadResult();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
-
-	foreach ( $rows as $rid => $row ) {
-		$rows[$rid]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=all';
-		$rows[$rid]->link_active = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=active';
-		$rows[$rid]->link_expired = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=expired';
-
-		if ( $totals['expired'] ) {
-			$rows[$rid]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
-		} else {
-			$rows[$rid]->expired_percentage = 0;
-		}
-
-		$rows[$rid]->expired_inner = false;
-		if ( $rows[$rid]->expired_percentage > 45 ) {
-			$rows[$rid]->expired_inner = true;
-		}
-
-		if ( $totals['active'] ) {
-			$rows[$rid]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
-		} else {
-			$rows[$rid]->active_percentage = 0;
-		}
-
-		$rows[$rid]->active_inner = false;
-		if ( $rows[$rid]->active_percentage > 45 ) {
-			$rows[$rid]->active_inner = true;
-		}
-
-		if ( $totals['active']+$totals['expired'] ) {
-			$rows[$rid]->total_percentage = ($row->expiredcount+$row->usercount) / ( ($totals['active']+$totals['expired']) / 100 );
-		} else {
-			$rows[$rid]->total_percentage = 0;
-		}
-
-		$rows[$rid]->total_inner = false;
-		if ( $rows[$rid]->total_percentage > 20 ) {
-			$rows[$rid]->total_inner = true;
-		}
-
-		if ( !empty( $row->desc ) ) {
-			$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
-			if ( strlen( $rows[$rid]->desc ) > 50 ) {
-				$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+			$rows[$n]->expired_inner = false;
+			if ( $rows[$n]->expired_percentage > 45 ) {
+				$rows[$n]->expired_inner = true;
 			}
-		}
-	}
 
-	HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option );
-}
+			$row->activecount = $row->usercount;
 
-function editSubscriptionPlan( $id, $option )
-{
-	global $aecConfig;
+			if ( $totals['active'] ) {
+				$rows[$n]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
+			} else {
+				$rows[$n]->active_percentage = 0;
+			}
 
-	$db = JFactory::getDBO();
+			$rows[$n]->active_inner = false;
+			if ( $rows[$n]->active_percentage > 45 ) {
+				$rows[$n]->active_inner = true;
+			}
 
-	$lang = JFactory::getLanguage();
+			$row->totalcount = $row->expiredcount+$row->usercount;
 
-	$lists = array();
-	$params_values = array();
-	$restrictions_values = array();
-	$customparams_values = array();
+			if ( $totals['active']+$totals['expired'] ) {
+				$rows[$n]->total_percentage = ($row->expiredcount+$row->usercount) / ( ($totals['active']+$totals['expired']) / 100 );
+			} else {
+				$rows[$n]->total_percentage = 0;
+			}
 
-	$customparamsarray = new stdClass();
+			$rows[$n]->total_inner = false;
+			if ( $rows[$n]->total_percentage > 20 ) {
+				$rows[$n]->total_inner = true;
+			}
 
-	$row = new SubscriptionPlan();
-	$row->load( $id );
-
-	$restrictionHelper = new aecRestrictionHelper();
-
-	if ( !$row->id ) {
-		$row->ordering	= 9999;
-		$hasrecusers	= false;
-
-		$params_values['active']	= 1;
-		$params_values['visible']	= 0;
-		$params_values['processors'] = 0;
-
-		$restrictions_values['gid_enabled']	= 1;
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$restrictions_values['gid']			= 2;
-		} else {
-			$restrictions_values['gid']			= 18;
-		}
-	} else {
-		$params_values = $row->params;
-		$restrictions_values = $row->restrictions;
-
-		if ( empty( $restrictions_values ) ) {
-			$restrictions_values = array();
-		}
-
-		// Clean up custom params
-		if ( !empty( $row->customparams ) ) {
-			foreach ( $row->customparams as $n => $v ) {
-				if ( isset( $params_values[$n] ) || isset( $restrictions_values[$n] ) ) {
-					unset( $row->customparams[$n] );
+			if ( !empty( $row->desc ) ) {
+				$rows[$n]->desc = stripslashes( strip_tags( $row->desc ) );
+				if ( strlen( $rows[$n]->desc ) > 50 ) {
+					$rows[$n]->desc = substr( $rows[$n]->desc, 0, 50) . ' ...';
 				}
 			}
 		}
 
-		$customparams_values = $row->custom_params;
+		$ret = new stdClass();
+		$ret->aaData = $rows;
 
-		// We need to convert the values that are set as object properties
-		$params_values['active']				= $row->active;
-		$params_values['visible']				= $row->visible;
-		$params_values['email_desc']			= $row->getProperty( 'email_desc' );
-		$params_values['name']					= $row->getProperty( 'name' );
-		$params_values['desc']					= $row->getProperty( 'desc' );
-		$params_values['micro_integrations']	= $row->micro_integrations;
-		$params_values['processors']			= $row->params['processors'];
+		echo json_encode( $ret );exit;
+	}
 
-		// Checking if there is already a user, which disables certain actions
-		$query  = 'SELECT count(*)'
+	function browse( $option )
+	{
+		$db = JFactory::getDBO();
+
+		$app = JFactory::getApplication();
+
+		$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$filter_group	= $app->getUserStateFromRequest( "filter_group", 'filter_group', array() );
+
+		$filtered = !empty($filter_group);
+
+		if ( !empty( $filter_group ) ) {
+			$subselect = ItemGroupHandler::getChildren( $filter_group, 'item' );
+		} else {
+			$subselect = array();
+		}
+
+		$search			= $app->getUserStateFromRequest( "search_subscr{$option}", 'search', '' );
+		$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
+
+		$orderby = $app->getUserStateFromRequest( "orderby_plans{$option}", 'orderby_plans', 'name ASC' );
+
+		// get the total number of records
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_plans'
+			. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
+		;
+		$db->setQuery( $query );
+		$total = $db->loadResult();
+
+		if ( $limitstart > $total ) {
+			$limitstart = 0;
+		}
+
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
+
+		// get the subset (based on limits) of records
+		$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect, $orderby, $search );
+
+		$gcolors = array();
+
+		foreach ( $rows as $n => $row ) {
+			$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE plan = ' . $row->id
+				. ' AND (status = \'Active\' OR status = \'Trial\')'
+			;
+			$db->setQuery( $query );
+
+			$rows[$n]->usercount = $db->loadResult();
+			if ( $db->getErrorNum() ) {
+				echo $db->stderr();
+				return false;
+			}
+
+			$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE plan = ' . $row->id
+				. ' AND (status = \'Expired\')'
+			;
+			$db->setQuery( $query );
+
+			$rows[$n]->expiredcount = $db->loadResult();
+			if ( $db->getErrorNum() ) {
+				echo $db->stderr();
+				return false;
+			}
+
+			$query = 'SELECT group_id'
+				. ' FROM #__acctexp_itemxgroup'
+				. ' WHERE type = \'item\''
+				. ' AND item_id = \'' . $rows[$n]->id . '\''
+			;
+			$db->setQuery( $query );
+
+			$groups = xJ::getDBArray( $db );
+
+			$rows[$n]->groups = array();
+			foreach ( $groups as $group ) {
+				if ( empty($group) ) continue;
+
+				if ( !isset( $gcolors[$group] ) ) {
+					$gcolors[$group] = array();
+					$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
+				}
+
+				$rows[$n]->groups[] = (object) array(
+					'id' => $group,
+					'color' => $gcolors[$group]['color']
+				);
+			}
+		}
+
+		$grouplist = ItemGroupHandler::getTree();
+
+		$glist		= array();
+		$sel_groups	= array();
+
+		$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
+
+		if ( empty( $filter_group ) ) {
+			$sel_groups[] = JHTML::_('select.option', 0, '- - - - - -' );
+		}
+
+		foreach ( $grouplist as $id => $glisti ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
+			} else {
+				$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+			}
+
+			if ( !empty( $filter_group ) ) {
+				if ( in_array( $glisti[0], $filter_group ) ) {
+					$sel_groups[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+				}
+			}
+		}
+
+		$lists['filter_group'] = JHTML::_('select.genericlist', $glist, 'filter_group[]', 'size="4" multiple="multiple"', 'value', 'text', $sel_groups );
+
+		$totals = array();
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_subscr'
+			. ' WHERE (status = \'Active\' OR status = \'Trial\')'
+			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
+		;
+		$db->setQuery( $query );
+
+		$totals['active'] = $db->loadResult();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_subscr'
+			. ' WHERE (status = \'Expired\')'
+			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
+		;
+		$db->setQuery( $query );
+
+		$totals['expired'] = $db->loadResult();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		foreach ( $rows as $rid => $row ) {
+			$rows[$rid]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=all';
+			$rows[$rid]->link_active = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=active';
+			$rows[$rid]->link_expired = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=expired';
+
+			if ( $totals['expired'] ) {
+				$rows[$rid]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
+			} else {
+				$rows[$rid]->expired_percentage = 0;
+			}
+
+			$rows[$rid]->expired_inner = false;
+			if ( $rows[$rid]->expired_percentage > 45 ) {
+				$rows[$rid]->expired_inner = true;
+			}
+
+			if ( $totals['active'] ) {
+				$rows[$rid]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
+			} else {
+				$rows[$rid]->active_percentage = 0;
+			}
+
+			$rows[$rid]->active_inner = false;
+			if ( $rows[$rid]->active_percentage > 45 ) {
+				$rows[$rid]->active_inner = true;
+			}
+
+			if ( $totals['active']+$totals['expired'] ) {
+				$rows[$rid]->total_percentage = ($row->expiredcount+$row->usercount) / ( ($totals['active']+$totals['expired']) / 100 );
+			} else {
+				$rows[$rid]->total_percentage = 0;
+			}
+
+			$rows[$rid]->total_inner = false;
+			if ( $rows[$rid]->total_percentage > 20 ) {
+				$rows[$rid]->total_inner = true;
+			}
+
+			if ( !empty( $row->desc ) ) {
+				$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
+				if ( strlen( $rows[$rid]->desc ) > 50 ) {
+					$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+				}
+			}
+		}
+
+		HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option );
+	}
+
+	function edit( $id, $option )
+	{
+		global $aecConfig;
+
+		$db = JFactory::getDBO();
+
+		$lang = JFactory::getLanguage();
+
+		$lists = array();
+		$params_values = array();
+		$restrictions_values = array();
+		$customparams_values = array();
+
+		$customparamsarray = new stdClass();
+
+		$row = new SubscriptionPlan();
+		$row->load( $id );
+
+		$restrictionHelper = new aecRestrictionHelper();
+
+		if ( !$row->id ) {
+			$row->ordering	= 9999;
+			$hasrecusers	= false;
+
+			$params_values['active']	= 1;
+			$params_values['visible']	= 0;
+			$params_values['processors'] = 0;
+
+			$restrictions_values['gid_enabled']	= 1;
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$restrictions_values['gid']			= 2;
+			} else {
+				$restrictions_values['gid']			= 18;
+			}
+		} else {
+			$params_values = $row->params;
+			$restrictions_values = $row->restrictions;
+
+			if ( empty( $restrictions_values ) ) {
+				$restrictions_values = array();
+			}
+
+			// Clean up custom params
+			if ( !empty( $row->customparams ) ) {
+				foreach ( $row->customparams as $n => $v ) {
+					if ( isset( $params_values[$n] ) || isset( $restrictions_values[$n] ) ) {
+						unset( $row->customparams[$n] );
+					}
+				}
+			}
+
+			$customparams_values = $row->custom_params;
+
+			// We need to convert the values that are set as object properties
+			$params_values['active']				= $row->active;
+			$params_values['visible']				= $row->visible;
+			$params_values['email_desc']			= $row->getProperty( 'email_desc' );
+			$params_values['name']					= $row->getProperty( 'name' );
+			$params_values['desc']					= $row->getProperty( 'desc' );
+			$params_values['micro_integrations']	= $row->micro_integrations;
+			$params_values['processors']			= $row->params['processors'];
+
+			// Checking if there is already a user, which disables certain actions
+			$query  = 'SELECT count(*)'
 				. ' FROM #__users AS a'
 				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
 				. ' WHERE b.plan = ' . $row->id
 				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
 				. ' AND b.recurring =\'1\''
-				;
-		$db->setQuery( $query );
-		$hasrecusers = ( $db->loadResult() > 0 ) ? true : false;
-	}
-
-	$stdformat = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
-				.'{"cmd":"concat","vars":[{"cmd":"jtext","vars":"CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
-				.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
-				.']}{/aecjson}'
-				;
-
-	// params and their type values
-	$params['active']					= array( 'toggle', 1 );
-	$params['visible']					= array( 'toggle', 1 );
-
-	$params['name']						= array( 'inputC', '' );
-	$params['desc']						= array( 'editor', '' );
-	$params['customamountformat']		= array( 'inputD', $stdformat );
-	$params['customthanks']				= array( 'inputC', '' );
-	$params['customtext_thanks_keeporiginal']	= array( 'toggle', 1 );
-	$params['customtext_thanks']		= array( 'editor', '' );
-	$params['email_desc']				= array( 'inputD', '' );
-	$params['meta']						= array( 'inputD', '' );
-	$params['micro_integrations_inherited']		= array( 'list', '' );
-	$params['micro_integrations']		= array( 'list', '' );
-	$params['micro_integrations_plan']	= array( 'list', '' );
-
-	$params['params_remap']				= array( 'subarea_change', 'groups' );
-
-	$groups = ItemGroupHandler::parentGroups( $row->id, 'item' );
-
-	if ( !empty( $groups ) ) {
-		$gs = array();
-		foreach ( $groups as $groupid ) {
-			$group = new ItemGroup();
-			$group->load( $groupid );
-
-			$g = array();
-			$g['id']	= $group->id;
-			$g['name']	= $group->getProperty('name');
-			$g['color']	= $group->params['color'];
-
-			$g['group']	= '<strong>' . $groupid . '</strong>';
-
-			$gs[$groupid] = $g;
+			;
+			$db->setQuery( $query );
+			$hasrecusers = ( $db->loadResult() > 0 ) ? true : false;
 		}
 
+		$stdformat = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
+			.'{"cmd":"concat","vars":[{"cmd":"jtext","vars":"CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
+			.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
+			.']}{/aecjson}'
+		;
 
-		$customparamsarray->groups = $gs;
-	} else {
-		$customparamsarray->groups = null;
-	}
+		// params and their type values
+		$params['active']					= array( 'toggle', 1 );
+		$params['visible']					= array( 'toggle', 1 );
 
-	$grouplist = ItemGroupHandler::getTree();
+		$params['name']						= array( 'inputC', '' );
+		$params['desc']						= array( 'editor', '' );
+		$params['customamountformat']		= array( 'inputD', $stdformat );
+		$params['customthanks']				= array( 'inputC', '' );
+		$params['customtext_thanks_keeporiginal']	= array( 'toggle', 1 );
+		$params['customtext_thanks']		= array( 'editor', '' );
+		$params['email_desc']				= array( 'inputD', '' );
+		$params['meta']						= array( 'inputD', '' );
+		$params['micro_integrations_inherited']		= array( 'list', '' );
+		$params['micro_integrations']		= array( 'list', '' );
+		$params['micro_integrations_plan']	= array( 'list', '' );
 
-	$glist = array();
+		$params['params_remap']				= array( 'subarea_change', 'groups' );
 
-	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
-	$groupids = array();
-	foreach ( $grouplist as $id => $glisti ) {
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', in_array($glisti[0], $groups) );
+		$groups = ItemGroupHandler::parentGroups( $row->id, 'item' );
+
+		if ( !empty( $groups ) ) {
+			$gs = array();
+			foreach ( $groups as $groupid ) {
+				$group = new ItemGroup();
+				$group->load( $groupid );
+
+				$g = array();
+				$g['id']	= $group->id;
+				$g['name']	= $group->getProperty('name');
+				$g['color']	= $group->params['color'];
+
+				$g['group']	= '<strong>' . $groupid . '</strong>';
+
+				$gs[$groupid] = $g;
+			}
+
+
+			$customparamsarray->groups = $gs;
 		} else {
-			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', in_array($glisti[0], $groups) );
+			$customparamsarray->groups = null;
 		}
 
-		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
-	}
+		$grouplist = ItemGroupHandler::getTree();
 
-	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+		$glist = array();
 
-	$params['add_group']			= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
+		$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
+		$groupids = array();
+		foreach ( $grouplist as $id => $glisti ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', in_array($glisti[0], $groups) );
+			} else {
+				$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', in_array($glisti[0], $groups) );
+			}
 
-	$params['params_remap']			= array( 'subarea_change', 'params' );
+			$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
+		}
 
-	$params['override_activation']	= array( 'toggle', 0 );
-	$params['override_regmail']		= array( 'toggle', 0 );
+		$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
-	$params['full_free']			= array( 'toggle', '' );
-	$params['full_amount']			= array( 'inputA', '' );
-	$params['full_period']			= array( 'inputA', '' );
-	$params['full_periodunit']		= array( 'list', 'D' );
-	$params['trial_free']			= array( 'toggle', '' );
-	$params['trial_amount']			= array( 'inputA', '' );
-	$params['trial_period']			= array( 'inputA', '' );
-	$params['trial_periodunit']		= array( 'list', 'D' );
+		$params['add_group']			= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
-	$params['gid_enabled']			= array( 'toggle', 1 );
-	$params['gid']					= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
-	$params['lifetime']				= array( 'toggle', 0 );
-	$params['processors']			= array( 'list', '' );
-	$params['processor_selectmode']	= array( 'list', '' );
-	$params['standard_parent']		= array( 'list', '' );
-	$params['fallback']				= array( 'list', '' );
-	$params['fallback_req_parent']	= array( 'toggle', 0 );
-	$params['make_active']			= array( 'toggle', 1 );
-	$params['make_primary']			= array( 'toggle', 1 );
-	$params['update_existing']		= array( 'toggle', 1 );
+		$params['params_remap']			= array( 'subarea_change', 'params' );
 
-	$params['similarplans']			= array( 'list', '' );
-	$params['equalplans']			= array( 'list', '' );
+		$params['override_activation']	= array( 'toggle', 0 );
+		$params['override_regmail']		= array( 'toggle', 0 );
 
-	$params['notauth_redirect']		= array( 'inputC', '' );
-	$params['fixed_redirect']		= array( 'inputC', '' );
-	$params['hide_duration_checkout']	= array( 'toggle', 0 );
-	$params['cart_behavior']		= array( 'list', 0 );
-	$params['addtocart_redirect']	= array( 'inputC', '' );
-	$params['addtocart_max']		= array( 'inputA', '' );
-	$params['notes']				= array( 'textarea', '' );
+		$params['full_free']			= array( 'toggle', '' );
+		$params['full_amount']			= array( 'inputA', '' );
+		$params['full_period']			= array( 'inputA', '' );
+		$params['full_periodunit']		= array( 'list', 'D' );
+		$params['trial_free']			= array( 'toggle', '' );
+		$params['trial_amount']			= array( 'inputA', '' );
+		$params['trial_period']			= array( 'inputA', '' );
+		$params['trial_periodunit']		= array( 'list', 'D' );
 
-	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
+		$params['gid_enabled']			= array( 'toggle', 1 );
+		$params['gid']					= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
+		$params['lifetime']				= array( 'toggle', 0 );
+		$params['processors']			= array( 'list', '' );
+		$params['processor_selectmode']	= array( 'list', '' );
+		$params['standard_parent']		= array( 'list', '' );
+		$params['fallback']				= array( 'list', '' );
+		$params['fallback_req_parent']	= array( 'toggle', 0 );
+		$params['make_active']			= array( 'toggle', 1 );
+		$params['make_primary']			= array( 'toggle', 1 );
+		$params['update_existing']		= array( 'toggle', 1 );
 
-	$params['inventory_amount_enabled']	= array( 'toggle', 0 );
-	$params['inventory_amount']			= array( 'inputB', 0 );
-	$params['inventory_amount_used']	= array( 'inputB', 0 );
+		$params['similarplans']			= array( 'list', '' );
+		$params['equalplans']			= array( 'list', '' );
 
-	$params = array_merge( $params, $restrictionHelper->getParams() );
+		$params['notauth_redirect']		= array( 'inputC', '' );
+		$params['fixed_redirect']		= array( 'inputC', '' );
+		$params['hide_duration_checkout']	= array( 'toggle', 0 );
+		$params['cart_behavior']		= array( 'list', 0 );
+		$params['addtocart_redirect']	= array( 'inputC', '' );
+		$params['addtocart_max']		= array( 'inputA', '' );
+		$params['notes']				= array( 'textarea', '' );
 
-	$rewriteswitches				= array( 'cms', 'user' );
-	$params['rewriteInfo']			= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
 
-	// make the select list for first trial period units
-	$perunit[] = JHTML::_('select.option', 'D', JText::_('PAYPLAN_PERUNIT1') );
-	$perunit[] = JHTML::_('select.option', 'W', JText::_('PAYPLAN_PERUNIT2') );
-	$perunit[] = JHTML::_('select.option', 'M', JText::_('PAYPLAN_PERUNIT3') );
-	$perunit[] = JHTML::_('select.option', 'Y', JText::_('PAYPLAN_PERUNIT4') );
+		$params['inventory_amount_enabled']	= array( 'toggle', 0 );
+		$params['inventory_amount']			= array( 'inputB', 0 );
+		$params['inventory_amount_used']	= array( 'inputB', 0 );
 
-	$lists['trial_periodunit'] = JHTML::_('select.genericlist', $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
-	$lists['full_periodunit'] = JHTML::_('select.genericlist', $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
+		$params = array_merge( $params, $restrictionHelper->getParams() );
 
-	// make the select list for first trial period units
-	$selectmode[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_LIST') );
-	$selectmode[] = JHTML::_('select.option', '1', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_CONFIRMATION') );
-	$selectmode[] = JHTML::_('select.option', '2', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_BOTH') );
+		$rewriteswitches				= array( 'cms', 'user' );
+		$params['rewriteInfo']			= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
-	$lists['processor_selectmode'] = JHTML::_('select.genericlist', $selectmode, 'processor_selectmode', 'size="3"', 'value', 'text', arrayValueDefault($params_values, 'processor_selectmode', "0") );
+		// make the select list for first trial period units
+		$perunit[] = JHTML::_('select.option', 'D', JText::_('PAYPLAN_PERUNIT1') );
+		$perunit[] = JHTML::_('select.option', 'W', JText::_('PAYPLAN_PERUNIT2') );
+		$perunit[] = JHTML::_('select.option', 'M', JText::_('PAYPLAN_PERUNIT3') );
+		$perunit[] = JHTML::_('select.option', 'Y', JText::_('PAYPLAN_PERUNIT4') );
 
-	$params['processors_remap'] = array("subarea_change", "plan_params");
+		$lists['trial_periodunit'] = JHTML::_('select.genericlist', $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
+		$lists['full_periodunit'] = JHTML::_('select.genericlist', $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
 
-	$pps = PaymentProcessorHandler::getInstalledObjectList( 1 );
+		// make the select list for first trial period units
+		$selectmode[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_LIST') );
+		$selectmode[] = JHTML::_('select.option', '1', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_CONFIRMATION') );
+		$selectmode[] = JHTML::_('select.option', '2', JText::_('PAYPLAN_PROCESSOR_SELECTMODE_BOTH') );
 
-	if ( empty( $params_values['processors'] ) ) {
-		$plan_procs = array();
-	} else {
-		$plan_procs = $params_values['processors'];
-	}
+		$lists['processor_selectmode'] = JHTML::_('select.genericlist', $selectmode, 'processor_selectmode', 'size="3"', 'value', 'text', arrayValueDefault($params_values, 'processor_selectmode', "0") );
 
-	if ( !empty($plan_procs) ) {
-		foreach ( $plan_procs as $proc ) {
-			foreach ( $pps as $pk => $ppo ) {
-				if ( $ppo->id == $proc ) {
-					$pps[] = $ppo;
-					unset($pps[$pk]);
+		$params['processors_remap'] = array("subarea_change", "plan_params");
+
+		$pps = PaymentProcessorHandler::getInstalledObjectList( 1 );
+
+		if ( empty( $params_values['processors'] ) ) {
+			$plan_procs = array();
+		} else {
+			$plan_procs = $params_values['processors'];
+		}
+
+		if ( !empty($plan_procs) ) {
+			foreach ( $plan_procs as $proc ) {
+				foreach ( $pps as $pk => $ppo ) {
+					if ( $ppo->id == $proc ) {
+						$pps[] = $ppo;
+						unset($pps[$pk]);
+					}
 				}
 			}
 		}
-	}
 
-	$custompar = array();
-	foreach ( $pps as $ppobj ) {
-		if ( !$ppobj->active ) {
-			continue;
-		}
-
-		$pp = new PaymentProcessor();
-
-		if ( !$pp->loadName( $ppobj->name ) ) {
-			continue;
-		}
-
-		$pp->init();
-		$pp->getInfo();
-
-		$custompar[$pp->id] = array();
-		$custompar[$pp->id]['handle'] = $ppobj->name;
-		$custompar[$pp->id]['name'] = $pp->info['longname'];
-		$custompar[$pp->id]['params'] = array();
-
-		$params['processor_' . $pp->id] = array( 'toggle', JText::_('PAYPLAN_PROCESSORS_ACTIVATE_NAME'), JText::_('PAYPLAN_PROCESSORS_ACTIVATE_DESC')  );
-		$custompar[$pp->id]['params'][] = 'processor_' . $pp->id;
-
-		$params[$pp->id . '_aec_overwrite_settings'] = array( 'toggle', JText::_('PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME'), JText::_('PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC') );
-		$custompar[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
-
-		$customparams = $pp->getCustomPlanParams();
-
-		if ( is_array( $customparams ) ) {
-			foreach ( $customparams as $customparam => $cpcontent ) {
-				$naming = array( $pp->getParamLang( $customparam . '_NAME' ), $pp->getParamLang( $customparam . '_DESC' ) );
-
-				$shortname = $pp->id . "_" . $customparam;
-				$params[$shortname] = array_merge( $cpcontent, $naming );
-				$custompar[$pp->id]['params'][] = $shortname;
-			}
-		}
-
-		if ( empty( $plan_procs ) ) {
-			continue;
-		}
-
-		if ( !in_array( $pp->id, $plan_procs ) ) {
-			continue;
-		}
-
-		$params_values['processor_' . $pp->id] = 1;
-
-		if ( isset( $customparams_values[$pp->id . '_aec_overwrite_settings'] ) ) {
-			if ( !$customparams_values[$pp->id . '_aec_overwrite_settings'] ) {
-				continue;
-			}
-		} else {
-			continue;
-		}
-
-		$settings_array = $pp->getBackendSettings();
-
-		if ( isset( $settings_array['lists'] ) ) {
-			foreach ( $settings_array['lists'] as $listname => $listcontent ) {
-				$lists[$pp->id . '_' . $listname] = $listcontent;
-			}
-
-			unset( $settings_array['lists'] );
-		}
-
-		// Iterate through settings form to...
-		foreach ( $settings_array as $name => $values ) {
-			$setting_name = $pp->id . '_' . $name;
-
-			if ( isset( $params[$setting_name] ) ) {
+		$custompar = array();
+		foreach ( $pps as $ppobj ) {
+			if ( !$ppobj->active ) {
 				continue;
 			}
 
-			if ( isset( $customparams_values[$setting_name] ) ) {
-				$value = $customparams_values[$setting_name];
-			} elseif ( isset( $pp->settings[$name] ) ) {
-				$value = $pp->settings[$name];
+			$pp = new PaymentProcessor();
+
+			if ( !$pp->loadName( $ppobj->name ) ) {
+				continue;
+			}
+
+			$pp->init();
+			$pp->getInfo();
+
+			$custompar[$pp->id] = array();
+			$custompar[$pp->id]['handle'] = $ppobj->name;
+			$custompar[$pp->id]['name'] = $pp->info['longname'];
+			$custompar[$pp->id]['params'] = array();
+
+			$params['processor_' . $pp->id] = array( 'toggle', JText::_('PAYPLAN_PROCESSORS_ACTIVATE_NAME'), JText::_('PAYPLAN_PROCESSORS_ACTIVATE_DESC')  );
+			$custompar[$pp->id]['params'][] = 'processor_' . $pp->id;
+
+			$params[$pp->id . '_aec_overwrite_settings'] = array( 'toggle', JText::_('PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME'), JText::_('PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC') );
+			$custompar[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
+
+			$customparams = $pp->getCustomPlanParams();
+
+			if ( is_array( $customparams ) ) {
+				foreach ( $customparams as $customparam => $cpcontent ) {
+					$naming = array( $pp->getParamLang( $customparam . '_NAME' ), $pp->getParamLang( $customparam . '_DESC' ) );
+
+					$shortname = $pp->id . "_" . $customparam;
+					$params[$shortname] = array_merge( $cpcontent, $naming );
+					$custompar[$pp->id]['params'][] = $shortname;
+				}
+			}
+
+			if ( empty( $plan_procs ) ) {
+				continue;
+			}
+
+			if ( !in_array( $pp->id, $plan_procs ) ) {
+				continue;
+			}
+
+			$params_values['processor_' . $pp->id] = 1;
+
+			if ( isset( $customparams_values[$pp->id . '_aec_overwrite_settings'] ) ) {
+				if ( !$customparams_values[$pp->id . '_aec_overwrite_settings'] ) {
+					continue;
+				}
 			} else {
-				$value = '';
+				continue;
 			}
 
-			// ...assign new list fields
-			switch( $settings_array[$name][0] ) {
-				case 'list_yesno':
-					$arr = array(
-						JHTML::_('select.option', 0, JText::_( 'no' ) ),
-						JHTML::_('select.option', 1, JText::_( 'yes' ) ),
-					);
+			$settings_array = $pp->getBackendSettings();
 
-					$lists[$setting_name] = JHTML::_('select.genericlist', $arr, $setting_name, '', 'value', 'text', (int) $value );
+			if ( isset( $settings_array['lists'] ) ) {
+				foreach ( $settings_array['lists'] as $listname => $listcontent ) {
+					$lists[$pp->id . '_' . $listname] = $listcontent;
+				}
 
-					$settings_array[$name][0] = 'list';
-					break;
+				unset( $settings_array['lists'] );
+			}
 
-				case 'list_currency':
-					// Get currency list
-					$currency_array	= explode( ',', $pp->info['currencies'] );
+			// Iterate through settings form to...
+			foreach ( $settings_array as $name => $values ) {
+				$setting_name = $pp->id . '_' . $name;
 
-					// Transform currencies into OptionArray
-					$currency_code_list = array();
-					foreach ( $currency_array as $currency ) {
-						if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
+				if ( isset( $params[$setting_name] ) ) {
+					continue;
+				}
+
+				if ( isset( $customparams_values[$setting_name] ) ) {
+					$value = $customparams_values[$setting_name];
+				} elseif ( isset( $pp->settings[$name] ) ) {
+					$value = $pp->settings[$name];
+				} else {
+					$value = '';
+				}
+
+				// ...assign new list fields
+				switch( $settings_array[$name][0] ) {
+					case 'list_yesno':
+						$arr = array(
+							JHTML::_('select.option', 0, JText::_( 'no' ) ),
+							JHTML::_('select.option', 1, JText::_( 'yes' ) ),
+						);
+
+						$lists[$setting_name] = JHTML::_('select.genericlist', $arr, $setting_name, '', 'value', 'text', (int) $value );
+
+						$settings_array[$name][0] = 'list';
+						break;
+
+					case 'list_currency':
+						// Get currency list
+						$currency_array	= explode( ',', $pp->info['currencies'] );
+
+						// Transform currencies into OptionArray
+						$currency_code_list = array();
+						foreach ( $currency_array as $currency ) {
+							if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
+								$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
+							}
 						}
-					}
 
-					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
-					$settings_array[$name][0] = 'list';
-					break;
+						// Create list
+						$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
+						$settings_array[$name][0] = 'list';
+						break;
 
-				case 'list_language':
-					// Get language list
-					if ( !is_array( $pp->info['languages'] ) ) {
-						$language_array	= explode( ',', $pp->info['languages'] );
-					} else {
-						$language_array	= $pp->info['languages'];
-					}
+					case 'list_language':
+						// Get language list
+						if ( !is_array( $pp->info['languages'] ) ) {
+							$language_array	= explode( ',', $pp->info['languages'] );
+						} else {
+							$language_array	= $pp->info['languages'];
+						}
 
-					// Transform languages into OptionArray
-					$language_code_list = array();
-					foreach ( $language_array as $language ) {
-						$language_code_list[] = JHTML::_('select.option', $language, ( $lang->hasKey( 'LANGUAGECODE_' . $language  ) ? JText::_( 'LANGUAGECODE_' . $language ) : $language ) );
-					}
-					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
-					$settings_array[$name][0] = 'list';
-					break;
+						// Transform languages into OptionArray
+						$language_code_list = array();
+						foreach ( $language_array as $language ) {
+							$language_code_list[] = JHTML::_('select.option', $language, ( $lang->hasKey( 'LANGUAGECODE_' . $language  ) ? JText::_( 'LANGUAGECODE_' . $language ) : $language ) );
+						}
+						// Create list
+						$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
+						$settings_array[$name][0] = 'list';
+						break;
 
-				case 'list_plan':
-					unset( $settings_array[$name] );
-					break;
+					case 'list_plan':
+						unset( $settings_array[$name] );
+						break;
 
-				default:
-					break;
+					default:
+						break;
+				}
+
+				// ...put in missing language fields
+				if ( !isset( $settings_array[$name][1] ) ) {
+					$settings_array[$name][1] = $pp->getParamLang( $name . '_NAME' );
+					$settings_array[$name][2] = $pp->getParamLang( $name . '_DESC' );
+				}
+
+				$params[$setting_name] = $settings_array[$name];
+				$custompar[$pp->id]['params'][] = $setting_name;
 			}
-
-			// ...put in missing language fields
-			if ( !isset( $settings_array[$name][1] ) ) {
-				$settings_array[$name][1] = $pp->getParamLang( $name . '_NAME' );
-				$settings_array[$name][2] = $pp->getParamLang( $name . '_DESC' );
-			}
-
-			$params[$setting_name] = $settings_array[$name];
-			$custompar[$pp->id]['params'][] = $setting_name;
 		}
-	}
 
-	$customparamsarray->pp = $custompar;
+		$customparamsarray->pp = $custompar;
 
-	// get available active plans
-	$fallback_plans = array( JHTML::_('select.option', '0', JText::_('PAYPLAN_NOFALLBACKPLAN') ) );
-	$parent_plans = array( JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPARENTPLAN') ) );
+		// get available active plans
+		$fallback_plans = array( JHTML::_('select.option', '0', JText::_('PAYPLAN_NOFALLBACKPLAN') ) );
+		$parent_plans = array( JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPARENTPLAN') ) );
 
-	$query = 'SELECT `id` AS value, `name` AS text'
+		$query = 'SELECT `id` AS value, `name` AS text'
 			. ' FROM #__acctexp_plans'
 			. ' WHERE `active` = 1'
 			. ' AND `id` != \'' . $row->id . '\'';
-			;
-	$db->setQuery( $query );
-	$payment_plans = $db->loadObjectList();
+		;
+		$db->setQuery( $query );
+		$payment_plans = $db->loadObjectList();
 
- 	if ( is_array( $payment_plans ) ) {
- 		$fallback_plans	= array_merge( $fallback_plans, $payment_plans );
- 		$parent_plans	= array_merge( $parent_plans, $payment_plans );
- 	}
+		if ( is_array( $payment_plans ) ) {
+			$fallback_plans	= array_merge( $fallback_plans, $payment_plans );
+			$parent_plans	= array_merge( $parent_plans, $payment_plans );
+		}
 
-	$lists['fallback'] = JHTML::_('select.genericlist', $fallback_plans, 'fallback', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
-	$lists['standard_parent'] = JHTML::_('select.genericlist', $parent_plans, 'standard_parent', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
+		$lists['fallback'] = JHTML::_('select.genericlist', $fallback_plans, 'fallback', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
+		$lists['standard_parent'] = JHTML::_('select.genericlist', $parent_plans, 'standard_parent', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
 
-	// get similar plans
-	if ( !empty( $params_values['similarplans'] ) ) {
-		$query = 'SELECT `id` AS value, `name` As text'
+		// get similar plans
+		if ( !empty( $params_values['similarplans'] ) ) {
+			$query = 'SELECT `id` AS value, `name` As text'
 				. ' FROM #__acctexp_plans'
 				. ' WHERE `id` IN (' . implode( ',', $params_values['similarplans'] ) .')'
-				;
-		$db->setQuery( $query );
+			;
+			$db->setQuery( $query );
 
-	 	$sel_similar_plans = $db->loadObjectList();
-	} else {
-		$sel_similar_plans = 0;
-	}
+			$sel_similar_plans = $db->loadObjectList();
+		} else {
+			$sel_similar_plans = 0;
+		}
 
-	$lists['similarplans'] = JHTML::_('select.genericlist', $payment_plans, 'similarplans[]', 'size="1" multiple="multiple"', 'value', 'text', $sel_similar_plans);
+		$lists['similarplans'] = JHTML::_('select.genericlist', $payment_plans, 'similarplans[]', 'size="1" multiple="multiple"', 'value', 'text', $sel_similar_plans);
 
-	// get equal plans
-	if ( !empty( $params_values['equalplans'] ) ) {
-		$query = 'SELECT `id` AS value, `name` AS text'
+		// get equal plans
+		if ( !empty( $params_values['equalplans'] ) ) {
+			$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'
 				. ' WHERE `id` IN (' . implode( ',', $params_values['equalplans'] ) .')'
-				;
-		$db->setQuery( $query );
+			;
+			$db->setQuery( $query );
 
-	 	$sel_equal_plans = $db->loadObjectList();
-	} else {
-		$sel_equal_plans = 0;
-	}
-
-	$lists['equalplans'] = JHTML::_('select.genericlist', $payment_plans, 'equalplans[]', 'size="1" multiple="multiple"', 'value', 'text', $sel_equal_plans);
-
-	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
-
-	// make the select list for first trial period units
-	$cartmode[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_CARTMODE_INHERIT') );
-	$cartmode[] = JHTML::_('select.option', '1', JText::_('PAYPLAN_CARTMODE_FORCE_CART') );
-	$cartmode[] = JHTML::_('select.option', '2', JText::_('PAYPLAN_CARTMODE_FORCE_DIRECT') );
-
-	$lists['cart_behavior'] = JHTML::_('select.genericlist', $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
-
-	$mi_list = microIntegrationHandler::getDetailedList();
-
-	$mi_settings = array( 'inherited' => array(), 'attached' => array(), 'custom' => array() );
-
-	$attached_mis = $row->getMicroIntegrationsSeparate( true );
-
-	foreach ( $mi_list as $mi_details ) {
-		$mi_details->inherited = false;
-		if ( !empty($attached_mis['inherited']) && in_array( $mi_details->id, $attached_mis['inherited'] ) ) {
-			$mi_details->inherited = true;
-
-			$mi_settings['inherited'][] = $mi_details;
+			$sel_equal_plans = $db->loadObjectList();
+		} else {
+			$sel_equal_plans = 0;
 		}
 
-		$mi_details->attached = false;
-		if ( !empty($attached_mis['plan']) && in_array( $mi_details->id, $attached_mis['plan'] ) ) {
-			$mi_details->attached = true;
+		$lists['equalplans'] = JHTML::_('select.genericlist', $payment_plans, 'equalplans[]', 'size="1" multiple="multiple"', 'value', 'text', $sel_equal_plans);
+
+		$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
+
+		// make the select list for first trial period units
+		$cartmode[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_CARTMODE_INHERIT') );
+		$cartmode[] = JHTML::_('select.option', '1', JText::_('PAYPLAN_CARTMODE_FORCE_CART') );
+		$cartmode[] = JHTML::_('select.option', '2', JText::_('PAYPLAN_CARTMODE_FORCE_DIRECT') );
+
+		$lists['cart_behavior'] = JHTML::_('select.genericlist', $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
+
+		$mi_list = microIntegrationHandler::getDetailedList();
+
+		$mi_settings = array( 'inherited' => array(), 'attached' => array(), 'custom' => array() );
+
+		$attached_mis = $row->getMicroIntegrationsSeparate( true );
+
+		foreach ( $mi_list as $mi_details ) {
+			$mi_details->inherited = false;
+			if ( !empty($attached_mis['inherited']) && in_array( $mi_details->id, $attached_mis['inherited'] ) ) {
+				$mi_details->inherited = true;
+
+				$mi_settings['inherited'][] = $mi_details;
+			}
+
+			$mi_details->attached = false;
+			if ( !empty($attached_mis['plan']) && in_array( $mi_details->id, $attached_mis['plan'] ) ) {
+				$mi_details->attached = true;
+			}
+
+			$mi_settings['attached'][] = $mi_details;
 		}
 
-		$mi_settings['attached'][] = $mi_details;
-	}
+		$mi_handler = new microIntegrationHandler();
+		$mi_list = $mi_handler->getIntegrationList();
 
-	$mi_handler = new microIntegrationHandler();
-	$mi_list = $mi_handler->getIntegrationList();
+		$mi_htmllist = array();
+		$mi_htmllist[]	= JHTML::_('select.option', '', JText::_('AEC_CMN_NONE_SELECTED') );
 
-	$mi_htmllist = array();
-	$mi_htmllist[]	= JHTML::_('select.option', '', JText::_('AEC_CMN_NONE_SELECTED') );
-
-	foreach ( $mi_list as $name ) {
-		$mi = new microIntegration();
-		$mi->class_name = 'mi_'.$name;
-		if ( $mi->callIntegration() ){
-			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
-			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . substr($mi->desc, 0, 120);
-			$mi_htmllist[] = JHTML::_('select.option', $name, $fullname );
+		foreach ( $mi_list as $name ) {
+			$mi = new microIntegration();
+			$mi->class_name = 'mi_'.$name;
+			if ( $mi->callIntegration() ){
+				$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
+				$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . substr($mi->desc, 0, 120);
+				$mi_htmllist[] = JHTML::_('select.option', $name, $fullname );
+			}
 		}
-	}
 
-	if ( !empty( $row->micro_integrations ) && is_array( $row->micro_integrations ) ) {
-		$query = 'SELECT `id`'
+		if ( !empty( $row->micro_integrations ) && is_array( $row->micro_integrations ) ) {
+			$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
 				. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
-		 		. ' AND `hidden` = \'1\''
-				;
-	 	$db->setQuery( $query );
-		$hidden_mi = $db->loadObjectList();
-	} else {
-		$hidden_mi = array();
-	}
-
-	$customparamsarray->hasperplanmi = false;
-
-	if ( !empty( $aecConfig->cfg['per_plan_mis'] ) || !empty( $hidden_mi ) ) {
-		$customparamsarray->hasperplanmi = true;
-
-		$lists['micro_integrations_plan'] = JHTML::_('select.genericlist', $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', array() );
-
-		$custompar = array();
-
-		$hidden_mi_list = array();
-		if ( !empty( $hidden_mi ) ) {
-			foreach ( $hidden_mi as $miobj ) {
-				$hidden_mi_list[] = $miobj->id;
-			}
+				. ' AND `hidden` = \'1\''
+			;
+			$db->setQuery( $query );
+			$hidden_mi = $db->loadObjectList();
+		} else {
+			$hidden_mi = array();
 		}
 
-		$params['micro_integrations_hidden']		= array( 'hidden', '' );
-		$params_values['micro_integrations_hidden']		= $hidden_mi_list;
+		$customparamsarray->hasperplanmi = false;
 
-		if ( !empty( $hidden_mi ) ) {
-			foreach ( $hidden_mi as $miobj ) {
-				$mi = new microIntegration();
+		if ( !empty( $aecConfig->cfg['per_plan_mis'] ) || !empty( $hidden_mi ) ) {
+			$customparamsarray->hasperplanmi = true;
 
-				if ( !$mi->load( $miobj->id ) ) {
-					continue;
+			$lists['micro_integrations_plan'] = JHTML::_('select.genericlist', $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', array() );
+
+			$custompar = array();
+
+			$hidden_mi_list = array();
+			if ( !empty( $hidden_mi ) ) {
+				foreach ( $hidden_mi as $miobj ) {
+					$hidden_mi_list[] = $miobj->id;
 				}
+			}
 
-				if ( !$mi->callIntegration( 1 ) ) {
-					continue;
-				}
+			$params['micro_integrations_hidden']		= array( 'hidden', '' );
+			$params_values['micro_integrations_hidden']		= $hidden_mi_list;
 
-				$custompar[$mi->id] = array();
-				$custompar[$mi->id]['name'] = $mi->name;
-				$custompar[$mi->id]['params'] = array();
+			if ( !empty( $hidden_mi ) ) {
+				foreach ( $hidden_mi as $miobj ) {
+					$mi = new microIntegration();
 
-				$prefix = 'MI_' . $mi->id . '_';
-
-				$params[] = array( 'area_change', 'MI' );
-				$params[] = array( 'subarea_change', 'E' );
-				$params[] = array( 'add_prefix', $prefix );
-				$params[] = array( 'section_paper', JText::_('MI_E_TITLE') );
-
-				$generalsettings = $mi->getGeneralSettings();
-
-				foreach ( $generalsettings as $name => $value ) {
-					$params[$prefix . $name] = $value;
-					$custompar[$mi->id]['params'][] = $prefix . $name;
-
-					if ( isset( $mi->$name ) ) {
-						$params_values[$prefix.$name] = $mi->$name;
-					} else {
-						$params_values[$prefix.$name] = '';
-					}
-				}
-
-				$params[]	= array( 'section_end', 0 );
-
-				$misettings = $mi->getSettings();
-
-				if ( isset( $misettings['lists'] ) ) {
-					foreach ( $misettings['lists'] as $listname => $listcontent ) {
-						$lists[$prefix . $listname] = str_replace( 'name="', 'name="'.$prefix, $listcontent );
+					if ( !$mi->load( $miobj->id ) ) {
+						continue;
 					}
 
-					unset( $misettings['lists'] );
+					if ( !$mi->callIntegration( 1 ) ) {
+						continue;
+					}
+
+					$custompar[$mi->id] = array();
+					$custompar[$mi->id]['name'] = $mi->name;
+					$custompar[$mi->id]['params'] = array();
+
+					$prefix = 'MI_' . $mi->id . '_';
+
+					$params[] = array( 'area_change', 'MI' );
+					$params[] = array( 'subarea_change', 'E' );
+					$params[] = array( 'add_prefix', $prefix );
+					$params[] = array( 'section_paper', JText::_('MI_E_TITLE') );
+
+					$generalsettings = $mi->getGeneralSettings();
+
+					foreach ( $generalsettings as $name => $value ) {
+						$params[$prefix . $name] = $value;
+						$custompar[$mi->id]['params'][] = $prefix . $name;
+
+						if ( isset( $mi->$name ) ) {
+							$params_values[$prefix.$name] = $mi->$name;
+						} else {
+							$params_values[$prefix.$name] = '';
+						}
+					}
+
+					$params[]	= array( 'section_end', 0 );
+
+					$misettings = $mi->getSettings();
+
+					if ( isset( $misettings['lists'] ) ) {
+						foreach ( $misettings['lists'] as $listname => $listcontent ) {
+							$lists[$prefix . $listname] = str_replace( 'name="', 'name="'.$prefix, $listcontent );
+						}
+
+						unset( $misettings['lists'] );
+					}
+
+					$params[] = array( 'area_change', 'MI' );
+					$params[] = array( 'subarea_change', $mi->class_name );
+					$params[] = array( 'add_prefix', $prefix );
+					$params[] = array( 'section_paper', JText::_('MI_E_SETTINGS') );
+
+					foreach ( $misettings as $name => $value ) {
+						$params[$prefix . $name] = $value;
+						$custompar[$mi->id]['params'][] = $prefix . $name;
+					}
+
+					$params[]	= array( 'section_end', 0 );
 				}
+			}
 
-				$params[] = array( 'area_change', 'MI' );
-				$params[] = array( 'subarea_change', $mi->class_name );
-				$params[] = array( 'add_prefix', $prefix );
-				$params[] = array( 'section_paper', JText::_('MI_E_SETTINGS') );
-
-				foreach ( $misettings as $name => $value ) {
-					$params[$prefix . $name] = $value;
-					$custompar[$mi->id]['params'][] = $prefix . $name;
-				}
-
-				$params[]	= array( 'section_end', 0 );
+			if ( !empty( $custompar ) ) {
+				$mi_settings['custom'] = $custompar;
 			}
 		}
 
-		if ( !empty( $custompar ) ) {
-			$mi_settings['custom'] = $custompar;
-		}
-	}
+		$customparamsarray->mi = $mi_settings;
 
-	$customparamsarray->mi = $mi_settings;
+		$settings = new aecSettings ( 'payplan', 'general' );
 
-	$settings = new aecSettings ( 'payplan', 'general' );
-
-	if ( is_array( $customparams_values ) ) {
-		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
-	} else {
-		$settingsparams = array_merge( $params_values, $restrictions_values );
-	}
-
-	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
-
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-	if ( !empty( $customparamsarray ) ) {
-		$aecHTML->customparams = $customparamsarray;
-	}
-
-	HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
-}
-
-function saveSubscriptionPlan( $option, $apply=0 )
-{
-	$db = JFactory::getDBO();
-
-	$row = new SubscriptionPlan();
-	$row->load( $_POST['id'] );
-
-	$post = AECToolbox::cleanPOST( $_POST, false );
-
-	$row->savePOSTsettings( $post );
-
-	$row->storeload();
-
-	if ( $_POST['id'] ) {
-		$id = $_POST['id'];
-	} else {
-		$id = $row->getMax();
-	}
-
-	if ( empty( $_POST['id'] ) ) {
-		ItemGroupHandler::setChildren( 1, array( $id ), 'item' );
-	}
-
-	if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['full_period'] ) ) {
-		$short	= "Plan Warning";
-		$event	= "You have selected a regular period for a plan that"
-					. " already has the 'lifetime' (i.e. 'non expiring') flag set."
-					. " The period you have set will be overridden by"
-					. " that setting.";
-		$tags	= 'settings,plan';
-		$params = array();
-
-		$eventlog = new eventLog();
-		$eventlog->issue( $short, $tags, $event, 32, $params );
-	}
-
-	$terms = $row->getTerms();
-
-	if ( !$terms->checkFree() && empty( $row->params['processors'] ) ) {
-		$short	= "Plan Warning";
-		$event	= "You have set a plan to be non-free, yet did not select a payment processor."
-					. " Without a processor assigned, the plan will not show up on the frontend.";
-		$tags	= 'settings,plan';
-		$params = array();
-
-		$eventlog = new eventLog();
-		$eventlog->issue( $short, $tags, $event, 32, $params );
-	}
-
-	if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['processors'] ) ) {
-		$fcount	= 0;
-		$found	= 0;
-
-		foreach ( $row->params['processors'] as $procid ) {
-			$fcount++;
-
-			if ( isset( $row->custom_params[$procid.'_recurring'] ) ) {
-				if ( ( 0 < $row->custom_params[$procid.'_recurring'] ) && ( $row->custom_params[$procid.'_recurring'] < 2 ) ) {
-					$found++;
-				} elseif ( $row->custom_params[$procid.'_recurring'] == 2 ) {
-					$fcount++;
-				}
-			} else {
-				$pp = new PaymentProcessor();
-				if ( ( 0 < $pp->is_recurring() ) && ( $pp->is_recurring() < 2 ) ) {
-					$found++;
-				} elseif ( $pp->is_recurring() == 2 ) {
-					$fcount++;
-				}
-			}
+		if ( is_array( $customparams_values ) ) {
+			$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
+		} else {
+			$settingsparams = array_merge( $params_values, $restrictions_values );
 		}
 
-		if ( $found ) {
-			if ( ( $found < $fcount ) && ( $fcount > 1 ) ) {
-				$event	= "You have selected one or more processors that only support recurring payments"
-						. ", yet the plan is set to a lifetime period."
-						. " This is not possible and the processors will not be displayed as options.";
-			} else {
-				$event	= "You have selected a processor that only supports recurring payments"
-						. ", yet the plan is set to a lifetime period."
-						. " This is not possible and the plan will not be displayed.";
-			}
+		$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+		if ( !empty( $customparamsarray ) ) {
+			$aecHTML->customparams = $customparamsarray;
+		}
+
+		HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
+	}
+
+	function save( $option, $apply=0 )
+	{
+		$db = JFactory::getDBO();
+
+		$row = new SubscriptionPlan();
+		$row->load( $_POST['id'] );
+
+		$post = AECToolbox::cleanPOST( $_POST, false );
+
+		$row->savePOSTsettings( $post );
+
+		$row->storeload();
+
+		if ( $_POST['id'] ) {
+			$id = $_POST['id'];
+		} else {
+			$id = $row->getMax();
+		}
+
+		if ( empty( $_POST['id'] ) ) {
+			ItemGroupHandler::setChildren( 1, array( $id ), 'item' );
+		}
+
+		if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['full_period'] ) ) {
 			$short	= "Plan Warning";
+			$event	= "You have selected a regular period for a plan that"
+				. " already has the 'lifetime' (i.e. 'non expiring') flag set."
+				. " The period you have set will be overridden by"
+				. " that setting.";
 			$tags	= 'settings,plan';
 			$params = array();
 
 			$eventlog = new eventLog();
 			$eventlog->issue( $short, $tags, $event, 32, $params );
 		}
-	}
 
-	if ( $apply ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('SAVED') );
-	}
-}
+		$terms = $row->getTerms();
 
-function removeSubscriptionPlan( $id, $option )
-{
-	$db = JFactory::getDBO();
+		if ( !$terms->checkFree() && empty( $row->params['processors'] ) ) {
+			$short	= "Plan Warning";
+			$event	= "You have set a plan to be non-free, yet did not select a payment processor."
+				. " Without a processor assigned, the plan will not show up on the frontend.";
+			$tags	= 'settings,plan';
+			$params = array();
 
-	$ids = implode( ',', $id );
+			$eventlog = new eventLog();
+			$eventlog->issue( $short, $tags, $event, 32, $params );
+		}
 
-	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_plans'
-			. ' WHERE `id` IN (' . $ids . ')'
-			;
-	$db->setQuery( $query );
-	$total = $db->loadResult();
+		if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['processors'] ) ) {
+			$fcount	= 0;
+			$found	= 0;
 
-	if ( $total == 0 ) {
-		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
+			foreach ( $row->params['processors'] as $procid ) {
+				$fcount++;
 
-	foreach ( $id as $planid ) {
-		if ( SubscriptionPlanHandler::getPlanUserCount( $planid ) > 0 ) {
-			$msg = JText::_('AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER');
+				if ( isset( $row->custom_params[$procid.'_recurring'] ) ) {
+					if ( ( 0 < $row->custom_params[$procid.'_recurring'] ) && ( $row->custom_params[$procid.'_recurring'] < 2 ) ) {
+						$found++;
+					} elseif ( $row->custom_params[$procid.'_recurring'] == 2 ) {
+						$fcount++;
+					}
+				} else {
+					$pp = new PaymentProcessor();
+					if ( ( 0 < $pp->is_recurring() ) && ( $pp->is_recurring() < 2 ) ) {
+						$found++;
+					} elseif ( $pp->is_recurring() == 2 ) {
+						$fcount++;
+					}
+				}
+			}
 
-			aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+			if ( $found ) {
+				if ( ( $found < $fcount ) && ( $fcount > 1 ) ) {
+					$event	= "You have selected one or more processors that only support recurring payments"
+						. ", yet the plan is set to a lifetime period."
+						. " This is not possible and the processors will not be displayed as options.";
+				} else {
+					$event	= "You have selected a processor that only supports recurring payments"
+						. ", yet the plan is set to a lifetime period."
+						. " This is not possible and the plan will not be displayed.";
+				}
+
+				$short	= "Plan Warning";
+				$tags	= 'settings,plan';
+				$params = array();
+
+				$eventlog = new eventLog();
+				$eventlog->issue( $short, $tags, $event, 32, $params );
+			}
+		}
+
+		if ( $apply ) {
+			aecRedirect( 'index.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 		} else {
-			$plan = new SubscriptionPlan();
-			$plan->load( $planid );
-
-			$plan->delete();
+			aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('SAVED') );
 		}
 	}
 
-	$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+	function remove( $id, $option )
+	{
+		$db = JFactory::getDBO();
 
-	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
-}
+		$ids = implode( ',', $id );
 
-function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
-{
-	$db = JFactory::getDBO();
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_plans'
+			. ' WHERE `id` IN (' . $ids . ')'
+		;
+		$db->setQuery( $query );
+		$total = $db->loadResult();
 
-	if ( count( $cid ) < 1 ) {
-		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
-		exit;
+		if ( $total == 0 ) {
+			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		foreach ( $id as $planid ) {
+			if ( SubscriptionPlanHandler::getPlanUserCount( $planid ) > 0 ) {
+				$msg = JText::_('AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER');
+
+				aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+			} else {
+				$plan = new SubscriptionPlan();
+				$plan->load( $planid );
+
+				$plan->delete();
+			}
+		}
+
+		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+
+		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 	}
 
-	$total	= count( $cid );
-	$cids	= implode( ',', $cid );
+	function change( $cid=null, $state=0, $type, $option )
+	{
+		$db = JFactory::getDBO();
 
-	$query = 'UPDATE #__acctexp_plans'
+		if ( count( $cid ) < 1 ) {
+			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		$total	= count( $cid );
+		$cids	= implode( ',', $cid );
+
+		$query = 'UPDATE #__acctexp_plans'
 			. ' SET `' . $type . '` = \'' . $state . '\''
 			. ' WHERE `id` IN (' . $cids . ')'
-			;
-	$db->setQuery( $query );
-
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
-
-	if ( $state ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
-	} else {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
-	}
-
-	$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
-}
-
-function listItemGroups( $option )
-{
- 	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
- 	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-	$search = $app->getUserStateFromRequest( "search_groups{$option}", 'search', '' );
-	$search = xJ::escape( $db, trim( strtolower( $search ) ) );
-
-	$orderby = $app->getUserStateFromRequest( "orderby_groups{$option}", 'orderby_groups', 'name ASC' );
-
- 	// get the total number of records
- 	$query = 'SELECT count(*)'
-		 	. ' FROM #__acctexp_itemgroups'
-			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-		 	;
- 	$db->setQuery( $query );
- 	$total = $db->loadResult();
- 	echo $db->getErrorMsg();
-
- 	if ( $limitstart > $total ) {
- 		$limitstart = 0;
- 	}
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
- 	// get the subset (based on limits) of records
- 	$query = 'SELECT *'
-		. ' FROM #__acctexp_itemgroups'
-		. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-		. ' GROUP BY `id`'
-		. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		;
-	$db->setQuery( $query );
-
- 	$rows = $db->loadObjectList();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
-
-	$gcolors = array();
-
-	foreach ( $rows as $rid => $row ) {
-		$query = 'SELECT count(*)'
-			. 'FROM #__users AS a'
-			. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-			. ' WHERE b.plan = ' . $row->id
-			. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
-			;
 		$db->setQuery( $query );
 
-	 	$rows[$rid]->usercount = $db->loadResult();
-	 	if ( $db->getErrorNum() ) {
-	 		echo $db->stderr();
-	 		return false;
-	 	}
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
 
-	 	$query = 'SELECT count(*)'
+		if ( $state ) {
+			$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
+		} else {
+			$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
+		}
+
+		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
+
+		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+	}
+}
+
+class aecAdminItemGroup
+{
+	function browse( $option )
+	{
+		$db = JFactory::getDBO();
+
+		$app = JFactory::getApplication();
+
+		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+
+		$search = $app->getUserStateFromRequest( "search_groups{$option}", 'search', '' );
+		$search = xJ::escape( $db, trim( strtolower( $search ) ) );
+
+		$orderby = $app->getUserStateFromRequest( "orderby_groups{$option}", 'orderby_groups', 'name ASC' );
+
+		// get the total number of records
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_itemgroups'
+			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
+		;
+		$db->setQuery( $query );
+		$total = $db->loadResult();
+		echo $db->getErrorMsg();
+
+		if ( $limitstart > $total ) {
+			$limitstart = 0;
+		}
+
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
+
+		// get the subset (based on limits) of records
+		$query = 'SELECT *'
+			. ' FROM #__acctexp_itemgroups'
+			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
+			. ' GROUP BY `id`'
+			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		;
+		$db->setQuery( $query );
+
+		$rows = $db->loadObjectList();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		$gcolors = array();
+
+		foreach ( $rows as $rid => $row ) {
+			$query = 'SELECT count(*)'
+				. 'FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. ' WHERE b.plan = ' . $row->id
+				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+			;
+			$db->setQuery( $query );
+
+			$rows[$rid]->usercount = $db->loadResult();
+			if ( $db->getErrorNum() ) {
+				echo $db->stderr();
+				return false;
+			}
+
+			$query = 'SELECT count(*)'
 				. ' FROM #__users AS a'
 				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
 				. ' WHERE b.plan = ' . $row->id
 				. ' AND (b.status = \'Expired\')'
-				;
-		$db->setQuery( $query	);
+			;
+			$db->setQuery( $query	);
 
-	 	$rows[$rid]->expiredcount = $db->loadResult();
-	 	if ( $db->getErrorNum() ) {
-	 		echo $db->stderr();
-	 		return false;
-	 	}
+			$rows[$rid]->expiredcount = $db->loadResult();
+			if ( $db->getErrorNum() ) {
+				echo $db->stderr();
+				return false;
+			}
 
-		$gid = $rows[$rid]->id;
+			$gid = $rows[$rid]->id;
 
-		if ( !isset( $gcolors[$gid] ) ) {
-			$gcolors[$gid] = array();
-			$gcolors[$gid]['color'] = ItemGroupHandler::groupColor( $gid );
-		}
+			if ( !isset( $gcolors[$gid] ) ) {
+				$gcolors[$gid] = array();
+				$gcolors[$gid]['color'] = ItemGroupHandler::groupColor( $gid );
+			}
 
-		$rows[$rid]->color = $gcolors[$gid]['color'];
+			$rows[$rid]->color = $gcolors[$gid]['color'];
 
-		$parents = ItemGroupHandler::getParents( $gid, 'group' );
+			$parents = ItemGroupHandler::getParents( $gid, 'group' );
 
-		$rows[$rid]->parent_groups = array();
+			$rows[$rid]->parent_groups = array();
 
-		if ( !empty( $parents ) ) {
-			foreach ( $parents as $parent ) {
-				if ( !isset( $gcolors[$parent] ) ) {
-					$gcolors[$parent] = array();
-					$gcolors[$parent]['color'] = ItemGroupHandler::groupColor( $parent );
+			if ( !empty( $parents ) ) {
+				foreach ( $parents as $parent ) {
+					if ( !isset( $gcolors[$parent] ) ) {
+						$gcolors[$parent] = array();
+						$gcolors[$parent]['color'] = ItemGroupHandler::groupColor( $parent );
+					}
+
+					$rows[$rid]->parent_groups[] = (object) array(
+						'id' => $parent,
+						'color' => $gcolors[$parent]['color']
+					);
 				}
-
+			} else {
 				$rows[$rid]->parent_groups[] = (object) array(
-					'id' => $parent,
-					'color' => $gcolors[$parent]['color']
+					'id' => $gid,
+					'color' => $gcolors[$gid]['color']
 				);
 			}
-		} else {
-			$rows[$rid]->parent_groups[] = (object) array(
-				'id' => $gid,
-				'color' => $gcolors[$gid]['color']
-			);
-		}
 
-		if ( !empty( $row->desc ) ) {
-			$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
-			if ( strlen( $rows[$rid]->desc ) > 50 ) {
-				$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+			if ( !empty( $row->desc ) ) {
+				$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
+				if ( strlen( $rows[$rid]->desc ) > 50 ) {
+					$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+				}
 			}
 		}
+
+		HTML_AcctExp::listItemGroups( $rows, $pageNav, $option, $orderby, $search );
 	}
 
-	HTML_AcctExp::listItemGroups( $rows, $pageNav, $option, $orderby, $search );
-}
+	function edit( $id, $option )
+	{
+		$db = JFactory::getDBO();
 
-function editItemGroup( $id, $option )
-{
-	$db = JFactory::getDBO();
+		$lists = array();
+		$params_values = array();
+		$restrictions_values = array();
+		$customparams_values = array();
 
-	$lists = array();
-	$params_values = array();
-	$restrictions_values = array();
-	$customparams_values = array();
+		$row = new ItemGroup();
+		$row->load( $id );
 
-	$row = new ItemGroup();
-	$row->load( $id );
+		$restrictionHelper = new aecRestrictionHelper();
 
-	$restrictionHelper = new aecRestrictionHelper();
+		if ( !$row->id ) {
+			$row->ordering	= 9999;
 
-	if ( !$row->id ) {
-		$row->ordering	= 9999;
+			$params_values['active']	= 1;
+			$params_values['visible']	= 0;
 
-		$params_values['active']	= 1;
-		$params_values['visible']	= 0;
-
-		$restrictions_values['gid_enabled']	= 1;
-		$restrictions_values['gid']			= 18;
-	} else {
-		$params_values = $row->params;
-		$restrictions_values = $row->restrictions;
-		$customparams_values = $row->custom_params;
-
-		// We need to convert the values that are set as object properties
-		$params_values['active']				= $row->active;
-		$params_values['visible']				= $row->visible;
-		$params_values['name']					= $row->getProperty( 'name' );
-		$params_values['desc']					= $row->getProperty( 'desc' );
-	}
-
-	// params and their type values
-	$params['active']					= array( 'toggle', 1 );
-	$params['visible']					= array( 'toggle', 0 );
-
-	$params['name']						= array( 'inputC', '' );
-	$params['desc']						= array( 'editor', '' );
-
-	$params['color']					= array( 'list', '' );
-
-	$params['reveal_child_items']		= array( 'toggle', 0 );
-	$params['symlink']					= array( 'inputC', '' );
-	$params['symlink_userid']			= array( 'toggle', 0 );
-
-	$params['notauth_redirect']			= array( 'inputD', '' );
-
-	$params['micro_integrations']		= array( 'list', '' );
-	$params['meta']						= array( 'inputD', '' );
-
-	$params['params_remap']				= array( 'subarea_change', 'groups' );
-
-	$groups = ItemGroupHandler::parentGroups( $row->id, 'group' );
-
-	$customparamsarray = new stdClass();
-	if ( !empty( $groups ) ) {
-		$gs = array();
-		foreach ( $groups as $groupid ) {
-			$params['group_delete_'.$groupid] = array( 'checkbox' );
-
-			$group = new ItemGroup();
-			$group->load( $groupid );
-
-			$g = array();
-			$g['id']	= $group->id;
-			$g['name']	= $group->getProperty('name');
-			$g['color']	= $group->params['color'];
-
-			$g['group']	= '<strong>' . $groupid . '</strong>';
-
-			$gs[$groupid] = $g;
-		}
-
-
-		$customparamsarray->groups = $gs;
-	} else {
-		$customparamsarray->groups = null;
-	}
-
-	$grouplist = ItemGroupHandler::getTree();
-
-	$glist = array();
-
-	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
-	$groupids = array();
-	foreach ( $grouplist as $gid => $glisti ) {
-		$children = ItemGroupHandler::getParents( $glisti[0], 'group' );
-
-		$disabled = in_array( $id, $children );
-
-		if ( $id ) {
-			$self = ( $glisti[0] == $id );
-			$existing = in_array( $glisti[0], $groups );
-
-			$disabled = ( $disabled || $self || $existing );
-		}
-
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', $disabled );
+			$restrictions_values['gid_enabled']	= 1;
+			$restrictions_values['gid']			= 18;
 		} else {
-			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', $disabled );
+			$params_values = $row->params;
+			$restrictions_values = $row->restrictions;
+			$customparams_values = $row->custom_params;
+
+			// We need to convert the values that are set as object properties
+			$params_values['active']				= $row->active;
+			$params_values['visible']				= $row->visible;
+			$params_values['name']					= $row->getProperty( 'name' );
+			$params_values['desc']					= $row->getProperty( 'desc' );
 		}
 
-		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
-	}
+		// params and their type values
+		$params['active']					= array( 'toggle', 1 );
+		$params['visible']					= array( 'toggle', 0 );
 
-	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+		$params['name']						= array( 'inputC', '' );
+		$params['desc']						= array( 'editor', '' );
 
-	foreach ( $groupids as $groupid => $groupcolor ) {
-		$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'" style="background-color: #'.$groupcolor.' !important;"', $lists['add_group'] );
-	}
+		$params['color']					= array( 'list', '' );
 
-	$params['add_group']	= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
+		$params['reveal_child_items']		= array( 'toggle', 0 );
+		$params['symlink']					= array( 'inputC', '' );
+		$params['symlink_userid']			= array( 'toggle', 0 );
 
-	$params['restr_remap']	= array( 'subarea_change', 'restrictions' );
+		$params['notauth_redirect']			= array( 'inputD', '' );
 
-	$params = array_merge( $params, $restrictionHelper->getParams() );
+		$params['micro_integrations']		= array( 'list', '' );
+		$params['meta']						= array( 'inputD', '' );
 
-	$rewriteswitches		= array( 'cms', 'user' );
-	$params['rewriteInfo']	= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$params['params_remap']				= array( 'subarea_change', 'groups' );
 
-	$colors = array(	'3182bd', '6baed6', '9ecae1', 'c6dbef', 'e6550d', 'fd8d3c', 'fdae6b', 'fdd0a2',
-						'31a354', '74c476', 'a1d99b', 'c7e9c0', '756bb1', '9e9ac8', 'bcbddc', 'dadaeb',
-						'636363', '969696', 'bdbdbd', 'd9d9d9',
-						'1f77b4', 'aec7e8', 'ff7f0e', 'ffbb78', '2ca02c', '98df8a', 'd62728', 'ff9896',
-						'9467bd', 'c5b0d5', '8c564b', 'c49c94', 'e377c2', 'f7b6d2', '7f7f7f', 'c7c7c7',
-						'bcbd22', 'dbdb8d', '17becf', '9edae5', 'BBDDFF', '5F8BC4', 'A2BE72', 'DDFF99',
-						'D07C30', 'C43C42', 'AA89BB', 'B7B7B7' );
+		$groups = ItemGroupHandler::parentGroups( $row->id, 'group' );
 
-	$colorlist = array();
-	foreach ( $colors as $color ) {
-		$obj = new stdClass;
-		$obj->value = '#'.$color;
-		$obj->text = $color;
+		$customparamsarray = new stdClass();
+		if ( !empty( $groups ) ) {
+			$gs = array();
+			foreach ( $groups as $groupid ) {
+				$params['group_delete_'.$groupid] = array( 'checkbox' );
 
-		$colorlist[] = $obj;
-	}
+				$group = new ItemGroup();
+				$group->load( $groupid );
 
-	$lists['color'] = JHTML::_('select.genericlist', $colorlist, 'color', 'size="1"', 'value', 'text', '#'.arrayValueDefault($params_values, 'color', 'BBDDFF'));
+				$g = array();
+				$g['id']	= $group->id;
+				$g['name']	= $group->getProperty('name');
+				$g['color']	= $group->params['color'];
 
-	$mi_list = microIntegrationHandler::getDetailedList();
+				$g['group']	= '<strong>' . $groupid . '</strong>';
 
-	$mi_settings = array( 'inherited' => array(), 'attached' => array(), 'custom' => array() );
+				$gs[$groupid] = $g;
+			}
 
-	$attached_mis = $row->getMicroIntegrationsSeparate( true );
 
-	foreach ( $mi_list as $mi_details ) {
-		$mi_details->inherited = false;
-		if ( in_array( $mi_details->id, $attached_mis['inherited'] ) ) {
-			$mi_details->inherited = true;
-
-			$mi_settings['inherited'][] = $mi_details;
+			$customparamsarray->groups = $gs;
+		} else {
+			$customparamsarray->groups = null;
 		}
 
-		$mi_details->attached = false;
-		if ( in_array( $mi_details->id, $attached_mis['group'] ) ) {
-			$mi_details->attached = true;
+		$grouplist = ItemGroupHandler::getTree();
+
+		$glist = array();
+
+		$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
+		$groupids = array();
+		foreach ( $grouplist as $gid => $glisti ) {
+			$children = ItemGroupHandler::getParents( $glisti[0], 'group' );
+
+			$disabled = in_array( $id, $children );
+
+			if ( $id ) {
+				$self = ( $glisti[0] == $id );
+				$existing = in_array( $glisti[0], $groups );
+
+				$disabled = ( $disabled || $self || $existing );
+			}
+
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', $disabled );
+			} else {
+				$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', $disabled );
+			}
+
+			$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
 		}
 
-		$mi_settings['attached'][] = $mi_details;
+		$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+
+		foreach ( $groupids as $groupid => $groupcolor ) {
+			$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'" style="background-color: #'.$groupcolor.' !important;"', $lists['add_group'] );
+		}
+
+		$params['add_group']	= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
+
+		$params['restr_remap']	= array( 'subarea_change', 'restrictions' );
+
+		$params = array_merge( $params, $restrictionHelper->getParams() );
+
+		$rewriteswitches		= array( 'cms', 'user' );
+		$params['rewriteInfo']	= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+		$colors = array(	'3182bd', '6baed6', '9ecae1', 'c6dbef', 'e6550d', 'fd8d3c', 'fdae6b', 'fdd0a2',
+			'31a354', '74c476', 'a1d99b', 'c7e9c0', '756bb1', '9e9ac8', 'bcbddc', 'dadaeb',
+			'636363', '969696', 'bdbdbd', 'd9d9d9',
+			'1f77b4', 'aec7e8', 'ff7f0e', 'ffbb78', '2ca02c', '98df8a', 'd62728', 'ff9896',
+			'9467bd', 'c5b0d5', '8c564b', 'c49c94', 'e377c2', 'f7b6d2', '7f7f7f', 'c7c7c7',
+			'bcbd22', 'dbdb8d', '17becf', '9edae5', 'BBDDFF', '5F8BC4', 'A2BE72', 'DDFF99',
+			'D07C30', 'C43C42', 'AA89BB', 'B7B7B7' );
+
+		$colorlist = array();
+		foreach ( $colors as $color ) {
+			$obj = new stdClass;
+			$obj->value = '#'.$color;
+			$obj->text = $color;
+
+			$colorlist[] = $obj;
+		}
+
+		$lists['color'] = JHTML::_('select.genericlist', $colorlist, 'color', 'size="1"', 'value', 'text', '#'.arrayValueDefault($params_values, 'color', 'BBDDFF'));
+
+		$mi_list = microIntegrationHandler::getDetailedList();
+
+		$mi_settings = array( 'inherited' => array(), 'attached' => array(), 'custom' => array() );
+
+		$attached_mis = $row->getMicroIntegrationsSeparate( true );
+
+		foreach ( $mi_list as $mi_details ) {
+			$mi_details->inherited = false;
+			if ( in_array( $mi_details->id, $attached_mis['inherited'] ) ) {
+				$mi_details->inherited = true;
+
+				$mi_settings['inherited'][] = $mi_details;
+			}
+
+			$mi_details->attached = false;
+			if ( in_array( $mi_details->id, $attached_mis['group'] ) ) {
+				$mi_details->attached = true;
+			}
+
+			$mi_settings['attached'][] = $mi_details;
+		}
+
+		$customparamsarray->mi = $mi_settings;
+
+		$settings = new aecSettings ( 'itemgroup', 'general' );
+		if ( is_array( $customparams_values ) ) {
+			$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
+		} elseif( is_array( $restrictions_values ) ){
+			$settingsparams = array_merge( $params_values, $restrictions_values );
+		}
+		else {
+			$settingsparams = $params_values;
+		}
+
+		$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
+
+		$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+		if ( !empty( $customparamsarray ) ) {
+			$aecHTML->customparams = $customparamsarray;
+		}
+
+		HTML_AcctExp::editItemGroup( $option, $aecHTML, $row );
 	}
 
-	$customparamsarray->mi = $mi_settings;
+	function save( $option, $apply=0 )
+	{
+		$row = new ItemGroup();
+		$row->load( $_POST['id'] );
 
-	$settings = new aecSettings ( 'itemgroup', 'general' );
-	if ( is_array( $customparams_values ) ) {
-		$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
-	} elseif( is_array( $restrictions_values ) ){
-		$settingsparams = array_merge( $params_values, $restrictions_values );
-	}
-	else {
-		$settingsparams = $params_values;
-	}
+		$post = AECToolbox::cleanPOST( $_POST, false );
 
-	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
+		$row->savePOSTsettings( $post );
 
-	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+		if ( !$row->check() ) {
+			echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
+			exit();
+		}
+		if ( !$row->store() ) {
+			echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
+			exit();
+		}
 
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-	if ( !empty( $customparamsarray ) ) {
-		$aecHTML->customparams = $customparamsarray;
-	}
+		$row->reorder();
 
-	HTML_AcctExp::editItemGroup( $option, $aecHTML, $row );
-}
+		if ( $_POST['id'] ) {
+			$id = $_POST['id'];
+		} else {
+			$id = $row->getMax();
+		}
 
-function saveItemGroup( $option, $apply=0 )
-{
-	$row = new ItemGroup();
-	$row->load( $_POST['id'] );
+		if ( empty( $_POST['id'] ) ) {
+			ItemGroupHandler::setChildren( 1, array( $id ), 'group' );
+		}
 
-	$post = AECToolbox::cleanPOST( $_POST, false );
-
-	$row->savePOSTsettings( $post );
-
-	if ( !$row->check() ) {
-		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
-		exit();
-	}
-	if ( !$row->store() ) {
-		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
-		exit();
-	}
-
-	$row->reorder();
-
-	if ( $_POST['id'] ) {
-		$id = $_POST['id'];
-	} else {
-		$id = $row->getMax();
-	}
-
-	if ( empty( $_POST['id'] ) ) {
-		ItemGroupHandler::setChildren( 1, array( $id ), 'group' );
-	}
-
-	if ( $apply ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editItemGroup&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('SAVED') );
-	}
-}
-
-function removeItemGroup( $id, $option )
-{
-	$db = JFactory::getDBO();
-
-	$ids = implode( ',', $id );
-
-	$db->setQuery(
-		'SELECT count(*)'
-		. ' FROM #__acctexp_itemgroups'
-		. ' WHERE `id` IN (' . $ids . ')'
-	);
-	$total = $db->loadResult();
-
-	if ( $total == 0 ) {
-		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	$total = 0;
-
-	foreach ( $id as $i ) {
-		$ig = new ItemGroup();
-		$ig->load( $i );
-
-		if ( $ig->delete() !== false ) {
-			ItemGroupHandler::removeChildren( $i, false, 'group' );
-
-			$total++;
+		if ( $apply ) {
+			aecRedirect( 'index.php?option=' . $option . '&task=editItemGroup&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('SAVED') );
 		}
 	}
 
-	if ( $total == 0 ) {
-		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
-		exit;
-	} else {
-		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+	function remove( $id, $option )
+	{
+		$db = JFactory::getDBO();
+
+		$ids = implode( ',', $id );
+
+		$db->setQuery(
+			'SELECT count(*)'
+			. ' FROM #__acctexp_itemgroups'
+			. ' WHERE `id` IN (' . $ids . ')'
+		);
+		$total = $db->loadResult();
+
+		if ( $total == 0 ) {
+			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		$total = 0;
+
+		foreach ( $id as $i ) {
+			$ig = new ItemGroup();
+			$ig->load( $i );
+
+			if ( $ig->delete() !== false ) {
+				ItemGroupHandler::removeChildren( $i, false, 'group' );
+
+				$total++;
+			}
+		}
+
+		if ( $total == 0 ) {
+			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
+			exit;
+		} else {
+			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+
+			aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', $msg );
+		}
+	}
+
+	function change( $cid=null, $state=0, $type, $option )
+	{
+		$db = JFactory::getDBO();
+
+		if ( count( $cid ) < 1 ) {
+			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		$total	= count( $cid );
+		$cids	= implode( ',', $cid );
+
+		$query = 'UPDATE #__acctexp_itemgroups'
+			. ' SET `' . $type . '` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+		;
+		$db->setQuery( $query );
+
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
+
+		if ( $state ) {
+			$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
+		} else {
+			$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
+		}
+
+		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
 		aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', $msg );
 	}
+
 }
 
-function changeItemGroup( $cid=null, $state=0, $type, $option )
+class aecAdminMicroIntegration
 {
-	$db = JFactory::getDBO();
+	function browse( $option )
+	{
+		$db = JFactory::getDBO();
 
-	if ( count( $cid ) < 1 ) {
-		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
+		$app = JFactory::getApplication();
 
-	$total	= count( $cid );
-	$cids	= implode( ',', $cid );
+		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart	= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$query = 'UPDATE #__acctexp_itemgroups'
-			. ' SET `' . $type . '` = \'' . $state . '\''
-			. ' WHERE `id` IN (' . $cids . ')'
-			;
-	$db->setQuery( $query );
+		$orderby		= $app->getUserStateFromRequest( "orderby_mi{$option}", 'orderby_mi', 'ordering ASC' );
+		$search			= $app->getUserStateFromRequest( "search{$option}_mi", 'search', '' );
+		$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
+		$filter_planid	= intval( $app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
 
-	if ( $state ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
-	} else {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
-	}
+		$filtered = !empty($filter_planid) || !empty($search);
 
-	$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
+		// get the total number of records
+		$db->setQuery(
+			'SELECT count(*)'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `hidden` = \'0\''
+			. ( empty( $search ) ? '' : ' AND (`name` LIKE \'%'.$search.'%\' OR `desc` LIKE \'%'.$search.'%\' OR `class_name` LIKE \'%'.$search.'%\')' )
+		);
+		$total = $db->loadResult();
 
-	aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', $msg );
-}
-
-function listMicroIntegrations( $option )
-{
-	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
-	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart	= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-	$orderby		= $app->getUserStateFromRequest( "orderby_mi{$option}", 'orderby_mi', 'ordering ASC' );
-	$search			= $app->getUserStateFromRequest( "search{$option}_mi", 'search', '' );
-	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
-
-	$filter_planid	= intval( $app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
-
-	$filtered = !empty($filter_planid) || !empty($search);
-
-	// get the total number of records
-	$db->setQuery(
-		'SELECT count(*)'
-		. ' FROM #__acctexp_microintegrations'
-		. ' WHERE `hidden` = \'0\''
-		. ( empty( $search ) ? '' : ' AND (`name` LIKE \'%'.$search.'%\' OR `desc` LIKE \'%'.$search.'%\' OR `class_name` LIKE \'%'.$search.'%\')' )
-	);
-	$total = $db->loadResult();
-
-	if ( $limitstart > $total ) {
-		$limitstart = 0;
-	}
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
-	$where = array();
-	$where[] = '`hidden` = \'0\'';
-
-	if ( isset( $search ) && $search!= '' ) {
-		$where[] = "(`name` LIKE '%$search%' OR `desc` LIKE '%$search%' OR `class_name` LIKE '%$search%')";
-	}
-
-	if ( isset( $filter_planid ) && $filter_planid > 0 ) {
-		$mis = microIntegrationHandler::getMIsbyPlan( $filter_planid );
-
-		if ( !empty( $mis ) ) {
-			$where[] = "(id IN (" . implode( ',', $mis ) . "))";
-		} else {
-			$filter_planid = "";
+		if ( $limitstart > $total ) {
+			$limitstart = 0;
 		}
-	}
 
-	// get the subset (based on limits) of required records
-	$query = 'SELECT * FROM #__acctexp_microintegrations';
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
-	$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
+		$where = array();
+		$where[] = '`hidden` = \'0\'';
 
-	$query .= ' ORDER BY `' . str_replace(' ', '` ', $orderby);
-	$query .= ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
+		if ( isset( $search ) && $search!= '' ) {
+			$where[] = "(`name` LIKE '%$search%' OR `desc` LIKE '%$search%' OR `class_name` LIKE '%$search%')";
+		}
 
-	$db->setQuery( $query );
+		if ( isset( $filter_planid ) && $filter_planid > 0 ) {
+			$mis = microIntegrationHandler::getMIsbyPlan( $filter_planid );
 
-	$rows = $db->loadObjectList();
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
-
-	foreach ( $rows as $rid => $row ) {
-		if ( !empty( $row->desc ) ) {
-			$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
-			if ( strlen( $rows[$rid]->desc ) > 50 ) {
-				$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+			if ( !empty( $mis ) ) {
+				$where[] = "(id IN (" . implode( ',', $mis ) . "))";
+			} else {
+				$filter_planid = "";
 			}
 		}
-	}
 
-	$sel = array();
-	$sel[] = JHTML::_('select.option', 'ordering ASC',		JText::_('ORDERING_ASC') );
-	$sel[] = JHTML::_('select.option', 'ordering DESC',		JText::_('ORDERING_DESC') );
-	$sel[] = JHTML::_('select.option', 'id ASC',			JText::_('ID_ASC') );
-	$sel[] = JHTML::_('select.option', 'id DESC',			JText::_('ID_DESC') );
-	$sel[] = JHTML::_('select.option', 'name ASC',			JText::_('NAME_ASC') );
-	$sel[] = JHTML::_('select.option', 'name DESC',			JText::_('NAME_DESC') );
-	$sel[] = JHTML::_('select.option', 'class_name ASC',	JText::_('CLASSNAME_ASC') );
-	$sel[] = JHTML::_('select.option', 'class_name DESC',	JText::_('CLASSNAME_DESC') );
+		// get the subset (based on limits) of required records
+		$query = 'SELECT * FROM #__acctexp_microintegrations';
 
-	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+		$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
 
-	// Get list of plans for filter
-	$query = 'SELECT `id`, `name`'
+		$query .= ' ORDER BY `' . str_replace(' ', '` ', $orderby);
+		$query .= ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
+
+		$db->setQuery( $query );
+
+		$rows = $db->loadObjectList();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		foreach ( $rows as $rid => $row ) {
+			if ( !empty( $row->desc ) ) {
+				$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
+				if ( strlen( $rows[$rid]->desc ) > 50 ) {
+					$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+				}
+			}
+		}
+
+		$sel = array();
+		$sel[] = JHTML::_('select.option', 'ordering ASC',		JText::_('ORDERING_ASC') );
+		$sel[] = JHTML::_('select.option', 'ordering DESC',		JText::_('ORDERING_DESC') );
+		$sel[] = JHTML::_('select.option', 'id ASC',			JText::_('ID_ASC') );
+		$sel[] = JHTML::_('select.option', 'id DESC',			JText::_('ID_DESC') );
+		$sel[] = JHTML::_('select.option', 'name ASC',			JText::_('NAME_ASC') );
+		$sel[] = JHTML::_('select.option', 'name DESC',			JText::_('NAME_DESC') );
+		$sel[] = JHTML::_('select.option', 'class_name ASC',	JText::_('CLASSNAME_ASC') );
+		$sel[] = JHTML::_('select.option', 'class_name DESC',	JText::_('CLASSNAME_DESC') );
+
+		$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+
+		// Get list of plans for filter
+		$query = 'SELECT `id`, `name`'
 			. ' FROM #__acctexp_plans'
 			. ' ORDER BY `ordering`'
-			;
-	$db->setQuery( $query );
-	$db_plans = $db->loadObjectList();
+		;
+		$db->setQuery( $query );
+		$db_plans = $db->loadObjectList();
 
-	$plans[] = JHTML::_('select.option', '0', JText::_('FILTER_PLAN'), 'id', 'name' );
-	if ( is_array( $db_plans ) ) {
-		$plans = array_merge( $plans, $db_plans );
+		$plans[] = JHTML::_('select.option', '0', JText::_('FILTER_PLAN'), 'id', 'name' );
+		if ( is_array( $db_plans ) ) {
+			$plans = array_merge( $plans, $db_plans );
+		}
+		$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
+
+		HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
 	}
-	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
-	HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
-}
+	function edit( $id, $option )
+	{
+		$lists	= array();
+		$mi		= new microIntegration();
+		$mi->load( $id );
 
-function editMicroIntegration( $id, $option )
-{
-	$lists	= array();
-	$mi		= new microIntegration();
-	$mi->load( $id );
+		$aecHTML = null;
+		$attached = array();
 
-	$aecHTML = null;
-	$attached = array();
+		$mi_gsettings = $mi->getGeneralSettings();
 
-	$mi_gsettings = $mi->getGeneralSettings();
+		if ( !$mi->id ) {
+			$lang = JFactory::getLanguage();
 
-	if ( !$mi->id ) {
-		$lang = JFactory::getLanguage();
+			// Create MI Selection List
+			$mi_handler = new microIntegrationHandler();
+			$mi_list = $mi_handler->getIntegrationList();
 
-		// Create MI Selection List
-		$mi_handler = new microIntegrationHandler();
-		$mi_list = $mi_handler->getIntegrationList();
+			$drilldown = array( 'all' => array() );
 
-		$drilldown = array( 'all' => array() );
+			$mi_gsettings['class_name']		= array( 'hidden' );
+			$mi_gsettings['class_list']		= array( 'list' );
 
-		$mi_gsettings['class_name']		= array( 'hidden' );
-		$mi_gsettings['class_list']		= array( 'list' );
+			if ( count( $mi_list ) > 0 ) {
+				foreach ( $mi_list as $name ) {
+					$mi_item = new microIntegration();
 
-		if ( count( $mi_list ) > 0 ) {
-			foreach ( $mi_list as $name ) {
-				$mi_item = new microIntegration();
+					if ( $mi_item->callDry( $name ) ) {
+						$handle = str_replace( 'mi_', '', $mi_item->class_name );
 
-				if ( $mi_item->callDry( $name ) ) {
-					$handle = str_replace( 'mi_', '', $mi_item->class_name );
+						if ( isset( $mi_item->info['type'] ) ) {
+							foreach ( $mi_item->info['type'] as $type ) {
+								$drill = explode( '.', $type );
 
-					if ( isset( $mi_item->info['type'] ) ) {
-						foreach ( $mi_item->info['type'] as $type ) {
-							$drill = explode( '.', $type );
+								$cursor =& $drilldown;
 
-							$cursor =& $drilldown;
+								$mi_item->name = str_replace( array(' AEC ', ' MI '), ' ', $mi_item->name );
 
-							$mi_item->name = str_replace( array(' AEC ', ' MI '), ' ', $mi_item->name );
+								foreach ( $drill as $i => $k ) {
+									if ( !isset( $cursor[$k] ) ) {
+										$cursor[$k] = array();
+									}
 
-							foreach ( $drill as $i => $k ) {
-								if ( !isset( $cursor[$k] ) ) {
-									$cursor[$k] = array();
-								}
-
-								if ( $i == count( $drill )-1 ) {
-									$cursor[$k][] = '<a href="#' . $handle . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
-								} else {
-									$cursor =& $cursor[$k];
+									if ( $i == count( $drill )-1 ) {
+										$cursor[$k][] = '<a href="#' . $handle . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
+									} else {
+										$cursor =& $cursor[$k];
+									}
 								}
 							}
 						}
+
+						$drilldown['all'][] = '<a href="#' . $handle . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
+					}
+				}
+
+				deep_ksort( $drilldown );
+
+				$lists['class_list'] = '<a tabindex="0" href="#mi-select-list" class="btn btn-primary" id="drilldown">Select an Integration</a>';
+
+				$lists['class_list'] .= '<div id="mi-select-list" class="hidden"><ul>';
+				foreach ( $drilldown as $lin => $li ) {
+					if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lin ) ) ) {
+						$kkey = JText::_('AEC_MI_LIST_' . strtoupper( $lin ) );
+					} else {
+						$kkey = ucwords( str_replace('_', ' ', $lin) );
 					}
 
-					$drilldown['all'][] = '<a href="#' . $handle . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
-				}
-			}
+					$lists['class_list'] .= '<li><a href="#">' . $kkey . '</a><ul>';
 
-			deep_ksort( $drilldown );
+					foreach ( $li as $lixn => $lix ) {
+						if ( is_array( $lix ) ) {
+							if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lixn ) ) ) {
+								$xkey = JText::_('AEC_MI_LIST_' . strtoupper( $lixn ) );
+							} else {
+								$xkey = ucwords( str_replace('_', ' ', $lixn) );
+							}
 
-			$lists['class_list'] = '<a tabindex="0" href="#mi-select-list" class="btn btn-primary" id="drilldown">Select an Integration</a>';
+							$lists['class_list'] .= '<li><a href="#">' . $xkey . '</a><ul>';
 
-			$lists['class_list'] .= '<div id="mi-select-list" class="hidden"><ul>';
-			foreach ( $drilldown as $lin => $li ) {
-				if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lin ) ) ) {
-					$kkey = JText::_('AEC_MI_LIST_' . strtoupper( $lin ) );
-				} else {
-					$kkey = ucwords( str_replace('_', ' ', $lin) );
-				}
+							foreach ( $lix as $mix ) {
+								$lists['class_list'] .= '<li>' . $mix . '</li>';
+							}
 
-				$lists['class_list'] .= '<li><a href="#">' . $kkey . '</a><ul>';
-
-				foreach ( $li as $lixn => $lix ) {
-					if ( is_array( $lix ) ) {
-						if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lixn ) ) ) {
-							$xkey = JText::_('AEC_MI_LIST_' . strtoupper( $lixn ) );
+							$lists['class_list'] .= '</ul></li>';
 						} else {
-							$xkey = ucwords( str_replace('_', ' ', $lixn) );
+							$lists['class_list'] .= '<li>' . $lix . '</li>';
 						}
-
-						$lists['class_list'] .= '<li><a href="#">' . $xkey . '</a><ul>';
-
-						foreach ( $lix as $mix ) {
-							$lists['class_list'] .= '<li>' . $mix . '</li>';
-						}
-
-						$lists['class_list'] .= '</ul></li>';
-					} else {
-						$lists['class_list'] .= '<li>' . $lix . '</li>';
 					}
+
+					$lists['class_list'] .= '</ul></li>';
 				}
+				$lists['class_list'] .= '</ul></div>';
 
-				$lists['class_list'] .= '</ul></li>';
+			} else {
+				$lists['class_list'] = '';
 			}
-			$lists['class_list'] .= '</ul></div>';
-
-		} else {
-			$lists['class_list'] = '';
 		}
-	}
 
-	if ( $mi->id ) {
-		// Call MI (override active check) and Settings
-		if ( $mi->callIntegration( true ) ) {
-			$attached['plans'] = microIntegrationHandler::getPlansbyMI( $mi->id, false, true );
-			$attached['groups'] = microIntegrationHandler::getGroupsbyMI( $mi->id, false, true );
+		if ( $mi->id ) {
+			// Call MI (override active check) and Settings
+			if ( $mi->callIntegration( true ) ) {
+				$attached['plans'] = microIntegrationHandler::getPlansbyMI( $mi->id, false, true );
+				$attached['groups'] = microIntegrationHandler::getGroupsbyMI( $mi->id, false, true );
 
-			$set = array();
-			foreach ( $mi_gsettings as $n => $v ) {
-				if ( !isset( $mi->$n ) ) {
-					if (  isset( $mi->settings[$n] ) ) {
-						$set[$n] = $mi->settings[$n];
+				$set = array();
+				foreach ( $mi_gsettings as $n => $v ) {
+					if ( !isset( $mi->$n ) ) {
+						if (  isset( $mi->settings[$n] ) ) {
+							$set[$n] = $mi->settings[$n];
+						} else {
+							$set[$n] = null;
+						}
 					} else {
-						$set[$n] = null;
+						$set[$n] = $mi->$n;
 					}
-				} else {
-					$set[$n] = $mi->$n;
 				}
+
+				$restrictionHelper = new aecRestrictionHelper();
+
+				$mi_gsettings['restr_remaps']	= array( 'subarea_change', 'restrictions' );
+
+				$mi_gsettings = array_merge( $mi_gsettings, $restrictionHelper->getParams() );
+
+				if ( empty( $mi->restrictions ) ) {
+					$mi->restrictions = array();
+				}
+
+				$lists = array_merge( $lists, $restrictionHelper->getLists( $set, $mi->restrictions ) );
+
+				$mi_gsettings[$mi->id.'remap']	= array( 'area_change', 'MI' );
+				$mi_gsettings[$mi->id.'remaps']	= array( 'subarea_change', $mi->class_name );
+
+				$mi_settings = $mi->getSettings();
+
+				// Get lists supplied by the MI
+				if ( !empty( $mi_settings['lists'] ) ) {
+					$lists = array_merge( $lists, $mi_settings['lists'] );
+					unset( $mi_settings['lists'] );
+				}
+
+				$available_plans = SubscriptionPlanHandler::getPlanList( false, false, true, null, true );
+
+				$selected_plans = array();
+				foreach ( $attached['plans'] as $p ) {
+					$selected_plans[] = (object) array( 'value' => $p->id, 'text' => $p->name );
+				}
+
+				$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', $selected_plans );
+
+				$available_groups = ItemGroupHandler::getGroups( null, true );
+
+				$selected_groups = array();
+				foreach ( $attached['groups'] as $g ) {
+					$selected_groups[] = (object) array( 'value' => $g->id, 'text' => $g->name );
+				}
+
+				$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', $selected_groups );
+
+				$gsettings = new aecSettings( 'MI', 'E' );
+				$gsettings->fullSettingsArray( $mi_gsettings, array_merge( $set, $mi->restrictions ), $lists );
+
+				$settings = new aecSettings( 'MI', $mi->class_name );
+				$settings->fullSettingsArray( $mi_settings, $set, $lists );
+
+				// Call HTML Class
+				$aecHTML = new aecHTML( array_merge( $gsettings->settings, $settings->settings ), array_merge( $gsettings->lists, $settings->lists ) );
+
+				$aecHTML->hasHacks = method_exists( $mi->mi_class, 'hacks' );
+
+				$aecHTML->customparams = array();
+				foreach ( $mi_settings as $n => $v ) {
+					$aecHTML->customparams[] = $n;
+				}
+
+				$aecHTML->hasSettings = true;
+
+				$aecHTML->hasRestrictions = !empty( $mi->settings['has_restrictions'] );
+			} else {
+				$short	= 'microIntegration loading failure';
+				$event	= 'When trying to load microIntegration: ' . $mi->id . ', callIntegration failed';
+				$tags	= 'microintegration,loading,error';
+				$params = array();
+
+				$eventlog = new eventLog();
+				$eventlog->issue( $short, $tags, $event, 128, $params );
 			}
-
-			$restrictionHelper = new aecRestrictionHelper();
-
-			$mi_gsettings['restr_remaps']	= array( 'subarea_change', 'restrictions' );
-
-			$mi_gsettings = array_merge( $mi_gsettings, $restrictionHelper->getParams() );
-
-			if ( empty( $mi->restrictions ) ) {
-				$mi->restrictions = array();
-			}
-
-			$lists = array_merge( $lists, $restrictionHelper->getLists( $set, $mi->restrictions ) );
-
-			$mi_gsettings[$mi->id.'remap']	= array( 'area_change', 'MI' );
-			$mi_gsettings[$mi->id.'remaps']	= array( 'subarea_change', $mi->class_name );
-
-			$mi_settings = $mi->getSettings();
-
-			// Get lists supplied by the MI
-			if ( !empty( $mi_settings['lists'] ) ) {
-				$lists = array_merge( $lists, $mi_settings['lists'] );
-				unset( $mi_settings['lists'] );
-			}
-
-			$available_plans = SubscriptionPlanHandler::getPlanList( false, false, true, null, true );
-
-			$selected_plans = array();
-			foreach ( $attached['plans'] as $p ) {
-				$selected_plans[] = (object) array( 'value' => $p->id, 'text' => $p->name );
-			}
-
-			$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', $selected_plans );
-
-			$available_groups = ItemGroupHandler::getGroups( null, true );
-
-			$selected_groups = array();
-			foreach ( $attached['groups'] as $g ) {
-				$selected_groups[] = (object) array( 'value' => $g->id, 'text' => $g->name );
-			}
-
-			$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', $selected_groups );
-
-			$gsettings = new aecSettings( 'MI', 'E' );
-			$gsettings->fullSettingsArray( $mi_gsettings, array_merge( $set, $mi->restrictions ), $lists );
-
-			$settings = new aecSettings( 'MI', $mi->class_name );
-			$settings->fullSettingsArray( $mi_settings, $set, $lists );
+		} else {
+			$settings = new aecSettings( 'MI', 'E' );
+			$settings->fullSettingsArray( $mi_gsettings, array(), $lists );
 
 			// Call HTML Class
-			$aecHTML = new aecHTML( array_merge( $gsettings->settings, $settings->settings ), array_merge( $gsettings->lists, $settings->lists ) );
+			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-			$aecHTML->hasHacks = method_exists( $mi->mi_class, 'hacks' );
+			$aecHTML->hasSettings = false;
 
-			$aecHTML->customparams = array();
-			foreach ( $mi_settings as $n => $v ) {
-				$aecHTML->customparams[] = $n;
+			$aecHTML->hasRestrictions = false;
+
+			$available_plans = SubscriptionPlanHandler::getPlanList( false, false, true, null, true );
+			$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', null );
+
+			$available_groups = ItemGroupHandler::getGroups( null, true );
+			$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', null );
+		}
+
+		HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML, $attached );
+	}
+
+	function save( $option, $apply=0 )
+	{
+		unset( $_POST['option'] );
+		unset( $_POST['task'] );
+
+		$id = $_POST['id'] ? $_POST['id'] : 0;
+
+		$mi = new microIntegration();
+		$mi->load( $id );
+
+		if ( !empty( $_POST['class_name'] ) ) {
+			$load = $mi->callDry( $_POST['class_name'] );
+		} else {
+			$load = $mi->callIntegration( 1 );
+		}
+
+		if ( $load ) {
+			$save = array(
+				'attach_to_plans' => array(),
+				'attached_to_plans' => array(),
+				'attach_to_groups' => array(),
+				'attached_to_groups' => array()
+			);
+
+			foreach ( $save as $pid => $v ) {
+				if ( isset( $_POST[$pid] ) ) {
+					$save[$pid] = $_POST[$pid];
+
+					unset( $_POST[$pid] );
+				} else {
+					$save[$pid] = array();
+				}
 			}
 
-			$aecHTML->hasSettings = true;
+			$mi->savePostParams( $_POST );
 
-			$aecHTML->hasRestrictions = !empty( $mi->settings['has_restrictions'] );
+			$mi->storeload();
+
+			$all_groups = array_unique( array_merge( $save['attach_to_groups'], $save['attached_to_groups'] ) );
+
+			if ( !empty( $all_groups ) ) {
+				foreach ( $all_groups as $groupid ) {
+					$group = new ItemGroup();
+					$group->load( $groupid );
+
+					if ( in_array( $groupid, $save['attach_to_groups'] ) && !in_array( $groupid, $save['attached_to_groups'] ) ) {
+						$group->params['micro_integrations'][] = $mi->id;
+
+						$group->storeload();
+					} elseif ( !in_array( $groupid, $save['attach_to_groups'] ) && in_array( $groupid, $save['attached_to_groups'] ) ) {
+						unset( $group->params['micro_integrations'][array_search( $mi->id, $group->params['micro_integrations'] )] );
+
+						$group->storeload();
+					}
+				}
+			}
+
+			$all_plans = array_unique( array_merge( $save['attach_to_plans'], $save['attached_to_plans'] ) );
+
+			if ( !empty( $all_plans ) ) {
+				foreach ( $all_plans as $planid ) {
+					$plan = new SubscriptionPlan();
+					$plan->load( $planid );
+
+					if ( in_array( $planid, $save['attach_to_plans'] ) && !in_array( $planid, $save['attached_to_plans'] ) ) {
+						$plan->micro_integrations[] = $mi->id;
+
+						$plan->storeload();
+					} elseif ( !in_array( $planid, $save['attach_to_plans'] ) && in_array( $planid, $save['attached_to_plans'] ) ) {
+						unset( $plan->micro_integrations[array_search( $mi->id, $plan->micro_integrations )] );
+
+						$plan->storeload();
+					}
+				}
+			}
 		} else {
-			$short	= 'microIntegration loading failure';
-			$event	= 'When trying to load microIntegration: ' . $mi->id . ', callIntegration failed';
+			$short	= 'microIntegration storing failure';
+			if ( !empty( $_POST['class_name'] ) ) {
+				$event	= 'When trying to store microIntegration: ' . $_POST['class_name'] . ', callIntegration failed';
+			} else {
+				$event	= 'When trying to store microIntegration: ' . $mi->id . ', callIntegration failed';
+			}
 			$tags	= 'microintegration,loading,error';
 			$params = array();
 
 			$eventlog = new eventLog();
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 		}
-	} else {
-		$settings = new aecSettings( 'MI', 'E' );
-		$settings->fullSettingsArray( $mi_gsettings, array(), $lists );
+
+		$mi->reorder();
+
+		if ( $id ) {
+			if ( $apply ) {
+				aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			} else {
+				aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			}
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->id , JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+		}
+
+	}
+
+	function remove( $id, $option )
+	{
+		$db = JFactory::getDBO();
+
+		$ids = implode( ',', $id );
+
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `id` IN (' . $ids . ')'
+		;
+		$db->setQuery( $query );
+		$total = $db->loadResult();
+
+		if ( $total==0 ) {
+			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		// Call On-Deletion function
+		foreach ( $id as $k ) {
+			$mi = new microIntegration();
+			$mi->load($k);
+			if ( $mi->callIntegration() ) {
+				$mi->delete();
+			}
+		}
+
+		// Micro Integrations from table
+		$query = 'DELETE FROM #__acctexp_microintegrations'
+			. ' WHERE `id` IN (' . $ids . ')'
+		;
+		$db->setQuery( $query	);
+
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
+
+		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+
+		aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
+	}
+
+	function cancel( $option )
+	{
+		aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('AEC_CMN_EDIT_CANCELLED') );
+	}
+
+	function change( $cid=null, $state=0, $option )
+	{
+		$db = JFactory::getDBO();
+
+		if ( count( $cid ) < 1 ) {
+			$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH'): JText::_('AEC_CMN_TOUNPUBLISH');
+			echo "<script> alert('" . sprintf( html_entity_decode( JText::_('AEC_ALERT_SELECT_FIRST_TO') ), $action ) . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		$total = count( $cid );
+		$cids = implode( ',', $cid );
+
+		$query = 'UPDATE #__acctexp_microintegrations'
+			. ' SET `active` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+		;
+		$db->setQuery( $query );
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
+
+		if ( $state ) {
+			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_PUBLISHED');
+		} else {
+			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UNPUBLISHED');
+		}
+
+		aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
+	}
+}
+
+class aecAdminCoupon
+{
+	function browse( $option )
+	{
+		$db = JFactory::getDBO();
+
+		$app = JFactory::getApplication();
+
+		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$search			= $app->getUserStateFromRequest( "search{$option}_coupons", 'search', '' );
+		$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
+
+		$filtered = !empty($search);
+
+		$orderby = $app->getUserStateFromRequest( "orderby_coupons{$option}", 'orderby_coupons', 'name ASC' );
+
+		$total = 0;
+
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_coupons'
+			. ( empty( $search ) ? '' : "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')" )
+		;
+		$db->setQuery( $query );
+		$total += $db->loadResult();
+
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_coupons_static'
+		;
+		$db->setQuery( $query );
+		$total += $db->loadResult();
+
+		if ( $limitstart > $total ) {
+			$limitstart = 0;
+		}
+
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
+
+		$where = array();
+		if ( isset( $search ) && $search!= '' ) {
+			$where[] = "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')";
+		}
+
+		// get the subset (based on limits) of required records
+		$query = '(SELECT *, "0" as `type`'
+			. ' FROM #__acctexp_coupons'
+			. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+			. ')'
+			. ' UNION '
+			. '(SELECT *, "1" as `type`'
+			. ' FROM #__acctexp_coupons_static'
+			. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+			. ')'
+			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		;
+
+		$db->setQuery( $query );
+
+		$rows = $db->loadObjectList();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		$query = 'SELECT SUM(usecount)'
+			. ' FROM #__acctexp_coupons'
+		;
+		$db->setQuery( $query );
+
+		$total_usecount = $db->loadResult();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		$query = 'SELECT SUM(usecount)'
+			. ' FROM #__acctexp_coupons_static'
+		;
+		$db->setQuery( $query );
+
+		$total_usecount += $db->loadResult();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		foreach ( $rows as $rid => $row ) {
+			if ( $row->usecount ) {
+				$rows[$rid]->percentage = $row->usecount / ( $total_usecount / 100 );
+			} else {
+				$rows[$rid]->percentage = 0;
+			}
+
+			$rows[$rid]->inner = false;
+			if ( $rows[$rid]->percentage > 15 ) {
+				$rows[$rid]->inner = true;
+			}
+		}
+
+		HTML_AcctExp::listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby );
+	}
+
+	function edit( $id, $option, $new )
+	{
+		$db = JFactory::getDBO();
+
+		$lists = array();
+
+		$cph = new couponHandler();
+
+		if ( !$new ) {
+			$idx = explode( ".", $id );
+
+			$cph->coupon = new Coupon( $idx[0] );
+			$cph->coupon->load( $idx[1] );
+
+			$params_values			= $cph->coupon->params;
+			$discount_values		= $cph->coupon->discount;
+			$restrictions_values	= $cph->coupon->restrictions;
+		} else {
+			$cph->coupon = new Coupon();
+			$cph->coupon->createNew();
+
+			$params_values			= array();
+			$discount_values		= array();
+			$restrictions_values	= array();
+		}
+
+		// We need to convert the values that are set as object properties
+		$params_values['active']				= $cph->coupon->active;
+		$params_values['type']					= $cph->coupon->type;
+		$params_values['name']					= $cph->coupon->name;
+		$params_values['desc']					= $cph->coupon->desc;
+		$params_values['coupon_code']			= $cph->coupon->coupon_code;
+		$params_values['usecount']				= $cph->coupon->usecount;
+		$params_values['micro_integrations']	= $cph->coupon->micro_integrations;
+
+		// params and their type values
+		$params['active']						= array( 'toggle',		1 );
+		$params['type']							= array( 'toggle',		1 );
+		$params['name']							= array( 'inputC',		'' );
+		$params['desc']							= array( 'inputE',		'' );
+		$params['coupon_code']					= array( 'inputC',		'' );
+		$params['micro_integrations']			= array( 'list',		'' );
+
+		$params['params_remap']					= array( 'subarea_change',	'params' );
+
+		$params['amount_use']					= array( 'toggle',		'' );
+		$params['amount']						= array( 'inputB',		'' );
+		$params['amount_percent_use']			= array( 'toggle',		'' );
+		$params['amount_percent']				= array( 'inputB',		'' );
+		$params['percent_first']				= array( 'toggle',		'' );
+		$params['useon_trial']					= array( 'toggle',		'' );
+		$params['useon_full']					= array( 'toggle',		'1' );
+		$params['useon_full_all']				= array( 'toggle',		'1' );
+
+		$params['has_start_date']				= array( 'toggle',		1 );
+		$params['start_date']					= array( 'list_date',	date( 'Y-m-d', ( (int) gmdate('U') ) ) );
+		$params['has_expiration']				= array( 'toggle',		0);
+		$params['expiration']					= array( 'list_date',	date( 'Y-m-d', ( (int) gmdate('U') ) ) );
+		$params['has_max_reuse']				= array( 'toggle',		0 );
+		$params['max_reuse']					= array( 'inputA',		1 );
+		$params['has_max_peruser_reuse']		= array( 'toggle',		1 );
+		$params['max_peruser_reuse']			= array( 'inputA',		1 );
+		$params['usecount']						= array( 'inputA',		0 );
+
+		$params['usage_plans_enabled']			= array( 'toggle',		0 );
+		$params['usage_plans']					= array( 'list',		0 );
+
+		$params['usage_cart_full']				= array( 'toggle',		0 );
+		$params['cart_multiple_items']			= array( 'toggle',		0 );
+		$params['cart_multiple_items_amount']	= array( 'inputB',		'' );
+
+		$params['restr_remap']					= array( 'subarea_change',	'restrictions' );
+
+		$params['depend_on_subscr_id']			= array( 'toggle',		0 );
+		$params['subscr_id_dependency']			= array( 'inputB',		'' );
+		$params['allow_trial_depend_subscr']	= array( 'toggle',		0 );
+
+		$params['restrict_combination']			= array( 'toggle',		0 );
+		$params['bad_combinations']				= array( 'list',		'' );
+
+		$params['allow_combination']			= array( 'toggle',		0 );
+		$params['good_combinations']			= array( 'list',		'' );
+
+		$params['restrict_combination_cart']	= array( 'toggle',		0 );
+		$params['bad_combinations_cart']		= array( 'list',		'' );
+
+		$params['allow_combination_cart']		= array( 'toggle',		0 );
+		$params['good_combinations_cart']		= array( 'list',		'' );
+
+		$restrictionHelper = new aecRestrictionHelper();
+		$params = array_merge( $params, $restrictionHelper->getParams() );
+
+		// get available plans
+		$available_plans = array();
+
+		$db->setQuery(
+			'SELECT `id` as value, `name` as text'
+			. ' FROM #__acctexp_plans'
+		);
+		$plans = $db->loadObjectList();
+
+		if ( is_array( $plans ) ) {
+			$all_plans = array_merge( $available_plans, $plans );
+		} else {
+			$all_plans = $available_plans;
+		}
+		$total_all_plans = min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
+
+		// get usages
+		if ( !empty( $restrictions_values['usage_plans'] ) ) {
+			$query = 'SELECT `id` AS value, `name` as text'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` IN (' . implode( ',', $restrictions_values['usage_plans'] ) . ')'
+			;
+			$db->setQuery( $query );
+
+			$sel_usage_plans = $db->loadObjectList();
+		} else {
+			$sel_usage_plans = 0;
+		}
+
+		$lists['usage_plans']		= JHTML::_('select.genericlist', $all_plans, 'usage_plans[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+			'value', 'text', $sel_usage_plans);
+
+
+		// get available micro integrations
+		$available_mi = array();
+
+		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+			. ' FROM #__acctexp_microintegrations'
+			. ' WHERE `active` = 1'
+			. ' ORDER BY `ordering`'
+		;
+		$db->setQuery( $query );
+		$mi_list = $db->loadObjectList();
+
+		$mis = array();
+		if ( !empty( $mi_list ) && !empty( $params_values['micro_integrations'] ) ) {
+			foreach ( $mi_list as $mi_item ) {
+				if ( in_array( $mi_item->value, $params_values['micro_integrations'] ) ) {
+					$mis[] = $mi_item->value;
+				}
+			}
+		}
+
+		if ( !empty( $mis ) ) {
+			$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
+				. ' FROM #__acctexp_microintegrations'
+				. ( !empty( $mis ) ? ' WHERE `id` IN (' . implode( ',', $mis ) . ')' : '' )
+			;
+			$db->setQuery( $query );
+			$selected_mi = $db->loadObjectList();
+		} else {
+			$selected_mi = array();
+		}
+
+		$lists['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi );
+
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_coupons'
+		;
+		$db->setQuery( $query );
+		$ccount = $db->loadResult();
+
+		if ( $ccount > 50 ) {
+			$coupons = array();
+		} else {
+			$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+				. ' FROM #__acctexp_coupons'
+				. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
+			;
+			$db->setQuery( $query );
+			$coupons = $db->loadObjectList();
+		}
+
+		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+			. ' FROM #__acctexp_coupons_static'
+			. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
+		;
+		$db->setQuery( $query );
+		$coupons = array_merge( $db->loadObjectList(), $coupons );
+
+		$cpl = array( 'bad_combinations', 'good_combinations', 'bad_combinations_cart', 'good_combinations_cart' );
+
+		foreach ( $cpl as $cpn ) {
+			$cur = array();
+
+			if ( !empty( $restrictions_values[$cpn] ) ) {
+				if ( $ccount > 50 ) {
+					$cur = array();
+				} else {
+					$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+						. ' FROM #__acctexp_coupons'
+						. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
+					;
+					$db->setQuery( $query );
+					$cur = $db->loadObjectList();
+				}
+
+				$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+					. ' FROM #__acctexp_coupons_static'
+					. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
+				;
+				$db->setQuery( $query );
+				$nc = $db->loadObjectList();
+
+				if ( !empty( $nc ) ) {
+					$cur = array_merge( $nc, $cur );
+				}
+			}
+
+			$lists[$cpn] = JHTML::_('select.genericlist', $coupons, $cpn.'[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $cur);
+		}
+
+		$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
+
+		$settings = new aecSettings( 'coupon', 'general' );
+
+		if ( is_array( $discount_values ) && is_array( $restrictions_values ) ) {
+			$settingsparams = array_merge( $params_values, $discount_values, $restrictions_values );
+		} else {
+			$settingsparams = $params_values;
+		}
+
+		$settings->fullSettingsArray( $params, $settingsparams, $lists );
 
 		// Call HTML Class
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-		$aecHTML->hasSettings = false;
-
-		$aecHTML->hasRestrictions = false;
-
-		$available_plans = SubscriptionPlanHandler::getPlanList( false, false, true, null, true );
-		$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', null );
-
-		$available_groups = ItemGroupHandler::getGroups( null, true );
-		$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', null );
-	}
-
-	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML, $attached );
-}
-
-function saveMicroIntegration( $option, $apply=0 )
-{
-	unset( $_POST['option'] );
-	unset( $_POST['task'] );
-
-	$id = $_POST['id'] ? $_POST['id'] : 0;
-
-	$mi = new microIntegration();
-	$mi->load( $id );
-
-	if ( !empty( $_POST['class_name'] ) ) {
-		$load = $mi->callDry( $_POST['class_name'] );
-	} else {
-		$load = $mi->callIntegration( 1 );
-	}
-
-	if ( $load ) {
-		$save = array(
-			'attach_to_plans' => array(),
-			'attached_to_plans' => array(),
-			'attach_to_groups' => array(),
-			'attached_to_groups' => array()
+		// Lets grab the data and fill it in.
+		$db->setQuery(
+			'SELECT id'
+			. ' FROM #__acctexp_invoices'
+			. ' WHERE `coupons` <> \'\''
+			. ' ORDER BY `created_date` DESC'
 		);
+		$rows = $db->loadObjectList();
 
-		foreach ( $save as $pid => $v ) {
-			if ( isset( $_POST[$pid] ) ) {
-				$save[$pid] = $_POST[$pid];
-
-				unset( $_POST[$pid] );
-			} else {
-				$save[$pid] = array();
-			}
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
 		}
 
-		$mi->savePostParams( $_POST );
-
-		$mi->storeload();
-
-		$all_groups = array_unique( array_merge( $save['attach_to_groups'], $save['attached_to_groups'] ) );
-
-		if ( !empty( $all_groups ) ) {
-			foreach ( $all_groups as $groupid ) {
-				$group = new ItemGroup();
-				$group->load( $groupid );
-
-				if ( in_array( $groupid, $save['attach_to_groups'] ) && !in_array( $groupid, $save['attached_to_groups'] ) ) {
-					$group->params['micro_integrations'][] = $mi->id;
-
-					$group->storeload();
-				} elseif ( !in_array( $groupid, $save['attach_to_groups'] ) && in_array( $groupid, $save['attached_to_groups'] ) ) {
-					unset( $group->params['micro_integrations'][array_search( $mi->id, $group->params['micro_integrations'] )] );
-
-					$group->storeload();
-				}
-			}
-		}
-
-		$all_plans = array_unique( array_merge( $save['attach_to_plans'], $save['attached_to_plans'] ) );
-
-		if ( !empty( $all_plans ) ) {
-			foreach ( $all_plans as $planid ) {
-				$plan = new SubscriptionPlan();
-				$plan->load( $planid );
-
-				if ( in_array( $planid, $save['attach_to_plans'] ) && !in_array( $planid, $save['attached_to_plans'] ) ) {
-					$plan->micro_integrations[] = $mi->id;
-
-					$plan->storeload();
-				} elseif ( !in_array( $planid, $save['attach_to_plans'] ) && in_array( $planid, $save['attached_to_plans'] ) ) {
-					unset( $plan->micro_integrations[array_search( $mi->id, $plan->micro_integrations )] );
-
-					$plan->storeload();
-				}
-			}
-		}
-	} else {
-		$short	= 'microIntegration storing failure';
-		if ( !empty( $_POST['class_name'] ) ) {
-			$event	= 'When trying to store microIntegration: ' . $_POST['class_name'] . ', callIntegration failed';
-		} else {
-			$event	= 'When trying to store microIntegration: ' . $mi->id . ', callIntegration failed';
-		}
-		$tags	= 'microintegration,loading,error';
-		$params = array();
-
-		$eventlog = new eventLog();
-		$eventlog->issue( $short, $tags, $event, 128, $params );
-	}
-
-	$mi->reorder();
-
-	if ( $id ) {
-		if ( $apply ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		}
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->id , JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-	}
-
-}
-
-function removeMicroIntegration( $id, $option )
-{
-	$db = JFactory::getDBO();
-
-	$ids = implode( ',', $id );
-
-	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_microintegrations'
-			. ' WHERE `id` IN (' . $ids . ')'
-			;
-	$db->setQuery( $query );
-	$total = $db->loadResult();
-
-	if ( $total==0 ) {
-		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	// Call On-Deletion function
-	foreach ( $id as $k ) {
-		$mi = new microIntegration();
-		$mi->load($k);
-		if ( $mi->callIntegration() ) {
-			$mi->delete();
-		}
-	}
-
-	// Micro Integrations from table
-	$query = 'DELETE FROM #__acctexp_microintegrations'
-			. ' WHERE `id` IN (' . $ids . ')'
-			;
-	$db->setQuery( $query	);
-
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
-
-	$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
-}
-
-function cancelMicroIntegration( $option )
-{
-	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('AEC_CMN_EDIT_CANCELLED') );
-}
-
-function changeMicroIntegration( $cid=null, $state=0, $option )
-{
-	$db = JFactory::getDBO();
-
-	if ( count( $cid ) < 1 ) {
-		$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH'): JText::_('AEC_CMN_TOUNPUBLISH');
-		echo "<script> alert('" . sprintf( html_entity_decode( JText::_('AEC_ALERT_SELECT_FIRST_TO') ), $action ) . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	$total = count( $cid );
-	$cids = implode( ',', $cid );
-
-	$query = 'UPDATE #__acctexp_microintegrations'
-			. ' SET `active` = \'' . $state . '\''
-			. ' WHERE `id` IN (' . $cids . ')'
-			;
-	$db->setQuery( $query );
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
-
-	if ( $state ) {
-		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_PUBLISHED');
-	} else {
-		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UNPUBLISHED');
-	}
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
-}
-
-function listCoupons( $option )
-{
-	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
-	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-	$search			= $app->getUserStateFromRequest( "search{$option}_coupons", 'search', '' );
-	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
-
-	$filtered = !empty($search);
-
-	$orderby = $app->getUserStateFromRequest( "orderby_coupons{$option}", 'orderby_coupons', 'name ASC' );
-
-	$total = 0;
-
-	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_coupons'
-			. ( empty( $search ) ? '' : "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')" )
-			;
-	$db->setQuery( $query );
-	$total += $db->loadResult();
-
-	$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_coupons_static'
-			;
-	$db->setQuery( $query );
-	$total += $db->loadResult();
-
-	if ( $limitstart > $total ) {
-		$limitstart = 0;
-	}
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
-	$where = array();
-	if ( isset( $search ) && $search!= '' ) {
-		$where[] = "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')";
-	}
-
-	// get the subset (based on limits) of required records
-	$query = '(SELECT *, "0" as `type`'
-		 	. ' FROM #__acctexp_coupons'
-		 	. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-		 	. ')'
-		 	. ' UNION '
-		 	. '(SELECT *, "1" as `type`'
-		 	. ' FROM #__acctexp_coupons_static'
-		 	. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
-		 	. ')'
-		 	. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		 	;
-
-	$db->setQuery( $query );
-
-	$rows = $db->loadObjectList();
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
-
-	$query = 'SELECT SUM(usecount)'
-			. ' FROM #__acctexp_coupons'
-			;
-	$db->setQuery( $query );
-
-	$total_usecount = $db->loadResult();
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
-
-	$query = 'SELECT SUM(usecount)'
-			. ' FROM #__acctexp_coupons_static'
-			;
-	$db->setQuery( $query );
-
-	$total_usecount += $db->loadResult();
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
-
-	foreach ( $rows as $rid => $row ) {
-		if ( $row->usecount ) {
-			$rows[$rid]->percentage = $row->usecount / ( $total_usecount / 100 );
-		} else {
-			$rows[$rid]->percentage = 0;
-		}
-
-		$rows[$rid]->inner = false;
-		if ( $rows[$rid]->percentage > 15 ) {
-			$rows[$rid]->inner = true;
-		}
-	}
-
-	HTML_AcctExp::listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby );
-}
-
-function editCoupon( $id, $option, $new )
-{
-	$db = JFactory::getDBO();
-
-	$lists = array();
-
-	$cph = new couponHandler();
-
-	if ( !$new ) {
-		$idx = explode( ".", $id );
-
-		$cph->coupon = new Coupon( $idx[0] );
-		$cph->coupon->load( $idx[1] );
-
-		$params_values			= $cph->coupon->params;
-		$discount_values		= $cph->coupon->discount;
-		$restrictions_values	= $cph->coupon->restrictions;
-	} else {
-		$cph->coupon = new Coupon();
-		$cph->coupon->createNew();
-
-		$params_values			= array();
-		$discount_values		= array();
-		$restrictions_values	= array();
-	}
-
-	// We need to convert the values that are set as object properties
-	$params_values['active']				= $cph->coupon->active;
-	$params_values['type']					= $cph->coupon->type;
-	$params_values['name']					= $cph->coupon->name;
-	$params_values['desc']					= $cph->coupon->desc;
-	$params_values['coupon_code']			= $cph->coupon->coupon_code;
-	$params_values['usecount']				= $cph->coupon->usecount;
-	$params_values['micro_integrations']	= $cph->coupon->micro_integrations;
-
-	// params and their type values
-	$params['active']						= array( 'toggle',		1 );
-	$params['type']							= array( 'toggle',		1 );
-	$params['name']							= array( 'inputC',		'' );
-	$params['desc']							= array( 'inputE',		'' );
-	$params['coupon_code']					= array( 'inputC',		'' );
-	$params['micro_integrations']			= array( 'list',		'' );
-
-	$params['params_remap']					= array( 'subarea_change',	'params' );
-
-	$params['amount_use']					= array( 'toggle',		'' );
-	$params['amount']						= array( 'inputB',		'' );
-	$params['amount_percent_use']			= array( 'toggle',		'' );
-	$params['amount_percent']				= array( 'inputB',		'' );
-	$params['percent_first']				= array( 'toggle',		'' );
-	$params['useon_trial']					= array( 'toggle',		'' );
-	$params['useon_full']					= array( 'toggle',		'1' );
-	$params['useon_full_all']				= array( 'toggle',		'1' );
-
-	$params['has_start_date']				= array( 'toggle',		1 );
-	$params['start_date']					= array( 'list_date',	date( 'Y-m-d', ( (int) gmdate('U') ) ) );
-	$params['has_expiration']				= array( 'toggle',		0);
-	$params['expiration']					= array( 'list_date',	date( 'Y-m-d', ( (int) gmdate('U') ) ) );
-	$params['has_max_reuse']				= array( 'toggle',		0 );
-	$params['max_reuse']					= array( 'inputA',		1 );
-	$params['has_max_peruser_reuse']		= array( 'toggle',		1 );
-	$params['max_peruser_reuse']			= array( 'inputA',		1 );
-	$params['usecount']						= array( 'inputA',		0 );
-
-	$params['usage_plans_enabled']			= array( 'toggle',		0 );
-	$params['usage_plans']					= array( 'list',		0 );
-
-	$params['usage_cart_full']				= array( 'toggle',		0 );
-	$params['cart_multiple_items']			= array( 'toggle',		0 );
-	$params['cart_multiple_items_amount']	= array( 'inputB',		'' );
-
-	$params['restr_remap']					= array( 'subarea_change',	'restrictions' );
-
-	$params['depend_on_subscr_id']			= array( 'toggle',		0 );
-	$params['subscr_id_dependency']			= array( 'inputB',		'' );
-	$params['allow_trial_depend_subscr']	= array( 'toggle',		0 );
-
-	$params['restrict_combination']			= array( 'toggle',		0 );
-	$params['bad_combinations']				= array( 'list',		'' );
-
-	$params['allow_combination']			= array( 'toggle',		0 );
-	$params['good_combinations']			= array( 'list',		'' );
-
-	$params['restrict_combination_cart']	= array( 'toggle',		0 );
-	$params['bad_combinations_cart']		= array( 'list',		'' );
-
-	$params['allow_combination_cart']		= array( 'toggle',		0 );
-	$params['good_combinations_cart']		= array( 'list',		'' );
-
-	$restrictionHelper = new aecRestrictionHelper();
-	$params = array_merge( $params, $restrictionHelper->getParams() );
-
-	// get available plans
-	$available_plans = array();
-
-	$db->setQuery(
-		'SELECT `id` as value, `name` as text'
-		. ' FROM #__acctexp_plans'
-	);
-	$plans = $db->loadObjectList();
-
- 	if ( is_array( $plans ) ) {
- 		$all_plans = array_merge( $available_plans, $plans );
- 	} else {
- 		$all_plans = $available_plans;
- 	}
-	$total_all_plans = min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
-
-	// get usages
-	if ( !empty( $restrictions_values['usage_plans'] ) ) {
-		$query = 'SELECT `id` AS value, `name` as text'
-				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` IN (' . implode( ',', $restrictions_values['usage_plans'] ) . ')'
-				;
-		$db->setQuery( $query );
-
-	 	$sel_usage_plans = $db->loadObjectList();
-	} else {
-		$sel_usage_plans = 0;
-	}
-
-	$lists['usage_plans']		= JHTML::_('select.genericlist', $all_plans, 'usage_plans[]', 'size="' . $total_all_plans . '" multiple="multiple"',
-									'value', 'text', $sel_usage_plans);
-
-
-	// get available micro integrations
-	$available_mi = array();
-
-	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-			. ' FROM #__acctexp_microintegrations'
-			. ' WHERE `active` = 1'
-			. ' ORDER BY `ordering`'
-			;
-	$db->setQuery( $query );
-	$mi_list = $db->loadObjectList();
-
-	$mis = array();
-	if ( !empty( $mi_list ) && !empty( $params_values['micro_integrations'] ) ) {
-		foreach ( $mi_list as $mi_item ) {
-			if ( in_array( $mi_item->value, $params_values['micro_integrations'] ) ) {
-				$mis[] = $mi_item->value;
-			}
-		}
-	}
-
- 	if ( !empty( $mis ) ) {
-	 	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-			 	. ' FROM #__acctexp_microintegrations'
-			 	. ( !empty( $mis ) ? ' WHERE `id` IN (' . implode( ',', $mis ) . ')' : '' )
-			 	;
-	 	$db->setQuery( $query );
-		$selected_mi = $db->loadObjectList();
- 	} else {
- 		$selected_mi = array();
- 	}
-
-	$lists['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi );
-
-	$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_coupons'
-		;
-	$db->setQuery( $query );
-	$ccount = $db->loadResult();
-
-	if ( $ccount > 50 ) {
-		$coupons = array();
-	} else {
-		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-				. ' FROM #__acctexp_coupons'
-				. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
-				;
-		$db->setQuery( $query );
-		$coupons = $db->loadObjectList();
-	}
-
-	$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-			. ' FROM #__acctexp_coupons_static'
-			. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
-			;
-	$db->setQuery( $query );
-	$coupons = array_merge( $db->loadObjectList(), $coupons );
-
-	$cpl = array( 'bad_combinations', 'good_combinations', 'bad_combinations_cart', 'good_combinations_cart' );
-
-	foreach ( $cpl as $cpn ) {
-		$cur = array();
-
-		if ( !empty( $restrictions_values[$cpn] ) ) {
-			if ( $ccount > 50 ) {
-				$cur = array();
-			} else {
-				$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-						. ' FROM #__acctexp_coupons'
-						. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
-						;
-				$db->setQuery( $query );
-				$cur = $db->loadObjectList();
+		$aecHTML->invoices = array();
+		foreach ( $rows as $row ) {
+			$invoice = new Invoice();
+			$invoice->load( $row->id );
+
+			if ( !in_array( $cph->coupon->coupon_code, $invoice->coupons ) ) {
+				continue;
 			}
 
-			$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-					. ' FROM #__acctexp_coupons_static'
-					. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
-					;
-			$db->setQuery( $query );
-			$nc = $db->loadObjectList();
+			$in_formatted = $invoice->formatInvoiceNumber();
 
-			if ( !empty( $nc ) ) {
-				$cur = array_merge( $nc, $cur );
-			}
-		}
+			$invoice->invoice_number_formatted = $invoice->invoice_number . ( ($in_formatted != $invoice->invoice_number) ? "\n" . '(' . $in_formatted . ')' : '' );
 
-		$lists[$cpn] = JHTML::_('select.genericlist', $coupons, $cpn.'[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $cur);
-	}
+			$invoice->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoice->usage . '">' . $invoice->usage . '</a>';
 
-	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
-
-	$settings = new aecSettings( 'coupon', 'general' );
-
-	if ( is_array( $discount_values ) && is_array( $restrictions_values ) ) {
-		$settingsparams = array_merge( $params_values, $discount_values, $restrictions_values );
-	} else {
-		$settingsparams = $params_values;
-	}
-
-	$settings->fullSettingsArray( $params, $settingsparams, $lists );
-
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-	// Lets grab the data and fill it in.
-	$db->setQuery(
-		'SELECT id'
-		. ' FROM #__acctexp_invoices'
-		. ' WHERE `coupons` <> \'\''
-		. ' ORDER BY `created_date` DESC'
-	);
-	$rows = $db->loadObjectList();
-
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
-
-	$aecHTML->invoices = array();
-	foreach ( $rows as $row ) {
-		$invoice = new Invoice();
-		$invoice->load( $row->id );
-
-		if ( !in_array( $cph->coupon->coupon_code, $invoice->coupons ) ) {
-			continue;
-		}
-
-		$in_formatted = $invoice->formatInvoiceNumber();
-
-		$invoice->invoice_number_formatted = $invoice->invoice_number . ( ($in_formatted != $invoice->invoice_number) ? "\n" . '(' . $in_formatted . ')' : '' );
-
-		$invoice->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoice->usage . '">' . $invoice->usage . '</a>';
-
-		$query = 'SELECT username'
+			$query = 'SELECT username'
 				. ' FROM #__users'
 				. ' WHERE `id` = \'' . $invoice->userid . '\''
-				;
-		$db->setQuery( $query );
-		$username = $db->loadResult();
+			;
+			$db->setQuery( $query );
+			$username = $db->loadResult();
 
-		$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoice->userid . '">';
+			$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoice->userid . '">';
 
-		if ( !empty( $username ) ) {
-			$invoice->username .= $username . '</a>';
-		} else {
-			$invoice->username .= $invoice->userid;
+			if ( !empty( $username ) ) {
+				$invoice->username .= $username . '</a>';
+			} else {
+				$invoice->username .= $invoice->userid;
+			}
+
+			$invoice->username .= '</a>';
+
+			$aecHTML->invoices[] = $invoice;
 		}
 
-		$invoice->username .= '</a>';
-
-		$aecHTML->invoices[] = $invoice;
+		HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon );
 	}
 
-	HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon );
+	function save( $option, $apply=0 )
+	{
+		$new = 0;
+		$type = $_POST['type'];
+
+		$_POST['coupon_code'] = aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+		if ( $_POST['coupon_code'] != '' ) {
+
+			$cph = new couponHandler();
+
+			if ( !empty( $_POST['id'] ) ) {
+				$cph->coupon = new Coupon( $_POST['oldtype'] );
+				$cph->coupon->load( $_POST['id'] );
+
+				if ( $cph->coupon->id ) {
+					$cph->status = true;
+				}
+			} else {
+				$cph->load( $_POST['coupon_code'] );
+			}
+
+			if ( !$cph->status ) {
+				$cph->coupon = new Coupon( $type );
+				$cph->coupon->createNew( $_POST['coupon_code'] );
+				$cph->status = true;
+				$new = 1;
+			}
+
+			if ( $cph->status ) {
+				if ( !$new ) {
+					if ( $cph->coupon->type != $_POST['type'] ) {
+						$cph->switchType();
+					}
+				}
+
+				unset( $_POST['type'] );
+				unset( $_POST['oldtype'] );
+				unset( $_POST['id'] );
+
+				$post = AECToolbox::cleanPOST( $_POST, false );
+
+				$cph->coupon->savePOSTsettings( $post );
+
+				$cph->coupon->storeload();
+			} else {
+				$short	= 'coupon store failure';
+				$event	= 'When trying to store coupon';
+				$tags	= 'coupon,loading,error';
+				$params = array();
+
+				$eventlog = new eventLog();
+				$eventlog->issue( $short, $tags, $event, 128, $params );
+			}
+
+			if ( $apply ) {
+				aecRedirect( 'index.php?option=' . $option . '&task=editCoupon&id=' . $cph->coupon->type.'.'.$cph->coupon->id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			} else {
+				aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			}
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_MSG_NO_COUPON_CODE') );
+		}
+
+	}
+
+	function remove( $id, $option, $returnTask )
+	{
+		$db = JFactory::getDBO();
+
+		$rids = $sids = array();
+		foreach ( $id as $i ) {
+			$ex = explode( '.', $i );
+
+			if ( $ex[0] ) {
+				$sids[] = $ex[1];
+			} else {
+				$rids[] = $ex[1];
+			}
+		}
+
+		if ( !empty( $sids ) ) {
+			$query = 'DELETE FROM #__acctexp_coupons_static'
+				. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
+			;
+			$db->setQuery( $query );
+
+			if ( !$db->query() ) {
+				echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+				exit();
+			}
+		}
+
+		if ( !empty( $rids ) ) {
+			$query = 'DELETE FROM #__acctexp_coupons'
+				. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
+			;
+			$db->setQuery( $query );
+
+			if ( !$db->query() ) {
+				echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+				exit();
+			}
+		}
+
+		$msg = JText::_('AEC_MSG_ITEMS_DELETED');
+
+		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
+	}
+
+	function change( $id=null, $state=0, $option )
+	{
+		$db = JFactory::getDBO();
+
+		if ( count( $id ) < 1 ) {
+			$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH') : JText::_('AEC_CMN_TOUNPUBLISH');
+			echo "<script> alert('" . sprintf( html_entity_decode( JText::_('AEC_ALERT_SELECT_FIRST_TO') ) ), $action . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		$idx	= explode( ',', $id );
+
+		$rids = $sids = array();
+		foreach ( $idx as $ctype => $cid ) {
+			if ( $ctype ) {
+				$sids[] = $cid;
+			} else {
+				$rids[] = $cid;
+			}
+		}
+
+		if ( !empty( $sids ) ) {
+			$db->setQuery(
+				'UPDATE #__acctexp_coupons_static'
+				. ' SET `active` = IF (`active` = 1, 0, 1)'
+				. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
+			);
+			$db->query();
+		}
+
+		if ( !empty( $rids ) ) {
+			$db->setQuery(
+				'UPDATE #__acctexp_coupons'
+				. ' SET `active` = IF (`active` = 1, 0, 1)'
+				. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
+			);
+			$db->query();
+		}
+
+		$msg = count( $id ) . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED');
+
+		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
+	}
+
 }
 
-function saveCoupon( $option, $apply=0 )
+class aecAdminInvoice
 {
-	$new = 0;
-	$type = $_POST['type'];
+	public function browse( $option )
+	{
+		$db = JFactory::getDBO();
 
-	$_POST['coupon_code'] = aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+		$app = JFactory::getApplication();
 
-	if ( $_POST['coupon_code'] != '' ) {
+		$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
+		$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
+		$search 	= $app->getUserStateFromRequest( "search_{$option}invoices", 'search', '' );
 
-		$cph = new couponHandler();
+		if ( $search ) {
+			$unformatted = xJ::escape( $db, trim( strtolower( $search ) ) );
 
-		if ( !empty( $_POST['id'] ) ) {
-			$cph->coupon = new Coupon( $_POST['oldtype'] );
-			$cph->coupon->load( $_POST['id'] );
+			$where = 'LOWER(`invoice_number`) LIKE \'%' . $unformatted . '%\''
+					. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
+					. ' OR `id` LIKE \'%' . $unformatted . '%\''
+					. ' OR LOWER(`invoice_number_format`) LIKE \'%' . $unformatted . '%\''
+					;
+		}
 
-			if ( $cph->coupon->id ) {
-				$cph->status = true;
+		$orderby = $app->getUserStateFromRequest( "orderby_invoices{$option}", 'orderby_invoices', 'created_date DESC' );
+
+		// get the total number of records
+		$db->setQuery(
+			'SELECT count(*)'
+			. ' FROM #__acctexp_invoices'
+		);
+		$total = $db->loadResult();
+
+
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
+
+		// Lets grab the data and fill it in.
+		$db->setQuery(
+			'SELECT id'
+			. ' FROM #__acctexp_invoices'
+			. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
+			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		);
+		$ids = xJ::getDBArray( $db );
+
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		$cclist = array();
+
+		$processors = PaymentProcessorHandler::getObjectList(
+			PaymentProcessorHandler::getProcessorList()
+		);
+
+		$procs = array(
+			'free' => 'Free',
+			'none' => 'None'
+		);
+		foreach ( $processors as $processor ) {
+			$procs[$processor->processor_name] = $processor->processor->info['longname'];
+		}
+
+		$invoices = array();
+		foreach ( $ids as $id ) {
+			$invoices[$id] = new Invoice();
+			$invoices[$id]->load( $id );
+
+			$invoices[$id]->formatInvoiceNumber();
+
+			if ( empty($invoices[$id]->invoice_number_formatted) ) {
+				$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number;
+			} else {
+				$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number . ( ($invoices[$id]->invoice_number_formatted != $invoices[$id]->invoice_number) ? "\n" . '(' . $invoices[$id]->invoice_number_formatted . ')' : '' );
 			}
-		} else {
-			$cph->load( $_POST['coupon_code'] );
-		}
 
-		if ( !$cph->status ) {
-			$cph->coupon = new Coupon( $type );
-			$cph->coupon->createNew( $_POST['coupon_code'] );
-			$cph->status = true;
-			$new = 1;
-		}
+			if ( !empty( $invoices[$id]->coupons ) ) {
+				$coupons = $invoices[$id]->coupons;
+			} else {
+				$coupons = null;
+			}
 
-		if ( $cph->status ) {
-			if ( !$new ) {
-				if ( $cph->coupon->type != $_POST['type'] ) {
-					$cph->switchType();
+			if ( !empty( $coupons ) ) {
+				$invoices[$id]->coupons = "";
+
+				$couponslist = array();
+				foreach ( $coupons as $coupon_code ) {
+					if ( !isset( $cclist[$coupon_code] ) ) {
+						$cclist[$coupon_code] = couponHandler::idFromCode( $coupon_code );
+					}
+
+					if ( !empty( $cclist[$coupon_code]['id'] ) ) {
+						$couponslist[] = '<a href="index.php?option=com_acctexp&amp;task=' . ( $cclist[$coupon_code]['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $cclist[$coupon_code]['id'] . '">' . $coupon_code . '</a>';
+					}
 				}
+
+				$invoices[$id]->coupons = implode( ", ", $couponslist );
+			} else {
+				$invoices[$id]->coupons = null;
 			}
 
-			unset( $_POST['type'] );
-			unset( $_POST['oldtype'] );
-			unset( $_POST['id'] );
+			$invoices[$id]->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoices[$id]->usage . '">' . $invoices[$id]->usage . '</a>';
 
-			$post = AECToolbox::cleanPOST( $_POST, false );
+			$query = 'SELECT username'
+					. ' FROM #__users'
+					. ' WHERE `id` = \'' . $invoices[$id]->userid . '\''
+					;
+			$db->setQuery( $query );
+			$username = $db->loadResult();
 
-			$cph->coupon->savePOSTsettings( $post );
+			$invoices[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoices[$id]->userid . '">';
 
-			$cph->coupon->storeload();
+			if ( !empty( $username ) ) {
+				$invoices[$id]->username .= $username . '</a>';
+			} else {
+				$invoices[$id]->username .= $invoices[$id]->userid;
+			}
+
+			$invoices[$id]->username .= '</a>';
+
+			$invoices[$id]->processor = $procs[$invoices[$id]->method];
+		}
+
+		HTML_AcctExp::viewInvoices( $option, $invoices, $search, $pageNav, $orderby );
+	}
+
+	function edit( $id, $option, $returnTask, $userid )
+	{
+		$db = JFactory::getDBO();
+
+		$row = new Invoice();
+		$row->load( $id );
+
+		$params['fixed']				= array( 'toggle',		0 );
+		$params['userid']				= array( 'hidden',		$userid );
+		$params['active']				= array( 'toggle',		1 );
+		$params['returnTask']			= array( 'hidden',		$returnTask );
+		$params['created_date']			= array( 'list_date',	date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) );
+		$params['amount']				= array( 'inputB',		'' );
+		$params['usage']				= array( 'list', 		0 );
+		$params['method']				= array( 'list', 		'' );
+		$params['coupons']				= array( 'list', 		0 );
+
+		$available_plans = SubscriptionPlanHandler::getActivePlanList();
+
+		$lists['usage'] = JHTML::_('select.genericlist', $available_plans, 'usage', 'size="1"', 'value', 'text', $row->usage );
+
+		$lists['method']				= str_replace( 'processor', 'method', PaymentProcessorHandler::getSelectList( $row->method, true ) );
+
+		$db->setQuery(
+			'SELECT `id` as value, `coupon_code` as text'
+			. ' FROM #__acctexp_coupons'
+		);
+
+		$coupons = $db->loadObjectList();
+
+		$db->setQuery(
+			'SELECT `id` as value, `coupon_code` as text'
+			. ' FROM #__acctexp_coupons_static'
+		);
+
+		$coupons = array_merge( $db->loadObjectList(), $coupons );
+
+		$coupons_active = array();
+
+		if ( !empty($row->coupons) ) {
+			foreach ( $row->coupons as $coupon_code ) {
+				$coupon_id = couponHandler::idFromCode($coupon_code);
+
+				$coupons_active[] = (int) $coupon_id['id'];
+			}
+		}
+
+		$lists['coupons'] = JHTML::_('select.genericlist', $coupons, 'coupons[]', 'multiple="multiple"', 'value', 'text', $coupons_active);
+
+		$params_values = array();
+		$params_values['active']		= $row->active;
+		$params_values['fixed']			= $row->fixed;
+		$params_values['userid']		= $row->userid;
+		$params_values['created_date']	= $row->created_date;
+
+		$settings = new aecSettings ( 'invoice', 'general' );
+		$settings->fullSettingsArray( $params, $params_values, $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+		if ( !empty( $customparamsarray ) ) {
+			$aecHTML->customparams = $customparamsarray;
+		}
+
+		$aecHTML->params = $row->params;
+
+		HTML_AcctExp::editInvoice( $option, $aecHTML, $id );
+	}
+
+	function save( $option, $return=0 )
+	{
+		$row = new Invoice();
+		$row->load( $_POST['id'] );
+
+		$returnTask = $_POST['returnTask'];
+
+		unset( $_POST['id'] );
+		unset( $_POST['returnTask'] );
+
+		if ( empty($_POST['coupons']) ) {
+			$_POST['coupons'] = array();
+		}
+
+		$previous = array();
+		if ( !empty($row->coupons) ) {
+			foreach ( $row->coupons as $coupon_code ) {
+				$id = couponHandler::idFromCode($coupon_code);
+
+				$previous[] = $id['id'];
+			}
+		}
+
+		$added = array();
+		foreach ( $_POST['coupons'] as $coupon_id ) {
+			if ( !in_array($coupon_id, $previous) ) {
+				$added[] = $coupon_id;
+			} else {
+				unset( $previous[array_search($coupon_id, $previous)] );
+			}
+		}
+
+		if ( !empty($added) ) {
+			foreach ( $added as $coupon_id ) {var_dump($coupon_id);
+				$row->addCoupon((int)$coupon_id, true);
+			}
+		}
+
+		if ( !empty($previous) ) {
+			foreach ( $previous as $coupon_id ) {
+				$row->removeCoupon((int)$coupon_id, true);
+			}
+		}
+
+		unset($_POST['coupons']);
+
+		$row->savePOSTsettings( $_POST );
+
+		$row->storeload();
+
+		if ( $return ) {
+			aecRedirect( 'index.php?option=' . $option . '&task=editInvoice&id=' . $row->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
 		} else {
-			$short	= 'coupon store failure';
-			$event	= 'When trying to store coupon';
-			$tags	= 'coupon,loading,error';
-			$params = array();
+			if ( $returnTask ) {
+				aecRedirect( 'index.php?option=' . $option . '&task=' . $returnTask . '&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );
+			} else {
+				aecRedirect( 'index.php?option=' . $option . '&task=invoices', JText::_('AEC_CONFIG_SAVED') );
+			}
+		}
+	}
 
-			$eventlog = new eventLog();
-			$eventlog->issue( $short, $tags, $event, 128, $params );
+	function clear( $option, $invoice_number, $applyplan, $task )
+	{
+		$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
+
+		$userid = '';
+		if ( $invoiceid ) {
+			$objInvoice = new Invoice();
+			$objInvoice->load( $invoiceid );
+
+			$pp = new stdClass();
+			$pp->id = 0;
+			$pp->processor_name = 'none';
+
+			if ( $applyplan ) {
+				$objInvoice->pay();
+			} else {
+				$objInvoice->setTransactionDate();
+			}
+
+			$history = new logHistory();
+			$history->entryFromInvoice( $objInvoice, null, $pp );
+
+			if ( strcmp( $task, 'editMembership' ) == 0) {
+				$userid = '&userid=' . $objInvoice->userid;
+			}
+		}
+
+		aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('AEC_MSG_INVOICE_CLEARED') );
+	}
+
+	function cancel( $option, $invoice_number, $task )
+	{
+		$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
+
+		$userid = '';
+		if ( $invoiceid ) {
+			$objInvoice = new Invoice();
+			$objInvoice->load( $invoiceid );
+
+			$objInvoice->delete();
+
+			if ( strcmp( $task, 'editMembership' ) == 0 ) {
+				$userid = '&userid=' . $objInvoice->userid;
+			}
+		}
+
+		aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('REMOVED') );
+	}
+
+	function printout( $option, $invoice_number, $standalone=true )
+	{
+		$invoice = new Invoice();
+		$invoice->loadInvoiceNumber( $invoice_number );
+
+		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
+		$iFactory->invoiceprint( $invoice->invoice_number, $standalone );
+	}
+
+	function printoutPDF( $option, $invoice_number )
+	{
+		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
+		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
+
+		ob_start();
+
+		AdminInvoicePrintout( $option, $invoice_number, false );
+
+		$buffer = ob_get_contents();
+
+		ob_end_clean();
+
+		$document= JFactory::getDocument();
+		$document->_type="html";
+		$renderer = $document->loadRenderer("head");
+
+		$content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+			.'<html xmlns="http://www.w3.org/1999/xhtml">'
+			.'<head>' . $renderer->render("head") . '</head><body>'.$buffer.'</body>'
+			.'</html>';
+
+		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+		$pdf->AddPage();
+		$pdf->writeHTML($content, true, false, true, false, '');
+
+		$pdf->Output( $invoice_number.'.pdf', 'I');exit;
+	}
+
+}
+
+class aecAdminService
+{
+	function browse( $option )
+	{
+		$db = JFactory::getDBO();
+
+		$app = JFactory::getApplication();
+
+		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+
+		$search = $app->getUserStateFromRequest( "search_services{$option}", 'search', '' );
+		$search = xJ::escape( $db, trim( strtolower( $search ) ) );
+
+		$filtered = !empty($search);
+
+		$orderby = $app->getUserStateFromRequest( "orderby_services{$option}", 'orderby_services', 'name ASC' );
+
+		// get the total number of records
+		$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_services'
+			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
+		;
+		$db->setQuery( $query );
+		$total = $db->loadResult();
+		echo $db->getErrorMsg();
+
+		if ( $limitstart > $total ) {
+			$limitstart = 0;
+		}
+
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
+
+		// get the subset (based on limits) of records
+		$query = 'SELECT *'
+			. ' FROM #__acctexp_services'
+			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
+			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		;
+		$db->setQuery( $query );
+
+		$rows = $db->loadObjectList();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		$lists = array();
+
+		HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
+	}
+
+	function edit( $id, $option )
+	{
+		$lists = array();
+		$params_values = array();
+
+		$row = aecService::getById($id);
+
+		if ( empty($row->id) ) {
+			$row = new aecService();
+			$row->ordering	= 9999;
+
+			$params_values['active']	= 1;
+		} else {
+			$params_values = $row->params;
+
+			// We need to convert the values that are set as object properties
+			$params_values['active']				= $row->active;
+			$params_values['name']					= $row->name;
+		}
+
+		// params and their type values
+		$params['active']					= array( 'toggle', 1 );
+		$params['visible']					= array( 'toggle', 0 );
+
+		$params['name']						= array( 'inputC', '' );
+		$params['type']						= array( 'list', '' );
+
+		$params['params_remap']				= array( 'subarea_change', 'services' );
+
+		$servicelist = aecServiceList::getAvailableServiceClasses(true);
+
+		$glist = array();
+
+		$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
+		foreach ( $servicelist as $service ) {
+			$info = $service->getInfo();
+
+			$glist[] = JHTML::_('select.option', $info['slug'], $info['name'], 'value', 'text' );
+		}
+
+		$lists['type'] = JHTML::_('select.genericlist', $glist, 'type', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+
+		$settings = new aecSettings( 'service', 'general' );
+
+		if ( $row->id ) {
+			$service_params = $row->getSettings();
+
+			$params = array_merge($params, $service_params);
+		} else {
+			$service_params = array();
+		}
+
+		$settings->fullSettingsArray( $params, $params_values, $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+		if ( !empty($service_params) ) {
+			foreach ( $service_params as $n => $v ) {
+				$aecHTML->customparams[] = $n;
+			}
+		}
+
+		$aecHTML->hasSettings = $id ? true : false;
+
+		HTML_AcctExp::editService( $option, $row, $aecHTML );
+	}
+
+	function save( $option, $apply=0 )
+	{
+		$post = AECToolbox::cleanPOST( $_POST, false );
+
+		if ( $_POST['id'] ) {
+			$row = aecService::getById($_POST['id']);
+		} else {
+			$row = aecService::getByType($post['type']);
+		}
+
+		$row->savePOSTsettings( $post );
+
+		if ( !$row->check() ) {
+			echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
+			exit();
+		}
+		if ( !$row->store() ) {
+			echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
+			exit();
+		}
+
+		$row->reorder();
+
+		if ( $_POST['id'] ) {
+			$id = $_POST['id'];
+		} else {
+			$id = $row->getMax();
 		}
 
 		if ( $apply ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editCoupon&id=' . $cph->coupon->type.'.'.$cph->coupon->id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			aecRedirect( 'index.php?option=' . $option . '&task=editService&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		}
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_MSG_NO_COUPON_CODE') );
-	}
-
-}
-
-function removeCoupon( $id, $option, $returnTask )
-{
-	$db = JFactory::getDBO();
-
-	$rids = $sids = array();
-	foreach ( $id as $i ) {
-		$ex = explode( '.', $i );
-
-		if ( $ex[0] ) {
-			$sids[] = $ex[1];
-		} else {
-			$rids[] = $ex[1];
+			aecRedirect( 'index.php?option=' . $option . '&task=showServices', JText::_('SAVED') );
 		}
 	}
 
-	if ( !empty( $sids ) ) {
-		$query = 'DELETE FROM #__acctexp_coupons_static'
-				. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
-				;
-		$db->setQuery( $query );
+	function remove( $id, $option )
+	{
+		$db = JFactory::getDBO();
 
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
-	}
+		$ids = implode( ',', $id );
 
-	if ( !empty( $rids ) ) {
-		$query = 'DELETE FROM #__acctexp_coupons'
-				. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
-				;
-		$db->setQuery( $query );
-
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-			exit();
-		}
-	}
-
-	$msg = JText::_('AEC_MSG_ITEMS_DELETED');
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
-}
-
-function changeCoupon( $id=null, $state=0, $option )
-{
-	$db = JFactory::getDBO();
-
-	if ( count( $id ) < 1 ) {
-		$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH') : JText::_('AEC_CMN_TOUNPUBLISH');
-		echo "<script> alert('" . sprintf( html_entity_decode( JText::_('AEC_ALERT_SELECT_FIRST_TO') ) ), $action . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	$idx	= explode( ',', $id );
-
-	$rids = $sids = array();
-	foreach ( $idx as $ctype => $cid ) {
-		if ( $ctype ) {
-			$sids[] = $cid;
-		} else {
-			$rids[] = $cid;
-		}
-	}
-
-	if ( !empty( $sids ) ) {
 		$db->setQuery(
-			'UPDATE #__acctexp_coupons_static'
-			. ' SET `active` = IF (`active` = 1, 0, 1)'
-			. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
-		);
-		$db->query();
-	}
-
-	if ( !empty( $rids ) ) {
-		$db->setQuery(
-			'UPDATE #__acctexp_coupons'
-			. ' SET `active` = IF (`active` = 1, 0, 1)'
-			. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
-		);
-		$db->query();
-	}
-
-	$msg = count( $id ) . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED');
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
-}
-
-function invoices( $option )
-{
-	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
-	$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
-	$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-	$search 	= $app->getUserStateFromRequest( "search_{$option}invoices", 'search', '' );
-
-	if ( $search ) {
-		$unformatted = xJ::escape( $db, trim( strtolower( $search ) ) );
-
-		$where = 'LOWER(`invoice_number`) LIKE \'%' . $unformatted . '%\''
-				. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
-				. ' OR `id` LIKE \'%' . $unformatted . '%\''
-				. ' OR LOWER(`invoice_number_format`) LIKE \'%' . $unformatted . '%\''
-				;
-	}
-
-	$orderby = $app->getUserStateFromRequest( "orderby_invoices{$option}", 'orderby_invoices', 'created_date DESC' );
-
-	// get the total number of records
-	$db->setQuery(
-		'SELECT count(*)'
-		. ' FROM #__acctexp_invoices'
-	);
-	$total = $db->loadResult();
-
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
-	// Lets grab the data and fill it in.
-	$db->setQuery(
-		'SELECT id'
-		. ' FROM #__acctexp_invoices'
-		. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
-		. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-	);
-	$ids = xJ::getDBArray( $db );
-
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
-
-	$cclist = array();
-
-	$processors = PaymentProcessorHandler::getObjectList(
-		PaymentProcessorHandler::getProcessorList()
-	);
-
-	$procs = array(
-		'free' => 'Free',
-		'none' => 'None'
-	);
-	foreach ( $processors as $processor ) {
-		$procs[$processor->processor_name] = $processor->processor->info['longname'];
-	}
-
-	$invoices = array();
-	foreach ( $ids as $id ) {
-		$invoices[$id] = new Invoice();
-		$invoices[$id]->load( $id );
-
-		$invoices[$id]->formatInvoiceNumber();
-
-		if ( empty($invoices[$id]->invoice_number_formatted) ) {
-			$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number;
-		} else {
-			$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number . ( ($invoices[$id]->invoice_number_formatted != $invoices[$id]->invoice_number) ? "\n" . '(' . $invoices[$id]->invoice_number_formatted . ')' : '' );
-		}
-
-		if ( !empty( $invoices[$id]->coupons ) ) {
-			$coupons = $invoices[$id]->coupons;
-		} else {
-			$coupons = null;
-		}
-
-		if ( !empty( $coupons ) ) {
-			$invoices[$id]->coupons = "";
-
-			$couponslist = array();
-			foreach ( $coupons as $coupon_code ) {
-				if ( !isset( $cclist[$coupon_code] ) ) {
-					$cclist[$coupon_code] = couponHandler::idFromCode( $coupon_code );
-				}
-
-				if ( !empty( $cclist[$coupon_code]['id'] ) ) {
-					$couponslist[] = '<a href="index.php?option=com_acctexp&amp;task=' . ( $cclist[$coupon_code]['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $cclist[$coupon_code]['id'] . '">' . $coupon_code . '</a>';
-				}
-			}
-
-			$invoices[$id]->coupons = implode( ", ", $couponslist );
-		} else {
-			$invoices[$id]->coupons = null;
-		}
-
-		$invoices[$id]->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoices[$id]->usage . '">' . $invoices[$id]->usage . '</a>';
-
-		$query = 'SELECT username'
-				. ' FROM #__users'
-				. ' WHERE `id` = \'' . $invoices[$id]->userid . '\''
-				;
-		$db->setQuery( $query );
-		$username = $db->loadResult();
-
-		$invoices[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoices[$id]->userid . '">';
-
-		if ( !empty( $username ) ) {
-			$invoices[$id]->username .= $username . '</a>';
-		} else {
-			$invoices[$id]->username .= $invoices[$id]->userid;
-		}
-
-		$invoices[$id]->username .= '</a>';
-
-		$invoices[$id]->processor = $procs[$invoices[$id]->method];
-	}
-
-	HTML_AcctExp::viewInvoices( $option, $invoices, $search, $pageNav, $orderby );
-}
-
-function editInvoice( $id, $option, $returnTask, $userid )
-{
-	$db = JFactory::getDBO();
-
-	$row = new Invoice();
-	$row->load( $id );
-
-	$params['fixed']				= array( 'toggle',		0 );
-	$params['userid']				= array( 'hidden',		$userid );
-	$params['active']				= array( 'toggle',		1 );
-	$params['returnTask']			= array( 'hidden',		$returnTask );
-	$params['created_date']			= array( 'list_date',	date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) );
-	$params['amount']				= array( 'inputB',		'' );
-	$params['usage']				= array( 'list', 		0 );
-	$params['method']				= array( 'list', 		'' );
-	$params['coupons']				= array( 'list', 		0 );
-
-	$available_plans = SubscriptionPlanHandler::getActivePlanList();
-
-	$lists['usage'] = JHTML::_('select.genericlist', $available_plans, 'usage', 'size="1"', 'value', 'text', $row->usage );
-
-	$lists['method']				= str_replace( 'processor', 'method', PaymentProcessorHandler::getSelectList( $row->method, true ) );
-
-	$db->setQuery(
-		'SELECT `id` as value, `coupon_code` as text'
-		. ' FROM #__acctexp_coupons'
-	);
-
-	$coupons = $db->loadObjectList();
-
-	$db->setQuery(
-		'SELECT `id` as value, `coupon_code` as text'
-		. ' FROM #__acctexp_coupons_static'
-	);
-
-	$coupons = array_merge( $db->loadObjectList(), $coupons );
-
-	$coupons_active = array();
-
-	if ( !empty($row->coupons) ) {
-		foreach ( $row->coupons as $coupon_code ) {
-			$coupon_id = couponHandler::idFromCode($coupon_code);
-
-			$coupons_active[] = (int) $coupon_id['id'];
-		}
-	}
-
-	$lists['coupons'] = JHTML::_('select.genericlist', $coupons, 'coupons[]', 'multiple="multiple"', 'value', 'text', $coupons_active);
-
-	$params_values = array();
-	$params_values['active']		= $row->active;
-	$params_values['fixed']			= $row->fixed;
-	$params_values['userid']		= $row->userid;
-	$params_values['created_date']	= $row->created_date;
-
-	$settings = new aecSettings ( 'invoice', 'general' );
-	$settings->fullSettingsArray( $params, $params_values, $lists ) ;
-
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-	if ( !empty( $customparamsarray ) ) {
-		$aecHTML->customparams = $customparamsarray;
-	}
-
-	$aecHTML->params = $row->params;
-
-	HTML_AcctExp::editInvoice( $option, $aecHTML, $id );
-}
-
-function saveInvoice( $option, $return=0 )
-{
-	$row = new Invoice();
-	$row->load( $_POST['id'] );
-
-	$returnTask = $_POST['returnTask'];
-
-	unset( $_POST['id'] );
-	unset( $_POST['returnTask'] );
-
-	if ( empty($_POST['coupons']) ) {
-		$_POST['coupons'] = array();
-	}
-
-	$previous = array();
-	if ( !empty($row->coupons) ) {
-		foreach ( $row->coupons as $coupon_code ) {
-			$id = couponHandler::idFromCode($coupon_code);
-
-			$previous[] = $id['id'];
-		}
-	}
-
-	$added = array();
-	foreach ( $_POST['coupons'] as $coupon_id ) {
-		if ( !in_array($coupon_id, $previous) ) {
-			$added[] = $coupon_id;
-		} else {
-			unset( $previous[array_search($coupon_id, $previous)] );
-		}
-	}
-
-	if ( !empty($added) ) {
-		foreach ( $added as $coupon_id ) {var_dump($coupon_id);
-			$row->addCoupon((int)$coupon_id, true);
-		}
-	}
-
-	if ( !empty($previous) ) {
-		foreach ( $previous as $coupon_id ) {
-			$row->removeCoupon((int)$coupon_id, true);
-		}
-	}
-
-	unset($_POST['coupons']);
-
-	$row->savePOSTsettings( $_POST );
-
-	$row->storeload();
-
-	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editInvoice&id=' . $row->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
-	} else {
-		if ( $returnTask ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=' . $returnTask . '&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );
-		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=invoices', JText::_('AEC_CONFIG_SAVED') );
-		}
-	}
-}
-
-function clearInvoice( $option, $invoice_number, $applyplan, $task )
-{
-	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
-
-	$userid = '';
-	if ( $invoiceid ) {
-		$objInvoice = new Invoice();
-		$objInvoice->load( $invoiceid );
-
-		$pp = new stdClass();
-		$pp->id = 0;
-		$pp->processor_name = 'none';
-
-		if ( $applyplan ) {
-			$objInvoice->pay();
-		} else {
-			$objInvoice->setTransactionDate();
-		}
-
-		$history = new logHistory();
-		$history->entryFromInvoice( $objInvoice, null, $pp );
-
-		if ( strcmp( $task, 'editMembership' ) == 0) {
-			$userid = '&userid=' . $objInvoice->userid;
-		}
-	}
-
-	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('AEC_MSG_INVOICE_CLEARED') );
-}
-
-function cancelInvoice( $option, $invoice_number, $task )
-{
-	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
-
-	$userid = '';
-	if ( $invoiceid ) {
-		$objInvoice = new Invoice();
-		$objInvoice->load( $invoiceid );
-
-		$objInvoice->delete();
-
-		if ( strcmp( $task, 'editMembership' ) == 0 ) {
-			$userid = '&userid=' . $objInvoice->userid;
-		}
-	}
-
-	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('REMOVED') );
-}
-
-function listServices( $option )
-{
-	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
-	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-	$search = $app->getUserStateFromRequest( "search_services{$option}", 'search', '' );
-	$search = xJ::escape( $db, trim( strtolower( $search ) ) );
-
-	$filtered = !empty($search);
-
-	$orderby = $app->getUserStateFromRequest( "orderby_services{$option}", 'orderby_services', 'name ASC' );
-
-	// get the total number of records
-	$query = 'SELECT count(*)'
-		. ' FROM #__acctexp_services'
-		. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-	;
-	$db->setQuery( $query );
-	$total = $db->loadResult();
-	echo $db->getErrorMsg();
-
-	if ( $limitstart > $total ) {
-		$limitstart = 0;
-	}
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
-	// get the subset (based on limits) of records
-	$query = 'SELECT *'
-		. ' FROM #__acctexp_services'
-		. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-		. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-	;
-	$db->setQuery( $query );
-
-	$rows = $db->loadObjectList();
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
-
-	$lists = array();
-
-	HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
-}
-
-function editService( $id, $option )
-{
-	$lists = array();
-	$params_values = array();
-
-	$row = aecService::getById($id);
-
-	if ( empty($row->id) ) {
-		$row = new aecService();
-		$row->ordering	= 9999;
-
-		$params_values['active']	= 1;
-	} else {
-		$params_values = $row->params;
-
-		// We need to convert the values that are set as object properties
-		$params_values['active']				= $row->active;
-		$params_values['name']					= $row->name;
-	}
-
-	// params and their type values
-	$params['active']					= array( 'toggle', 1 );
-	$params['visible']					= array( 'toggle', 0 );
-
-	$params['name']						= array( 'inputC', '' );
-	$params['type']						= array( 'list', '' );
-
-	$params['params_remap']				= array( 'subarea_change', 'services' );
-
-	$servicelist = aecServiceList::getAvailableServiceClasses(true);
-
-	$glist = array();
-
-	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
-	foreach ( $servicelist as $service ) {
-		$info = $service->getInfo();
-
-		$glist[] = JHTML::_('select.option', $info['slug'], $info['name'], 'value', 'text' );
-	}
-
-	$lists['type'] = JHTML::_('select.genericlist', $glist, 'type', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
-
-	$settings = new aecSettings( 'service', 'general' );
-
-	if ( $row->id ) {
-		$service_params = $row->getSettings();
-
-		$params = array_merge($params, $service_params);
-	} else {
-		$service_params = array();
-	}
-
-	$settings->fullSettingsArray( $params, $params_values, $lists ) ;
-
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-	if ( !empty($service_params) ) {
-		foreach ( $service_params as $n => $v ) {
-			$aecHTML->customparams[] = $n;
-		}
-	}
-
-	$aecHTML->hasSettings = $id ? true : false;
-
-	HTML_AcctExp::editService( $option, $row, $aecHTML );
-}
-
-function saveService( $option, $apply=0 )
-{
-	$post = AECToolbox::cleanPOST( $_POST, false );
-
-	if ( $_POST['id'] ) {
-		$row = aecService::getById($_POST['id']);
-	} else {
-		$row = aecService::getByType($post['type']);
-	}
-
-	$row->savePOSTsettings( $post );
-
-	if ( !$row->check() ) {
-		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
-		exit();
-	}
-	if ( !$row->store() ) {
-		echo "<script> alert('".$row->getError()."'); window.history.go(-2); </script>\n";
-		exit();
-	}
-
-	$row->reorder();
-
-	if ( $_POST['id'] ) {
-		$id = $_POST['id'];
-	} else {
-		$id = $row->getMax();
-	}
-
-	if ( $apply ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editService&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showServices', JText::_('SAVED') );
-	}
-}
-
-function removeService( $id, $option )
-{
-	$db = JFactory::getDBO();
-
-	$ids = implode( ',', $id );
-
-	$db->setQuery(
-		'SELECT count(*)'
-		. ' FROM #__acctexp_services'
-		. ' WHERE `id` IN (' . $ids . ')'
-	);
-
-	$total = $db->loadResult();
-
-	if ( $total == 0 ) {
-		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	if ( $total == 0 ) {
-		echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
-		exit;
-	} else {
-		$db->setQuery(
-			'DELETE FROM #__acctexp_services'
+			'SELECT count(*)'
+			. ' FROM #__acctexp_services'
 			. ' WHERE `id` IN (' . $ids . ')'
 		);
 
-		$db->query();
+		$total = $db->loadResult();
 
-		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+		if ( $total == 0 ) {
+			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		if ( $total == 0 ) {
+			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
+			exit;
+		} else {
+			$db->setQuery(
+				'DELETE FROM #__acctexp_services'
+				. ' WHERE `id` IN (' . $ids . ')'
+			);
+
+			$db->query();
+
+			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+
+			aecRedirect( 'index.php?option=' . $option . '&task=showServices', $msg );
+		}
+	}
+
+	function change( $cid=null, $state=0, $type, $option )
+	{
+		$db = JFactory::getDBO();
+
+		if ( count( $cid ) < 1 ) {
+			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
+			exit;
+		}
+
+		$total	= count( $cid );
+		$cids	= implode( ',', $cid );
+
+		$query = 'UPDATE #__acctexp_services'
+			. ' SET `' . $type . '` = \'' . $state . '\''
+			. ' WHERE `id` IN (' . $cids . ')'
+		;
+		$db->setQuery( $query );
+
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
+
+		if ( $state ) {
+			$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
+		} else {
+			$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
+		}
+
+		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
 		aecRedirect( 'index.php?option=' . $option . '&task=showServices', $msg );
 	}
 }
 
-function changeService( $cid=null, $state=0, $type, $option )
+class aecAdminHistory
 {
-	$db = JFactory::getDBO();
+	function browse( $option )
+	{
+		$db = JFactory::getDBO();
 
-	if ( count( $cid ) < 1 ) {
-		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
+		$app = JFactory::getApplication();
 
-	$total	= count( $cid );
-	$cids	= implode( ',', $cid );
+		$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
+		$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
+		$search 	= $app->getUserStateFromRequest( "search{$option}_log_history", 'search', '' );
 
-	$query = 'UPDATE #__acctexp_services'
-		. ' SET `' . $type . '` = \'' . $state . '\''
-		. ' WHERE `id` IN (' . $cids . ')'
-	;
-	$db->setQuery( $query );
+		$where = array();
+		if ( $search ) {
+			$where[] = 'LOWER(`user_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`invoice_number`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`proc_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+		}
 
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
+		$orderby = $app->getUserStateFromRequest( "orderby_history{$option}", 'orderby_history', 'transaction_date DESC' );
 
-	if ( $state ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
-	} else {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
-	}
-
-	$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showServices', $msg );
-}
-
-function AdminInvoicePrintout( $option, $invoice_number, $standalone=true )
-{
-	$invoice = new Invoice();
-	$invoice->loadInvoiceNumber( $invoice_number );
-
-	$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
-	$iFactory->invoiceprint( $invoice->invoice_number, $standalone );
-}
-
-function AdminInvoicePDF( $option, $invoice_number )
-{
-	require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
-	require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
-
-	ob_start();
-
-	AdminInvoicePrintout( $option, $invoice_number, false );
-
-	$buffer = ob_get_contents();
-
-	ob_end_clean();
-
-	$document= JFactory::getDocument();
-	$document->_type="html";
-	$renderer = $document->loadRenderer("head");
-
-	$content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
-				.'<html xmlns="http://www.w3.org/1999/xhtml">'
-				.'<head>' . $renderer->render("head") . '</head><body>'.$buffer.'</body>'
-				.'</html>';
-
-	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
-	$pdf->AddPage();
-	$pdf->writeHTML($content, true, false, true, false, '');
-
-	$pdf->Output( $invoice_number.'.pdf', 'I');exit;
-}
-
-function history( $option )
-{
-	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
-	$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
-	$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-	$search 	= $app->getUserStateFromRequest( "search{$option}_log_history", 'search', '' );
-
-	$where = array();
-	if ( $search ) {
-		$where[] = 'LOWER(`user_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-		$where[] = 'LOWER(`invoice_number`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-		$where[] = 'LOWER(`proc_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-	}
-
-	$orderby = $app->getUserStateFromRequest( "orderby_history{$option}", 'orderby_history', 'transaction_date DESC' );
-
-	// get the total number of records
-	$query = 'SELECT count(*)'
+		// get the total number of records
+		$query = 'SELECT count(*)'
 			. '  FROM #__acctexp_log_history'
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
-			;
-	$db->setQuery( $query );
-	$total = $db->loadResult();
-	echo $db->getErrorMsg();
+		;
+		$db->setQuery( $query );
+		$total = $db->loadResult();
+		echo $db->getErrorMsg();
 
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
-	// Lets grab the data and fill it in.
-	$query = 'SELECT id'
+		// Lets grab the data and fill it in.
+		$query = 'SELECT id'
 			. ' FROM #__acctexp_log_history'
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			. ' GROUP BY `transaction_date`'
 			. ' ORDER BY `transaction_date` DESC'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-			;
-	$db->setQuery( $query );
-	$rowids = xJ::getDBArray( $db );
+		;
+		$db->setQuery( $query );
+		$rowids = xJ::getDBArray( $db );
 
-	$rows = array();
-	foreach ( $rowids as $rid ) {
-		$entry = new logHistory();
-		$entry->load( $rid );
+		$rows = array();
+		foreach ( $rowids as $rid ) {
+			$entry = new logHistory();
+			$entry->load( $rid );
 
-		$rows[] = $entry;
+			$rows[] = $entry;
+		}
+
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
+
+		HTML_AcctExp::viewHistory( $option, $rows, $search, $pageNav );
 	}
-
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
-
-	HTML_AcctExp::viewHistory( $option, $rows, $search, $pageNav );
 }
 
-function eventlog( $option )
+class aecAdminEventlog
 {
-	$db = JFactory::getDBO();
+	function eventlog( $option )
+	{
+		$db = JFactory::getDBO();
 
-	$app = JFactory::getApplication();
+		$app = JFactory::getApplication();
 
-	$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
-	$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-	$search 	= $app->getUserStateFromRequest( "search{$option}_eventlog", 'search', '' );
+		$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
+		$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
+		$search 	= $app->getUserStateFromRequest( "search{$option}_eventlog", 'search', '' );
 
-	$where = array();
-	if ( $search ) {
-		$where[] = 'LOWER(`short`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-		$where[] = 'LOWER(`event`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-		$where[] = 'LOWER(`tags`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-	}
+		$where = array();
+		if ( $search ) {
+			$where[] = 'LOWER(`short`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`event`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`tags`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+		}
 
-	// get the total number of records
-	$query = 'SELECT count(*)'
+		// get the total number of records
+		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_eventlog'
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
-			;
-	$db->setQuery( $query );
-	$total = $db->loadResult();
-	echo $db->getErrorMsg();
+		;
+		$db->setQuery( $query );
+		$total = $db->loadResult();
+		echo $db->getErrorMsg();
 
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
-	// Lets grab the data and fill it in.
-	$query = 'SELECT id'
+		// Lets grab the data and fill it in.
+		$query = 'SELECT id'
 			. ' FROM #__acctexp_eventlog'
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			. ' ORDER BY `id` DESC'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-			;
-	$db->setQuery( $query );
-	$rows = xJ::getDBArray( $db );
+		;
+		$db->setQuery( $query );
+		$rows = xJ::getDBArray( $db );
 
-	if ( $db->getErrorNum() ) {
-		echo $db->stderr();
-		return false;
-	}
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
+			return false;
+		}
 
-	$events = array();
-	foreach ( $rows as $id ) {
-		$row = new EventLog();
-		$row->load( $id );
+		$events = array();
+		foreach ( $rows as $id ) {
+			$row = new EventLog();
+			$row->load( $id );
 
-		$events[$id] = new stdClass();
-		$events[$id]->id		= $row->id;
-		$events[$id]->datetime	= $row->datetime;
-		$events[$id]->short		= $row->short;
-		$events[$id]->tags		= implode( ', ', explode( ',', $row->tags ) );
-		$events[$id]->event		= $row->event;
-		$events[$id]->level		= $row->level;
-		$events[$id]->notify	= $row->notify;
+			$events[$id] = new stdClass();
+			$events[$id]->id		= $row->id;
+			$events[$id]->datetime	= $row->datetime;
+			$events[$id]->short		= $row->short;
+			$events[$id]->tags		= implode( ', ', explode( ',', $row->tags ) );
+			$events[$id]->event		= $row->event;
+			$events[$id]->level		= $row->level;
+			$events[$id]->notify	= $row->notify;
 
-		$params = array();
-		if ( !empty( $row->params ) && is_array( $row->params ) ) {
-			foreach ( $row->params as $key => $value ) {
-				switch ( $key ) {
-					case 'userid':
-						$content = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $value . '">' . $value . '</a>';
-						break;
-					case 'invoice_number':
-						$content = '<a class="quicksearch" href="#">' . $value . '</a>';
-						break;
-					default:
-						$content = $value;
-						break;
+			$params = array();
+			if ( !empty( $row->params ) && is_array( $row->params ) ) {
+				foreach ( $row->params as $key => $value ) {
+					switch ( $key ) {
+						case 'userid':
+							$content = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $value . '">' . $value . '</a>';
+							break;
+						case 'invoice_number':
+							$content = '<a class="quicksearch" href="#">' . $value . '</a>';
+							break;
+						default:
+							$content = $value;
+							break;
+					}
+					$params[] = $key . '(' . $content . ')';
 				}
-				$params[] = $key . '(' . $content . ')';
 			}
-		}
-		$events[$id]->params = implode( ', ', $params );
+			$events[$id]->params = implode( ', ', $params );
 
-		if ( strpos( $row->event, '<?xml' ) !== false ) {
-			$events[$id]->event = '<p><strong>XML cell - decoded as:</strong></p><pre class="prettyprint">'.htmlentities($row->event).'</pre>';
-		} else {
-			$format = @json_decode( $row->event );
-
-			if ( is_array( $format ) || is_object( $format ) ) {
-				$events[$id]->event = '<p><strong>JSON cell - decoded as:</strong></p><pre class="prettyprint">'.print_r($format,true).'</pre>';
+			if ( strpos( $row->event, '<?xml' ) !== false ) {
+				$events[$id]->event = '<p><strong>XML cell - decoded as:</strong></p><pre class="prettyprint">'.htmlentities($row->event).'</pre>';
 			} else {
-				$events[$id]->event = htmlentities( stripslashes( $events[$id]->event ) );
+				$format = @json_decode( $row->event );
+
+				if ( is_array( $format ) || is_object( $format ) ) {
+					$events[$id]->event = '<p><strong>JSON cell - decoded as:</strong></p><pre class="prettyprint">'.print_r($format,true).'</pre>';
+				} else {
+					$events[$id]->event = htmlentities( stripslashes( $events[$id]->event ) );
+				}
 			}
 		}
-	}
 
-	HTML_AcctExp::eventlog( $option, $events, $search, $pageNav );
+		HTML_AcctExp::eventlog( $option, $events, $search, $pageNav );
+	}
 }
 
-function aec_stats( $option, $page )
+class aecAdminStats
 {
-	if ( empty( $page ) ) {
-		$page = 'overview';
-	}
+	function browse( $option, $page )
+	{
+		if ( empty( $page ) ) {
+			$page = 'overview';
+		}
 
-	$stats = array();
+		$stats = array();
 
-	$document= JFactory::getDocument();
-	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.time.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.layout.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.js"></script>' );
-	$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
-	$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
+		$document= JFactory::getDocument();
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.min.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.time.min.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.layout.min.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.js"></script>' );
+		$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
+		$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 
-	$db = JFactory::getDBO();
+		$db = JFactory::getDBO();
 
-	$query = 'SELECT count(*)'
+		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_log_history'
-			;
-	$db->setQuery( $query );
+		;
+		$db->setQuery( $query );
 
-	$stats['sale_count'] = $db->loadResult();
+		$stats['sale_count'] = $db->loadResult();
 
-	$query = 'SELECT DISTINCT(date(transaction_date)) AS date, count( * ) AS count' .
+		$query = 'SELECT DISTINCT(date(transaction_date)) AS date, count( * ) AS count' .
 			' FROM #__acctexp_log_history' .
 			' GROUP BY date' .
 			' ORDER BY count ASC';
-	$db->setQuery( $query );
-	$sales_count = $db->loadObjectList();
-	$stats['min_sale_count'] = $sales_count[0]->count;
-	$stats['max_sale_count'] = $sales_count[count($sales_count)-1]->count;
-	$stats['avg_sale_count'] = $sales_count[((int) (count($sales_count)/2) )]->count;
+		$db->setQuery( $query );
+		$sales_count = $db->loadObjectList();
+		$stats['min_sale_count'] = $sales_count[0]->count;
+		$stats['max_sale_count'] = $sales_count[count($sales_count)-1]->count;
+		$stats['avg_sale_count'] = $sales_count[((int) (count($sales_count)/2) )]->count;
 
-	$query = 'SELECT amount'
+		$query = 'SELECT amount'
 			. ' FROM #__acctexp_log_history'
 			. ' ORDER BY 0+`amount` DESC'
-			;
-	$db->setQuery( $query );
+		;
+		$db->setQuery( $query );
 
-	$stats['max_sale_value'] = $db->loadResult();
+		$stats['max_sale_value'] = $db->loadResult();
 
-	$query = 'SELECT MIN(amount)'
+		$query = 'SELECT MIN(amount)'
 			. ' FROM #__acctexp_log_history'
 			. ' WHERE amount > 0'
-			;
-	$db->setQuery( $query );
+		;
+		$db->setQuery( $query );
 
-	$stats['min_sale_value'] = $db->loadResult();
+		$stats['min_sale_value'] = $db->loadResult();
 
-	$query = 'SELECT SUM(amount)'
+		$query = 'SELECT SUM(amount)'
 			. ' FROM #__acctexp_log_history'
-			;
-	$db->setQuery( $query );
+		;
+		$db->setQuery( $query );
 
-	if ( $stats['sale_count'] ) {
-		$stats['avg_sale_value'] = round( $db->loadResult() / $stats['sale_count'], 2 );
-	} else {
-		$stats['avg_sale_value'] = 0;
-	}
+		if ( $stats['sale_count'] ) {
+			$stats['avg_sale_value'] = round( $db->loadResult() / $stats['sale_count'], 2 );
+		} else {
+			$stats['avg_sale_value'] = 0;
+		}
 
-	$stats['avg_sale'] = $stats['avg_sale_count']*$stats['avg_sale_value']*1.8;
+		$stats['avg_sale'] = $stats['avg_sale_count']*$stats['avg_sale_value']*1.8;
 
-	$query = 'SELECT MIN(transaction_date)'
+		$query = 'SELECT MIN(transaction_date)'
 			. ' FROM #__acctexp_log_history'
-			;
-	$db->setQuery( $query );
+		;
+		$db->setQuery( $query );
 
-	$stats['first_sale'] = $db->loadResult();
+		$stats['first_sale'] = $db->loadResult();
 
-	$query = 'SELECT id, name'
+		$query = 'SELECT id, name'
 			. ' FROM #__acctexp_plans'
 			. ' ORDER BY `id`'
-		 	;
+		;
 
-	$db->setQuery( $query );
+		$db->setQuery( $query );
 
-	$rows = $db->loadObjectList();
+		$rows = $db->loadObjectList();
 
-	$mrow = count( $rows )-1;
+		$mrow = count( $rows )-1;
 
-	$i = 0;
-	$stats['plan_names'] = array();
-	for ( $i=0; $i<=$rows[$mrow]->id; $i++ ) {
-		$stats['plan_names'][$i] = "";
-		foreach ( $rows as $rid => $row ) {
-			if ( $row->id == $i ) {
-				$stats['plan_names'][$i] = $row->name;
+		$i = 0;
+		$stats['plan_names'] = array();
+		for ( $i=0; $i<=$rows[$mrow]->id; $i++ ) {
+			$stats['plan_names'][$i] = "";
+			foreach ( $rows as $rid => $row ) {
+				if ( $row->id == $i ) {
+					$stats['plan_names'][$i] = $row->name;
+				}
 			}
 		}
-	}
 
-	$query = 'SELECT id, name'
+		$query = 'SELECT id, name'
 			. ' FROM #__acctexp_itemgroups'
 			. ' ORDER BY `id`'
-		 	;
+		;
 
-	$db->setQuery( $query );
+		$db->setQuery( $query );
 
-	$rows = $db->loadObjectList();
+		$rows = $db->loadObjectList();
 
-	$mrow = count( $rows )-1;
+		$mrow = count( $rows )-1;
 
-	$i = 0;
-	$stats['group_names'] = array();
-	for ( $i=0; $i<=$rows[$mrow]->id; $i++ ) {
-		$stats['group_names'][$i] = "";
-		foreach ( $rows as $rid => $row ) {
-			if ( $row->id == $i ) {
-				$stats['group_names'][$i] = $row->name;
+		$i = 0;
+		$stats['group_names'] = array();
+		for ( $i=0; $i<=$rows[$mrow]->id; $i++ ) {
+			$stats['group_names'][$i] = "";
+			foreach ( $rows as $rid => $row ) {
+				if ( $row->id == $i ) {
+					$stats['group_names'][$i] = $row->name;
+				}
 			}
 		}
+
+		HTML_AcctExp::stats( $option, $page, $stats );
 	}
 
-	HTML_AcctExp::stats( $option, $page, $stats );
-}
+	function request( $option, $type, $start, $end )
+	{
+		$db = JFactory::getDBO();
 
-function aec_statrequest( $option, $type, $start, $end )
-{
-	$db = JFactory::getDBO();
+		$tree = new stdClass();
 
-	$tree = new stdClass();
+		switch ( $type ) {
+			case 'sales':
+				$tree = array();
 
-	switch ( $type ) {
-		case 'sales':
-			$tree = array();
+				if ( empty( $end ) ) {
+					$end = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
+				}
 
-			if ( empty( $end ) ) {
-				$end = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
-			}
-
-			$query = 'SELECT `id`'
+				$query = 'SELECT `id`'
 					. ' FROM #__acctexp_log_history'
 					. ' WHERE transaction_date >= \'' . $start . '\''
 					. ' AND transaction_date <= \'' . $end . '\''
 					. ' ORDER BY transaction_date ASC'
-					;
-			$db->setQuery( $query );
-			$entries = xJ::getDBArray( $db );
+				;
+				$db->setQuery( $query );
+				$entries = xJ::getDBArray( $db );
 
-			if ( empty( $entries ) ) {
-				echo json_encode( $tree );exit;
-			}
+				if ( empty( $entries ) ) {
+					echo json_encode( $tree );exit;
+				}
 
-			$historylist = array();
-			$groups = array();
-			foreach ( $entries as $id ) {
-				$entry = new logHistory();
-				$entry->load( $id );
-				$entry->amount = AECToolbox::correctAmount( $entry->amount );
+				$historylist = array();
+				$groups = array();
+				foreach ( $entries as $id ) {
+					$entry = new logHistory();
+					$entry->load( $id );
+					$entry->amount = AECToolbox::correctAmount( $entry->amount );
 
-				$refund = false;
+					$refund = false;
 
-				if ( is_array( $entry->response ) && !empty( $entry->response ) ) {
-					$filter = array( 'new_case', 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
+					if ( is_array( $entry->response ) && !empty( $entry->response ) ) {
+						$filter = array( 'new_case', 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
 
-					foreach ( $entry->response as $v ) {
-						if ( in_array( $v, $filter ) ) {
-							continue 2;
-						} elseif ( ( $v == 'refund' ) || ( $v == 'Reversed' ) || ( $v == 'Refunded' ) ) {
-							$refund = true;
+						foreach ( $entry->response as $v ) {
+							if ( in_array( $v, $filter ) ) {
+								continue 2;
+							} elseif ( ( $v == 'refund' ) || ( $v == 'Reversed' ) || ( $v == 'Refunded' ) ) {
+								$refund = true;
+							}
 						}
+					} else {
+						continue;
 					}
-				} else {
-					continue;
+
+					$pgroups = ItemGroupHandler::parentGroups( $entry->plan_id );
+
+					if ( empty( $pgroups[0] ) ) {
+						$pgroups[0] = 0;
+					}
+
+					if ( !in_array( $pgroups[0], $groups ) ) {
+						$groups[] = $pgroups[0];
+					}
+
+					$sale			= new stdClass();
+					$sale->id		= $id;
+					//$sale->invoice	= $entry->invoice_number;
+					$sale->date		= $entry->transaction_date;
+					//$sale->datejs	= date( 'F d, Y H:i:s', strtotime( $entry->transaction_date ) );
+					$sale->plan		= $entry->plan_id;
+					$sale->group	= $pgroups[0];
+					$sale->amount	= $refund ? (-$entry->amount) : $entry->amount;
+
+					$tree[] = $sale;
 				}
 
-				$pgroups = ItemGroupHandler::parentGroups( $entry->plan_id );
+				break;
+		}
 
-				if ( empty( $pgroups[0] ) ) {
-					$pgroups[0] = 0;
-				}
-
-				if ( !in_array( $pgroups[0], $groups ) ) {
-					$groups[] = $pgroups[0];
-				}
-
-				$sale			= new stdClass();
-				$sale->id		= $id;
-				//$sale->invoice	= $entry->invoice_number;
-				$sale->date		= $entry->transaction_date;
-				//$sale->datejs	= date( 'F d, Y H:i:s', strtotime( $entry->transaction_date ) );
-				$sale->plan		= $entry->plan_id;
-				$sale->group	= $pgroups[0];
-				$sale->amount	= $refund ? (-$entry->amount) : $entry->amount;
-
-				$tree[] = $sale;
-			}
-
-			break;
+		echo json_encode( $tree );exit;
 	}
-
-	echo json_encode( $tree );exit;
 }
 
 function quicklookup( $option )
@@ -7053,4 +7095,24 @@ function toolBoxTool( $option, $cmd )
 
 		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );
 	}
+}
+
+function getRanges( $nums )
+{
+	sort($nums);
+
+	$ranges = array();
+
+	for ( $i = 0, $len = count($nums); $i < $len; $i++ ) {
+		$rStart = $nums[$i];
+		$rEnd = $rStart;
+
+		while ( isset($nums[$i+1]) && $nums[$i+1]-$nums[$i] == 1 ){
+			$rEnd = $nums[++$i];
+		}
+
+		$ranges[] = $rStart == $rEnd ? $rStart : $rStart.'-'.$rEnd;
+	}
+
+	return $ranges;
 }

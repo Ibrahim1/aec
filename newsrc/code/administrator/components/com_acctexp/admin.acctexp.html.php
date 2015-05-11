@@ -204,11 +204,18 @@ class HTML_myCommon
 			switch ( $buttons ) {
 				case 'list':
 					$buttons = array(
+						'edit' => array(
+							'style' => 'success',
+							'text' => JText::_('EDIT_PAYPLAN'),
+							'actionable' => true,
+							'icon' => 'edit',
+							'multi-icon' => 'list'
+						),
 						'copy' => array(
 							'style' => 'warning',
 							'text' => JText::_('COPY_PAYPLAN'),
 							'actionable' => true,
-							'icon' => 'share'
+							'icon' => 'files-o'
 						),
 						'remove' => array(
 							'style' => 'danger',
@@ -245,7 +252,7 @@ class HTML_myCommon
 							'style' => 'warning',
 							'text' => JText::_('EDIT_PAYPLAN'),
 							'actionable' => true,
-							'icon' => 'pencil'
+							'icon' => 'edit'
 						),
 						'hl1' => array(),
 						'pgs' => array( 'groupstart' => true ),
@@ -327,19 +334,24 @@ class HTML_myCommon
 		$v = new JVersion();
 
 		if ( !empty($button['modal']) ) {
-			return '<a href="#' . $button['modal'] . '" id="' . $button['modal'] . '-trigger" class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . '" data-toggle="modal" class="toolbar-notify">' . aecHTML::Icon( $button['icon'] ) . '&nbsp;&nbsp;' . ( $fulltext ? '' : $button['text'] ) . '</a>';
+			return '<a href="#' . $button['modal']
+				. '" id="' . $button['modal'] . '-trigger"'
+				. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' toolbar-notify" data-toggle="modal">'
+					. aecHTML::Icon( $button['icon'] )
+					. '&nbsp;&nbsp;'
+					. ( $fulltext ? '' : $button['text'] )
+				. '</a>';
 		} else {
 			return '<a'
-			. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . '"'
-			. ' onclick="javascript: '
-			. ( $v->isCompatible('2.5') ? 'Joomla.' : '' )
-			. 'submitbutton(\'' . $action . $object . '\')"'
-			. ( !empty($button['actionable']) ? ' disabled="disabled"' : '' )
-			. ' href="#"'
-			. ' rel="tooltip"'
-			. ' data-original-title="' . ( $fulltext ? '' : $button['text'] ) . '">'
-			. aecHTML::Icon( $button['icon'] ) . ( $fulltext ? ' ' . $button['text'] : '' )
-			. '</a>';
+				. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' btn-aec-submit"'
+				. ' data-action="' . $action . '" data-entity="' . $object . '"'
+				. ( !empty($button['actionable']) ? ' disabled="disabled"' : '' )
+				. ' href="#"'
+				. ' rel="tooltip"'
+				. ' data-original-title="' . ( $fulltext ? '' : $button['text'] ) . '">'
+					. ( empty($button['multi-icon']) ? '' : aecHTML::Icon( $button['multi-icon'], ' display-on-multiselect" style="margin-right: 6px;"' ) )
+					. aecHTML::Icon( $button['icon'] ) . ( $fulltext ? ' ' . $button['text'] : '' )
+				. '</a>';
 		}
 	}
 

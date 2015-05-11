@@ -491,10 +491,18 @@ jQuery(document).ready(function(jQuery) {
 				} else {
 					select_all.removeClass('btn-warning').addClass('btn-success');
 				}
+
+				if ( selected_rows > 1 ) {
+					jQuery('.display-on-multiselect').show();
+				} else {
+					jQuery('.display-on-multiselect').hide();
+				}
 			} else {
 				jQuery('div.aec-buttons a.btn-conditional').attr("disabled", true);
 
 				select_all.removeClass('btn-warning').addClass('btn-success');
+
+				jQuery('.display-on-multiselect').hide();
 			}
 		};
 
@@ -608,6 +616,37 @@ jQuery(document).ready(function(jQuery) {
 		};
 
 	}
+
+
+	function aecSubmitBtn(command, entity) {
+		// javascript: Joomla.submitbutton('removeSubscriptionPlan')
+		var task = command + entity;
+
+		if (typeof(form) === 'undefined') {
+			form = document.getElementById('adminForm');
+		}
+
+		if (typeof(task) !== 'undefined' && task !== "") {
+			form.task.value = task;
+		}
+
+		// Submit the form.
+		if (typeof form.onsubmit == 'function') {
+			form.onsubmit();
+		}
+
+		if (typeof form.fireEvent == 'function') {
+			form.fireEvent('submit');
+		}
+
+		form.submit();
+	}
+
+	jQuery('.btn-aec-submit').click(function(e){
+		var el = jQuery(this);
+
+		aecSubmitBtn(el.data('action'), el.data('entity'));
+	})
 });
 
 function readNotice(id) {
