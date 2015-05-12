@@ -614,12 +614,10 @@ jQuery(document).ready(function(jQuery) {
 
 			return document._oldGetElementById(id);
 		};
-
 	}
 
 
-	function aecSubmitBtn(command, entity) {
-		// javascript: Joomla.submitbutton('removeSubscriptionPlan')
+	function aecSubmitBtn(command, entity, inject) {
 		var task = command + entity;
 
 		if (typeof(form) === 'undefined') {
@@ -628,6 +626,12 @@ jQuery(document).ready(function(jQuery) {
 
 		if (typeof(task) !== 'undefined' && task !== "") {
 			form.task.value = task;
+		}
+
+		if (inject.length) {
+			jQuery.each(inject, function(k, v) {
+				form[k].value = v;
+			});
 		}
 
 		// Submit the form.
@@ -642,10 +646,17 @@ jQuery(document).ready(function(jQuery) {
 		form.submit();
 	}
 
-	jQuery('.btn-aec-submit').click(function(e){
-		var el = jQuery(this);
+	jQuery('.btn-aec-submit').click(function(e) {
+		var el = jQuery(this),
+			inject = [];
 
-		aecSubmitBtn(el.data('action'), el.data('entity'));
+		jQuery.each(el.data(), function(k, v) {
+			if ( k.substr(0, 6) == 'inject' ) {
+				inject.push()
+			}
+		});
+
+		aecSubmitBtn(el.data('task'), el.data('entity'), inject);
 	})
 });
 
