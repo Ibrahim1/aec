@@ -1093,7 +1093,7 @@ class HTML_AcctExp
 		);
 	}
 
-	static function central( $display=null, $searchcontent=null )
+	static function central()
 	{
 		HTML_myCommon::startCommon('aec-wrap-squared');
 

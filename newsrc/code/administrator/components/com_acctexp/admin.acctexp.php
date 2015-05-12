@@ -350,42 +350,6 @@ switch( strtolower( $task ) ) {
 	default: aecCentral( $option ); break;
 }
 
-function toggleProperty( $type, $id, $property )
-{
-	$db = JFactory::getDBO();
-
-	$query = 'SELECT `'.$property.'` FROM #__acctexp_' . $type
-			. ' WHERE `id` = ' . $id
-			;
-	$db->setQuery( $query );
-	$newstate = $db->loadResult() ? 0 : 1;
-
-	if ( $property == 'default' ) {
-		if ( !$newstate ) {
-			echo !$newstate;
-
-			return;
-		}
-
-		// Reset all other items
-		$query = 'UPDATE #__acctexp_' . $type
-				. ' SET `'.$property.'` = '.($newstate ? 0 : 1)
-				. ' WHERE `id` != ' . $id
-				;
-		$db->setQuery( $query );
-		$db->query();
-	}
-
-	$query = 'UPDATE #__acctexp_' . $type
-			. ' SET `'.$property.'` = '.$newstate
-			. ' WHERE `id` = ' . $id
-			;
-	$db->setQuery( $query );
-	$db->query();
-
-	echo $newstate;
-}
-
 function addGroup( $type, $id, $groupid )
 {
 	if ( ItemGroupHandler::setChildren( $groupid, array( $id ), $type ) ) {
@@ -410,130 +374,227 @@ function removeGroup( $type, $id, $groupid )
 	echo 1;
 }
 
-function orderObject( $option, $type, $id, $up, $customreturn=null )
+class aecAdminCentral extends aecAdminEntity
 {
-	$row = new $type();
-	$row->load( $id );
-	$row->move( $up ? -1 : 1 );
-
-	aecRedirect( 'index.php?option='. $option . '&task=' . ( empty( $customreturn ) ? 'show' . $type . 's' : $customreturn ) );
-}
-
-function copyObject( $option, $type, $id, $customreturn=null )
-{
-	foreach ( $id as $pid ) {
-		$row = new $type();
-		$row->load( $pid );
-		$row->copy();
+	public function browse()
+	{
+		HTML_AcctExp::central();
 	}
 
-	aecRedirect( 'index.php?option='. $option . '&task=' . ( empty( $customreturn ) ? 'show' . $type . 's' : $customreturn ) );
-}
+	public function getNotices()
+	{
+		$this->db->setQuery(
+			'SELECT COUNT(*)'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+		);
 
-function aecCentral( $option, $searchresult=null, $searchcontent=null )
-{
-	$db = JFactory::getDBO();
+		$furthernotices = $this->db->loadResult() - 5;
 
-	$db->setQuery(
-		'SELECT COUNT(*)'
-		. ' FROM #__acctexp_eventlog'
-		. ' WHERE `notify` = \'1\''
-	);
+		$this->db->setQuery(
+			'SELECT *'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			. ' ORDER BY `datetime` DESC'
+			. ' LIMIT 0, 5'
+		);
 
-	$furthernotices = $db->loadResult() - 10;
+		$notices = $this->db->loadObjectList();
 
-	$db->setQuery(
-		'SELECT *'
-		. ' FROM #__acctexp_eventlog'
-		. ' WHERE `notify` = \'1\''
-		. ' ORDER BY `datetime` DESC'
-		. ' LIMIT 0, 10'
-	);
+		HTML_AcctExp::eventlogModal( $notices, $furthernotices );
+	}
 
-	$notices = $db->loadObjectList();
-
-	HTML_AcctExp::central( $searchresult, $notices, $furthernotices, $searchcontent );
-}
-
-function getNotices()
-{
-	$db = JFactory::getDBO();
-
-	$db->setQuery(
-		'SELECT COUNT(*)'
-		. ' FROM #__acctexp_eventlog'
-		. ' WHERE `notify` = \'1\''
-	);
-
-	$furthernotices = $db->loadResult() - 5;
-
-	$db->setQuery(
-		'SELECT *'
-		. ' FROM #__acctexp_eventlog'
-		. ' WHERE `notify` = \'1\''
-		. ' ORDER BY `datetime` DESC'
-		. ' LIMIT 0, 5'
-	);
-
-	$notices = $db->loadObjectList();
-
-	HTML_AcctExp::eventlogModal( $notices, $furthernotices );
-}
-
-function readNotice( $id )
-{
-	$db = JFactory::getDBO();
-
-	$query = 'UPDATE #__acctexp_eventlog'
+	public function readNotice( $id )
+	{
+		$query = 'UPDATE #__acctexp_eventlog'
 			. ' SET `notify` = \'0\''
 			. ' WHERE `id` = \'' . $id . '\''
-			;
-	$db->setQuery( $query	);
-	$db->query(); echo 1;exit;
-}
+		;
+		$this->db->setQuery($query);
 
-function getNotice()
-{
-	$db = JFactory::getDBO();
+		$this->db->query();
 
-	$db->setQuery(
-		'SELECT *'
-		. ' FROM #__acctexp_eventlog'
-		. ' WHERE `notify` = \'1\''
-		. ' ORDER BY `datetime` DESC'
-		. ' LIMIT 5, 1'
-	);
-	$notice = $db->loadObject();
-
-	if ( empty( $notice->id ) ) {
-		return '';
+		echo 1;exit;
 	}
 
-	$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
+	function getNotice()
+	{
+		$this->db->setQuery(
+			'SELECT *'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			. ' ORDER BY `datetime` DESC'
+			. ' LIMIT 5, 1'
+		);
 
-	return '<div class="alert alert-' . $noticex[$notice->level] . '" id="alert-' . $notice->id . '">
+		$notice = $this->db->loadObject();
+
+		if ( empty( $notice->id ) ) {
+			return '';
+		}
+
+		$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
+
+		return '<div class="alert alert-' . $noticex[$notice->level] . '" id="alert-' . $notice->id . '">
 			<a class="close" href="#' . $notice->id . '" onclick="readNotice(' . $notice->id . ')">&times;</a>
 			<h5><strong>' . JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ) . ': ' . $notice->short . '</strong></h5>
 			<p>' . substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ) . '</p>
 			<span class="help-block">' . $notice->datetime . '</span>
 		</div>';
+	}
 }
 
-function cancel( $option )
+class aecAdminEntity
 {
-	$app = JFactory::getApplication();
+	public $app;
 
-	$nexttask = aecGetParam( 'nexttask', 'config' ) ;
+	public $lang;
 
-	$app->redirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('CANCELED') );
+	public $db;
+
+	public $id;
+
+	public $entity;
+
+	public function __construct( $id )
+	{
+		$this->setID($id);
+
+		$this->app = JFactory::getApplication();
+
+		$this->lang = JFactory::getLanguage();
+
+		$this->db = JFactory::getDBO();
+	}
+
+	public function setID( $id )
+	{
+		if ( empty($id) ) {
+			$this->id = array();
+		} elseif ( is_array($id) ) {
+			$this->id = array($id);
+		} elseif ( strpos(',', $id) || strpos('-', $id) ) {
+			$array = explode(',', $id);
+
+			$ids = array();
+			foreach ( $array as $v ) {
+				if ( strpos('-', $v) ) {
+					$p = explode('-', $v);
+
+					$ids = array_merge( $ids, range($p[0], $p[1]) );
+				} else {
+					$ids[] = $v;
+				}
+			}
+
+			$this->id = $ids;
+		} else {
+			$this->id = array($id);
+		}
+	}
+
+	public function redirect( $task='browse', $entity=null )
+	{
+		if ( empty($entity) ) $entity = $this->entity;
+
+		aecRedirect( 'index.php?option=com_acctexp&task=' . $task . '&entity=' . $entity );
+	}
+
+	public function cancel( $option )
+	{
+		$nexttask = aecGetParam( 'nexttask', 'config' ) ;
+
+		$this->redirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('CANCELED') );
+	}
+
+	function order( $option, $type, $id, $up, $customreturn=null )
+	{
+		foreach( $this->id as $id ) {
+			$row = new $this->entity;
+			$row->load( $this->id );
+			$row->move( $up ? -1 : 1 );
+		}
+
+		$this->redirect();
+	}
+
+	function toggle( $type, $id, $property )
+	{
+		$query = 'SELECT `'.$property.'` FROM #__acctexp_' . $type
+			. ' WHERE `id` = ' . $id
+		;
+		$this->db->setQuery( $query );
+		$newstate = $this->db->loadResult() ? 0 : 1;
+
+		if ( $property == 'default' ) {
+			if ( !$newstate ) {
+				echo !$newstate;
+
+				return;
+			}
+
+			// Reset all other items
+			$query = 'UPDATE #__acctexp_' . $type
+				. ' SET `'.$property.'` = '.($newstate ? 0 : 1)
+				. ' WHERE `id` != ' . $id
+			;
+			$this->db->setQuery( $query );
+			$this->db->query();
+		}
+
+		$query = 'UPDATE #__acctexp_' . $type
+			. ' SET `'.$property.'` = '.$newstate
+			. ' WHERE `id` = ' . $id
+		;
+		$this->db->setQuery( $query );
+		$this->db->query();
+
+		echo $newstate;
+	}
+
+	function copy( $option, $type, $id, $customreturn=null )
+	{
+		foreach ( $id as $pid ) {
+			$row = new $type();
+			$row->load( $pid );
+			$row->copy();
+		}
+
+		$this->redirect();
+	}
+
+	public function log( $short, $tags, $event, $level=32, $params=array() )
+	{
+		$eventlog = new eventLog();
+		$eventlog->issue( $short, $tags, $event, $level, $params );
+	}
+
+	public function getRanges( $nums )
+	{
+		sort($nums);
+
+		$ranges = array();
+
+		for ( $i = 0, $len = count($nums); $i < $len; $i++ ) {
+			$rStart = $nums[$i];
+			$rEnd = $rStart;
+
+			while ( isset($nums[$i+1]) && $nums[$i+1]-$nums[$i] == 1 ){
+				$rEnd = $nums[++$i];
+			}
+
+			$ranges[] = $rStart == $rEnd ? $rStart : $rStart.'-'.$rEnd;
+		}
+
+		return $ranges;
+	}
+
 }
 
 class aecAdminSettings
 {
 	function edit( $option )
 	{
-		$db = JFactory::getDBO();
-
 		global $aecConfig;
 
 		// See whether we have a duplication
@@ -803,13 +864,13 @@ class aecAdminSettings
 					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idkp['view'] . '%\' )'
 					. ' AND published = \'1\''
 				;
-				$db->setQuery( $query );
+				$this->db->setQuery( $query );
 
 				$mid = 0;
 				if ( empty( $idkp['params'] ) ) {
-					$mid = $db->loadResult();
+					$mid = $this->db->loadResult();
 				} else {
-					$mids = xJ::getDBArray( $db );
+					$mids = xJ::getDBArray( $this->db );
 
 					if ( !empty( $mids ) ) {
 						$query = 'SELECT `id`'
@@ -818,9 +879,9 @@ class aecAdminSettings
 							. ' AND `params` LIKE \'%' . $idkp['params'] . '%\''
 							. ' AND published = \'1\''
 						;
-						$db->setQuery( $query );
+						$this->db->setQuery( $query );
 
-						$mid = $db->loadResult();
+						$mid = $this->db->loadResult();
 					}
 				}
 
@@ -856,8 +917,6 @@ class aecAdminSettings
 
 	function save( $option, $return=0 )
 	{
-		$db = JFactory::getDBO();
-
 		$user= JFactory::getUser();
 
 		global $aecConfig;
@@ -914,11 +973,11 @@ class aecAdminSettings
 				}
 
 				$query = 'UPDATE #__assets'
-					. ' SET `rules` = \'' . xJ::escape( $db, $set ) . '\''
+					. ' SET `rules` = \'' . xJ::escape( $this->db, $set ) . '\''
 					. ' WHERE `name` = \'com_acctexp\''
 				;
-				$db->setQuery( $query );
-				$db->query();
+				$this->db->setQuery( $query );
+				$this->db->query();
 			}
 		}
 
@@ -964,22 +1023,24 @@ class aecAdminSettings
 		}
 
 		if ( $return ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=showSettings', JText::_('AEC_CONFIG_SAVED') );
+			$this->redirect('edit', 'Settings', JText::_('AEC_CONFIG_SAVED'));
 		} else {
 			aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_SAVED') );
+
+			$this->redirect('browse', 'Central', JText::_('AEC_CONFIG_SAVED'));
 		}
 	}
 }
 
-class aecAdminSubscription
+class aecAdminSubscription extends aecAdminEntity
 {
+	public $entity = 'Subscription';
+
 	function edit( $option, $userid, $subscriptionid, $task, $page=0 )
 	{
 		if ( !empty( $subscriptionid ) ) {
 			$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
 		}
-
-		$lang = JFactory::getLanguage();
 
 		if ( !empty( $subscriptionid ) ) {
 			$sid = $subscriptionid;
@@ -1066,7 +1127,7 @@ class aecAdminSubscription
 				$status .= aecHTML::Icon( 'remove-circle' ) . 'deactivated';
 			} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
 				if ( isset( $invoice->params['pending_reason'] ) ) {
-					if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
+					if ( $this->lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
 						$status .= aecHTML::Icon( 'warning-sign' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
 					} else {
 						$status .= aecHTML::Icon( 'warning-sign' ) . $invoice->params['pending_reason'];
@@ -1382,8 +1443,6 @@ class aecAdminSubscription
 
 	function browse( $option, $set_group, $subscriptionid, $userid=array(), $planid=null )
 	{
-		$db = JFactory::getDBO();
-
 		$app = JFactory::getApplication();
 
 		$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
@@ -1392,7 +1451,7 @@ class aecAdminSubscription
 		$orderby		= $app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
 		$groups			= $app->getUserStateFromRequest( "groups{$option}", 'groups', 'active' );
 		$search			= $app->getUserStateFromRequest( "search{$option}_subscr", 'search', '' );
-		$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
+		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
 		if ( empty( $planid ) ) {
 			$filter_plan	= $app->getUserStateFromRequest( "filter_plan{$option}", 'filter_plan', 0 );
@@ -1724,8 +1783,8 @@ class aecAdminSubscription
 			$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
 		}
 
-		$db->setQuery( $query );
-		$total = $db->loadResult();
+		$this->db->setQuery( $query );
+		$total = $this->db->loadResult();
 
 		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
@@ -1772,19 +1831,19 @@ class aecAdminSubscription
 			}
 		}
 
-		$db->setQuery( 'SET SQL_BIG_SELECTS=1');
-		$db->query();
+		$this->db->setQuery( 'SET SQL_BIG_SELECTS=1');
+		$this->db->query();
 
-		$db->setQuery( $query );
-		$rows = $db->loadObjectList();
+		$this->db->setQuery( $query );
+		$rows = $this->db->loadObjectList();
 
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
-		$db->setQuery( 'SET SQL_BIG_SELECTS=0');
-		$db->query();
+		$this->db->setQuery( 'SET SQL_BIG_SELECTS=0');
+		$this->db->query();
 
 		$processors = PaymentProcessorHandler::getObjectList(
 			PaymentProcessorHandler::getProcessorList()
@@ -1810,17 +1869,17 @@ class aecAdminSubscription
 			. ' FROM #__acctexp_plans'
 			. ' ORDER BY `ordering`'
 		;
-		$db->setQuery( $query );
-		$db_plans = $db->loadObjectList();
+		$this->db->setQuery( $query );
+		$this->db_plans = $this->db->loadObjectList();
 
 		$plans2[] = JHTML::_('select.option', '0', JText::_('BIND_USER'), 'id', 'name' );
-		if ( is_array( $db_plans ) ) {
-			$plans2 = array_merge( $plans2, $db_plans );
+		if ( is_array( $this->db_plans ) ) {
+			$plans2 = array_merge( $plans2, $this->db_plans );
 		}
 		$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="form-control inputbox" size="1"', 'id', 'name', 0 );
 
 		$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
-		foreach ( $db_plans as $plan ) {
+		foreach ( $this->db_plans as $plan ) {
 			$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected"' : '' ) . '>' . $plan->name . '</option>';
 		}
 		$lists['filter_plan'] .= '</select>';
@@ -1883,14 +1942,14 @@ class aecAdminSubscription
 	}
 }
 
-class aecAdminTemplate
+class aecAdminTemplate extends aecAdminEntity
 {
 	function browse( $option )
 	{
-		$app = JFactory::getApplication();
+		$this->app = JFactory::getApplication();
 
-		$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$limit = $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
+		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
 		$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
@@ -1957,26 +2016,24 @@ class aecAdminTemplate
 		$temp->loadName( $name );
 
 		if ( $_POST['default'] ) {
-			$db = JFactory::getDBO();
-
 			if ( $temp->id ) {
 				if ( !$temp->default ) {
 					// Reset all other items
-					$db->setQuery(
+					$this->db->setQuery(
 						'UPDATE #__acctexp_config_templates'
 						. ' SET `default` = 0'
 						. ' WHERE `id` > 0'
 					);
-					$db->query();
+					$this->db->query();
 				}
 			} else {
 				// Reset all other items
-				$db->setQuery(
+				$this->db->setQuery(
 					'UPDATE #__acctexp_config_templates'
 					. ' SET `default` = 0'
 					. ' WHERE `id` > 0'
 				);
-				$db->query();
+				$this->db->query();
 			}
 
 			$temp->default = 1;
@@ -2004,23 +2061,19 @@ class aecAdminTemplate
 	}
 }
 
-class aecAdminProcessor
+class aecAdminProcessor extends aecAdminEntity
 {
 	function browse( $option )
 	{
-		$db = JFactory::getDBO();
-
-		$app = JFactory::getApplication();
-
-		$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$limit = $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
+		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
 		// get the total number of records
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT count(*)'
 			. ' FROM #__acctexp_config_processors'
 		);
-		$total = $db->loadResult();
+		$total = $this->db->loadResult();
 
 		if ( $limitstart > $total ) {
 			$limitstart = 0;
@@ -2035,8 +2088,8 @@ class aecAdminProcessor
 			//. ' ORDER BY `ordering`'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		;
-		$db->setQuery( $query );
-		$names = xJ::getDBArray( $db );
+		$this->db->setQuery( $query );
+		$names = xJ::getDBArray( $this->db );
 
 		$rows = array();
 		foreach ( $names as $name ) {
@@ -2053,8 +2106,6 @@ class aecAdminProcessor
 
 	function edit( $id, $option )
 	{
-		$lang = JFactory::getLanguage();
-
 		if ( $id ) {
 			$pp = new PaymentProcessor();
 
@@ -2099,7 +2150,7 @@ class aecAdminProcessor
 						// Transform currencies into OptionArray
 						$currency_code_list = array();
 						foreach ( $currency_array as $currency ) {
-							if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
+							if ( $this->lang->hasKey( 'CURRENCY_' . $currency )) {
 								$currency_code_list[] = JHTML::_('select.option', $currency, $currency . ' - ' . JText::_( 'CURRENCY_' . $currency ) );
 							}
 						}
@@ -2114,18 +2165,18 @@ class aecAdminProcessor
 					case 'list_language':
 						// Get language list
 						if ( is_array( $pp->info['languages'] ) ) {
-							$language_array	= $pp->info['languages'];
+							$this->language_array	= $pp->info['languages'];
 						} else {
-							$language_array	= explode( ',', $pp->info['languages'] );
+							$this->language_array	= explode( ',', $pp->info['languages'] );
 						}
 
 						// Transform languages into OptionArray
-						$language_code_list = array();
-						foreach ( $language_array as $language ) {
-							$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'LANGUAGECODE_' . strtoupper( $language ) ) );
+						$this->language_code_list = array();
+						foreach ( $this->language_array as $this->language ) {
+							$this->language_code_list[] = JHTML::_('select.option', $this->language, JText::_( 'LANGUAGECODE_' . strtoupper( $this->language ) ) );
 						}
 						// Create list
-						$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+						$lists[$setting_name] = JHTML::_('select.genericlist', $this->language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
 						$settings_array[$name][0] = 'list';
 						break;
 					case 'list_plan':
@@ -2198,8 +2249,6 @@ class aecAdminProcessor
 
 	function change( $cid=null, $state=0, $type, $option )
 	{
-		$db = JFactory::getDBO();
-
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 			exit;
@@ -2208,14 +2257,14 @@ class aecAdminProcessor
 		$total	= count( $cid );
 		$cids	= implode( ',', $cid );
 
-		$db->setQuery(
+		$this->db->setQuery(
 			'UPDATE #__acctexp_config_processors'
 			. ' SET `' . $type . '` = \'' . $state . '\''
 			. ' WHERE `id` IN (' . $cids . ')'
 		);
 
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		if ( !$this->db->query() ) {
+			echo "<script> alert('".$this->db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
@@ -2309,12 +2358,10 @@ class aecAdminProcessor
 	}
 }
 
-class aecAdminSubscriptionPlan
+class aecAdminSubscriptionPlan extends aecAdminEntity
 {
 	function getList()
 	{
-		$db = JFactory::getDBO();
-
 		$rows = SubscriptionPlanHandler::getFullPlanList();
 
 		$totals = array();
@@ -2323,11 +2370,11 @@ class aecAdminSubscriptionPlan
 			. ' WHERE (status = \'Active\' OR status = \'Trial\')'
 			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$totals['active'] = $db->loadResult();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$totals['active'] = $this->db->loadResult();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -2336,11 +2383,11 @@ class aecAdminSubscriptionPlan
 			. ' WHERE (status = \'Expired\')'
 			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$totals['expired'] = $db->loadResult();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$totals['expired'] = $this->db->loadResult();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -2352,11 +2399,11 @@ class aecAdminSubscriptionPlan
 				. ' WHERE plan = ' . $row->id
 				. ' AND (status = \'Active\' OR status = \'Trial\')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$rows[$n]->usercount = $db->loadResult();
-			if ( $db->getErrorNum() ) {
-				echo $db->stderr();
+			$rows[$n]->usercount = $this->db->loadResult();
+			if ( $this->db->getErrorNum() ) {
+				echo $this->db->stderr();
 				return false;
 			}
 
@@ -2365,11 +2412,11 @@ class aecAdminSubscriptionPlan
 				. ' WHERE plan = ' . $row->id
 				. ' AND (status = \'Expired\')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$rows[$n]->expiredcount = $db->loadResult();
-			if ( $db->getErrorNum() ) {
-				echo $db->stderr();
+			$rows[$n]->expiredcount = $this->db->loadResult();
+			if ( $this->db->getErrorNum() ) {
+				echo $this->db->stderr();
 				return false;
 			}
 
@@ -2378,8 +2425,8 @@ class aecAdminSubscriptionPlan
 				. ' WHERE type = \'item\''
 				. ' AND item_id = \'' . $rows[$n]->id . '\''
 			;
-			$db->setQuery( $query	);
-			$g = (int) $db->loadResult();
+			$this->db->setQuery( $query	);
+			$g = (int) $this->db->loadResult();
 
 			$group = empty( $g ) ? 0 : $g;
 
@@ -2448,13 +2495,9 @@ class aecAdminSubscriptionPlan
 
 	function browse( $option )
 	{
-		$db = JFactory::getDBO();
-
-		$app = JFactory::getApplication();
-
-		$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-		$filter_group	= $app->getUserStateFromRequest( "filter_group", 'filter_group', array() );
+		$limit			= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
+		$limitstart		= $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$filter_group	= $this->app->getUserStateFromRequest( "filter_group", 'filter_group', array() );
 
 		$filtered = !empty($filter_group);
 
@@ -2464,18 +2507,18 @@ class aecAdminSubscriptionPlan
 			$subselect = array();
 		}
 
-		$search			= $app->getUserStateFromRequest( "search_subscr{$option}", 'search', '' );
-		$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
+		$search			= $this->app->getUserStateFromRequest( "search_subscr{$option}", 'search', '' );
+		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
-		$orderby = $app->getUserStateFromRequest( "orderby_plans{$option}", 'orderby_plans', 'name ASC' );
+		$orderby = $this->app->getUserStateFromRequest( "orderby_plans{$option}", 'orderby_plans', 'name ASC' );
 
 		// get the total number of records
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_plans'
 			. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
 		;
-		$db->setQuery( $query );
-		$total = $db->loadResult();
+		$this->db->setQuery( $query );
+		$total = $this->db->loadResult();
 
 		if ( $limitstart > $total ) {
 			$limitstart = 0;
@@ -2494,11 +2537,11 @@ class aecAdminSubscriptionPlan
 				. ' WHERE plan = ' . $row->id
 				. ' AND (status = \'Active\' OR status = \'Trial\')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$rows[$n]->usercount = $db->loadResult();
-			if ( $db->getErrorNum() ) {
-				echo $db->stderr();
+			$rows[$n]->usercount = $this->db->loadResult();
+			if ( $this->db->getErrorNum() ) {
+				echo $this->db->stderr();
 				return false;
 			}
 
@@ -2507,11 +2550,11 @@ class aecAdminSubscriptionPlan
 				. ' WHERE plan = ' . $row->id
 				. ' AND (status = \'Expired\')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$rows[$n]->expiredcount = $db->loadResult();
-			if ( $db->getErrorNum() ) {
-				echo $db->stderr();
+			$rows[$n]->expiredcount = $this->db->loadResult();
+			if ( $this->db->getErrorNum() ) {
+				echo $this->db->stderr();
 				return false;
 			}
 
@@ -2520,9 +2563,9 @@ class aecAdminSubscriptionPlan
 				. ' WHERE type = \'item\''
 				. ' AND item_id = \'' . $rows[$n]->id . '\''
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$groups = xJ::getDBArray( $db );
+			$groups = xJ::getDBArray( $this->db );
 
 			$rows[$n]->groups = array();
 			foreach ( $groups as $group ) {
@@ -2573,11 +2616,11 @@ class aecAdminSubscriptionPlan
 			. ' WHERE (status = \'Active\' OR status = \'Trial\')'
 			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$totals['active'] = $db->loadResult();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$totals['active'] = $this->db->loadResult();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -2586,11 +2629,11 @@ class aecAdminSubscriptionPlan
 			. ' WHERE (status = \'Expired\')'
 			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$totals['expired'] = $db->loadResult();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$totals['expired'] = $this->db->loadResult();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -2646,10 +2689,6 @@ class aecAdminSubscriptionPlan
 	function edit( $id, $option )
 	{
 		global $aecConfig;
-
-		$db = JFactory::getDBO();
-
-		$lang = JFactory::getLanguage();
 
 		$lists = array();
 		$params_values = array();
@@ -2713,8 +2752,8 @@ class aecAdminSubscriptionPlan
 				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
 				. ' AND b.recurring =\'1\''
 			;
-			$db->setQuery( $query );
-			$hasrecusers = ( $db->loadResult() > 0 ) ? true : false;
+			$this->db->setQuery( $query );
+			$hasrecusers = ( $this->db->loadResult() > 0 ) ? true : false;
 		}
 
 		$stdformat = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
@@ -2972,7 +3011,7 @@ class aecAdminSubscriptionPlan
 						// Transform currencies into OptionArray
 						$currency_code_list = array();
 						foreach ( $currency_array as $currency ) {
-							if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
+							if ( $this->lang->hasKey( 'CURRENCY_' . $currency )) {
 								$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
 							}
 						}
@@ -2985,18 +3024,18 @@ class aecAdminSubscriptionPlan
 					case 'list_language':
 						// Get language list
 						if ( !is_array( $pp->info['languages'] ) ) {
-							$language_array	= explode( ',', $pp->info['languages'] );
+							$this->language_array	= explode( ',', $pp->info['languages'] );
 						} else {
-							$language_array	= $pp->info['languages'];
+							$this->language_array	= $pp->info['languages'];
 						}
 
 						// Transform languages into OptionArray
-						$language_code_list = array();
-						foreach ( $language_array as $language ) {
-							$language_code_list[] = JHTML::_('select.option', $language, ( $lang->hasKey( 'LANGUAGECODE_' . $language  ) ? JText::_( 'LANGUAGECODE_' . $language ) : $language ) );
+						$this->language_code_list = array();
+						foreach ( $this->language_array as $this->language ) {
+							$this->language_code_list[] = JHTML::_('select.option', $this->language, ( $this->lang->hasKey( 'LANGUAGECODE_' . $this->language  ) ? JText::_( 'LANGUAGECODE_' . $this->language ) : $this->language ) );
 						}
 						// Create list
-						$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
+						$lists[$setting_name] = JHTML::_('select.genericlist', $this->language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
 						$settings_array[$name][0] = 'list';
 						break;
 
@@ -3030,8 +3069,8 @@ class aecAdminSubscriptionPlan
 			. ' WHERE `active` = 1'
 			. ' AND `id` != \'' . $row->id . '\'';
 		;
-		$db->setQuery( $query );
-		$payment_plans = $db->loadObjectList();
+		$this->db->setQuery( $query );
+		$payment_plans = $this->db->loadObjectList();
 
 		if ( is_array( $payment_plans ) ) {
 			$fallback_plans	= array_merge( $fallback_plans, $payment_plans );
@@ -3047,9 +3086,9 @@ class aecAdminSubscriptionPlan
 				. ' FROM #__acctexp_plans'
 				. ' WHERE `id` IN (' . implode( ',', $params_values['similarplans'] ) .')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$sel_similar_plans = $db->loadObjectList();
+			$sel_similar_plans = $this->db->loadObjectList();
 		} else {
 			$sel_similar_plans = 0;
 		}
@@ -3062,9 +3101,9 @@ class aecAdminSubscriptionPlan
 				. ' FROM #__acctexp_plans'
 				. ' WHERE `id` IN (' . implode( ',', $params_values['equalplans'] ) .')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$sel_equal_plans = $db->loadObjectList();
+			$sel_equal_plans = $this->db->loadObjectList();
 		} else {
 			$sel_equal_plans = 0;
 		}
@@ -3124,8 +3163,8 @@ class aecAdminSubscriptionPlan
 				. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
 				. ' AND `hidden` = \'1\''
 			;
-			$db->setQuery( $query );
-			$hidden_mi = $db->loadObjectList();
+			$this->db->setQuery( $query );
+			$hidden_mi = $this->db->loadObjectList();
 		} else {
 			$hidden_mi = array();
 		}
@@ -3240,8 +3279,6 @@ class aecAdminSubscriptionPlan
 
 	function save( $option, $apply=0 )
 	{
-		$db = JFactory::getDBO();
-
 		$row = new SubscriptionPlan();
 		$row->load( $_POST['id'] );
 
@@ -3262,29 +3299,25 @@ class aecAdminSubscriptionPlan
 		}
 
 		if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['full_period'] ) ) {
-			$short	= "Plan Warning";
-			$event	= "You have selected a regular period for a plan that"
+			$this->log(
+				"Plan Warning",
+				"You have selected a regular period for a plan that"
 				. " already has the 'lifetime' (i.e. 'non expiring') flag set."
 				. " The period you have set will be overridden by"
-				. " that setting.";
-			$tags	= 'settings,plan';
-			$params = array();
-
-			$eventlog = new eventLog();
-			$eventlog->issue( $short, $tags, $event, 32, $params );
+				. " that setting.",
+				'settings,plan'
+			);
 		}
 
 		$terms = $row->getTerms();
 
 		if ( !$terms->checkFree() && empty( $row->params['processors'] ) ) {
-			$short	= "Plan Warning";
-			$event	= "You have set a plan to be non-free, yet did not select a payment processor."
-				. " Without a processor assigned, the plan will not show up on the frontend.";
-			$tags	= 'settings,plan';
-			$params = array();
-
-			$eventlog = new eventLog();
-			$eventlog->issue( $short, $tags, $event, 32, $params );
+			$this->log(
+				"Plan Warning",
+				"You have set a plan to be non-free, yet did not select a payment processor."
+				. " Without a processor assigned, the plan will not show up on the frontend.",
+				'settings,plan'
+			);
 		}
 
 		if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['processors'] ) ) {
@@ -3339,16 +3372,14 @@ class aecAdminSubscriptionPlan
 
 	function remove( $id, $option )
 	{
-		$db = JFactory::getDBO();
-
 		$ids = implode( ',', $id );
 
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_plans'
 			. ' WHERE `id` IN (' . $ids . ')'
 		;
-		$db->setQuery( $query );
-		$total = $db->loadResult();
+		$this->db->setQuery( $query );
+		$total = $this->db->loadResult();
 
 		if ( $total == 0 ) {
 			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
@@ -3375,8 +3406,6 @@ class aecAdminSubscriptionPlan
 
 	function change( $cid=null, $state=0, $type, $option )
 	{
-		$db = JFactory::getDBO();
-
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 			exit;
@@ -3389,10 +3418,10 @@ class aecAdminSubscriptionPlan
 			. ' SET `' . $type . '` = \'' . $state . '\''
 			. ' WHERE `id` IN (' . $cids . ')'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		if ( !$this->db->query() ) {
+			echo "<script> alert('".$this->db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
@@ -3408,30 +3437,26 @@ class aecAdminSubscriptionPlan
 	}
 }
 
-class aecAdminItemGroup
+class aecAdminItemGroup extends aecAdminEntity
 {
 	function browse( $option )
 	{
-		$db = JFactory::getDBO();
+		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
+		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-		$app = JFactory::getApplication();
+		$search = $this->app->getUserStateFromRequest( "search_groups{$option}", 'search', '' );
+		$search = xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
-		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-		$search = $app->getUserStateFromRequest( "search_groups{$option}", 'search', '' );
-		$search = xJ::escape( $db, trim( strtolower( $search ) ) );
-
-		$orderby = $app->getUserStateFromRequest( "orderby_groups{$option}", 'orderby_groups', 'name ASC' );
+		$orderby = $this->app->getUserStateFromRequest( "orderby_groups{$option}", 'orderby_groups', 'name ASC' );
 
 		// get the total number of records
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_itemgroups'
 			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
 		;
-		$db->setQuery( $query );
-		$total = $db->loadResult();
-		echo $db->getErrorMsg();
+		$this->db->setQuery( $query );
+		$total = $this->db->loadResult();
+		echo $this->db->getErrorMsg();
 
 		if ( $limitstart > $total ) {
 			$limitstart = 0;
@@ -3447,11 +3472,11 @@ class aecAdminItemGroup
 			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$rows = $db->loadObjectList();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$rows = $this->db->loadObjectList();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -3464,11 +3489,11 @@ class aecAdminItemGroup
 				. ' WHERE b.plan = ' . $row->id
 				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$rows[$rid]->usercount = $db->loadResult();
-			if ( $db->getErrorNum() ) {
-				echo $db->stderr();
+			$rows[$rid]->usercount = $this->db->loadResult();
+			if ( $this->db->getErrorNum() ) {
+				echo $this->db->stderr();
 				return false;
 			}
 
@@ -3478,11 +3503,11 @@ class aecAdminItemGroup
 				. ' WHERE b.plan = ' . $row->id
 				. ' AND (b.status = \'Expired\')'
 			;
-			$db->setQuery( $query	);
+			$this->db->setQuery( $query	);
 
-			$rows[$rid]->expiredcount = $db->loadResult();
-			if ( $db->getErrorNum() ) {
-				echo $db->stderr();
+			$rows[$rid]->expiredcount = $this->db->loadResult();
+			if ( $this->db->getErrorNum() ) {
+				echo $this->db->stderr();
 				return false;
 			}
 
@@ -3531,8 +3556,6 @@ class aecAdminItemGroup
 
 	function edit( $id, $option )
 	{
-		$db = JFactory::getDBO();
-
 		$lists = array();
 		$params_values = array();
 		$restrictions_values = array();
@@ -3757,16 +3780,14 @@ class aecAdminItemGroup
 
 	function remove( $id, $option )
 	{
-		$db = JFactory::getDBO();
-
 		$ids = implode( ',', $id );
 
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT count(*)'
 			. ' FROM #__acctexp_itemgroups'
 			. ' WHERE `id` IN (' . $ids . ')'
 		);
-		$total = $db->loadResult();
+		$total = $this->db->loadResult();
 
 		if ( $total == 0 ) {
 			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
@@ -3798,8 +3819,6 @@ class aecAdminItemGroup
 
 	function change( $cid=null, $state=0, $type, $option )
 	{
-		$db = JFactory::getDBO();
-
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 			exit;
@@ -3812,10 +3831,10 @@ class aecAdminItemGroup
 			. ' SET `' . $type . '` = \'' . $state . '\''
 			. ' WHERE `id` IN (' . $cids . ')'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		if ( !$this->db->query() ) {
+			echo "<script> alert('".$this->db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
@@ -3832,33 +3851,29 @@ class aecAdminItemGroup
 
 }
 
-class aecAdminMicroIntegration
+class aecAdminMicroIntegration extends aecAdminEntity
 {
 	function browse( $option )
 	{
-		$db = JFactory::getDBO();
+		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
+		$limitstart	= $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-		$app = JFactory::getApplication();
+		$orderby		= $this->app->getUserStateFromRequest( "orderby_mi{$option}", 'orderby_mi', 'ordering ASC' );
+		$search			= $this->app->getUserStateFromRequest( "search{$option}_mi", 'search', '' );
+		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
-		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart	= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-		$orderby		= $app->getUserStateFromRequest( "orderby_mi{$option}", 'orderby_mi', 'ordering ASC' );
-		$search			= $app->getUserStateFromRequest( "search{$option}_mi", 'search', '' );
-		$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
-
-		$filter_planid	= intval( $app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
+		$filter_planid	= intval( $this->app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
 
 		$filtered = !empty($filter_planid) || !empty($search);
 
 		// get the total number of records
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT count(*)'
 			. ' FROM #__acctexp_microintegrations'
 			. ' WHERE `hidden` = \'0\''
 			. ( empty( $search ) ? '' : ' AND (`name` LIKE \'%'.$search.'%\' OR `desc` LIKE \'%'.$search.'%\' OR `class_name` LIKE \'%'.$search.'%\')' )
 		);
-		$total = $db->loadResult();
+		$total = $this->db->loadResult();
 
 		if ( $limitstart > $total ) {
 			$limitstart = 0;
@@ -3891,11 +3906,11 @@ class aecAdminMicroIntegration
 		$query .= ' ORDER BY `' . str_replace(' ', '` ', $orderby);
 		$query .= ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$rows = $db->loadObjectList();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$rows = $this->db->loadObjectList();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -3925,12 +3940,12 @@ class aecAdminMicroIntegration
 			. ' FROM #__acctexp_plans'
 			. ' ORDER BY `ordering`'
 		;
-		$db->setQuery( $query );
-		$db_plans = $db->loadObjectList();
+		$this->db->setQuery( $query );
+		$this->db_plans = $this->db->loadObjectList();
 
 		$plans[] = JHTML::_('select.option', '0', JText::_('FILTER_PLAN'), 'id', 'name' );
-		if ( is_array( $db_plans ) ) {
-			$plans = array_merge( $plans, $db_plans );
+		if ( is_array( $this->db_plans ) ) {
+			$plans = array_merge( $plans, $this->db_plans );
 		}
 		$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
@@ -3949,8 +3964,6 @@ class aecAdminMicroIntegration
 		$mi_gsettings = $mi->getGeneralSettings();
 
 		if ( !$mi->id ) {
-			$lang = JFactory::getLanguage();
-
 			// Create MI Selection List
 			$mi_handler = new microIntegrationHandler();
 			$mi_list = $mi_handler->getIntegrationList();
@@ -3999,7 +4012,7 @@ class aecAdminMicroIntegration
 
 				$lists['class_list'] .= '<div id="mi-select-list" class="hidden"><ul>';
 				foreach ( $drilldown as $lin => $li ) {
-					if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lin ) ) ) {
+					if ( $this->lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lin ) ) ) {
 						$kkey = JText::_('AEC_MI_LIST_' . strtoupper( $lin ) );
 					} else {
 						$kkey = ucwords( str_replace('_', ' ', $lin) );
@@ -4009,7 +4022,7 @@ class aecAdminMicroIntegration
 
 					foreach ( $li as $lixn => $lix ) {
 						if ( is_array( $lix ) ) {
-							if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lixn ) ) ) {
+							if ( $this->lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lixn ) ) ) {
 								$xkey = JText::_('AEC_MI_LIST_' . strtoupper( $lixn ) );
 							} else {
 								$xkey = ucwords( str_replace('_', ' ', $lixn) );
@@ -4250,16 +4263,14 @@ class aecAdminMicroIntegration
 
 	function remove( $id, $option )
 	{
-		$db = JFactory::getDBO();
-
 		$ids = implode( ',', $id );
 
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_microintegrations'
 			. ' WHERE `id` IN (' . $ids . ')'
 		;
-		$db->setQuery( $query );
-		$total = $db->loadResult();
+		$this->db->setQuery( $query );
+		$total = $this->db->loadResult();
 
 		if ( $total==0 ) {
 			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
@@ -4279,10 +4290,10 @@ class aecAdminMicroIntegration
 		$query = 'DELETE FROM #__acctexp_microintegrations'
 			. ' WHERE `id` IN (' . $ids . ')'
 		;
-		$db->setQuery( $query	);
+		$this->db->setQuery( $query	);
 
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		if ( !$this->db->query() ) {
+			echo "<script> alert('".$this->db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
@@ -4298,8 +4309,6 @@ class aecAdminMicroIntegration
 
 	function change( $cid=null, $state=0, $option )
 	{
-		$db = JFactory::getDBO();
-
 		if ( count( $cid ) < 1 ) {
 			$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH'): JText::_('AEC_CMN_TOUNPUBLISH');
 			echo "<script> alert('" . sprintf( html_entity_decode( JText::_('AEC_ALERT_SELECT_FIRST_TO') ), $action ) . "'); window.history.go(-1);</script>\n";
@@ -4313,9 +4322,9 @@ class aecAdminMicroIntegration
 			. ' SET `active` = \'' . $state . '\''
 			. ' WHERE `id` IN (' . $cids . ')'
 		;
-		$db->setQuery( $query );
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		$this->db->setQuery( $query );
+		if ( !$this->db->query() ) {
+			echo "<script> alert('".$this->db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
@@ -4329,22 +4338,18 @@ class aecAdminMicroIntegration
 	}
 }
 
-class aecAdminCoupon
+class aecAdminCoupon extends aecAdminEntity
 {
 	function browse( $option )
 	{
-		$db = JFactory::getDBO();
-
-		$app = JFactory::getApplication();
-
-		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-		$search			= $app->getUserStateFromRequest( "search{$option}_coupons", 'search', '' );
-		$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
+		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
+		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$search			= $this->app->getUserStateFromRequest( "search{$option}_coupons", 'search', '' );
+		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
 		$filtered = !empty($search);
 
-		$orderby = $app->getUserStateFromRequest( "orderby_coupons{$option}", 'orderby_coupons', 'name ASC' );
+		$orderby = $this->app->getUserStateFromRequest( "orderby_coupons{$option}", 'orderby_coupons', 'name ASC' );
 
 		$total = 0;
 
@@ -4352,14 +4357,14 @@ class aecAdminCoupon
 			. ' FROM #__acctexp_coupons'
 			. ( empty( $search ) ? '' : "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')" )
 		;
-		$db->setQuery( $query );
-		$total += $db->loadResult();
+		$this->db->setQuery( $query );
+		$total += $this->db->loadResult();
 
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_coupons_static'
 		;
-		$db->setQuery( $query );
-		$total += $db->loadResult();
+		$this->db->setQuery( $query );
+		$total += $this->db->loadResult();
 
 		if ( $limitstart > $total ) {
 			$limitstart = 0;
@@ -4386,33 +4391,33 @@ class aecAdminCoupon
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		;
 
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$rows = $db->loadObjectList();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$rows = $this->db->loadObjectList();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
 		$query = 'SELECT SUM(usecount)'
 			. ' FROM #__acctexp_coupons'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$total_usecount = $db->loadResult();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$total_usecount = $this->db->loadResult();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
 		$query = 'SELECT SUM(usecount)'
 			. ' FROM #__acctexp_coupons_static'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$total_usecount += $db->loadResult();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$total_usecount += $this->db->loadResult();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -4434,8 +4439,6 @@ class aecAdminCoupon
 
 	function edit( $id, $option, $new )
 	{
-		$db = JFactory::getDBO();
-
 		$lists = array();
 
 		$cph = new couponHandler();
@@ -4527,11 +4530,11 @@ class aecAdminCoupon
 		// get available plans
 		$available_plans = array();
 
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT `id` as value, `name` as text'
 			. ' FROM #__acctexp_plans'
 		);
-		$plans = $db->loadObjectList();
+		$plans = $this->db->loadObjectList();
 
 		if ( is_array( $plans ) ) {
 			$all_plans = array_merge( $available_plans, $plans );
@@ -4546,9 +4549,9 @@ class aecAdminCoupon
 				. ' FROM #__acctexp_plans'
 				. ' WHERE `id` IN (' . implode( ',', $restrictions_values['usage_plans'] ) . ')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			$sel_usage_plans = $db->loadObjectList();
+			$sel_usage_plans = $this->db->loadObjectList();
 		} else {
 			$sel_usage_plans = 0;
 		}
@@ -4565,8 +4568,8 @@ class aecAdminCoupon
 			. ' WHERE `active` = 1'
 			. ' ORDER BY `ordering`'
 		;
-		$db->setQuery( $query );
-		$mi_list = $db->loadObjectList();
+		$this->db->setQuery( $query );
+		$mi_list = $this->db->loadObjectList();
 
 		$mis = array();
 		if ( !empty( $mi_list ) && !empty( $params_values['micro_integrations'] ) ) {
@@ -4582,8 +4585,8 @@ class aecAdminCoupon
 				. ' FROM #__acctexp_microintegrations'
 				. ( !empty( $mis ) ? ' WHERE `id` IN (' . implode( ',', $mis ) . ')' : '' )
 			;
-			$db->setQuery( $query );
-			$selected_mi = $db->loadObjectList();
+			$this->db->setQuery( $query );
+			$selected_mi = $this->db->loadObjectList();
 		} else {
 			$selected_mi = array();
 		}
@@ -4593,8 +4596,8 @@ class aecAdminCoupon
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_coupons'
 		;
-		$db->setQuery( $query );
-		$ccount = $db->loadResult();
+		$this->db->setQuery( $query );
+		$ccount = $this->db->loadResult();
 
 		if ( $ccount > 50 ) {
 			$coupons = array();
@@ -4603,16 +4606,16 @@ class aecAdminCoupon
 				. ' FROM #__acctexp_coupons'
 				. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
 			;
-			$db->setQuery( $query );
-			$coupons = $db->loadObjectList();
+			$this->db->setQuery( $query );
+			$coupons = $this->db->loadObjectList();
 		}
 
 		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
 			. ' FROM #__acctexp_coupons_static'
 			. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
 		;
-		$db->setQuery( $query );
-		$coupons = array_merge( $db->loadObjectList(), $coupons );
+		$this->db->setQuery( $query );
+		$coupons = array_merge( $this->db->loadObjectList(), $coupons );
 
 		$cpl = array( 'bad_combinations', 'good_combinations', 'bad_combinations_cart', 'good_combinations_cart' );
 
@@ -4627,16 +4630,16 @@ class aecAdminCoupon
 						. ' FROM #__acctexp_coupons'
 						. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
 					;
-					$db->setQuery( $query );
-					$cur = $db->loadObjectList();
+					$this->db->setQuery( $query );
+					$cur = $this->db->loadObjectList();
 				}
 
 				$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
 					. ' FROM #__acctexp_coupons_static'
 					. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
 				;
-				$db->setQuery( $query );
-				$nc = $db->loadObjectList();
+				$this->db->setQuery( $query );
+				$nc = $this->db->loadObjectList();
 
 				if ( !empty( $nc ) ) {
 					$cur = array_merge( $nc, $cur );
@@ -4662,16 +4665,16 @@ class aecAdminCoupon
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
 		// Lets grab the data and fill it in.
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT id'
 			. ' FROM #__acctexp_invoices'
 			. ' WHERE `coupons` <> \'\''
 			. ' ORDER BY `created_date` DESC'
 		);
-		$rows = $db->loadObjectList();
+		$rows = $this->db->loadObjectList();
 
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -4694,8 +4697,8 @@ class aecAdminCoupon
 				. ' FROM #__users'
 				. ' WHERE `id` = \'' . $invoice->userid . '\''
 			;
-			$db->setQuery( $query );
-			$username = $db->loadResult();
+			$this->db->setQuery( $query );
+			$username = $this->db->loadResult();
 
 			$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoice->userid . '">';
 
@@ -4781,8 +4784,6 @@ class aecAdminCoupon
 
 	function remove( $id, $option, $returnTask )
 	{
-		$db = JFactory::getDBO();
-
 		$rids = $sids = array();
 		foreach ( $id as $i ) {
 			$ex = explode( '.', $i );
@@ -4798,10 +4799,10 @@ class aecAdminCoupon
 			$query = 'DELETE FROM #__acctexp_coupons_static'
 				. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			if ( !$db->query() ) {
-				echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			if ( !$this->db->query() ) {
+				echo "<script> alert('".$this->db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 				exit();
 			}
 		}
@@ -4810,10 +4811,10 @@ class aecAdminCoupon
 			$query = 'DELETE FROM #__acctexp_coupons'
 				. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
 			;
-			$db->setQuery( $query );
+			$this->db->setQuery( $query );
 
-			if ( !$db->query() ) {
-				echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			if ( !$this->db->query() ) {
+				echo "<script> alert('".$this->db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 				exit();
 			}
 		}
@@ -4825,8 +4826,6 @@ class aecAdminCoupon
 
 	function change( $id=null, $state=0, $option )
 	{
-		$db = JFactory::getDBO();
-
 		if ( count( $id ) < 1 ) {
 			$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH') : JText::_('AEC_CMN_TOUNPUBLISH');
 			echo "<script> alert('" . sprintf( html_entity_decode( JText::_('AEC_ALERT_SELECT_FIRST_TO') ) ), $action . "'); window.history.go(-1);</script>\n";
@@ -4845,21 +4844,21 @@ class aecAdminCoupon
 		}
 
 		if ( !empty( $sids ) ) {
-			$db->setQuery(
+			$this->db->setQuery(
 				'UPDATE #__acctexp_coupons_static'
 				. ' SET `active` = IF (`active` = 1, 0, 1)'
 				. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
 			);
-			$db->query();
+			$this->db->query();
 		}
 
 		if ( !empty( $rids ) ) {
-			$db->setQuery(
+			$this->db->setQuery(
 				'UPDATE #__acctexp_coupons'
 				. ' SET `active` = IF (`active` = 1, 0, 1)'
 				. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
 			);
-			$db->query();
+			$this->db->query();
 		}
 
 		$msg = count( $id ) . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED');
@@ -4869,20 +4868,16 @@ class aecAdminCoupon
 
 }
 
-class aecAdminInvoice
+class aecAdminInvoice extends aecAdminEntity
 {
 	public function browse( $option )
 	{
-		$db = JFactory::getDBO();
-
-		$app = JFactory::getApplication();
-
-		$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
-		$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-		$search 	= $app->getUserStateFromRequest( "search_{$option}invoices", 'search', '' );
+		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
+		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
+		$search 	= $this->app->getUserStateFromRequest( "search_{$option}invoices", 'search', '' );
 
 		if ( $search ) {
-			$unformatted = xJ::escape( $db, trim( strtolower( $search ) ) );
+			$unformatted = xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
 			$where = 'LOWER(`invoice_number`) LIKE \'%' . $unformatted . '%\''
 					. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
@@ -4891,30 +4886,30 @@ class aecAdminInvoice
 					;
 		}
 
-		$orderby = $app->getUserStateFromRequest( "orderby_invoices{$option}", 'orderby_invoices', 'created_date DESC' );
+		$orderby = $this->app->getUserStateFromRequest( "orderby_invoices{$option}", 'orderby_invoices', 'created_date DESC' );
 
 		// get the total number of records
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT count(*)'
 			. ' FROM #__acctexp_invoices'
 		);
-		$total = $db->loadResult();
+		$total = $this->db->loadResult();
 
 
 		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 		// Lets grab the data and fill it in.
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT id'
 			. ' FROM #__acctexp_invoices'
 			. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
 			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		);
-		$ids = xJ::getDBArray( $db );
+		$ids = xJ::getDBArray( $this->db );
 
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -4976,8 +4971,8 @@ class aecAdminInvoice
 					. ' FROM #__users'
 					. ' WHERE `id` = \'' . $invoices[$id]->userid . '\''
 					;
-			$db->setQuery( $query );
-			$username = $db->loadResult();
+			$this->db->setQuery( $query );
+			$username = $this->db->loadResult();
 
 			$invoices[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoices[$id]->userid . '">';
 
@@ -4997,8 +4992,6 @@ class aecAdminInvoice
 
 	function edit( $id, $option, $returnTask, $userid )
 	{
-		$db = JFactory::getDBO();
-
 		$row = new Invoice();
 		$row->load( $id );
 
@@ -5018,19 +5011,19 @@ class aecAdminInvoice
 
 		$lists['method']				= str_replace( 'processor', 'method', PaymentProcessorHandler::getSelectList( $row->method, true ) );
 
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT `id` as value, `coupon_code` as text'
 			. ' FROM #__acctexp_coupons'
 		);
 
-		$coupons = $db->loadObjectList();
+		$coupons = $this->db->loadObjectList();
 
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT `id` as value, `coupon_code` as text'
 			. ' FROM #__acctexp_coupons_static'
 		);
 
-		$coupons = array_merge( $db->loadObjectList(), $coupons );
+		$coupons = array_merge( $this->db->loadObjectList(), $coupons );
 
 		$coupons_active = array();
 
@@ -5215,32 +5208,28 @@ class aecAdminInvoice
 
 }
 
-class aecAdminService
+class aecAdminService extends aecAdminEntity
 {
 	function browse( $option )
 	{
-		$db = JFactory::getDBO();
+		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
+		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-		$app = JFactory::getApplication();
-
-		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-		$search = $app->getUserStateFromRequest( "search_services{$option}", 'search', '' );
-		$search = xJ::escape( $db, trim( strtolower( $search ) ) );
+		$search = $this->app->getUserStateFromRequest( "search_services{$option}", 'search', '' );
+		$search = xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
 		$filtered = !empty($search);
 
-		$orderby = $app->getUserStateFromRequest( "orderby_services{$option}", 'orderby_services', 'name ASC' );
+		$orderby = $this->app->getUserStateFromRequest( "orderby_services{$option}", 'orderby_services', 'name ASC' );
 
 		// get the total number of records
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_services'
 			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
 		;
-		$db->setQuery( $query );
-		$total = $db->loadResult();
-		echo $db->getErrorMsg();
+		$this->db->setQuery( $query );
+		$total = $this->db->loadResult();
+		echo $this->db->getErrorMsg();
 
 		if ( $limitstart > $total ) {
 			$limitstart = 0;
@@ -5255,11 +5244,11 @@ class aecAdminService
 			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$rows = $db->loadObjectList();
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		$rows = $this->db->loadObjectList();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -5374,17 +5363,15 @@ class aecAdminService
 
 	function remove( $id, $option )
 	{
-		$db = JFactory::getDBO();
-
 		$ids = implode( ',', $id );
 
-		$db->setQuery(
+		$this->db->setQuery(
 			'SELECT count(*)'
 			. ' FROM #__acctexp_services'
 			. ' WHERE `id` IN (' . $ids . ')'
 		);
 
-		$total = $db->loadResult();
+		$total = $this->db->loadResult();
 
 		if ( $total == 0 ) {
 			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
@@ -5395,12 +5382,12 @@ class aecAdminService
 			echo "<script> alert('" . html_entity_decode( JText::_('AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
 			exit;
 		} else {
-			$db->setQuery(
+			$this->db->setQuery(
 				'DELETE FROM #__acctexp_services'
 				. ' WHERE `id` IN (' . $ids . ')'
 			);
 
-			$db->query();
+			$this->db->query();
 
 			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
 
@@ -5410,7 +5397,7 @@ class aecAdminService
 
 	function change( $cid=null, $state=0, $type, $option )
 	{
-		$db = JFactory::getDBO();
+		$this->db = JFactory::getDBO();
 
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -5424,10 +5411,10 @@ class aecAdminService
 			. ' SET `' . $type . '` = \'' . $state . '\''
 			. ' WHERE `id` IN (' . $cids . ')'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		if ( !$this->db->query() ) {
+			echo "<script> alert('".$this->db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
@@ -5447,31 +5434,29 @@ class aecAdminHistory
 {
 	function browse( $option )
 	{
-		$db = JFactory::getDBO();
+		$this->app = JFactory::getApplication();
 
-		$app = JFactory::getApplication();
-
-		$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
-		$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-		$search 	= $app->getUserStateFromRequest( "search{$option}_log_history", 'search', '' );
+		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
+		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
+		$search 	= $this->app->getUserStateFromRequest( "search{$option}_log_history", 'search', '' );
 
 		$where = array();
 		if ( $search ) {
-			$where[] = 'LOWER(`user_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-			$where[] = 'LOWER(`invoice_number`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-			$where[] = 'LOWER(`proc_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`user_name`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`invoice_number`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`proc_name`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
 		}
 
-		$orderby = $app->getUserStateFromRequest( "orderby_history{$option}", 'orderby_history', 'transaction_date DESC' );
+		$orderby = $this->app->getUserStateFromRequest( "orderby_history{$option}", 'orderby_history', 'transaction_date DESC' );
 
 		// get the total number of records
 		$query = 'SELECT count(*)'
 			. '  FROM #__acctexp_log_history'
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 		;
-		$db->setQuery( $query );
-		$total = $db->loadResult();
-		echo $db->getErrorMsg();
+		$this->db->setQuery( $query );
+		$total = $this->db->loadResult();
+		echo $this->db->getErrorMsg();
 
 		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
@@ -5483,8 +5468,8 @@ class aecAdminHistory
 			. ' ORDER BY `transaction_date` DESC'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		;
-		$db->setQuery( $query );
-		$rowids = xJ::getDBArray( $db );
+		$this->db->setQuery( $query );
+		$rowids = xJ::getDBArray( $this->db );
 
 		$rows = array();
 		foreach ( $rowids as $rid ) {
@@ -5494,8 +5479,8 @@ class aecAdminHistory
 			$rows[] = $entry;
 		}
 
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -5507,19 +5492,15 @@ class aecAdminEventlog
 {
 	function eventlog( $option )
 	{
-		$db = JFactory::getDBO();
-
-		$app = JFactory::getApplication();
-
-		$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
-		$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-		$search 	= $app->getUserStateFromRequest( "search{$option}_eventlog", 'search', '' );
+		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
+		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
+		$search 	= $this->app->getUserStateFromRequest( "search{$option}_eventlog", 'search', '' );
 
 		$where = array();
 		if ( $search ) {
-			$where[] = 'LOWER(`short`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-			$where[] = 'LOWER(`event`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
-			$where[] = 'LOWER(`tags`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`short`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`event`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
+			$where[] = 'LOWER(`tags`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
 		}
 
 		// get the total number of records
@@ -5527,9 +5508,9 @@ class aecAdminEventlog
 			. ' FROM #__acctexp_eventlog'
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 		;
-		$db->setQuery( $query );
-		$total = $db->loadResult();
-		echo $db->getErrorMsg();
+		$this->db->setQuery( $query );
+		$total = $this->db->loadResult();
+		echo $this->db->getErrorMsg();
 
 		$pageNav = new bsPagination( $total, $limitstart, $limit );
 
@@ -5540,11 +5521,11 @@ class aecAdminEventlog
 			. ' ORDER BY `id` DESC'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		;
-		$db->setQuery( $query );
-		$rows = xJ::getDBArray( $db );
+		$this->db->setQuery( $query );
+		$rows = xJ::getDBArray( $this->db );
 
-		if ( $db->getErrorNum() ) {
-			echo $db->stderr();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
 			return false;
 		}
 
@@ -5616,21 +5597,19 @@ class aecAdminStats
 		$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
 		$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 
-		$db = JFactory::getDBO();
-
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_log_history'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$stats['sale_count'] = $db->loadResult();
+		$stats['sale_count'] = $this->db->loadResult();
 
 		$query = 'SELECT DISTINCT(date(transaction_date)) AS date, count( * ) AS count' .
 			' FROM #__acctexp_log_history' .
 			' GROUP BY date' .
 			' ORDER BY count ASC';
-		$db->setQuery( $query );
-		$sales_count = $db->loadObjectList();
+		$this->db->setQuery( $query );
+		$sales_count = $this->db->loadObjectList();
 		$stats['min_sale_count'] = $sales_count[0]->count;
 		$stats['max_sale_count'] = $sales_count[count($sales_count)-1]->count;
 		$stats['avg_sale_count'] = $sales_count[((int) (count($sales_count)/2) )]->count;
@@ -5639,25 +5618,25 @@ class aecAdminStats
 			. ' FROM #__acctexp_log_history'
 			. ' ORDER BY 0+`amount` DESC'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$stats['max_sale_value'] = $db->loadResult();
+		$stats['max_sale_value'] = $this->db->loadResult();
 
 		$query = 'SELECT MIN(amount)'
 			. ' FROM #__acctexp_log_history'
 			. ' WHERE amount > 0'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$stats['min_sale_value'] = $db->loadResult();
+		$stats['min_sale_value'] = $this->db->loadResult();
 
 		$query = 'SELECT SUM(amount)'
 			. ' FROM #__acctexp_log_history'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
 		if ( $stats['sale_count'] ) {
-			$stats['avg_sale_value'] = round( $db->loadResult() / $stats['sale_count'], 2 );
+			$stats['avg_sale_value'] = round( $this->db->loadResult() / $stats['sale_count'], 2 );
 		} else {
 			$stats['avg_sale_value'] = 0;
 		}
@@ -5667,18 +5646,18 @@ class aecAdminStats
 		$query = 'SELECT MIN(transaction_date)'
 			. ' FROM #__acctexp_log_history'
 		;
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$stats['first_sale'] = $db->loadResult();
+		$stats['first_sale'] = $this->db->loadResult();
 
 		$query = 'SELECT id, name'
 			. ' FROM #__acctexp_plans'
 			. ' ORDER BY `id`'
 		;
 
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$rows = $db->loadObjectList();
+		$rows = $this->db->loadObjectList();
 
 		$mrow = count( $rows )-1;
 
@@ -5698,9 +5677,9 @@ class aecAdminStats
 			. ' ORDER BY `id`'
 		;
 
-		$db->setQuery( $query );
+		$this->db->setQuery( $query );
 
-		$rows = $db->loadObjectList();
+		$rows = $this->db->loadObjectList();
 
 		$mrow = count( $rows )-1;
 
@@ -5720,8 +5699,6 @@ class aecAdminStats
 
 	function request( $option, $type, $start, $end )
 	{
-		$db = JFactory::getDBO();
-
 		$tree = new stdClass();
 
 		switch ( $type ) {
@@ -5738,8 +5715,8 @@ class aecAdminStats
 					. ' AND transaction_date <= \'' . $end . '\''
 					. ' ORDER BY transaction_date ASC'
 				;
-				$db->setQuery( $query );
-				$entries = xJ::getDBArray( $db );
+				$this->db->setQuery( $query );
+				$entries = xJ::getDBArray( $this->db );
 
 				if ( empty( $entries ) ) {
 					echo json_encode( $tree );exit;
@@ -6393,10 +6370,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
  */
 function backupFile( $file, $file_new )
 {
-		if ( !copy( $file, $file_new ) ) {
-				return false;
-		}
-		return true;
+	if ( !copy( $file, $file_new ) ) {
+			return false;
+	}
+	return true;
 }
 
 function importData( $option )
@@ -7095,24 +7072,4 @@ function toolBoxTool( $option, $cmd )
 
 		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );
 	}
-}
-
-function getRanges( $nums )
-{
-	sort($nums);
-
-	$ranges = array();
-
-	for ( $i = 0, $len = count($nums); $i < $len; $i++ ) {
-		$rStart = $nums[$i];
-		$rEnd = $rStart;
-
-		while ( isset($nums[$i+1]) && $nums[$i+1]-$nums[$i] == 1 ){
-			$rEnd = $nums[++$i];
-		}
-
-		$ranges[] = $rStart == $rEnd ? $rStart : $rStart.'-'.$rEnd;
-	}
-
-	return $ranges;
 }
