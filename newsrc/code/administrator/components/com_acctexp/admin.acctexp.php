@@ -346,8 +346,15 @@ switch( strtolower( $task ) ) {
 		} else {
 			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 		}
+		break;
 
-	default: aecCentral( $option ); break;
+	default:
+		$class = 'aecAdmin' . ucfirst($entity);
+
+		$class = new $class($id);
+
+		$class->call($task);
+		break;
 }
 
 function addGroup( $type, $id, $groupid )
@@ -374,86 +381,31 @@ function removeGroup( $type, $id, $groupid )
 	echo 1;
 }
 
-class aecAdminCentral extends aecAdminEntity
-{
-	public function browse()
-	{
-		HTML_AcctExp::central();
-	}
-
-	public function getNotices()
-	{
-		$this->db->setQuery(
-			'SELECT COUNT(*)'
-			. ' FROM #__acctexp_eventlog'
-			. ' WHERE `notify` = \'1\''
-		);
-
-		$furthernotices = $this->db->loadResult() - 5;
-
-		$this->db->setQuery(
-			'SELECT *'
-			. ' FROM #__acctexp_eventlog'
-			. ' WHERE `notify` = \'1\''
-			. ' ORDER BY `datetime` DESC'
-			. ' LIMIT 0, 5'
-		);
-
-		$notices = $this->db->loadObjectList();
-
-		HTML_AcctExp::eventlogModal( $notices, $furthernotices );
-	}
-
-	public function readNotice( $id )
-	{
-		$query = 'UPDATE #__acctexp_eventlog'
-			. ' SET `notify` = \'0\''
-			. ' WHERE `id` = \'' . $id . '\''
-		;
-		$this->db->setQuery($query);
-
-		$this->db->query();
-
-		echo 1;exit;
-	}
-
-	function getNotice()
-	{
-		$this->db->setQuery(
-			'SELECT *'
-			. ' FROM #__acctexp_eventlog'
-			. ' WHERE `notify` = \'1\''
-			. ' ORDER BY `datetime` DESC'
-			. ' LIMIT 5, 1'
-		);
-
-		$notice = $this->db->loadObject();
-
-		if ( empty( $notice->id ) ) {
-			return '';
-		}
-
-		$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
-
-		return '<div class="alert alert-' . $noticex[$notice->level] . '" id="alert-' . $notice->id . '">
-			<a class="close" href="#' . $notice->id . '" onclick="readNotice(' . $notice->id . ')">&times;</a>
-			<h5><strong>' . JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ) . ': ' . $notice->short . '</strong></h5>
-			<p>' . substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ) . '</p>
-			<span class="help-block">' . $notice->datetime . '</span>
-		</div>';
-	}
-}
-
 class aecAdminEntity
 {
+	/**
+	 * @var JApplication
+	 */
 	public $app;
 
+	/**
+	 * @var JLanguage
+	 */
 	public $lang;
 
+	/**
+	 * @var JDatabase|JDatabaseDriver
+	 */
 	public $db;
 
+	/**
+	 * @var array
+	 */
 	public $id;
 
+	/**
+	 * @var string
+	 */
 	public $entity;
 
 	public function __construct( $id )
@@ -491,6 +443,13 @@ class aecAdminEntity
 		} else {
 			$this->id = array($id);
 		}
+	}
+
+	public function call( $task='browse' )
+	{
+		if ( ($task == 'edit') && empty($this->id) ) $task = 'new';
+
+		$this->$task();
 	}
 
 	public function redirect( $task='browse', $entity=null )
@@ -589,6 +548,76 @@ class aecAdminEntity
 		return $ranges;
 	}
 
+}
+
+class aecAdminCentral extends aecAdminEntity
+{
+	public function browse()
+	{
+		HTML_AcctExp::central();
+	}
+
+	public function getNotices()
+	{
+		$this->db->setQuery(
+			'SELECT COUNT(*)'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+		);
+
+		$furthernotices = $this->db->loadResult() - 5;
+
+		$this->db->setQuery(
+			'SELECT *'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			. ' ORDER BY `datetime` DESC'
+			. ' LIMIT 0, 5'
+		);
+
+		$notices = $this->db->loadObjectList();
+
+		HTML_AcctExp::eventlogModal( $notices, $furthernotices );
+	}
+
+	public function readNotice( $id )
+	{
+		$query = 'UPDATE #__acctexp_eventlog'
+			. ' SET `notify` = \'0\''
+			. ' WHERE `id` = \'' . $id . '\''
+		;
+		$this->db->setQuery($query);
+
+		$this->db->query();
+
+		echo 1;exit;
+	}
+
+	function getNotice()
+	{
+		$this->db->setQuery(
+			'SELECT *'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			. ' ORDER BY `datetime` DESC'
+			. ' LIMIT 5, 1'
+		);
+
+		$notice = $this->db->loadObject();
+
+		if ( empty( $notice->id ) ) {
+			return '';
+		}
+
+		$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
+
+		return '<div class="alert alert-' . $noticex[$notice->level] . '" id="alert-' . $notice->id . '">
+			<a class="close" href="#' . $notice->id . '" onclick="readNotice(' . $notice->id . ')">&times;</a>
+			<h5><strong>' . JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ) . ': ' . $notice->short . '</strong></h5>
+			<p>' . substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ) . '</p>
+			<span class="help-block">' . $notice->datetime . '</span>
+		</div>';
+	}
 }
 
 class aecAdminSettings
@@ -1032,414 +1061,9 @@ class aecAdminSettings
 	}
 }
 
-class aecAdminSubscription extends aecAdminEntity
+class aecAdminMembership extends aecAdminEntity
 {
-	public $entity = 'Subscription';
-
-	function edit( $option, $userid, $subscriptionid, $task, $page=0 )
-	{
-		if ( !empty( $subscriptionid ) ) {
-			$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
-		}
-
-		if ( !empty( $subscriptionid ) ) {
-			$sid = $subscriptionid;
-		} else {
-			$sid = 0;
-		}
-
-		$lists = array();
-
-		$metaUser = new metaUser( $userid );
-
-		if ( !empty( $sid ) ) {
-			$metaUser->moveFocus( $sid );
-		} else {
-			if ( $metaUser->hasSubscription ) {
-				$sid = $metaUser->focusSubscription->id;
-			}
-		}
-
-		if ( $metaUser->loadSubscriptions() && !empty( $sid ) ) {
-			foreach ( $metaUser->allSubscriptions as $s_id => $s_c ) {
-				if ( $s_c->id == $sid ) {
-					$metaUser->allSubscriptions[$s_id]->current_focus = true;
-					continue;
-				}
-			}
-		}
-
-		$invoices_limit = 15;
-
-		$invoice_ids = aecInvoiceHelper::InvoiceIdList( $metaUser->userid, $page*$invoices_limit, $invoices_limit );
-
-		$group_selection = array();
-		$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
-		$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('EXPIRE_NOW') );
-		$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('EXPIRE_EXCLUDE') );
-		$group_selection[] = JHTML::_('select.option', 'active',	JText::_('EXPIRE_INCLUDE') );
-		$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('EXPIRE_CLOSE') );
-		$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('EXPIRE_CANCEL') );
-		$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
-
-		$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
-
-		$invoices = array();
-		$couponsh = array();
-		$invoice_counter = 0;
-
-		$processors = PaymentProcessorHandler::getObjectList(
-			PaymentProcessorHandler::getProcessorList()
-		);
-
-		$procs = array(
-			'free' => 'Free',
-			'none' => 'None'
-		);
-
-		foreach ( $processors as $processor ) {
-			$procs[$processor->processor_name] = $processor->processor->info['longname'];
-		}
-
-		foreach ( $invoice_ids as $inv_id ) {
-			$invoice = new Invoice();
-			$invoice->load ($inv_id );
-
-			if ( !empty( $invoice->coupons ) ) {
-				foreach( $invoice->coupons as $coupon_code ) {
-					if ( !isset( $couponsh[$coupon_code] ) ) {
-						$couponsh[$coupon_code] = couponHandler::idFromCode( $coupon_code );
-					}
-
-					$couponsh[$coupon_code]['invoices'][] = $invoice->invoice_number;
-				}
-			}
-
-			if ( $invoice_counter >= $invoices_limit && ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
-				continue;
-			} else {
-				$invoice_counter++;
-			}
-
-			$status = aecHTML::Icon( 'plus' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->created_date ) . '<br />';
-
-			if ( isset( $invoice->params['deactivated'] ) ) {
-				$status .= aecHTML::Icon( 'remove-circle' ) . 'deactivated';
-			} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-				if ( isset( $invoice->params['pending_reason'] ) ) {
-					if ( $this->lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
-						$status .= aecHTML::Icon( 'warning-sign' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
-					} else {
-						$status .= aecHTML::Icon( 'warning-sign' ) . $invoice->params['pending_reason'];
-					}
-				} else {
-					$status .= aecHTML::Icon( 'time' ) . 'uncleared';
-				}
-			}
-
-			$actions	= array();
-			$rowstyle	= '';
-
-			if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-				$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number );
-
-				$actions = array(
-					array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info', '', $checkoutlink ),
-					array( 'cancel', 'remove', 'USERINVOICE_ACTION_CANCEL', 'danger' ),
-					array( 'clear', 'ok', 'USERINVOICE_ACTION_CLEAR_APPLY', 'success', '&applyplan=1' ),
-					array( 'clear', 'check', 'USERINVOICE_ACTION_CLEAR', 'warning' ),
-				);
-
-				$rowstyle = ' style="background-color:#fee;"';
-			} else {
-				$status .= aecHTML::Icon( 'shopping-cart' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
-			}
-
-			$actions[] = array( 'print', 'print', 'HISTORY_ACTION_PRINT', '', '&tmpl=component" target="_blank' );
-			$actions[] = array( 'pdf', 'file', 'PDF', '', '' );
-
-			$actionlist = '<div class="btn-group">';
-			foreach ( $actions as $action ) {
-				if ( !empty( $action[5] ) ) {
-					$alink = $action[5];
-				} else {
-					$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=editMembership&userid=' . $metaUser->userid;
-
-					if ( !empty( $action[4] ) ) {
-						$alink .= $action[4];
-					}
-				}
-
-				$actionlist .= aecHTML::Button( $action[1], $action[2], $action[3], $alink );
-			}
-			$actionlist .= '</div>';
-
-			$non_formatted = $invoice->invoice_number;
-			$invoice->formatInvoiceNumber();
-			$is_formatted = $invoice->invoice_number;
-
-			if ( $non_formatted != $is_formatted ) {
-				$is_formatted = $non_formatted . "\n" . '(' . $is_formatted . ')';
-			}
-
-			$invoices[$inv_id] = array();
-			$invoices[$inv_id]['rowstyle']			= $rowstyle;
-			$invoices[$inv_id]['invoice_number']	= $is_formatted;
-			$invoices[$inv_id]['amount']			= $invoice->amount . '&nbsp;' . $invoice->currency;
-			$invoices[$inv_id]['status']			= $status;
-
-			if ( $procs[$invoice->method] ) {
-				$invoices[$inv_id]['processor']		= $invoice->method;
-			} else {
-				$invoices[$inv_id]['processor']		= $procs[$invoice->method];
-			}
-
-			$invoices[$inv_id]['usage']				= $invoice->usage;
-			$invoices[$inv_id]['actions']			= $actionlist;
-		}
-
-		$coupons = array();
-
-		$coupon_counter = 0;
-		foreach ( $couponsh as $coupon_code => $coupon ) {
-			if ( $coupon_counter >= 10 ) {
-				continue;
-			} else {
-				$coupon_counter++;
-			}
-
-			$cc = array();
-			$cc['coupon_code']	= '<a href="index.php?option=com_acctexp&amp;task=editCoupon&id=' . $coupon['type'].'.'.$coupon['id'] . '">' . $coupon_code . '</a>';
-			$cc['invoices']		= implode( ", ", $coupon['invoices'] );
-
-			$coupons[] = $cc;
-		}
-
-		// get available plans
-		$available_plans	= SubscriptionPlanHandler::getActivePlanList(false);
-
-		$lists['assignto_plan'] = JHTML::_('select.genericlist', $available_plans, 'assignto_plan[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', 0 );
-
-		$userMIs = $metaUser->getUserMIs();
-
-		$mi					= array();
-		$mi['profile']		= array();
-		$mi['admin']		= array();
-		$mi['profile_form']	= array();
-		$mi['admin_form']	= array();
-
-		$params = array();
-
-		foreach ( $userMIs as $m ) {
-			$pref = 'mi_'.$m->id.'_';
-
-			$ui = $m->profile_info( $metaUser );
-			if ( !empty( $ui ) ) {
-				$mi['profile'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ui );
-			}
-
-			$uf = $m->profile_form( $metaUser, true );
-			if ( !empty( $uf ) ) {
-				foreach ( $uf as $k => $v ) {
-					$mi['profile_form'][] = $pref.$k;
-					$params[$pref.$k] = $v;
-				}
-			}
-
-			$ai = $m->admin_info( $metaUser );
-			if ( !empty( $ai ) ) {
-				$mi['admin'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ai );
-			}
-
-			$af = $m->admin_form( $metaUser );
-			if ( !empty( $af ) ) {
-				foreach ( $af as $k => $v ) {
-					$mi['admin_form'][] = $pref.$k;
-					$params[$pref.$k] = $v;
-				}
-			}
-		}
-
-		if ( !empty( $params ) ) {
-			$settings = new aecSettings ( 'userForm', 'mi' );
-			$settings->fullSettingsArray( $params, array(), $lists ) ;
-
-			// Call HTML Class
-			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-		} else {
-			$aecHTML = new stdClass();
-		}
-
-		$aecHTML->invoice_pages	= (int) ( aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid ) / $invoices_limit );
-		$aecHTML->invoice_page	= $page;
-		$aecHTML->sid			= $sid;
-
-		HTML_AcctExp::userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
-	}
-
-	function save( $option, $apply=0 )
-	{
-		$app = JFactory::getApplication();
-
-		$post = $_POST;
-
-		if ( $post['assignto_plan'][0] == 0 ) {
-			unset( $post['assignto_plan'][0] );
-		}
-
-		$metaUser = new metaUser( $post['userid'] );
-
-		if ( $metaUser->hasSubscription && !empty( $post['subscriptionid'] ) ) {
-			$metaUser->moveFocus( $post['subscriptionid'] );
-		}
-
-		$ck_primary = aecGetParam( 'ck_primary' );
-
-		if ( $ck_primary && !$metaUser->focusSubscription->primary ) {
-			$metaUser->focusSubscription->makePrimary();
-		}
-
-		if ( !empty( $post['assignto_plan'] ) && is_array( $post['assignto_plan'] ) ) {
-			foreach ( $post['assignto_plan'] as $assign_planid ) {
-				$plan = new SubscriptionPlan();
-				$plan->load( $assign_planid );
-
-				$metaUser->establishFocus( $plan );
-
-				$metaUser->focusSubscription->applyUsage( $assign_planid, 'none', 1 );
-
-				// We have to reload the metaUser object because of the changes
-				$metaUser = new metaUser( $post['userid'] );
-			}
-		}
-
-		$ck_lifetime = aecGetParam( 'ck_lifetime' );
-
-		$set_status = trim( aecGetParam( 'set_status', null ) );
-
-		if ( !$metaUser->hasSubscription ) {
-			if ( $set_status == 'excluded' ) {
-				$metaUser->focusSubscription = new Subscription();
-				$metaUser->focusSubscription->createNew( $metaUser->userid, 'none', 0 );
-
-				$metaUser->hasSubscription = true;
-			} else {
-				echo "<script> alert('".JText::_('AEC_ERR_NO_SUBSCRIPTION')."'); window.history.go(-1); </script>\n";
-				exit();
-			}
-		}
-
-		if ( empty( $post['assignto_plan'] ) ) {
-			if ( $ck_lifetime ) {
-				$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
-				$metaUser->focusSubscription->status		= 'Active';
-				$metaUser->focusSubscription->lifetime	= 1;
-			} elseif ( !empty( $post['expiration'] ) ) {
-				if ( $post['expiration'] != $post['expiration_check'] ) {
-					if ( strpos( $post['expiration'], ':' ) === false ) {
-						$metaUser->focusSubscription->expiration = $post['expiration'] . ' 00:00:00';
-					} else {
-						$metaUser->focusSubscription->expiration = $post['expiration'];
-					}
-
-					if ( $metaUser->focusSubscription->status == 'Trial' ) {
-						$metaUser->focusSubscription->status = 'Trial';
-					} else {
-						$metaUser->focusSubscription->status = 'Active';
-					}
-
-					$metaUser->focusSubscription->lifetime = 0;
-				}
-			}
-		}
-
-		if ( !empty( $set_status ) ) {
-			switch ( $set_status ) {
-				case 'expired':
-					$metaUser->focusSubscription->expire();
-					break;
-				case 'cancelled':
-					$metaUser->focusSubscription->cancel();
-					break;
-				default:
-					$metaUser->focusSubscription->setStatus( ucfirst( $set_status ) );
-					break;
-			}
-		}
-
-		if ( !empty( $post['notes'] ) ) {
-			$metaUser->focusSubscription->customparams['notes'] = $post['notes'];
-
-			unset( $post['notes'] );
-		}
-
-		if ( $metaUser->hasSubscription ) {
-			$metaUser->focusSubscription->storeload();
-		}
-
-		$userMIs = $metaUser->getUserMIs();
-
-		if ( !empty( $userMIs ) ) {
-			foreach ( $userMIs as $m ) {
-				$params = array();
-
-				$pref = 'mi_'.$m->id.'_';
-
-				$uf = $m->profile_form( $metaUser );
-				if ( !empty( $uf ) ) {
-					foreach ( $uf as $k => $v ) {
-						if ( isset( $post[$pref.$k] ) ) {
-							$params[$k] = $post[$pref.$k];
-						}
-					}
-
-					$m->profile_form_save( $metaUser, $params );
-				}
-
-				$admin_params = array();
-
-				$af = $m->admin_form( $metaUser );
-				if ( !empty( $af ) ) {
-					foreach ( $af as $k => $v ) {
-						if ( isset( $post[$pref.$k] ) ) {
-							$admin_params[$k] = $post[$pref.$k];
-						}
-					}
-
-					$m->admin_form_save( $metaUser, $admin_params );
-				}
-
-				if ( empty( $params ) ) {
-					continue;
-				}
-
-				$metaUser->meta->setMIParams( $m->id, null, $params, true );
-			}
-
-			$metaUser->meta->storeload();
-		}
-
-		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart	= $app->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
-
-		$nexttask	= aecGetParam( 'nexttask', 'showSubscriptions' ) ;
-
-		if ( empty( $nexttask ) ) {
-			$nexttask = 'showSubscriptions';
-		}
-
-		if ( $apply ) {
-			$subID = !empty($post['subscriptionid']) ? $post['subscriptionid'] : $metaUser->focusSubscription->id;
-
-			if ( empty( $subID ) ) {
-				aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $metaUser->userid, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-			} else {
-				aecRedirect( 'index.php?option=' . $option . '&task=editMembership&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-			}
-		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('SAVED') );
-		}
-	}
+	public $entity = 'Membership';
 
 	function browse( $option, $set_group, $subscriptionid, $userid=array(), $planid=null )
 	{
@@ -1939,6 +1563,411 @@ class aecAdminSubscription extends aecAdminEntity
 		$lists['set_time_unit'] = JHTML::_('select.genericlist', $perunit, 'set_time_unit', 'class="form-control inputbox" size="1"', 'value', 'text');
 
 		HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
+	}
+
+	function edit( $option, $userid, $subscriptionid, $task, $page=0 )
+	{
+		if ( !empty( $subscriptionid ) ) {
+			$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
+		}
+
+		if ( !empty( $subscriptionid ) ) {
+			$sid = $subscriptionid;
+		} else {
+			$sid = 0;
+		}
+
+		$lists = array();
+
+		$metaUser = new metaUser( $userid );
+
+		if ( !empty( $sid ) ) {
+			$metaUser->moveFocus( $sid );
+		} else {
+			if ( $metaUser->hasSubscription ) {
+				$sid = $metaUser->focusSubscription->id;
+			}
+		}
+
+		if ( $metaUser->loadSubscriptions() && !empty( $sid ) ) {
+			foreach ( $metaUser->allSubscriptions as $s_id => $s_c ) {
+				if ( $s_c->id == $sid ) {
+					$metaUser->allSubscriptions[$s_id]->current_focus = true;
+					continue;
+				}
+			}
+		}
+
+		$invoices_limit = 15;
+
+		$invoice_ids = aecInvoiceHelper::InvoiceIdList( $metaUser->userid, $page*$invoices_limit, $invoices_limit );
+
+		$group_selection = array();
+		$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
+		$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('EXPIRE_NOW') );
+		$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('EXPIRE_EXCLUDE') );
+		$group_selection[] = JHTML::_('select.option', 'active',	JText::_('EXPIRE_INCLUDE') );
+		$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('EXPIRE_CLOSE') );
+		$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('EXPIRE_CANCEL') );
+		$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
+
+		$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
+
+		$invoices = array();
+		$couponsh = array();
+		$invoice_counter = 0;
+
+		$processors = PaymentProcessorHandler::getObjectList(
+			PaymentProcessorHandler::getProcessorList()
+		);
+
+		$procs = array(
+			'free' => 'Free',
+			'none' => 'None'
+		);
+
+		foreach ( $processors as $processor ) {
+			$procs[$processor->processor_name] = $processor->processor->info['longname'];
+		}
+
+		foreach ( $invoice_ids as $inv_id ) {
+			$invoice = new Invoice();
+			$invoice->load ($inv_id );
+
+			if ( !empty( $invoice->coupons ) ) {
+				foreach( $invoice->coupons as $coupon_code ) {
+					if ( !isset( $couponsh[$coupon_code] ) ) {
+						$couponsh[$coupon_code] = couponHandler::idFromCode( $coupon_code );
+					}
+
+					$couponsh[$coupon_code]['invoices'][] = $invoice->invoice_number;
+				}
+			}
+
+			if ( $invoice_counter >= $invoices_limit && ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
+				continue;
+			} else {
+				$invoice_counter++;
+			}
+
+			$status = aecHTML::Icon( 'plus' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->created_date ) . '<br />';
+
+			if ( isset( $invoice->params['deactivated'] ) ) {
+				$status .= aecHTML::Icon( 'remove-circle' ) . 'deactivated';
+			} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+				if ( isset( $invoice->params['pending_reason'] ) ) {
+					if ( $this->lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
+						$status .= aecHTML::Icon( 'warning-sign' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
+					} else {
+						$status .= aecHTML::Icon( 'warning-sign' ) . $invoice->params['pending_reason'];
+					}
+				} else {
+					$status .= aecHTML::Icon( 'time' ) . 'uncleared';
+				}
+			}
+
+			$actions	= array();
+			$rowstyle	= '';
+
+			if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+				$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number );
+
+				$actions = array(
+					array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info', '', $checkoutlink ),
+					array( 'cancel', 'remove', 'USERINVOICE_ACTION_CANCEL', 'danger' ),
+					array( 'clear', 'ok', 'USERINVOICE_ACTION_CLEAR_APPLY', 'success', '&applyplan=1' ),
+					array( 'clear', 'check', 'USERINVOICE_ACTION_CLEAR', 'warning' ),
+				);
+
+				$rowstyle = ' style="background-color:#fee;"';
+			} else {
+				$status .= aecHTML::Icon( 'shopping-cart' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
+			}
+
+			$actions[] = array( 'print', 'print', 'HISTORY_ACTION_PRINT', '', '&tmpl=component" target="_blank' );
+			$actions[] = array( 'pdf', 'file', 'PDF', '', '' );
+
+			$actionlist = '<div class="btn-group">';
+			foreach ( $actions as $action ) {
+				if ( !empty( $action[5] ) ) {
+					$alink = $action[5];
+				} else {
+					$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=editMembership&userid=' . $metaUser->userid;
+
+					if ( !empty( $action[4] ) ) {
+						$alink .= $action[4];
+					}
+				}
+
+				$actionlist .= aecHTML::Button( $action[1], $action[2], $action[3], $alink );
+			}
+			$actionlist .= '</div>';
+
+			$non_formatted = $invoice->invoice_number;
+			$invoice->formatInvoiceNumber();
+			$is_formatted = $invoice->invoice_number;
+
+			if ( $non_formatted != $is_formatted ) {
+				$is_formatted = $non_formatted . "\n" . '(' . $is_formatted . ')';
+			}
+
+			$invoices[$inv_id] = array();
+			$invoices[$inv_id]['rowstyle']			= $rowstyle;
+			$invoices[$inv_id]['invoice_number']	= $is_formatted;
+			$invoices[$inv_id]['amount']			= $invoice->amount . '&nbsp;' . $invoice->currency;
+			$invoices[$inv_id]['status']			= $status;
+
+			if ( $procs[$invoice->method] ) {
+				$invoices[$inv_id]['processor']		= $invoice->method;
+			} else {
+				$invoices[$inv_id]['processor']		= $procs[$invoice->method];
+			}
+
+			$invoices[$inv_id]['usage']				= $invoice->usage;
+			$invoices[$inv_id]['actions']			= $actionlist;
+		}
+
+		$coupons = array();
+
+		$coupon_counter = 0;
+		foreach ( $couponsh as $coupon_code => $coupon ) {
+			if ( $coupon_counter >= 10 ) {
+				continue;
+			} else {
+				$coupon_counter++;
+			}
+
+			$cc = array();
+			$cc['coupon_code']	= '<a href="index.php?option=com_acctexp&amp;task=editCoupon&id=' . $coupon['type'].'.'.$coupon['id'] . '">' . $coupon_code . '</a>';
+			$cc['invoices']		= implode( ", ", $coupon['invoices'] );
+
+			$coupons[] = $cc;
+		}
+
+		// get available plans
+		$available_plans	= SubscriptionPlanHandler::getActivePlanList(false);
+
+		$lists['assignto_plan'] = JHTML::_('select.genericlist', $available_plans, 'assignto_plan[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', 0 );
+
+		$userMIs = $metaUser->getUserMIs();
+
+		$mi					= array();
+		$mi['profile']		= array();
+		$mi['admin']		= array();
+		$mi['profile_form']	= array();
+		$mi['admin_form']	= array();
+
+		$params = array();
+
+		foreach ( $userMIs as $m ) {
+			$pref = 'mi_'.$m->id.'_';
+
+			$ui = $m->profile_info( $metaUser );
+			if ( !empty( $ui ) ) {
+				$mi['profile'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ui );
+			}
+
+			$uf = $m->profile_form( $metaUser, true );
+			if ( !empty( $uf ) ) {
+				foreach ( $uf as $k => $v ) {
+					$mi['profile_form'][] = $pref.$k;
+					$params[$pref.$k] = $v;
+				}
+			}
+
+			$ai = $m->admin_info( $metaUser );
+			if ( !empty( $ai ) ) {
+				$mi['admin'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ai );
+			}
+
+			$af = $m->admin_form( $metaUser );
+			if ( !empty( $af ) ) {
+				foreach ( $af as $k => $v ) {
+					$mi['admin_form'][] = $pref.$k;
+					$params[$pref.$k] = $v;
+				}
+			}
+		}
+
+		if ( !empty( $params ) ) {
+			$settings = new aecSettings ( 'userForm', 'mi' );
+			$settings->fullSettingsArray( $params, array(), $lists ) ;
+
+			// Call HTML Class
+			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+		} else {
+			$aecHTML = new stdClass();
+		}
+
+		$aecHTML->invoice_pages	= (int) ( aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid ) / $invoices_limit );
+		$aecHTML->invoice_page	= $page;
+		$aecHTML->sid			= $sid;
+
+		HTML_AcctExp::userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
+	}
+
+	function save( $option, $apply=0 )
+	{
+		$app = JFactory::getApplication();
+
+		$post = $_POST;
+
+		if ( $post['assignto_plan'][0] == 0 ) {
+			unset( $post['assignto_plan'][0] );
+		}
+
+		$metaUser = new metaUser( $post['userid'] );
+
+		if ( $metaUser->hasSubscription && !empty( $post['subscriptionid'] ) ) {
+			$metaUser->moveFocus( $post['subscriptionid'] );
+		}
+
+		$ck_primary = aecGetParam( 'ck_primary' );
+
+		if ( $ck_primary && !$metaUser->focusSubscription->primary ) {
+			$metaUser->focusSubscription->makePrimary();
+		}
+
+		if ( !empty( $post['assignto_plan'] ) && is_array( $post['assignto_plan'] ) ) {
+			foreach ( $post['assignto_plan'] as $assign_planid ) {
+				$plan = new SubscriptionPlan();
+				$plan->load( $assign_planid );
+
+				$metaUser->establishFocus( $plan );
+
+				$metaUser->focusSubscription->applyUsage( $assign_planid, 'none', 1 );
+
+				// We have to reload the metaUser object because of the changes
+				$metaUser = new metaUser( $post['userid'] );
+			}
+		}
+
+		$ck_lifetime = aecGetParam( 'ck_lifetime' );
+
+		$set_status = trim( aecGetParam( 'set_status', null ) );
+
+		if ( !$metaUser->hasSubscription ) {
+			if ( $set_status == 'excluded' ) {
+				$metaUser->focusSubscription = new Subscription();
+				$metaUser->focusSubscription->createNew( $metaUser->userid, 'none', 0 );
+
+				$metaUser->hasSubscription = true;
+			} else {
+				echo "<script> alert('".JText::_('AEC_ERR_NO_SUBSCRIPTION')."'); window.history.go(-1); </script>\n";
+				exit();
+			}
+		}
+
+		if ( empty( $post['assignto_plan'] ) ) {
+			if ( $ck_lifetime ) {
+				$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
+				$metaUser->focusSubscription->status		= 'Active';
+				$metaUser->focusSubscription->lifetime	= 1;
+			} elseif ( !empty( $post['expiration'] ) ) {
+				if ( $post['expiration'] != $post['expiration_check'] ) {
+					if ( strpos( $post['expiration'], ':' ) === false ) {
+						$metaUser->focusSubscription->expiration = $post['expiration'] . ' 00:00:00';
+					} else {
+						$metaUser->focusSubscription->expiration = $post['expiration'];
+					}
+
+					if ( $metaUser->focusSubscription->status == 'Trial' ) {
+						$metaUser->focusSubscription->status = 'Trial';
+					} else {
+						$metaUser->focusSubscription->status = 'Active';
+					}
+
+					$metaUser->focusSubscription->lifetime = 0;
+				}
+			}
+		}
+
+		if ( !empty( $set_status ) ) {
+			switch ( $set_status ) {
+				case 'expired':
+					$metaUser->focusSubscription->expire();
+					break;
+				case 'cancelled':
+					$metaUser->focusSubscription->cancel();
+					break;
+				default:
+					$metaUser->focusSubscription->setStatus( ucfirst( $set_status ) );
+					break;
+			}
+		}
+
+		if ( !empty( $post['notes'] ) ) {
+			$metaUser->focusSubscription->customparams['notes'] = $post['notes'];
+
+			unset( $post['notes'] );
+		}
+
+		if ( $metaUser->hasSubscription ) {
+			$metaUser->focusSubscription->storeload();
+		}
+
+		$userMIs = $metaUser->getUserMIs();
+
+		if ( !empty( $userMIs ) ) {
+			foreach ( $userMIs as $m ) {
+				$params = array();
+
+				$pref = 'mi_'.$m->id.'_';
+
+				$uf = $m->profile_form( $metaUser );
+				if ( !empty( $uf ) ) {
+					foreach ( $uf as $k => $v ) {
+						if ( isset( $post[$pref.$k] ) ) {
+							$params[$k] = $post[$pref.$k];
+						}
+					}
+
+					$m->profile_form_save( $metaUser, $params );
+				}
+
+				$admin_params = array();
+
+				$af = $m->admin_form( $metaUser );
+				if ( !empty( $af ) ) {
+					foreach ( $af as $k => $v ) {
+						if ( isset( $post[$pref.$k] ) ) {
+							$admin_params[$k] = $post[$pref.$k];
+						}
+					}
+
+					$m->admin_form_save( $metaUser, $admin_params );
+				}
+
+				if ( empty( $params ) ) {
+					continue;
+				}
+
+				$metaUser->meta->setMIParams( $m->id, null, $params, true );
+			}
+
+			$metaUser->meta->storeload();
+		}
+
+		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$limitstart	= $app->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
+
+		$nexttask	= aecGetParam( 'nexttask', 'showSubscriptions' ) ;
+
+		if ( empty( $nexttask ) ) {
+			$nexttask = 'showSubscriptions';
+		}
+
+		if ( $apply ) {
+			$subID = !empty($post['subscriptionid']) ? $post['subscriptionid'] : $metaUser->focusSubscription->id;
+
+			if ( empty( $subID ) ) {
+				aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $metaUser->userid, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			} else {
+				aecRedirect( 'index.php?option=' . $option . '&task=editMembership&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			}
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('SAVED') );
+		}
 	}
 }
 
@@ -3257,7 +3286,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 		$customparamsarray->mi = $mi_settings;
 
-		$settings = new aecSettings ( 'payplan', 'general' );
+		$settings = new aecSettings( 'payplan', 'general' );
 
 		if ( is_array( $customparams_values ) ) {
 			$settingsparams = array_merge( $params_values, $customparams_values, $restrictions_values );
