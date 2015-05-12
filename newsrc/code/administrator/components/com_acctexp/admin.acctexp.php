@@ -449,7 +449,19 @@ class aecAdminEntity
 	{
 		if ( ($task == 'edit') && empty($this->id) ) $task = 'new';
 
-		$this->$task();
+		$r = new ReflectionMethod(
+			get_class($className),
+			$task
+		);
+
+		$params = $r->getParameters();
+
+		$parameters = array();
+		foreach ( $params as $k ) {
+			$parameters[$k] = aecGetParam($k);
+		}
+
+		call_user_func_array(array($this, $task), $parameters);
 	}
 
 	public function redirect( $task='browse', $entity=null )

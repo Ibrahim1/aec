@@ -344,7 +344,7 @@ class HTML_myCommon
 		} else {
 			return '<a'
 				. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' btn-aec-submit"'
-				. ' data-action="' . $action . '" data-entity="' . $object . '"'
+				. ' data-task="' . $action . '" data-entity="' . $object . '"'
 				. ( !empty($button['actionable']) ? ' disabled="disabled"' : '' )
 				. ' href="#"'
 				. ' rel="tooltip"'
