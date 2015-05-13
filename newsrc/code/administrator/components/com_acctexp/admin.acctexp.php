@@ -450,7 +450,7 @@ class aecAdminEntity
 		if ( ($task == 'edit') && empty($this->id) ) $task = 'new';
 
 		$r = new ReflectionMethod(
-			get_class($className),
+			get_class($this),
 			$task
 		);
 
@@ -458,7 +458,7 @@ class aecAdminEntity
 
 		$parameters = array();
 		foreach ( $params as $k ) {
-			$parameters[$k] = aecGetParam($k);
+			$parameters[$k->getName()] = aecGetParam($k);
 		}
 
 		call_user_func_array(array($this, $task), $parameters);
@@ -471,18 +471,18 @@ class aecAdminEntity
 		aecRedirect( 'index.php?option=com_acctexp&task=' . $task . '&entity=' . $entity );
 	}
 
-	public function cancel( $option )
+	public function cancel()
 	{
 		$nexttask = aecGetParam( 'nexttask', 'config' ) ;
 
-		$this->redirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('CANCELED') );
+		$this->redirect( 'index.php?option=com_acctexp&task=' . $nexttask, JText::_('CANCELED') );
 	}
 
-	function order( $option, $type, $id, $up, $customreturn=null )
+	function order( $up )
 	{
 		foreach( $this->id as $id ) {
 			$row = new $this->entity;
-			$row->load( $this->id );
+			$row->load( $id );
 			$row->move( $up ? -1 : 1 );
 		}
 
@@ -523,10 +523,10 @@ class aecAdminEntity
 		echo $newstate;
 	}
 
-	function copy( $option, $type, $id, $customreturn=null )
+	function copy( $type, $id, $customreturn=null )
 	{
 		foreach ( $id as $pid ) {
-			$row = new $type();
+			$row = new $this->entity();
 			$row->load( $pid );
 			$row->copy();
 		}
