@@ -28,20 +28,12 @@ JLoader::register('JPaneTabs',  JPATH_LIBRARIES.'/joomla/html/pane.php');
 
 xJACLhandler::adminBlock( $aecConfig->cfg['adminaccess'], $aecConfig->cfg['manageraccess'] );
 
-$task			= trim( aecGetParam( 'task', null ) );
-$returnTask 	= trim( aecGetParam( 'returnTask', null ) );
-$userid			= aecGetParam( 'userid', null );
-$subscriptionid	= aecGetParam( 'subscriptionid', null );
-$id				= aecGetParam( 'id', null );
+$entity = trim( aecGetParam( 'entity', 'central' ) );
+$task = trim( aecGetParam( 'task', 'index' ) );
 
-if ( !is_null( $id ) ) {
-	if ( !is_array( $id ) ) {
-		$savid = $id;
+$id = aecGetParam( 'id', null );
 
-		$id = array();
-		$id[0] = $savid;
-	}
-}
+if ( !is_null($id) && !is_array($id) ) $id = array($id);
 
 $db = JFactory::getDBO();
 
@@ -62,20 +54,7 @@ switch( strtolower( $task ) ) {
 		echo "wolves teeth";
 		break;
 
-	case 'editmembership': editUser( $option, $userid, $subscriptionid, $returnTask, aecGetParam('page') ); break;
-
-	case 'savemembership': saveUser( $option ); break;
-	case 'applymembership': saveUser( $option, 1 ); break;
-	case 'cancelmembership': cancel( $option ); break;
-	case 'showcentral': aecCentral( $option ); break;
-
 	case 'showsubscriptions': listSubscriptions( $option, '', $subscriptionid, $userid, aecGetParam('plan') ); break;
-
-	case 'showallsubscriptions':
-		$groups = array( 'active', 'expired', 'pending', 'cancelled', 'hold', 'closed' );
-
-		listSubscriptions( $option, $groups, $subscriptionid, $userid, aecGetParam('plan') );
-		break;
 
 	case 'showexcluded': listSubscriptions( $option, 'excluded', $subscriptionid, $userid ); break;
 	case 'showactive': listSubscriptions( $option, 'active', $subscriptionid, $userid ); break;
@@ -478,7 +457,7 @@ class aecAdminEntity
 		$this->redirect( 'index.php?option=com_acctexp&task=' . $nexttask, JText::_('CANCELED') );
 	}
 
-	function order( $up )
+	public function order( $up )
 	{
 		foreach( $this->id as $id ) {
 			$row = new $this->entity;
@@ -489,7 +468,7 @@ class aecAdminEntity
 		$this->redirect();
 	}
 
-	function toggle( $type, $id, $property )
+	public function toggle( $type, $id, $property )
 	{
 		$query = 'SELECT `'.$property.'` FROM #__acctexp_' . $type
 			. ' WHERE `id` = ' . $id
@@ -523,7 +502,7 @@ class aecAdminEntity
 		echo $newstate;
 	}
 
-	function copy( $type, $id, $customreturn=null )
+	public function copy( $type, $id, $customreturn=null )
 	{
 		foreach ( $id as $pid ) {
 			$row = new $this->entity();
@@ -564,7 +543,7 @@ class aecAdminEntity
 
 class aecAdminCentral extends aecAdminEntity
 {
-	public function browse()
+	public function index()
 	{
 		HTML_AcctExp::central();
 	}
@@ -605,7 +584,7 @@ class aecAdminCentral extends aecAdminEntity
 		echo 1;exit;
 	}
 
-	function getNotice()
+	public function getNotice()
 	{
 		$this->db->setQuery(
 			'SELECT *'
@@ -634,7 +613,7 @@ class aecAdminCentral extends aecAdminEntity
 
 class aecAdminSettings
 {
-	function edit( $option )
+	public function edit( $option )
 	{
 		global $aecConfig;
 
@@ -956,7 +935,7 @@ class aecAdminSettings
 		HTML_AcctExp::Settings( $option, $aecHTML, $params, $tab_data );
 	}
 
-	function save( $option, $return=0 )
+	public function save( $option, $return=0 )
 	{
 		$user= JFactory::getUser();
 
@@ -1077,7 +1056,7 @@ class aecAdminMembership extends aecAdminEntity
 {
 	public $entity = 'Membership';
 
-	function browse( $option, $set_group, $subscriptionid, $userid=array(), $planid=null )
+	public function index( $subscriptionid, $userid=array(), $planid=null )
 	{
 		$app = JFactory::getApplication();
 
@@ -1577,7 +1556,7 @@ class aecAdminMembership extends aecAdminEntity
 		HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
 	}
 
-	function edit( $option, $userid, $subscriptionid, $task, $page=0 )
+	public function edit( $option, $userid, $subscriptionid, $task, $page=0 )
 	{
 		if ( !empty( $subscriptionid ) ) {
 			$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
@@ -1818,7 +1797,7 @@ class aecAdminMembership extends aecAdminEntity
 		HTML_AcctExp::userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
 	}
 
-	function save( $option, $apply=0 )
+	public function save( $option, $apply=0 )
 	{
 		$app = JFactory::getApplication();
 
@@ -1985,7 +1964,7 @@ class aecAdminMembership extends aecAdminEntity
 
 class aecAdminTemplate extends aecAdminEntity
 {
-	function browse( $option )
+	public function index( $option )
 	{
 		$this->app = JFactory::getApplication();
 
@@ -2029,7 +2008,7 @@ class aecAdminTemplate extends aecAdminEntity
 		HTML_AcctExp::listTemplates( $rows, $pageNav, $option );
 	}
 
-	function edit( $option, $name )
+	public function edit( $option, $name )
 	{
 		$temp = new configTemplate();
 		$temp->loadName( $name );
@@ -2051,7 +2030,7 @@ class aecAdminTemplate extends aecAdminEntity
 		HTML_AcctExp::editTemplate( $option, $aecHTML, $tempsettings['tab_data'] );
 	}
 
-	function save( $option, $name, $return=0 )
+	public function save( $option, $name, $return=0 )
 	{
 		$temp = new configTemplate();
 		$temp->loadName( $name );
@@ -2104,7 +2083,7 @@ class aecAdminTemplate extends aecAdminEntity
 
 class aecAdminProcessor extends aecAdminEntity
 {
-	function browse( $option )
+	public function index( $option )
 	{
 		$limit = $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -2145,7 +2124,7 @@ class aecAdminProcessor extends aecAdminEntity
 		HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
 	}
 
-	function edit( $id, $option )
+	public function edit( $id, $option )
 	{
 		if ( $id ) {
 			$pp = new PaymentProcessor();
@@ -2288,7 +2267,7 @@ class aecAdminProcessor extends aecAdminEntity
 		HTML_AcctExp::editProcessor( $option, $aecHTML );
 	}
 
-	function change( $cid=null, $state=0, $type, $option )
+	public function change( $cid=null, $state=0, $type, $option )
 	{
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -2320,7 +2299,7 @@ class aecAdminProcessor extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', $msg );
 	}
 
-	function save( $option, $return=0 )
+	public function save( $option, $return=0 )
 	{
 		$pp = new PaymentProcessor();
 
@@ -2401,7 +2380,7 @@ class aecAdminProcessor extends aecAdminEntity
 
 class aecAdminSubscriptionPlan extends aecAdminEntity
 {
-	function getList()
+	public function getList()
 	{
 		$rows = SubscriptionPlanHandler::getFullPlanList();
 
@@ -2534,7 +2513,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		echo json_encode( $ret );exit;
 	}
 
-	function browse( $option )
+	public function index( $option )
 	{
 		$limit			= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart		= $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -2727,7 +2706,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option );
 	}
 
-	function edit( $id, $option )
+	public function edit( $id, $option )
 	{
 		global $aecConfig;
 
@@ -3318,7 +3297,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
 	}
 
-	function save( $option, $apply=0 )
+	public function save( $option, $apply=0 )
 	{
 		$row = new SubscriptionPlan();
 		$row->load( $_POST['id'] );
@@ -3411,7 +3390,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		}
 	}
 
-	function remove( $id, $option )
+	public function remove( $id, $option )
 	{
 		$ids = implode( ',', $id );
 
@@ -3445,7 +3424,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 	}
 
-	function change( $cid=null, $state=0, $type, $option )
+	public function change( $cid=null, $state=0, $type, $option )
 	{
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -3480,7 +3459,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 class aecAdminItemGroup extends aecAdminEntity
 {
-	function browse( $option )
+	public function index( $option )
 	{
 		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -3595,7 +3574,7 @@ class aecAdminItemGroup extends aecAdminEntity
 		HTML_AcctExp::listItemGroups( $rows, $pageNav, $option, $orderby, $search );
 	}
 
-	function edit( $id, $option )
+	public function edit( $id, $option )
 	{
 		$lists = array();
 		$params_values = array();
@@ -3782,7 +3761,7 @@ class aecAdminItemGroup extends aecAdminEntity
 		HTML_AcctExp::editItemGroup( $option, $aecHTML, $row );
 	}
 
-	function save( $option, $apply=0 )
+	public function save( $option, $apply=0 )
 	{
 		$row = new ItemGroup();
 		$row->load( $_POST['id'] );
@@ -3819,7 +3798,7 @@ class aecAdminItemGroup extends aecAdminEntity
 		}
 	}
 
-	function remove( $id, $option )
+	public function remove( $id, $option )
 	{
 		$ids = implode( ',', $id );
 
@@ -3858,7 +3837,7 @@ class aecAdminItemGroup extends aecAdminEntity
 		}
 	}
 
-	function change( $cid=null, $state=0, $type, $option )
+	public function change( $cid=null, $state=0, $type, $option )
 	{
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -3894,7 +3873,7 @@ class aecAdminItemGroup extends aecAdminEntity
 
 class aecAdminMicroIntegration extends aecAdminEntity
 {
-	function browse( $option )
+	public function index( $option )
 	{
 		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart	= $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -3993,7 +3972,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
 	}
 
-	function edit( $id, $option )
+	public function edit( $id, $option )
 	{
 		$lists	= array();
 		$mi		= new microIntegration();
@@ -4199,7 +4178,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML, $attached );
 	}
 
-	function save( $option, $apply=0 )
+	public function save( $option, $apply=0 )
 	{
 		unset( $_POST['option'] );
 		unset( $_POST['task'] );
@@ -4302,7 +4281,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 	}
 
-	function remove( $id, $option )
+	public function remove( $id, $option )
 	{
 		$ids = implode( ',', $id );
 
@@ -4343,12 +4322,12 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
 	}
 
-	function cancel( $option )
+	public function cancel( $option )
 	{
 		aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('AEC_CMN_EDIT_CANCELLED') );
 	}
 
-	function change( $cid=null, $state=0, $option )
+	public function change( $cid=null, $state=0, $option )
 	{
 		if ( count( $cid ) < 1 ) {
 			$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH'): JText::_('AEC_CMN_TOUNPUBLISH');
@@ -4381,7 +4360,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 class aecAdminCoupon extends aecAdminEntity
 {
-	function browse( $option )
+	public function index( $option )
 	{
 		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -4478,7 +4457,7 @@ class aecAdminCoupon extends aecAdminEntity
 		HTML_AcctExp::listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby );
 	}
 
-	function edit( $id, $option, $new )
+	public function edit( $id, $option, $new )
 	{
 		$lists = array();
 
@@ -4757,7 +4736,7 @@ class aecAdminCoupon extends aecAdminEntity
 		HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon );
 	}
 
-	function save( $option, $apply=0 )
+	public function save( $option, $apply=0 )
 	{
 		$new = 0;
 		$type = $_POST['type'];
@@ -4823,7 +4802,7 @@ class aecAdminCoupon extends aecAdminEntity
 
 	}
 
-	function remove( $id, $option, $returnTask )
+	public function remove( $id, $option, $returnTask )
 	{
 		$rids = $sids = array();
 		foreach ( $id as $i ) {
@@ -4865,7 +4844,7 @@ class aecAdminCoupon extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
 	}
 
-	function change( $id=null, $state=0, $option )
+	public function change( $id=null, $state=0, $option )
 	{
 		if ( count( $id ) < 1 ) {
 			$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH') : JText::_('AEC_CMN_TOUNPUBLISH');
@@ -4911,7 +4890,7 @@ class aecAdminCoupon extends aecAdminEntity
 
 class aecAdminInvoice extends aecAdminEntity
 {
-	public function browse( $option )
+	public function index( $option )
 	{
 		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
 		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -5031,7 +5010,7 @@ class aecAdminInvoice extends aecAdminEntity
 		HTML_AcctExp::viewInvoices( $option, $invoices, $search, $pageNav, $orderby );
 	}
 
-	function edit( $id, $option, $returnTask, $userid )
+	public function edit( $id, $option, $returnTask, $userid )
 	{
 		$row = new Invoice();
 		$row->load( $id );
@@ -5098,7 +5077,7 @@ class aecAdminInvoice extends aecAdminEntity
 		HTML_AcctExp::editInvoice( $option, $aecHTML, $id );
 	}
 
-	function save( $option, $return=0 )
+	public function save( $option, $return=0 )
 	{
 		$row = new Invoice();
 		$row->load( $_POST['id'] );
@@ -5159,7 +5138,7 @@ class aecAdminInvoice extends aecAdminEntity
 		}
 	}
 
-	function clear( $option, $invoice_number, $applyplan, $task )
+	public function clear( $option, $invoice_number, $applyplan, $task )
 	{
 		$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
@@ -5189,7 +5168,7 @@ class aecAdminInvoice extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('AEC_MSG_INVOICE_CLEARED') );
 	}
 
-	function cancel( $option, $invoice_number, $task )
+	public function cancel( $option, $invoice_number, $task )
 	{
 		$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
@@ -5208,7 +5187,7 @@ class aecAdminInvoice extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('REMOVED') );
 	}
 
-	function printout( $option, $invoice_number, $standalone=true )
+	public function printout( $option, $invoice_number, $standalone=true )
 	{
 		$invoice = new Invoice();
 		$invoice->loadInvoiceNumber( $invoice_number );
@@ -5217,7 +5196,7 @@ class aecAdminInvoice extends aecAdminEntity
 		$iFactory->invoiceprint( $invoice->invoice_number, $standalone );
 	}
 
-	function printoutPDF( $option, $invoice_number )
+	public function printoutPDF( $option, $invoice_number )
 	{
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
@@ -5251,7 +5230,7 @@ class aecAdminInvoice extends aecAdminEntity
 
 class aecAdminService extends aecAdminEntity
 {
-	function browse( $option )
+	public function index( $option )
 	{
 		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -5298,7 +5277,7 @@ class aecAdminService extends aecAdminEntity
 		HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
 	}
 
-	function edit( $id, $option )
+	public function edit( $id, $option )
 	{
 		$lists = array();
 		$params_values = array();
@@ -5366,7 +5345,7 @@ class aecAdminService extends aecAdminEntity
 		HTML_AcctExp::editService( $option, $row, $aecHTML );
 	}
 
-	function save( $option, $apply=0 )
+	public function save( $option, $apply=0 )
 	{
 		$post = AECToolbox::cleanPOST( $_POST, false );
 
@@ -5402,7 +5381,7 @@ class aecAdminService extends aecAdminEntity
 		}
 	}
 
-	function remove( $id, $option )
+	public function remove( $id, $option )
 	{
 		$ids = implode( ',', $id );
 
@@ -5436,7 +5415,7 @@ class aecAdminService extends aecAdminEntity
 		}
 	}
 
-	function change( $cid=null, $state=0, $type, $option )
+	public function change( $cid=null, $state=0, $type, $option )
 	{
 		$this->db = JFactory::getDBO();
 
@@ -5473,7 +5452,7 @@ class aecAdminService extends aecAdminEntity
 
 class aecAdminHistory
 {
-	function browse( $option )
+	public function index( $option )
 	{
 		$this->app = JFactory::getApplication();
 
@@ -5531,7 +5510,7 @@ class aecAdminHistory
 
 class aecAdminEventlog
 {
-	function eventlog( $option )
+	public function eventlog( $option )
 	{
 		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
 		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -5622,7 +5601,7 @@ class aecAdminEventlog
 
 class aecAdminStats
 {
-	function browse( $option, $page )
+	public function index( $option, $page )
 	{
 		if ( empty( $page ) ) {
 			$page = 'overview';
@@ -5738,7 +5717,7 @@ class aecAdminStats
 		HTML_AcctExp::stats( $option, $page, $stats );
 	}
 
-	function request( $option, $type, $start, $end )
+	public function request( $option, $type, $start, $end )
 	{
 		$tree = new stdClass();
 

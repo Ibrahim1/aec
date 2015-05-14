@@ -124,15 +124,17 @@ class HTML_myCommon
 	static function startForm( $multipart=false )
 	{
 		?>
-			<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"<?php if ($multipart){ echo ' enctype="multipart/form-data"';} ?>>
-			<?php
+		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"<?php if ($multipart){ echo ' enctype="multipart/form-data"';} ?>>
+		<?php
 	}
 
-	static function endForm( $option, $id, $task='' )
+	static function endForm( $entity='', $task='', $id='' )
 	{
-		$options = array( 'id' => $id, 'option' => $option, 'task' => $task );
+		$options = array( 'id' => $id, 'option' => 'com_acctexp', 'entity' => $entity, 'task' => $task );
 
 		foreach ( $options as $name => $value ) {
+			if ( empty($value) ) continue;
+
 			echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
 		}
 
@@ -902,7 +904,7 @@ class HTML_AcctExp
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
 		<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="task" value="save" />
 		<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
 
@@ -1329,8 +1331,7 @@ class HTML_AcctExp
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="returnTask" value="" />
+			<input type="hidden" name="task" value="save" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
 		<div class="row">
@@ -1524,11 +1525,8 @@ class HTML_AcctExp
 						}
 
 					}
+					HTML_myCommon::endForm('Settings', 'save', 1);
 					?>
-					<input type="hidden" name="id" value="1" />
-					<input type="hidden" name="task" value="" />
-					<input type="hidden" name="option" value="<?php echo $option; ?>" />
-					</form>
 				</div>
 			</div>
 		</div>
@@ -1591,13 +1589,10 @@ class HTML_AcctExp
 					</div>
 				</div>
 			</div>
-		<?php } ?>
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="showProcessors" />
-		<input type="hidden" name="returnTask" value="showProcessors" />
-		<input type="hidden" name="boxchecked" value="0" />
-		</form>
-		<?php
+		<?php }
+
+		HTML_myCommon::endForm('Processor');
+
  		HTML_myCommon::endCommon();
 	}
 
@@ -1632,7 +1627,7 @@ class HTML_AcctExp
 		</div>
 		<?php
 
-		HTML_myCommon::endForm( $option, $id, 'saveProcessor' );
+		HTML_myCommon::endForm('Processor', 'save', $id);
 
 		echo $aecHTML->loadJS();
 
@@ -1679,12 +1674,10 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="showTemplates" />
-		<input type="hidden" name="returnTask" value="showTemplates" />
-		<input type="hidden" name="boxchecked" value="0" />
-		</form>
 		<?php
+
+		HTML_myCommon::endForm('Template');
+
  		HTML_myCommon::endCommon();
 	}
 
@@ -1740,15 +1733,15 @@ class HTML_AcctExp
 		}
 
 		$tabs->endPanes();
-		?>
-		<input type="hidden" name="name" value="<?php echo $aecHTML->tempname; ?>" />
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		</form>
 
+		?>
 		</div>
 
+		<input type="hidden" name="name" value="<?php echo $aecHTML->tempname; ?>" />
 		<?php
+
+		HTML_myCommon::endForm('Template');
+
 		echo $aecHTML->loadJS();
 
  		HTML_myCommon::endCommon();
@@ -1865,9 +1858,7 @@ class HTML_AcctExp
 				</div>
 			</div>
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
-			<input type="hidden" name="task" value="showActive" />
-			<input type="hidden" name="returnTask" value="showActive" />
-			<input type="hidden" name="boxchecked" value="0" />
+			<input type="hidden" name="entity" value="Membership" />
 
 			<div class="modal fade" id="bulk-edit">
 				<div class="modal-dialog">
@@ -1987,8 +1978,7 @@ class HTML_AcctExp
 			</div>
 		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="showMicroIntegrations" />
-		<input type="hidden" name="returnTask" value="showMicroIntegrations" />
+		<input type="hidden" name="entity" value="MicroIntegration" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 		<?php
@@ -2124,7 +2114,8 @@ class HTML_AcctExp
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="entity" value="MicroIntegration" />
+		<input type="hidden" name="task" value="save" />
 		</form>
 
 		</div>
@@ -2267,8 +2258,7 @@ class HTML_AcctExp
 		</div>
 		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="showSubscriptionPlans" />
-		<input type="hidden" name="returnTask" value="showSubscriptionPlans" />
+		<input type="hidden" name="entity" value="SubscriptionPlan" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
@@ -2641,7 +2631,8 @@ class HTML_AcctExp
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="entity" value="SubscriptionPlan" />
+		<input type="hidden" name="task" value="save" />
 		</form>
 
 		</div>
@@ -2741,9 +2732,7 @@ class HTML_AcctExp
 			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="showItemGroups" />
-		<input type="hidden" name="returnTask" value="showItemGroups" />
-		<input type="hidden" name="boxchecked" value="0" />
+		<input type="hidden" name="entity" value="ItemGroup" />
 		</form>
 
 		<?php
@@ -2905,7 +2894,8 @@ class HTML_AcctExp
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="entity" value="ItemGroup" />
+		<input type="hidden" name="task" value="save" />
 		</form>
 
 		</div>
@@ -2990,9 +2980,7 @@ class HTML_AcctExp
 			</div>
 		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="showCoupons" />
-		<input type="hidden" name="returnTask" value="showCoupons" />
-		<input type="hidden" name="boxchecked" value="0" />
+		<input type="hidden" name="entity" value="Coupon" />
 		</form>
 
 		<?php
@@ -3143,7 +3131,8 @@ class HTML_AcctExp
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="oldtype" value="<?php echo $row->type; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="entity" value="Coupon" />
+		<input type="hidden" name="task" value="save" />
 		</form>
 
 		</div>
@@ -3221,9 +3210,7 @@ class HTML_AcctExp
 			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="invoices" />
-		<input type="hidden" name="returnTask" value="invoices" />
-		<input type="hidden" name="boxchecked" value="0" />
+		<input type="hidden" name="entity" value="Invoice" />
 		</form>
 
 		<?php
@@ -3277,7 +3264,7 @@ class HTML_AcctExp
 
 		<?php
 
-		HTML_myCommon::endForm( $option, $id, 'saveInvoice' );
+		HTML_myCommon::endForm('Invoice', 'save', $id);
 
 		echo $aecHTML->loadJS();
 
