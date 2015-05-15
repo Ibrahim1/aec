@@ -1481,7 +1481,7 @@ class HTML_AcctExp
 	/**
 	 * @param aecHTML $aecHTML
 	 */
-	static function Settings( $option, $aecHTML, $params, $tab_data )
+	static function Settings( $aecHTML, $params, $tab_data )
 	{
 		jimport( 'joomla.html.editor' );
 

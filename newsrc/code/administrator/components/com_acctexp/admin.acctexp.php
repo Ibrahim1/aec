@@ -611,9 +611,9 @@ class aecAdminCentral extends aecAdminEntity
 	}
 }
 
-class aecAdminSettings
+class aecAdminSettings extends aecAdminEntity
 {
-	public function edit( $option )
+	public function edit()
 	{
 		global $aecConfig;
 
@@ -932,10 +932,10 @@ class aecAdminSettings
 			$aecHTML->customparams = $customparamsarray;
 		}
 
-		HTML_AcctExp::Settings( $option, $aecHTML, $params, $tab_data );
+		HTML_AcctExp::Settings( $aecHTML, $params, $tab_data );
 	}
 
-	public function save( $option, $return=0 )
+	public function save( $return=0 )
 	{
 		$user= JFactory::getUser();
 
@@ -1045,8 +1045,6 @@ class aecAdminSettings
 		if ( $return ) {
 			$this->redirect('edit', 'Settings', JText::_('AEC_CONFIG_SAVED'));
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_SAVED') );
-
 			$this->redirect('browse', 'Central', JText::_('AEC_CONFIG_SAVED'));
 		}
 	}
