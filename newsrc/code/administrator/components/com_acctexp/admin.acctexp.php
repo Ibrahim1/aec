@@ -519,6 +519,39 @@ class aecAdminEntity
 		$eventlog->issue( $short, $tags, $event, $level, $params );
 	}
 
+    public function getState( $params )
+    {
+        $option = 'com_acctexp';
+
+        $this->state->limit = $this->app->getUserStateFromRequest(
+            "viewlistlimit",
+            'limit',
+            $this->app->getCfg('list_limit')
+        );
+
+        $this->state->limitstart = $this->app->getUserStateFromRequest(
+            "viewconf{$option}limitstart",
+            'limitstart',
+            0
+        );
+
+        $this->state->search = xJ::escape( $this->db, trim(
+            strtolower( $this->app->getUserStateFromRequest(
+                "search{$option}_subscr",
+                'search',
+                ''
+            ) )
+        ) );
+
+        foreach ( $params as $key => $default ) {
+            $this->state->{$key} = $this->app->getUserStateFromRequest(
+                'aec_' . $this->entity . '_' . $key,
+                $this->entity . '_' . $key,
+                $default
+            );
+        }
+    }
+
 	public function getRanges( $nums )
 	{
 		sort($nums);
@@ -1057,6 +1090,16 @@ class aecAdminMembership extends aecAdminEntity
 	public function index( $subscriptionid, $userid=array(), $planid=null )
 	{
 		$app = JFactory::getApplication();
+
+
+        $this->state->orderby = $this->app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
+
+        $this->state->groups = $this->app->getUserStateFromRequest(
+            "groups{$option}", 'groups', 'active'
+        );
+
+
+        $state = $this->getState( array(array( 'orderby' => 'name ASC'), 'groups') );
 
 		$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 		$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
