@@ -34,7 +34,7 @@ class HTML_myCommon
 				<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
 			</div>
 		</div>
-		<?php
+	<?php
 	}
 
 	static function addBackendCSS()
@@ -110,7 +110,7 @@ class HTML_myCommon
 		?>
 		<div class="modal fade" id="notifications">
 		</div>
-		<?php
+	<?php
 
 	}
 
@@ -123,9 +123,9 @@ class HTML_myCommon
 
 	static function startForm( $multipart=false )
 	{
-		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"<?php if ($multipart){ echo ' enctype="multipart/form-data"';} ?>>
-		<?php
+	?>
+	<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"<?php if ($multipart){ echo ' enctype="multipart/form-data"';} ?>>
+	<?php
 	}
 
 	static function endForm( $entity='', $task='', $id='' )
@@ -169,9 +169,9 @@ class HTML_myCommon
 										<input type="hidden" name="previous-search" value="<?php echo $value; ?>"/>
 										<input class="form-control input-lg" type="text" name="search" placeholder="<?php echo $placeholder; ?>" value="<?php echo $value; ?>" />
 										<span id="searchclear" class="glyphicon glyphicon-remove"></span>
-							<span class="input-group-btn">
-								<a class="btn btn-lg btn-primary" onclick="document.adminForm.submit();"><i class="glyphicon glyphicon-search"></i></a>
-							</span>
+								<span class="input-group-btn">
+									<a class="btn btn-lg btn-primary" onclick="document.adminForm.submit();"><i class="glyphicon glyphicon-search"></i></a>
+								</span>
 									</div>
 								</div>
 							<?php } ?>
@@ -337,23 +337,23 @@ class HTML_myCommon
 
 		if ( !empty($button['modal']) ) {
 			return '<a href="#' . $button['modal']
-				. '" id="' . $button['modal'] . '-trigger"'
-				. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' toolbar-notify" data-toggle="modal">'
-					. aecHTML::Icon( $button['icon'] )
-					. '&nbsp;&nbsp;'
-					. ( $fulltext ? '' : $button['text'] )
-				. '</a>';
+			. '" id="' . $button['modal'] . '-trigger"'
+			. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' toolbar-notify" data-toggle="modal">'
+			. aecHTML::Icon( $button['icon'] )
+			. '&nbsp;&nbsp;'
+			. ( $fulltext ? '' : $button['text'] )
+			. '</a>';
 		} else {
 			return '<a'
-				. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' btn-aec-submit"'
-				. ' data-task="' . $action . '" data-entity="' . $object . '"'
-				. ( !empty($button['actionable']) ? ' disabled="disabled"' : '' )
-				. ' href="#"'
-				. ' rel="tooltip"'
-				. ' data-original-title="' . ( $fulltext ? '' : $button['text'] ) . '">'
-					. ( empty($button['multi-icon']) ? '' : aecHTML::Icon( $button['multi-icon'], ' display-on-multiselect" style="margin-right: 6px;"' ) )
-					. aecHTML::Icon( $button['icon'] ) . ( $fulltext ? ' ' . $button['text'] : '' )
-				. '</a>';
+			. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' btn-aec-submit"'
+			. ' data-task="' . $action . '" data-entity="' . $object . '"'
+			. ( !empty($button['actionable']) ? ' disabled="disabled"' : '' )
+			. ' href="#"'
+			. ' rel="tooltip"'
+			. ' data-original-title="' . ( $fulltext ? '' : $button['text'] ) . '">'
+			. ( empty($button['multi-icon']) ? '' : aecHTML::Icon( $button['multi-icon'], ' display-on-multiselect" style="margin-right: 6px;"' ) )
+			. aecHTML::Icon( $button['icon'] ) . ( $fulltext ? ' ' . $button['text'] : '' )
+			. '</a>';
 		}
 	}
 
@@ -379,11 +379,11 @@ class HTML_myCommon
 
 		if ( ( $property == 'default' ) && $state ) {
 			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-sm <?php echo $csscl;?> ui-disabled" id="<?php echo $cssid;?>" href="#" disabled="disabled" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
-				<?php echo aecHTML::Icon( $icons[$state] ); ?>
+			<?php echo aecHTML::Icon( $icons[$state] ); ?>
 			</a><?php
 		} else {
 			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-sm <?php echo $csscl;?>" id="<?php echo $cssid;?>" href="#" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
-				<?php echo aecHTML::Icon( $icons[$state] ); ?>
+			<?php echo aecHTML::Icon( $icons[$state] ); ?>
 			</a><?php
 		}
 	}
@@ -396,7 +396,7 @@ class HTML_AcctExp
 	 */
 	static function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
-		?><script type="text/javascript">
+	?><script type="text/javascript">
 		jQuery(document).ready(function() {
 			if ( jQuery("input#ck_lifetime").is(':checked') ) {
 				jQuery("input#expiration").attr("disabled", "disabled");
@@ -410,506 +410,506 @@ class HTML_AcctExp
 				}
 			});
 		});
-		</script><?php
+	</script><?php
 
-		HTML_myCommon::startCommon('aec-wrap-geometry', 'aec-wrap-inner-light');
+	HTML_myCommon::startCommon('aec-wrap-geometry', 'aec-wrap-inner-light');
 
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$edituserlink		= 'index.php?option=com_users&amp;task=user.edit&amp;id=' . $metaUser->userid;
-			$activateuserlink	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $metaUser->cmsUser->activation;
-		} else {
-			$edituserlink		= 'index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=' . $metaUser->userid;
-			$activateuserlink	= 'index.php?option=com_user&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation;
+	if ( defined( 'JPATH_MANIFESTS' ) ) {
+		$edituserlink		= 'index.php?option=com_users&amp;task=user.edit&amp;id=' . $metaUser->userid;
+		$activateuserlink	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $metaUser->cmsUser->activation;
+	} else {
+		$edituserlink		= 'index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=' . $metaUser->userid;
+		$activateuserlink	= 'index.php?option=com_user&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation;
+	}
+
+	$exp = $icon = $status = "";
+
+	if ( $metaUser->hasSubscription ) {
+		if ( isset( $metaUser->focusSubscription->expiration ) ) {
+			$exp = $metaUser->focusSubscription->expiration;
 		}
 
-		$exp = $icon = $status = "";
-
-		if ( $metaUser->hasSubscription ) {
-			if ( isset( $metaUser->focusSubscription->expiration ) ) {
-				$exp = $metaUser->focusSubscription->expiration;
-			}
-
-			switch( $metaUser->focusSubscription->status ) {
-				case 'Excluded':
-					$icon = 'repeat';
-					$status	= JText::_('AEC_CMN_EXCLUDED');
-					break;
-				case 'Trial':
-					$icon 	= 'star';
-					$status	= JText::_('AEC_CMN_TRIAL');
-					break;
-				case 'Pending':
-					$icon 	= 'star';
-					$status	= JText::_('AEC_CMN_PENDING');
-					break;
-				case 'Active':
-					$icon	= 'ok';
-					$status	= JText::_('AEC_CMN_ACTIVE');
-					break;
-				case 'Cancelled':
-				case 'Cancel':
-					$icon	= 'warning-sign';
-					$status	= JText::_('AEC_CMN_CANCEL');
-					break;
-				case 'Held':
-				case 'Hold':
-					$icon	= 'warning-sign';
-					$status	= JText::_('AEC_CMN_HOLD');
-					break;
-				case 'Expired':
-					$icon	= 'remove';
-					$status	= JText::_('AEC_CMN_EXPIRED');
-					break;
-				case 'Closed':
-					$icon	= 'remove';
-					$status	= JText::_('AEC_CMN_CLOSED');
-					break;
-				default:
-					$icon	= 'remove-circle';
-					$status	= JText::_('AEC_CMN_NOT_SET');
-					break;
-			}
+		switch( $metaUser->focusSubscription->status ) {
+			case 'Excluded':
+				$icon = 'repeat';
+				$status	= JText::_('AEC_CMN_EXCLUDED');
+				break;
+			case 'Trial':
+				$icon 	= 'star';
+				$status	= JText::_('AEC_CMN_TRIAL');
+				break;
+			case 'Pending':
+				$icon 	= 'star';
+				$status	= JText::_('AEC_CMN_PENDING');
+				break;
+			case 'Active':
+				$icon	= 'ok';
+				$status	= JText::_('AEC_CMN_ACTIVE');
+				break;
+			case 'Cancelled':
+			case 'Cancel':
+				$icon	= 'warning-sign';
+				$status	= JText::_('AEC_CMN_CANCEL');
+				break;
+			case 'Held':
+			case 'Hold':
+				$icon	= 'warning-sign';
+				$status	= JText::_('AEC_CMN_HOLD');
+				break;
+			case 'Expired':
+				$icon	= 'remove';
+				$status	= JText::_('AEC_CMN_EXPIRED');
+				break;
+			case 'Closed':
+				$icon	= 'remove';
+				$status	= JText::_('AEC_CMN_CLOSED');
+				break;
+			default:
+				$icon	= 'remove-circle';
+				$status	= JText::_('AEC_CMN_NOT_SET');
+				break;
 		}
+	}
 
-		$buttons = array(
-			'applyMembership' => array(
-				'style' => 'info',
-				'text' => JText::_('APPLY'),
-				'icon' => 'ok-sign' ),
-			'saveMembership' => array(
-				'style' => 'success',
-				'text' => JText::_('SAVE'),
-				'icon' => 'ok' ),
-			'hl1' => array(),
-			'cancelMembership' => array(
-				'style' => 'danger',
-				'text' => JText::_('CANCEL'),
-				'icon' => 'remove'
-			)
-		);
+	$buttons = array(
+		'applyMembership' => array(
+			'style' => 'info',
+			'text' => JText::_('APPLY'),
+			'icon' => 'ok-sign' ),
+		'saveMembership' => array(
+			'style' => 'success',
+			'text' => JText::_('SAVE'),
+			'icon' => 'ok' ),
+		'hl1' => array(),
+		'cancelMembership' => array(
+			'style' => 'danger',
+			'text' => JText::_('CANCEL'),
+			'icon' => 'remove'
+		)
+	);
 
-		HTML_myCommon::startForm();
+	HTML_myCommon::startForm();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, '' );
+	HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, '' );
 
-		?><div class="col-sm-12"><?php
+	?><div class="col-sm-12"><?php
 
-		$tabs = new bsPaneTabs;
+	$tabs = new bsPaneTabs;
 
-		$tabs->startTabs();
-		$tabs->newTab( 'user', JText::_('AEC_HEAD_PLAN_INFO') );
-		$tabs->newTab( 'mis', JText::_('AEC_USER_MICRO_INTEGRATION') );
-		$tabs->endTabs();
+	$tabs->startTabs();
+	$tabs->newTab( 'user', JText::_('AEC_HEAD_PLAN_INFO') );
+	$tabs->newTab( 'mis', JText::_('AEC_USER_MICRO_INTEGRATION') );
+	$tabs->endTabs();
 
-		$tabs->startPanes();
+	$tabs->startPanes();
 
-		$tabs->nextPane( 'user', true ); ?>
-		<div class="row">
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
-				<div class="row">
-					<?php if ( $metaUser->hasSubscription ) { ?>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></label>
-								<div class="col-sm-8">
-									<p class="form-control-static"><?php echo $metaUser->focusSubscription->id; ?></p>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></label>
-								<div class="col-sm-8">
-									<p class="form-control-static">#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</p>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
-								<div class="col-sm-8">
-									<p class="form-control-static"><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></p>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></label>
-								<div class="col-sm-8">
-									<p class="form-control-static"><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></p>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label" for="ck_primary">
-									<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
-								</label>
-								<div class="col-sm-8">
-									<input type="hidden" value="0" name="ck_primary"/>
-									<div>
-										<input id="ck_primary" class="bootstrap-toggle" type="checkbox" name="ck_primary"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->primary; ?>"/>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label class="col-sm-4 control-label" for="expiration_current">
-									<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
-								</label>
-								<div class="col-sm-8">
-									<p class="form-control-static"><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></p>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label" for="ck_lifetime">
-									<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
-								</label>
-								<div class="col-sm-8">
-									<input type="hidden" value="0" name="ck_lifetime"/>
-									<div>
-										<input id="ck_lifetime" class="bootstrap-toggle" type="checkbox" name="ck_lifetime"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->lifetime; ?>"/>
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">
-									<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
-								</label>
-								<div class="col-sm-8">
-									<div>
-										<input id="datepicker-expiration" name="expiration" class="jqui-datetimepicker" type="text" value="<?php echo $exp ?>">
-										<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label" for="set_status">
-									<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
-								</label>
-								<div class="col-sm-8">
-									<div>
-										<?php echo $lists['set_status']; ?>
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label" for="assignto_plan">
-									<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
-								</label>
-								<div class="col-sm-8">
-									<div>
-										<?php echo $lists['assignto_plan']; ?>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					<?php } else { ?>
-						<div class="col-sm-12">
-							<div class="form-group">
-								<label class="col-sm-4 control-label" for="assignto_plan">
-									<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
-								</label>
-								<div class="col-sm-8">
-									<div>
-										<?php echo $lists['assignto_plan']; ?>
-									</div>
-								</div>
-							</div>
-						</div>
-					<?php } ?>
-				</div>
-			</section>
-			<section class="paper">
-				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?> History</h4>
+	$tabs->nextPane( 'user', true ); ?>
+	<div class="row">
+	<div class="col-sm-6">
+		<section class="paper">
+			<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
+			<div class="row">
 				<?php if ( $metaUser->hasSubscription ) { ?>
-					<div class="form-group">
-						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></label>
-						<div class="col-sm-8">
-							<p class="form-control-static">#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</p>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USED_PLANS'); ?></label>
-						<div class="col-sm-8">
-							<div>
-								<span>
-									<?php if ( !empty( $metaUser->meta->plan_history->used_plans ) ) { ?>
-										<ul>
-											<?php foreach ( $metaUser->meta->plan_history->used_plans as $used => $amount ) { ?>
-												<li>#<?php echo $used; ?> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? JText::_('AEC_USER_TIMES') : JText::_('AEC_USER_TIME') ); ?>)</li>
-											<?php } ?>
-										</ul>
-									<?php } else {
-										echo JText::_('AEC_USER_NO_PREV_PLANS');
-									} ?>
-								</span>
-							</div>
-						</div>
-					</div>
-				<?php } ?>
-				<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
-					<br />
-					<p><strong><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS');?>:</strong></p>
-					<table class="infobox_table table-striped">
-						<tr>
-							<th>&nbsp;</th>
-							<th>&nbsp;</th>
-							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID');?></th>
-							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_STATUS');?></th>
-							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_PROCESSOR');?></th>
-							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_SINGUP');?></th>
-							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_EXPIRATION');?></th>
-						</tr>
-						<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
-							<tr<?php echo isset( $subs->current_focus ) ? ' class="current-focus"' : ''; ?>>
-								<td><?php echo isset( $subs->current_focus ) ? '<strong>&rArr;</strong>' : '&nbsp;'; ?></td>
-								<td><?php echo $subs->primary ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-								<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=editMembership&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
-								<td><?php echo $subs->status; ?></td>
-								<td><?php echo $subs->type; ?></td>
-								<td><?php echo $subs->signup_date; ?></td>
-								<td><?php echo $subs->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $subs->expiration ); ?></td>
-							</tr>
-						<?php
-						} ?>
-					</table>
-				<?php } elseif ( $metaUser->hasSubscription ) { ?>
-					<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NOPE');?></p>
-				<?php } else { ?>
-					<div class="alert alert-danger">
-						<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NONE');?></p>
-					</div>
-				<?php } ?>
-			</section>
-			<section class="paper">
-				<h4><?php echo 'Notes'; ?></h4>
-				<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
-			</section>
-		</div>
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
-				<div class="row">
 					<div class="col-sm-6">
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USERID'); ?></label>
+							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></label>
 							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo $metaUser->userid; ?></p>
+								<p class="form-control-static"><?php echo $metaUser->focusSubscription->id; ?></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></label>
+							<div class="col-sm-8">
+								<p class="form-control-static">#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</p>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
 							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></p>
+								<p class="form-control-static"><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></p>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PROFILE'); ?></label>
+							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></label>
 							<div class="col-sm-8">
-								<p class="form-control-static"><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></p>
+								<p class="form-control-static"><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></p>
 							</div>
 						</div>
-						<?php if ( aecComponentHelper::detect_component('anyCB') ) { ?>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">CB Profile</label>
-								<div class="col-sm-8">
-									<p class="form-control-static"><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></p>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="ck_primary">
+								<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
+							</label>
+							<div class="col-sm-8">
+								<input type="hidden" value="0" name="ck_primary"/>
+								<div>
+									<input id="ck_primary" class="bootstrap-toggle" type="checkbox" name="ck_primary"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->primary; ?>"/>
 								</div>
 							</div>
-						<?php } ?>
-						<?php if ( aecComponentHelper::detect_component('JOMSOCIAL') ) { ?>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">JomSocial Profile</label>
-								<div class="col-sm-8">
-									<p class="form-control-static"><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></p>
-								</div>
-							</div>
-						<?php } ?>
+						</div>
 					</div>
 					<div class="col-sm-6">
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USERNAME'); ?></label>
+							<label class="col-sm-4 control-label" for="expiration_current">
+								<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
+							</label>
 							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo $metaUser->cmsUser->username; ?></p>
+								<p class="form-control-static"><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></p>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_NAME'); ?></label>
+							<label class="col-sm-4 control-label" for="ck_lifetime">
+								<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
+							</label>
 							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo $metaUser->cmsUser->name; ?></p>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_EMAIL'); ?></label>
-							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo $metaUser->cmsUser->email; ?> (<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</p>
-							</div>
-						</div>
-						<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
-							<div class="form-group">
-								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_TYPE'); ?></label>
-								<div class="col-sm-8">
-									<p class="form-control-static"><?php echo $metaUser->cmsUser->usertype; ?></p>
+								<input type="hidden" value="0" name="ck_lifetime"/>
+								<div>
+									<input id="ck_lifetime" class="bootstrap-toggle" type="checkbox" name="ck_lifetime"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->lifetime; ?>"/>
 								</div>
 							</div>
-						<?php } ?>
+						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_REGISTERED'); ?></label>
+							<label class="col-sm-4 control-label">
+								<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
+							</label>
 							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></p>
+								<div>
+									<input id="datepicker-expiration" name="expiration" class="jqui-datetimepicker" type="text" value="<?php echo $exp ?>">
+									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></label>
+							<label class="col-sm-4 control-label" for="set_status">
+								<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
+							</label>
 							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo $metaUser->cmsUser->lastvisitDate; ?></p>
+								<div>
+									<?php echo $lists['set_status']; ?>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="assignto_plan">
+								<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
+							</label>
+							<div class="col-sm-8">
+								<div>
+									<?php echo $lists['assignto_plan']; ?>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</section>
-			<section class="paper">
-				<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
-				<table class="infobox_table table-striped">
-					<thead>
-					<tr>
-						<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
-						<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
-						<th><?php echo JText::_('HISTORY_COL_DATE');?></th>
-						<th><?php echo JText::_('HISTORY_COL_METHOD');?></th>
-						<th><?php echo JText::_('HISTORY_COL_PLAN');?></th>
-						<th><?php echo JText::_('HISTORY_COL_ACTION');?></th>
-					</tr>
-					</thead>
-					<tbody>
-					<?php
-					if ( !empty( $invoices ) ) {
-						foreach ( $invoices as $invoice_id => $invoice ) { ?>
-							<tr<?php echo $invoice['rowstyle']; ?>>
-								<td>
-									<a href="index.php?option=com_acctexp&amp;task=editInvoice&amp;returnTask=invoices&amp;id=<?php echo $invoice_id; ?>"><?php echo $invoice['invoice_number']; ?></a>
-								</td>
-								<td><?php echo $invoice['amount']; ?></td>
-								<td><?php echo $invoice['status']; ?></td>
-								<td><?php echo $invoice['processor']; ?></td>
-								<td><a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=<?php echo $invoice['usage']; ?>" target="_blank"><?php echo $invoice['usage']; ?></a></td>
-								<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
-							</tr>
-						<?php
-						}
 
-						if ( $aecHTML->invoice_pages > 1 ) {
-							echo '<div class="aec-invoices-pagination"><p>';
-							$plist = array();
-							for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
-								if ( $i == $aecHTML->invoice_page ) {
-									$plist[] = ( $i + 1 );
-								} else {
-									$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&amp;page=' . $i . '">' . ( $i + 1 ) . '</a>';
-								}
-							}
-							echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
-						}
-					} else {
-						echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
-							. JText::_('AEC_USER_NO_INVOICES')
-							. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-					}
-					?>
-					</tbody>
-					<tfoot>
-					<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'plus' ); ?> Add Invoice</a></td></tr>
-					</tfoot>
-				</table>
-			</section>
-			<section class="paper">
-				<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
-				<table class="infobox_table table-striped">
-					<thead>
-					<tr>
-						<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
-						<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
-					</tr>
-					</thead>
-					<tbody>
-					<?php
-					if ( !empty( $coupons ) ) {
-						foreach ( $coupons as $coupon ) { ?>
-							<tr>
-								<td><?php echo $coupon['coupon_code']; ?></td>
-								<td><?php echo $coupon['invoices']; ?></td>
-							</tr>
-						<?php
-						}
-					} else {
-						echo '<tr><td colspan="2" style="text-align:center;">&gt;&gt;&nbsp;'
-							. JText::_('AEC_USER_NO_COUPONS')
-							. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-					} ?>
-					</tbody>
-				</table>
-			</section>
-		</div>
-		</div>
-		<?php $tabs->nextPane( 'mis' ); ?>
-			<div class="row">
-				<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
-					<div class="col-sm-6">
-						<section class="paper">
-							<h4><?php echo JText::_('Profile Form'); ?></h4>
-							<p>(This is what the user sees on the frontend.)</p>
-							<?php if ( !empty( $mi['profile'] ) ) { ?>
-								<?php foreach ( $mi['profile'] as $mix ) { ?>
-									<div class="profileinfobox">
-										<h4><?php echo $mix['name']; ?></h4>
-										<p><?php echo $mix['info']; ?></p>
-									</div>
-								<?php } ?>
-							<?php }
-							if ( !empty( $mi['profile_form'] ) ) { ?>
-								<?php foreach ( $mi['profile_form'] as $k ) { ?>
-									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
-								<?php } ?>
-							<?php } ?>
-						</section>
-					</div>
-				<?php } ?>
-				<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
-					<div class="col-sm-6">
-						<section class="paper">
-							<h4><?php echo JText::_('Admin Form'); ?></h4>
-							<?php if ( !empty( $mi['admin'] ) ) { ?>
-								<?php foreach ( $mi['admin'] as $mix ) { ?>
-									<div class="admininfobox">
-										<h4><?php echo $mix['name']; ?></h4>
-										<p><?php echo $mix['info']; ?></p>
-									</div>
-								<?php } ?>
-							<?php }
-							if ( !empty( $mi['admin_form'] ) ) { ?>
-								<?php foreach ( $mi['admin_form'] as $k ) { ?>
-									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
-								<?php } ?>
-							<?php } ?>
-						</section>
-					</div>
-				<?php }
-				if ( !empty( $metaUser->meta->params->mi ) ) { ?>
+				<?php } else { ?>
 					<div class="col-sm-12">
-						<section class="paper">
-							<h4><?php echo JText::_('Database Records'); ?></h4>
-							<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
-						</section>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="assignto_plan">
+								<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
+							</label>
+							<div class="col-sm-8">
+								<div>
+									<?php echo $lists['assignto_plan']; ?>
+								</div>
+							</div>
+						</div>
 					</div>
 				<?php } ?>
 			</div>
-		<?php $tabs->endPanes(); ?>
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
-		<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
-		<input type="hidden" name="task" value="save" />
-		<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
-		</form>
+		</section>
+		<section class="paper">
+			<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?> History</h4>
+			<?php if ( $metaUser->hasSubscription ) { ?>
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></label>
+					<div class="col-sm-8">
+						<p class="form-control-static">#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USED_PLANS'); ?></label>
+					<div class="col-sm-8">
+						<div>
+									<span>
+										<?php if ( !empty( $metaUser->meta->plan_history->used_plans ) ) { ?>
+											<ul>
+												<?php foreach ( $metaUser->meta->plan_history->used_plans as $used => $amount ) { ?>
+													<li>#<?php echo $used; ?> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? JText::_('AEC_USER_TIMES') : JText::_('AEC_USER_TIME') ); ?>)</li>
+												<?php } ?>
+											</ul>
+										<?php } else {
+											echo JText::_('AEC_USER_NO_PREV_PLANS');
+										} ?>
+									</span>
+						</div>
+					</div>
+				</div>
+			<?php } ?>
+			<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
+				<br />
+				<p><strong><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS');?>:</strong></p>
+				<table class="infobox_table table-striped">
+					<tr>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+						<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID');?></th>
+						<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_STATUS');?></th>
+						<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_PROCESSOR');?></th>
+						<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_SINGUP');?></th>
+						<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_EXPIRATION');?></th>
+					</tr>
+					<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
+						<tr<?php echo isset( $subs->current_focus ) ? ' class="current-focus"' : ''; ?>>
+							<td><?php echo isset( $subs->current_focus ) ? '<strong>&rArr;</strong>' : '&nbsp;'; ?></td>
+							<td><?php echo $subs->primary ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
+							<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=editMembership&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
+							<td><?php echo $subs->status; ?></td>
+							<td><?php echo $subs->type; ?></td>
+							<td><?php echo $subs->signup_date; ?></td>
+							<td><?php echo $subs->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $subs->expiration ); ?></td>
+						</tr>
+					<?php
+					} ?>
+				</table>
+			<?php } elseif ( $metaUser->hasSubscription ) { ?>
+				<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NOPE');?></p>
+			<?php } else { ?>
+				<div class="alert alert-danger">
+					<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NONE');?></p>
+				</div>
+			<?php } ?>
+		</section>
+		<section class="paper">
+			<h4><?php echo 'Notes'; ?></h4>
+			<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
+		</section>
+	</div>
+	<div class="col-sm-6">
+		<section class="paper">
+			<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USERID'); ?></label>
+						<div class="col-sm-8">
+							<p class="form-control-static"><?php echo $metaUser->userid; ?></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
+						<div class="col-sm-8">
+							<p class="form-control-static"><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PROFILE'); ?></label>
+						<div class="col-sm-8">
+							<p class="form-control-static"><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></p>
+						</div>
+					</div>
+					<?php if ( aecComponentHelper::detect_component('anyCB') ) { ?>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">CB Profile</label>
+							<div class="col-sm-8">
+								<p class="form-control-static"><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></p>
+							</div>
+						</div>
+					<?php } ?>
+					<?php if ( aecComponentHelper::detect_component('JOMSOCIAL') ) { ?>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">JomSocial Profile</label>
+							<div class="col-sm-8">
+								<p class="form-control-static"><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></p>
+							</div>
+						</div>
+					<?php } ?>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USERNAME'); ?></label>
+						<div class="col-sm-8">
+							<p class="form-control-static"><?php echo $metaUser->cmsUser->username; ?></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_NAME'); ?></label>
+						<div class="col-sm-8">
+							<p class="form-control-static"><?php echo $metaUser->cmsUser->name; ?></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_EMAIL'); ?></label>
+						<div class="col-sm-8">
+							<p class="form-control-static"><?php echo $metaUser->cmsUser->email; ?> (<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</p>
+						</div>
+					</div>
+					<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
+						<div class="form-group">
+							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_TYPE'); ?></label>
+							<div class="col-sm-8">
+								<p class="form-control-static"><?php echo $metaUser->cmsUser->usertype; ?></p>
+							</div>
+						</div>
+					<?php } ?>
+					<div class="form-group">
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_REGISTERED'); ?></label>
+						<div class="col-sm-8">
+							<p class="form-control-static"><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></label>
+						<div class="col-sm-8">
+							<p class="form-control-static"><?php echo $metaUser->cmsUser->lastvisitDate; ?></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="paper">
+			<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
+			<table class="infobox_table table-striped">
+				<thead>
+				<tr>
+					<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
+					<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
+					<th><?php echo JText::_('HISTORY_COL_DATE');?></th>
+					<th><?php echo JText::_('HISTORY_COL_METHOD');?></th>
+					<th><?php echo JText::_('HISTORY_COL_PLAN');?></th>
+					<th><?php echo JText::_('HISTORY_COL_ACTION');?></th>
+				</tr>
+				</thead>
+				<tbody>
+				<?php
+				if ( !empty( $invoices ) ) {
+					foreach ( $invoices as $invoice_id => $invoice ) { ?>
+						<tr<?php echo $invoice['rowstyle']; ?>>
+							<td>
+								<a href="index.php?option=com_acctexp&amp;task=editInvoice&amp;returnTask=invoices&amp;id=<?php echo $invoice_id; ?>"><?php echo $invoice['invoice_number']; ?></a>
+							</td>
+							<td><?php echo $invoice['amount']; ?></td>
+							<td><?php echo $invoice['status']; ?></td>
+							<td><?php echo $invoice['processor']; ?></td>
+							<td><a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=<?php echo $invoice['usage']; ?>" target="_blank"><?php echo $invoice['usage']; ?></a></td>
+							<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
+						</tr>
+					<?php
+					}
 
-		<?php
-		HTML_myCommon::endCommon();
+					if ( $aecHTML->invoice_pages > 1 ) {
+						echo '<div class="aec-invoices-pagination"><p>';
+						$plist = array();
+						for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
+							if ( $i == $aecHTML->invoice_page ) {
+								$plist[] = ( $i + 1 );
+							} else {
+								$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&amp;page=' . $i . '">' . ( $i + 1 ) . '</a>';
+							}
+						}
+						echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
+					}
+				} else {
+					echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
+						. JText::_('AEC_USER_NO_INVOICES')
+						. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+				}
+				?>
+				</tbody>
+				<tfoot>
+				<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'plus' ); ?> Add Invoice</a></td></tr>
+				</tfoot>
+			</table>
+		</section>
+		<section class="paper">
+			<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
+			<table class="infobox_table table-striped">
+				<thead>
+				<tr>
+					<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
+					<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
+				</tr>
+				</thead>
+				<tbody>
+				<?php
+				if ( !empty( $coupons ) ) {
+					foreach ( $coupons as $coupon ) { ?>
+						<tr>
+							<td><?php echo $coupon['coupon_code']; ?></td>
+							<td><?php echo $coupon['invoices']; ?></td>
+						</tr>
+					<?php
+					}
+				} else {
+					echo '<tr><td colspan="2" style="text-align:center;">&gt;&gt;&nbsp;'
+						. JText::_('AEC_USER_NO_COUPONS')
+						. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+				} ?>
+				</tbody>
+			</table>
+		</section>
+	</div>
+	</div>
+	<?php $tabs->nextPane( 'mis' ); ?>
+	<div class="row">
+		<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Profile Form'); ?></h4>
+					<p>(This is what the user sees on the frontend.)</p>
+					<?php if ( !empty( $mi['profile'] ) ) { ?>
+						<?php foreach ( $mi['profile'] as $mix ) { ?>
+							<div class="profileinfobox">
+								<h4><?php echo $mix['name']; ?></h4>
+								<p><?php echo $mix['info']; ?></p>
+							</div>
+						<?php } ?>
+					<?php }
+					if ( !empty( $mi['profile_form'] ) ) { ?>
+						<?php foreach ( $mi['profile_form'] as $k ) { ?>
+							<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+						<?php } ?>
+					<?php } ?>
+				</section>
+			</div>
+		<?php } ?>
+		<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Admin Form'); ?></h4>
+					<?php if ( !empty( $mi['admin'] ) ) { ?>
+						<?php foreach ( $mi['admin'] as $mix ) { ?>
+							<div class="admininfobox">
+								<h4><?php echo $mix['name']; ?></h4>
+								<p><?php echo $mix['info']; ?></p>
+							</div>
+						<?php } ?>
+					<?php }
+					if ( !empty( $mi['admin_form'] ) ) { ?>
+						<?php foreach ( $mi['admin_form'] as $k ) { ?>
+							<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+						<?php } ?>
+					<?php } ?>
+				</section>
+			</div>
+		<?php }
+		if ( !empty( $metaUser->meta->params->mi ) ) { ?>
+			<div class="col-sm-12">
+				<section class="paper">
+					<h4><?php echo JText::_('Database Records'); ?></h4>
+					<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+				</section>
+			</div>
+		<?php } ?>
+	</div>
+	<?php $tabs->endPanes(); ?>
+	<input type="hidden" name="option" value="<?php echo $option; ?>" />
+	<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
+	<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
+	<input type="hidden" name="task" value="save" />
+	<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
+	</form>
+
+	<?php
+	HTML_myCommon::endCommon();
 	}
 
 	static function SubscriptionName( $subscriptionid )
@@ -947,9 +947,9 @@ class HTML_AcctExp
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT COUNT(*)'
-				. ' FROM #__acctexp_eventlog'
-				. ' WHERE `notify` = \'1\''
-				;
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+		;
 		$db->setQuery( $query );
 		$notices = $db->loadResult();
 
@@ -968,28 +968,28 @@ class HTML_AcctExp
 					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" class="toolbar-notify"><?php echo aecHTML::Icon( 'envelope' ); ?> <?php echo $notices ?></a>
 				<?php } ?>
 				<ul class="nav navbar-nav">
-				<?php foreach ( $menu as $mid => $m ) { ?>
-					<?php if ( isset( $m['items'] ) ) { ?>
-						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?><span class="caret"></span></a>
-							<ul class="dropdown-menu">
-							<?php
-							foreach ( $m['items'] as $item ) {
-								if ( is_array( $item ) ) {
-									echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
-								} else {
-									echo '<li class="divider"></li>';
-								}
-							}
-							?>
-							</ul>
-						</li>
-					<?php } else { ?>
-						<li>
-							<a href="#help" id="aecmenu-<?php echo str_replace( " ", "-", strtolower( $m['short'] ) ) ?>" data-toggle="modal"><?php echo $m['short'] ?></a>
-						</li>
+					<?php foreach ( $menu as $mid => $m ) { ?>
+						<?php if ( isset( $m['items'] ) ) { ?>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?><span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<?php
+									foreach ( $m['items'] as $item ) {
+										if ( is_array( $item ) ) {
+											echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
+										} else {
+											echo '<li class="divider"></li>';
+										}
+									}
+									?>
+								</ul>
+							</li>
+						<?php } else { ?>
+							<li>
+								<a href="#help" id="aecmenu-<?php echo str_replace( " ", "-", strtolower( $m['short'] ) ) ?>" data-toggle="modal"><?php echo $m['short'] ?></a>
+							</li>
+						<?php } ?>
 					<?php } ?>
-				<?php } ?>
 				</ul>
 				<form action="#" class="pull-right">
 					<input type="text" placeholder="Quicksearch" id="quicksearch" data-placement="bottom" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
@@ -1321,7 +1321,7 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<?php
+	<?php
 	}
 
 	static function hacks ( $option, $hacks )
@@ -1398,8 +1398,8 @@ class HTML_AcctExp
 			</div>
 		</div>
 
- 		<?php
- 		HTML_myCommon::endCommon();
+		<?php
+		HTML_myCommon::endCommon();
 	}
 
 	static function help()
@@ -1434,48 +1434,48 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<?php
+	<?php
 	}
 
 	static function eventlogModal( $notices, $furthernotices )
 	{
 		?>
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-						<h3>Eventlog</h3>
-					</div>
-					<div class="modal-body">
-						<div class="aec-center-block aec-center-block-half">
-							<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
-							<p>
-								<a href="#" class="btn btn-small" onclick="readNotices()"><?php echo aecHTML::Icon( 'ok' ); ?> <?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a>
-								<a href="index.php?option=com_acctexp&amp;task=eventlog" class="btn btn-success btn-small pull-right" onclick="readNotices()"><?php echo JText::_('Go to the Eventlog'); ?><?php echo aecHTML::Icon( 'chevron-right' ); ?></a>
-							</p>
-							<div id="aec-alertlist">
-								<?php
-								$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
-								foreach( $notices as $notice ) {
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h3>Eventlog</h3>
+				</div>
+				<div class="modal-body">
+					<div class="aec-center-block aec-center-block-half">
+						<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
+						<p>
+							<a href="#" class="btn btn-small" onclick="readNotices()"><?php echo aecHTML::Icon( 'ok' ); ?> <?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a>
+							<a href="index.php?option=com_acctexp&amp;task=eventlog" class="btn btn-success btn-small pull-right" onclick="readNotices()"><?php echo JText::_('Go to the Eventlog'); ?><?php echo aecHTML::Icon( 'chevron-right' ); ?></a>
+						</p>
+						<div id="aec-alertlist">
+							<?php
+							$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
+							foreach( $notices as $notice ) {
 								?>
-									<div class="alert alert-<?php echo $noticex[$notice->level]; ?>" id="alert-<?php echo $notice->id; ?>">
-										<a class="close" href="#<?php echo $notice->id; ?>" onclick="readNotice(<?php echo $notice->id; ?>)">&times;</a>
-										<h5><strong><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ); ?>: <?php echo $notice->short; ?></strong></h5>
-										<p> <?php echo substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ); ?></p>
-										<span class="help-block"><?php echo $notice->datetime; ?></span>
-									</div>
-								<?php
-								}
-								?>
-							</div>
-							<?php if ( $furthernotices > 0 ) { ?>
-								<p id="further-notices"><span><?php echo $furthernotices; ?></span> <?php echo JText::_('further notice(s)'); ?></p>
-							<?php } ?>
+								<div class="alert alert-<?php echo $noticex[$notice->level]; ?>" id="alert-<?php echo $notice->id; ?>">
+									<a class="close" href="#<?php echo $notice->id; ?>" onclick="readNotice(<?php echo $notice->id; ?>)">&times;</a>
+									<h5><strong><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ); ?>: <?php echo $notice->short; ?></strong></h5>
+									<p> <?php echo substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ); ?></p>
+									<span class="help-block"><?php echo $notice->datetime; ?></span>
+								</div>
+							<?php
+							}
+							?>
 						</div>
+						<?php if ( $furthernotices > 0 ) { ?>
+							<p id="further-notices"><span><?php echo $furthernotices; ?></span> <?php echo JText::_('further notice(s)'); ?></p>
+						<?php } ?>
 					</div>
 				</div>
 			</div>
-		<?php
+		</div>
+	<?php
 	}
 
 	/**
@@ -1503,14 +1503,14 @@ class HTML_AcctExp
 				<div class="col-sm-3 affix-sidebar">
 
 					<ul class="nav nav-list affixnav" data-spy="affix" data-offset-top="148">
-					<input type="text" placeholder="filter settings here" id="settings-filter">
-					<?php
-					foreach ( $params as $rowname => $rowcontent ) {
+						<input type="text" placeholder="filter settings here" id="settings-filter">
+						<?php
+						foreach ( $params as $rowname => $rowcontent ) {
 							if ( $rowcontent[0] == 'page-head' ) {
 								echo '<li><a href="#' . str_replace(" ", "_", strtolower($rowcontent[1]) ) . '">' . aecHTML::Icon( 'chevron-right' ) . $rowcontent[1] . '</a></li>';
 							}
-					}
-					?>
+						}
+						?>
 					</ul>
 				</div>
 				<div class="col-sm-9">
@@ -1533,7 +1533,7 @@ class HTML_AcctExp
 		<?php
 		echo $aecHTML->loadJS();
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -1593,7 +1593,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::endForm('Processor');
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -1631,7 +1631,7 @@ class HTML_AcctExp
 
 		echo $aecHTML->loadJS();
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -1678,7 +1678,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::endForm('Template');
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -1692,9 +1692,9 @@ class HTML_AcctExp
 
 		$buttons = array(
 			'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
-			 'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
-			 'hl1' => array(),
-			 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
+			'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
+			'hl1' => array(),
+			'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 		);
 
 		HTML_myCommon::startForm();
@@ -1744,7 +1744,7 @@ class HTML_AcctExp
 
 		echo $aecHTML->loadJS();
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -1902,8 +1902,8 @@ class HTML_AcctExp
 
 		</div>
 
- 		<?php
- 		HTML_myCommon::endCommon();
+		<?php
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -1916,73 +1916,73 @@ class HTML_AcctExp
 
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 
-		<?php
-		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', '', $search, 'list', 'MicroIntegration' );
+			<?php
+			HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', '', $search, 'list', 'MicroIntegration' );
 
-		$th_list = array(
-			array('name', 'MI_NAME'),
-			array('desc', 'MI_DESC'),
-			array('active', 'MI_ACTIVE', 'center'),
-			array('ordering', 'MI_REORDER'),
-			array('class_name', 'MI_FUNCTION')
-		);
+			$th_list = array(
+				array('name', 'MI_NAME'),
+				array('desc', 'MI_DESC'),
+				array('active', 'MI_ACTIVE', 'center'),
+				array('ordering', 'MI_REORDER'),
+				array('class_name', 'MI_FUNCTION')
+			);
 
-		?>
+			?>
 			<input type="hidden" name="orderby_mi" value="<?php echo $orderby; ?>"/>
-		<?php if ( empty( $rows )  && !$filtered ) { ?>
-			<div class="clearfix"></div>
-			<div class="container" style="min-height: 50%; padding: 10% 0;">
-				<p style="text-align: center">There is no micro integration set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'MicroIntegration', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new micro integration' ), true )?></p>
-			</div>
-		<?php } else { ?>
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-sm-12">
+			<?php if ( empty( $rows )  && !$filtered ) { ?>
+				<div class="clearfix"></div>
+				<div class="container" style="min-height: 50%; padding: 10% 0;">
+					<p style="text-align: center">There is no micro integration set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'MicroIntegration', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new micro integration' ), true )?></p>
+				</div>
+			<?php } else { ?>
+				<div class="container-fluid">
+					<div class="row">
 						<div class="col-sm-12">
-							<table class="table table-hover table-striped table-selectable">
-								<thead><tr>
-									<th class="text-center">
-										ID
-										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
-									</th>
-									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
-								</tr></thead>
-								<tbody>
-								<?php foreach ( $rows as $i => $row ) { ?>
+							<div class="col-sm-12">
+								<table class="table table-hover table-striped table-selectable">
+									<thead><tr>
+										<th class="text-center">
+											ID
+											<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+										</th>
+										<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
+									</tr></thead>
+									<tbody>
+									<?php foreach ( $rows as $i => $row ) { ?>
+										<tr>
+											<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+											<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+											<td class="text-left">
+												<?php
+												echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
+											</td>
+											<td class="text-center">
+												<?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?>
+											</td>
+											<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
+											<td class="text-left"><?php echo $row->class_name; ?></td>
+										</tr>
+									<?php } ?>
+									</tbody>
+									<tfoot>
 									<tr>
-										<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
-										<td class="text-left">
-											<?php
-											echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
+										<td colspan="9">
+											<?php echo $pageNav->getListFooter(); ?>
 										</td>
-										<td class="text-center">
-											<?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?>
-										</td>
-										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
-										<td class="text-left"><?php echo $row->class_name; ?></td>
 									</tr>
-								<?php } ?>
-								</tbody>
-								<tfoot>
-								<tr>
-									<td colspan="9">
-										<?php echo $pageNav->getListFooter(); ?>
-									</td>
-								</tr>
-								</tfoot>
-							</table>
+									</tfoot>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		<?php } ?>
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="entity" value="MicroIntegration" />
-		<input type="hidden" name="boxchecked" value="0" />
+			<?php } ?>
+			<input type="hidden" name="option" value="<?php echo $option; ?>" />
+			<input type="hidden" name="entity" value="MicroIntegration" />
+			<input type="hidden" name="boxchecked" value="0" />
 		</form>
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -2024,91 +2024,91 @@ class HTML_AcctExp
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'mi', true ); ?>
-			<div class="row">
-				<div class="col-sm-6">
-					<section class="paper">
-						<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
-						<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-						<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
-							<?php echo $aecHTML->createSettingsParticle( 'class_name' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'class_list' ); ?>
-						<?php } else { ?>
-							<div class="form-group">
-								<div class="col-sm-4">
-									<label for="class_name">Integration Type</label>
-								</div>
-								<div class="col-sm-8">
-									<p class="form-control-static">
-										<strong><?php echo $row->mi_class->info['name']; ?></strong>
-									</p>
-								</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
+						<?php echo $aecHTML->createSettingsParticle( 'class_name' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'class_list' ); ?>
+					<?php } else { ?>
+						<div class="form-group">
+							<div class="col-sm-4">
+								<label for="class_name">Integration Type</label>
 							</div>
-						<?php } ?>
-						<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'has_restrictions' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
-					</section>
-				</div>
-				<div class="col-sm-6">
-					<section class="paper">
-						<h4><?php echo JText::_('Attached to'); ?></h4>
-
-						<?php
-						echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
-
-						echo $lists['attach_to_groups'];
-						?>
-						<hr/>
-						<?php
-						echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
-
-						echo $lists['attach_to_plans'];
-						?>
-					</section>
-				</div>
-				<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
-					<div class="col-sm-8 col-sm-offset-2">
-						<section class="paper">
-							<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
-							<div style="position:relative;">
-								<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
+							<div class="col-sm-8">
+								<p class="form-control-static">
+									<strong><?php echo $row->mi_class->info['name']; ?></strong>
+								</p>
 							</div>
-						</section>
-					</div>
-				<?php } ?>
+						</div>
+					<?php } ?>
+					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'has_restrictions' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
+				</section>
 			</div>
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Attached to'); ?></h4>
+
+					<?php
+					echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
+
+					echo $lists['attach_to_groups'];
+					?>
+					<hr/>
+					<?php
+					echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
+
+					echo $lists['attach_to_plans'];
+					?>
+				</section>
+			</div>
+			<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
+				<div class="col-sm-8 col-sm-offset-2">
+					<section class="paper">
+						<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
+						<div style="position:relative;">
+							<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
+						</div>
+					</section>
+				</div>
+			<?php } ?>
+		</div>
 		<?php if ( $aecHTML->hasRestrictions ) {
-			$tabs->nextPane( 'restrictions' ); ?>
-				<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-		<?php }
+		$tabs->nextPane( 'restrictions' ); ?>
+		<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+	<?php }
 
 		if ( $aecHTML->hasSettings ) {
 			$tabs->nextPane( 'settings' ); ?>
 			<div class="row">
-				<div class="col-sm-8 col-sm-offset-2">
-					<section class="paper">
-						<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
-						<?php foreach ( $aecHTML->customparams as $name ) { ?>
-							<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
+			<div class="col-sm-8 col-sm-offset-2">
+			<section class="paper">
+			<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
+			<?php foreach ( $aecHTML->customparams as $name ) { ?>
+				<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
 					</section></div></div>
-							<?php $tabs->nextPane( $name ); ?>
-								<div class="row">
-									<div class="col-sm-8 col-sm-offset-2">
-										<section class="paper">
-											<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
-							<?php } else {
-								echo $aecHTML->createSettingsParticle( $name );
-							} ?>
-						<?php } ?>
-					</section>
-				</div>
+					<?php $tabs->nextPane( $name ); ?>
+					<div class="row">
+					<div class="col-sm-8 col-sm-offset-2">
+					<section class="paper">
+					<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
+				<?php } else {
+					echo $aecHTML->createSettingsParticle( $name );
+				} ?>
+			<?php } ?>
+			</section>
+			</div>
 			</div>
 		<?php } ?>
 		<?php $tabs->endPanes(); ?>
@@ -2123,7 +2123,7 @@ class HTML_AcctExp
 		<?php
 		echo $aecHTML->loadJS();
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -2147,11 +2147,11 @@ class HTML_AcctExp
 		?>
 		<input type="hidden" name="orderby_plans" value="<?php echo $orderby; ?>"/>
 		<?php if ( empty( $rows ) && !$filtered ) { ?>
-			<div class="clearfix"></div>
-			<div class="container" style="min-height: 50%; padding: 10% 0;">
-				<p class="text-center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
-			</div>
-		<?php } else { ?>
+		<div class="clearfix"></div>
+		<div class="container" style="min-height: 50%; padding: 10% 0;">
+			<p class="text-center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
+		</div>
+	<?php } else { ?>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
@@ -2189,9 +2189,9 @@ class HTML_AcctExp
 											<div class="progress-group">
 												<div class="progress">
 													<div class="progress-bar progress-bar-danger" style="width: <?php echo $row->expired_percentage; ?>%;">
-													<?php if ( !$row->expired_inner ) {
-														echo '</div>';
-													} ?>
+														<?php if ( !$row->expired_inner ) {
+															echo '</div>';
+														} ?>
 														<div class="progress-bar-content">
 															<?php if ( $row->expiredcount ) { ?>
 																<a href="<?php echo $row->link_expired; ?>">
@@ -2199,27 +2199,27 @@ class HTML_AcctExp
 																</a>
 															<?php } ?>
 														</div>
-													<?php if ( $row->expired_inner ) {
-														echo '</div>';
-													} ?>
-												</div>
-												<div class="progress">
-													<div class="progress-bar progress-bar-succcess progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
-													<?php if ( !$row->active_inner ) {
-														echo '</div>';
-													} ?>
-														<div class="progress-bar-content">
-															<?php if ( $row->usercount ) { ?>
-																<a href="<?php echo $row->link_active; ?>">
-																	<strong><?php echo $row->usercount; ?></strong>
-																</a>
-															<?php } ?>
+														<?php if ( $row->expired_inner ) {
+															echo '</div>';
+														} ?>
+													</div>
+													<div class="progress">
+														<div class="progress-bar progress-bar-succcess progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
+															<?php if ( !$row->active_inner ) {
+																echo '</div>';
+															} ?>
+															<div class="progress-bar-content">
+																<?php if ( $row->usercount ) { ?>
+																	<a href="<?php echo $row->link_active; ?>">
+																		<strong><?php echo $row->usercount; ?></strong>
+																	</a>
+																<?php } ?>
+															</div>
+															<?php if ( $row->active_inner ) {
+																echo '</div>';
+															} ?>
 														</div>
-													<?php if ( $row->active_inner ) {
-														echo '</div>';
-													} ?>
-												</div>
-											</div>
+													</div>
 										</td>
 										<td>
 											<div class="progress">
@@ -2256,14 +2256,14 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<?php } ?>
+	<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="entity" value="SubscriptionPlan" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -2610,7 +2610,7 @@ class HTML_AcctExp
 				</section>
 			</div>
 		</div>
-		<?php } ?>
+	<?php } ?>
 		<?php
 		if ( !empty( $aecHTML->customparams->mi['custom'] ) ) { ?>
 			<div class="row">
@@ -2638,7 +2638,7 @@ class HTML_AcctExp
 		</div>
 
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	static function groupRow( $type, $group )
@@ -2736,7 +2736,7 @@ class HTML_AcctExp
 		</form>
 
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -2901,7 +2901,7 @@ class HTML_AcctExp
 		</div>
 
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -2926,65 +2926,65 @@ class HTML_AcctExp
 		?>
 		<input type="hidden" name="orderby_coupons" value="<?php echo $orderby; ?>"/>
 		<?php if ( empty( $rows ) && !$filtered ) { ?>
-			<div class="clearfix"></div>
-			<div class="container" style="min-height: 50%; padding: 10% 0;">
-				<p style="text-align: center">There is no coupon set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Coupon', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new coupon' ), true )?></p>
-			</div>
-		<?php } else { ?>
-			<div class="container-fluid">
-				<div class="row">
+		<div class="clearfix"></div>
+		<div class="container" style="min-height: 50%; padding: 10% 0;">
+			<p style="text-align: center">There is no coupon set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Coupon', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new coupon' ), true )?></p>
+		</div>
+	<?php } else { ?>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
 					<div class="col-sm-12">
-						<div class="col-sm-12">
-							<table class="table table-hover table-striped table-selectable">
-								<thead><tr>
-									<th class="text-center">
-										<?php echo JText::_('AEC_CMN_ID'); ?>
-										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
-									</th>
-									<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
-									<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
-								</tr></thead>
-								<tbody>
-								<?php foreach ( $rows as $i => $row ) { ?>
-									<tr>
-										<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
-										<td class="text-left">
-											<a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
-										</td>
-										<td class="text-left"><strong><?php echo $row->coupon_code; ?></strong></td>
-										<td class="text-left"><?php echo $row->desc; ?></td>
-										<td class="text-center">
-											<?php HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?>
-										</td>
-										<td class="text-center">
-											<div class="progress progress-info progress-striped">
-												<?php if ( $row->usecount ) { ?>
-													<div class="bar" style="width: <?php echo $row->percentage; ?>%;"><?php if ( $row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?></div><?php if ( !$row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?>
-												<?php } ?>
-											</div>
-										</td>
-									</tr>
-								<?php } ?>
-								</tbody>
-								<tfoot>
+						<table class="table table-hover table-striped table-selectable">
+							<thead><tr>
+								<th class="text-center">
+									<?php echo JText::_('AEC_CMN_ID'); ?>
+									<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+								</th>
+								<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
+								<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
+							</tr></thead>
+							<tbody>
+							<?php foreach ( $rows as $i => $row ) { ?>
 								<tr>
-									<td colspan="9">
-										<?php echo $pageNav->getListFooter(); ?>
+									<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
+									<td class="text-left">
+										<a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+									</td>
+									<td class="text-left"><strong><?php echo $row->coupon_code; ?></strong></td>
+									<td class="text-left"><?php echo $row->desc; ?></td>
+									<td class="text-center">
+										<?php HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?>
+									</td>
+									<td class="text-center">
+										<div class="progress progress-info progress-striped">
+											<?php if ( $row->usecount ) { ?>
+												<div class="bar" style="width: <?php echo $row->percentage; ?>%;"><?php if ( $row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?></div><?php if ( !$row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?>
+											<?php } ?>
+										</div>
 									</td>
 								</tr>
-								</tfoot>
-							</table>
-						</div>
+							<?php } ?>
+							</tbody>
+							<tfoot>
+							<tr>
+								<td colspan="9">
+									<?php echo $pageNav->getListFooter(); ?>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
 					</div>
 				</div>
 			</div>
-		<?php } ?>
+		</div>
+	<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="entity" value="Coupon" />
 		</form>
 
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -3014,51 +3014,51 @@ class HTML_AcctExp
 
 		$tabs->startPanes();
 		$tabs->nextPane( 'coupon' ); ?>
-			<div class="row">
-				<div class="col-sm-6">
-					<section class="paper">
-						<h4>General</h4>
-						<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-					</section>
-					<section class="paper">
-						<h4>Terms</h4>
-						<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'amount_percent_use' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'amount_percent' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'percent_first' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'useon_trial' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'useon_full' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
-					</section>
-				</div>
-				<div class="col-sm-6">
-					<section class="paper">
-						<h4>Date &amp; User Restrictions</h4>
-						<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'has_expiration' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
-						<hr />
-						<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
-						<hr />
-						<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
-						<hr />
-						<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
-					</section>
-				</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4>General</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+				</section>
+				<section class="paper">
+					<h4>Terms</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'amount_percent_use' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'amount_percent' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'percent_first' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'useon_trial' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'useon_full' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
+				</section>
 			</div>
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4>Date &amp; User Restrictions</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'has_expiration' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
+					<hr />
+					<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
+					<hr />
+					<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
+					<hr />
+					<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
+				</section>
+			</div>
+		</div>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<div class="col-sm-8 col-sm-offset-2">
 			<section class="paper">
@@ -3138,7 +3138,7 @@ class HTML_AcctExp
 		</div>
 
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -3214,7 +3214,7 @@ class HTML_AcctExp
 		</form>
 
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -3268,7 +3268,7 @@ class HTML_AcctExp
 
 		echo $aecHTML->loadJS();
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -3299,28 +3299,28 @@ class HTML_AcctExp
 									<th><?php echo JText::_('HISTORY_RESPONSE'); ?></th>
 								</tr></thead>
 								<tbody>
-									<?php foreach ( $rows as $row ) { ?>
-										<tr>
-											<td><?php echo $row->user_name; ?></td>
-											<td><?php echo $row->invoice_number; ?></td>
-											<td><?php echo $row->plan_name; ?></td>
-											<td><?php echo $row->transaction_date; ?></td>
-											<td><?php echo $row->proc_name; ?></td>
-											<td><?php echo $row->amount; ?></td>
-											<td class="text-left">
-												<?php if ( !empty( $row->response ) ) {
-													echo '<pre class="prettyprint">'.print_r($row->response, true).'</pre>';
-												} ?>
-											</td>
-										</tr>
-									<?php } ?>
-								</tbody>
-								<tfoot>
+								<?php foreach ( $rows as $row ) { ?>
 									<tr>
-										<td colspan="7">
-											<?php echo $pageNav->getListFooter(); ?>
+										<td><?php echo $row->user_name; ?></td>
+										<td><?php echo $row->invoice_number; ?></td>
+										<td><?php echo $row->plan_name; ?></td>
+										<td><?php echo $row->transaction_date; ?></td>
+										<td><?php echo $row->proc_name; ?></td>
+										<td><?php echo $row->amount; ?></td>
+										<td class="text-left">
+											<?php if ( !empty( $row->response ) ) {
+												echo '<pre class="prettyprint">'.print_r($row->response, true).'</pre>';
+											} ?>
 										</td>
 									</tr>
+								<?php } ?>
+								</tbody>
+								<tfoot>
+								<tr>
+									<td colspan="7">
+										<?php echo $pageNav->getListFooter(); ?>
+									</td>
+								</tr>
 								</tfoot>
 							</table>
 						</div>
@@ -3335,7 +3335,7 @@ class HTML_AcctExp
 		</form>
 
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -3382,11 +3382,11 @@ class HTML_AcctExp
 									</tr>
 								<?php } ?>
 								<tfoot>
-									<tr>
-										<td colspan="8">
-											<?php echo $pageNav->getListFooter(); ?>
-										</td>
-									</tr>
+								<tr>
+									<td colspan="8">
+										<?php echo $pageNav->getListFooter(); ?>
+									</td>
+								</tr>
 								</tfoot>
 							</table>
 						</div>
@@ -3406,16 +3406,16 @@ class HTML_AcctExp
 
 	static function stats( $option, $page, $stats )
 	{
-		global $aecConfig;
+	global $aecConfig;
 
-		HTML_myCommon::startCommon('aec-wrap-dots');
+	HTML_myCommon::startCommon('aec-wrap-dots');
 
-		HTML_myCommon::startForm();
+	HTML_myCommon::startForm();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' );
+	HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' );
 
-		?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
+	?>
+	<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
 		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/charts.js"></script>
 		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
 		<script type="text/javascript">
@@ -3429,334 +3429,334 @@ class HTML_AcctExp
 				group_names = ["<?php echo implode( '","', $stats['group_names'] ); ?>"],
 				plan_names = ["<?php echo implode( '","', $stats['plan_names'] ); ?>"];
 		</script>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
+	<form action="index.php" method="post" name="adminForm" id="adminForm">
 
-		<ul class="nav nav-pills">
-			<?php
-				$menus = array( 'overview' => "Overview",
-								'compare' => "Compare",
-								//'users' => "Users",
-								'sales' => "Sales Graph",
-								'all_time' => "All Time Sales"
-				);
-
-				foreach ( $menus as $menu => $menutext ) {
-					echo '<li' . ( ( $page == $menu ) ? ' class="active"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats&page=' . $menu . '">' . $menutext . '</a></li>';
-				}
-			?>
-		</ul>
-
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="col-sm-12">
-						<table class="aecadminform">
-							<tr><td>
-
+	<ul class="nav nav-pills">
 		<?php
-			switch ( $page ) {
-				case 'overview':
-					?>
-					<section class="paper" id="chart">
-						<div id="overview-day" class="overview-container">
-							<h4><?php echo gmdate('l, jS M Y'); ?></h4>
-							<div id="overview-day-this" class="chart-sunburst"></div>
-							<div id="overview-day-hourly-graph" class="chart-rickshaw"></div>
-						</div>
-						<div id="overview-month" class="overview-container">
-							<h4><?php echo gmdate('F'); ?></h4>
-							<div id="overview-month-this" class="chart-sunburst"></div>
-							<div id="overview-month-graph" class="chart-rickshaw"></div>
-						</div>
-						<div id="overview-year" class="overview-container">
-							<h4><?php echo gmdate('Y'); ?></h4>
-							<div id="overview-year-sun" class="chart-sunburst"></div>
-							<div id="overview-year-cell" class="chart-cellular"></div>
-						</div>
-						<script type="text/javascript">
-							var cf = d3.chart.factory()
-							.source("sales")
-							.canvas(200, 200, 10)
-							.target("div#overview-day-this")
-							.range(	"<?php echo gmdate('Y-m-d') . ' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#overview-day-hourly-graph")
-							.create("rickshaw",{ unit:"hour" });
+		$menus = array( 'overview' => "Overview",
+						'compare' => "Compare",
+			//'users' => "Users",
+						'sales' => "Sales Graph",
+						'all_time' => "All Time Sales"
+		);
 
-							cf.target("div#overview-month-this")
-							.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#overview-month-graph")
-							.create("rickshaw",{ unit:"day" });
-
-							cf.canvas(200, 200, 10)
-							.target("div#overview-year-sun")
-							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-							.create("sunburst", 200)
-							.canvas(760, 160, 10)
-							.target("div#overview-year-cell")
-							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-							.create("cellular");
-						</script>
-					</div>
-					<?php
-					break;
-				case 'compare':
-					?>
-					<section class="paper" id="chart">
-						<div id="compare-day" class="compare-container">
-							<h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4>
-							<div id="compare-day-last" class="chart-sunburst"></div>
-							<div id="compare-day-compare" class="chart-rickshaw-bump"></div>
-							<div id="compare-day-this" class="chart-sunburst"></div>
-							<div id="compare-day-graph-last" class="chart-rickshaw-wide-slim"></div>
-							<div id="compare-day-graph-this" class="chart-rickshaw-wide-slim"></div>
-						</div>
-						<div id="compare-week" class="compare-container">
-							<h4>Week <?php echo gmdate('W', gmdate("U")-86400*7); ?> &rarr; Week <?php echo gmdate('W'); ?></h4>
-							<div id="compare-week-last" class="chart-sunburst"></div>
-							<div id="compare-week-compare" class="chart-rickshaw-bump"></div>
-							<div id="compare-week-this" class="chart-sunburst"></div>
-							<div id="compare-week-graph-last" class="chart-rickshaw-wide-slim"></div>
-							<div id="compare-week-graph-this" class="chart-rickshaw-wide-slim"></div>
-						</div>
-						<div id="compare-month" class="compare-container">
-							<h4><?php echo gmdate('F', strtotime("last month",gmdate("U"))); ?> &rarr; <?php echo gmdate('F'); ?></h4>
-							<div id="compare-month-last" class="chart-sunburst"></div>
-							<div id="compare-month-compare" class="chart-rickshaw-bump"></div>
-							<div id="compare-month-this" class="chart-sunburst"></div>
-							<div id="compare-month-graph-last" class="chart-rickshaw-wide-slim"></div>
-							<div id="compare-month-graph-this" class="chart-rickshaw-wide-slim"></div>
-						</div>
-						<div id="compare-year" class="compare-container">
-							<h4><?php echo gmdate('Y', strtotime("last year",gmdate("U"))); ?> &rarr; <?php echo gmdate('Y'); ?></h4>
-							<div id="compare-year-last" class="chart-sunburst"></div>
-							<div id="compare-year-compare" class="chart-rickshaw-bump"></div>
-							<div id="compare-year-this" class="chart-sunburst"></div>
-							<div id="compare-year-graph-last" class="chart-rickshaw-wide-slim"></div>
-							<div id="compare-year-graph-this" class="chart-rickshaw-wide-slim"></div>
-						</div>
-						<script type="text/javascript">
-							var cf = d3.chart.factory()
-							.source("sales")
-							.canvas(200, 200, 10);
-
-							cf.target("div#compare-day-last")
-							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#compare-day-graph-last")
-							.create("rickshaw",{ unit:"hour" })
-							.target("div#compare-day-this")
-							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#compare-day-graph-this")
-							.create("rickshaw",{ unit:"hour" })
-							.target("div#compare-day-last")
-							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
-							.target("div#compare-day-compare")
-							.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
-
-							cf.target("div#compare-week-last")
-							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#compare-week-graph-last")
-							.create("rickshaw",{ unit:"day" })
-							.target("div#compare-week-this")
-							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#compare-week-graph-this")
-							.create("rickshaw",{ unit:"day" })
-							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
-							.target("div#compare-week-compare")
-							.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
-
-							cf.target("div#compare-month-last")
-							.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#compare-month-graph-last")
-							.create("rickshaw",{ unit:"day" })
-							.target("div#compare-month-this")
-							.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#compare-month-graph-this")
-							.create("rickshaw",{ unit:"day" })
-							.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-							.target("div#compare-month-compare")
-							.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
-
-							cf.target("div#compare-year-last")
-							.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#compare-year-graph-last")
-							.create("rickshaw",{ unit:"week" })
-							.target("div#compare-year-this")
-							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
-							.create("sunburst")
-							.target("div#compare-year-graph-this")
-							.create("rickshaw",{ unit:"week" })
-							.target("div#compare-year-last")
-							.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
-							.target("div#compare-year-compare")
-							.create("rickshaw",{ unit:"year", renderer:"line", axes_time:false });
-						</script>
-					</div>
-					<?php
-					break;
-				case 'users':
-					break;
-				case 'sales':
-					?>
-					<section class="paper">
-						<h4>Sales Graph</h4>
-						<div id="sales-graph" class="overview-container">
-							<div id="overview-sales-graph" class="chart-rickshaw-huge"></div>
-							<div class="chart-controls-box">
-								<div id="legend" class="chart-controls">
-									<p><strong>hover</strong> to highlight, <strong>click</strong> to toggle, <strong>drag</strong> to sort groups</p>
-								</div>
-								<div id="renderer_form" class="toggler chart-controls">
-									<input type="radio" name="renderer" id="area" value="area" checked="checked">
-									<label for="area"><i class="graph-control-area"></i>area</label>
-									<input type="radio" name="renderer" id="bar" value="bar">
-									<label for="bar"><i class="graph-control-bar"></i>bar</label>
-									<input type="radio" name="renderer" id="line" value="line">
-									<label for="line"><i class="graph-control-line"></i>line</label>
-									<input type="radio" name="renderer" id="scatter" value="scatterplot">
-									<label for="scatter"><i class="graph-control-scatter"></i>scatter</label>
-								</div>
-								<div id="offset_form" class="chart-controls">
-									<label for="value">
-										<input type="radio" name="offset" id="value" value="value">
-										<span><i class="graph-control-value"></i>value</span>
-									</label>
-									<label for="stack">
-										<input type="radio" name="offset" id="stack" value="zero" checked="checked">
-										<span><i class="graph-control-stack"></i>stack</span>
-									</label>
-									<label for="stream">
-										<input type="radio" name="offset" id="stream" value="wiggle">
-										<span><i class="graph-control-stream"></i>stream</span>
-									</label>
-									<label for="pct">
-										<input type="radio" name="offset" id="pct" value="expand">
-										<span><i class="graph-control-pct"></i>percent</span>
-									</label>
-								</div>
-								<div id="unit_form" class="chart-controls">
-									<label for="day">
-										<input type="radio" name="unit" id="day" value="day" checked="checked">
-										<span><i class="graph-control-day"></i>days</span>
-									</label>
-									<label for="week">
-										<input type="radio" name="unit" id="week" value="week">
-										<span><i class="graph-control-week"></i>weeks</span>
-									</label>
-									<label for="month">
-										<input type="radio" name="unit" id="month" value="month">
-										<span><i class="graph-control-bar"></i>months</span>
-									</label>
-									<label for="year">
-										<input type="radio" name="unit" id="year" value="year">
-										<span><i class="graph-control-year"></i>years</span>
-									</label>
-								</div>
-								<div id="range_form" class="chart-controls">
-									<label for="rangepicker">
-										<span class="jqui-daterangepicker-text">Select Range:</span>
-										<input class="jqui-daterangepicker" type="text" value="<?php echo gmdate('Y-01-01') . " - " . gmdate('Y-m-d'); ?>"/>
-										<span class="jqui-loading"></span>
-									</label>
-								</div>
-							</div>
-						</div>
-						<script type="text/javascript">
-							var cf = d3.chart.factory()
-							.source("sales")
-							.canvas(200, 200, 10)
-							.target("div#overview-sales-graph")
-							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-							.create("rickshaw",{ unit:"day", renderer:"area", legend:true });
-						</script>
-					</div>
-					<?php
-					break;
-				case 'all_time':
-					$start = date( "Y", strtotime( $stats['first_sale'] ) );
-					$end = date( "Y" );
-
-					$years = $start - $end;
-					?>
-					<section class="paper" id="chart">
-						<div id="all-time-cells" class="all-time-container">
-							<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
-								<div id="all-time-<?php echo $i; ?>" class="all-time-container-full">
-									<h4><?php echo $i; ?></h4>
-									<div id="all-time-year-<?php echo $i; ?>-sunburst" class="chart-sunburst"></div>
-									<div id="all-time-year-<?php echo $i; ?>-cells" class="chart-cellular"></div>
-									<div id="all-time-year-<?php echo $i; ?>-graph" class="chart-rickshaw-slim"></div>
-								</div>
-							<?php } ?>
-						</div>
-						<div id="all-time-suns" class="all-time-container-full">
-							<h4>All Time Total</h4>
-							<div id="all-suns" class="chart-sunburstxl"></div>
-						</div>
-						<script type="text/javascript">
-							var cf = d3.chart.factory()
-							.source("sales")
-							<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
-							.canvas(200, 200, 10)
-							.target("div#all-time-year-<?php echo $i; ?>-sunburst")
-							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-									"<?php echo $i . '-12-31 23:59:59'; ?>")
-							.create("sunburst")
-							.canvas(760, 160, 10)
-							.target("div#all-time-year-<?php echo $i; ?>-cells")
-							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-									"<?php echo $i . '-12-31 23:59:59'; ?>")
-							.create("cellular")
-							.target("div#all-time-year-<?php echo $i; ?>-graph")
-							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-									"<?php echo $i . '-12-31 23:59:59'; ?>")
-							.create("rickshaw",{ unit:"week" })
-							<?php } ?>
-							.canvas(500, 500, 10)
-							.target("div#all-suns")
-							.range(	"<?php echo gmdate('1960-01-01') .' 00:00:00'; ?>",
-									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-							.create("sunburst");
-						</script>
-					</div>
-					<?php
-					break;
-			}
+		foreach ( $menus as $menu => $menutext ) {
+			echo '<li' . ( ( $page == $menu ) ? ' class="active"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats&page=' . $menu . '">' . $menutext . '</a></li>';
+		}
 		?>
-							</td></tr>
-						</table>
+	</ul>
+
+	<div class="container-fluid">
+	<div class="row">
+	<div class="col-sm-12">
+	<div class="col-sm-12">
+	<table class="aecadminform">
+	<tr><td>
+
+	<?php
+	switch ( $page ) {
+		case 'overview':
+			?>
+			<section class="paper" id="chart">
+				<div id="overview-day" class="overview-container">
+					<h4><?php echo gmdate('l, jS M Y'); ?></h4>
+					<div id="overview-day-this" class="chart-sunburst"></div>
+					<div id="overview-day-hourly-graph" class="chart-rickshaw"></div>
+				</div>
+				<div id="overview-month" class="overview-container">
+					<h4><?php echo gmdate('F'); ?></h4>
+					<div id="overview-month-this" class="chart-sunburst"></div>
+					<div id="overview-month-graph" class="chart-rickshaw"></div>
+				</div>
+				<div id="overview-year" class="overview-container">
+					<h4><?php echo gmdate('Y'); ?></h4>
+					<div id="overview-year-sun" class="chart-sunburst"></div>
+					<div id="overview-year-cell" class="chart-cellular"></div>
+				</div>
+				<script type="text/javascript">
+					var cf = d3.chart.factory()
+						.source("sales")
+						.canvas(200, 200, 10)
+						.target("div#overview-day-this")
+						.range(	"<?php echo gmdate('Y-m-d') . ' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#overview-day-hourly-graph")
+						.create("rickshaw",{ unit:"hour" });
+
+					cf.target("div#overview-month-this")
+						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#overview-month-graph")
+						.create("rickshaw",{ unit:"day" });
+
+					cf.canvas(200, 200, 10)
+						.target("div#overview-year-sun")
+						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("sunburst", 200)
+						.canvas(760, 160, 10)
+						.target("div#overview-year-cell")
+						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("cellular");
+				</script>
+						</div>
+						<?php
+						break;
+		case 'compare':
+			?>
+			<section class="paper" id="chart">
+				<div id="compare-day" class="compare-container">
+					<h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4>
+					<div id="compare-day-last" class="chart-sunburst"></div>
+					<div id="compare-day-compare" class="chart-rickshaw-bump"></div>
+					<div id="compare-day-this" class="chart-sunburst"></div>
+					<div id="compare-day-graph-last" class="chart-rickshaw-wide-slim"></div>
+					<div id="compare-day-graph-this" class="chart-rickshaw-wide-slim"></div>
+				</div>
+				<div id="compare-week" class="compare-container">
+					<h4>Week <?php echo gmdate('W', gmdate("U")-86400*7); ?> &rarr; Week <?php echo gmdate('W'); ?></h4>
+					<div id="compare-week-last" class="chart-sunburst"></div>
+					<div id="compare-week-compare" class="chart-rickshaw-bump"></div>
+					<div id="compare-week-this" class="chart-sunburst"></div>
+					<div id="compare-week-graph-last" class="chart-rickshaw-wide-slim"></div>
+					<div id="compare-week-graph-this" class="chart-rickshaw-wide-slim"></div>
+				</div>
+				<div id="compare-month" class="compare-container">
+					<h4><?php echo gmdate('F', strtotime("last month",gmdate("U"))); ?> &rarr; <?php echo gmdate('F'); ?></h4>
+					<div id="compare-month-last" class="chart-sunburst"></div>
+					<div id="compare-month-compare" class="chart-rickshaw-bump"></div>
+					<div id="compare-month-this" class="chart-sunburst"></div>
+					<div id="compare-month-graph-last" class="chart-rickshaw-wide-slim"></div>
+					<div id="compare-month-graph-this" class="chart-rickshaw-wide-slim"></div>
+				</div>
+				<div id="compare-year" class="compare-container">
+					<h4><?php echo gmdate('Y', strtotime("last year",gmdate("U"))); ?> &rarr; <?php echo gmdate('Y'); ?></h4>
+					<div id="compare-year-last" class="chart-sunburst"></div>
+					<div id="compare-year-compare" class="chart-rickshaw-bump"></div>
+					<div id="compare-year-this" class="chart-sunburst"></div>
+					<div id="compare-year-graph-last" class="chart-rickshaw-wide-slim"></div>
+					<div id="compare-year-graph-this" class="chart-rickshaw-wide-slim"></div>
+				</div>
+				<script type="text/javascript">
+					var cf = d3.chart.factory()
+						.source("sales")
+						.canvas(200, 200, 10);
+
+					cf.target("div#compare-day-last")
+						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#compare-day-graph-last")
+						.create("rickshaw",{ unit:"hour" })
+						.target("div#compare-day-this")
+						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#compare-day-graph-this")
+						.create("rickshaw",{ unit:"hour" })
+						.target("div#compare-day-last")
+						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
+						.target("div#compare-day-compare")
+						.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
+
+					cf.target("div#compare-week-last")
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#compare-week-graph-last")
+						.create("rickshaw",{ unit:"day" })
+						.target("div#compare-week-this")
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#compare-week-graph-this")
+						.create("rickshaw",{ unit:"day" })
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
+						.target("div#compare-week-compare")
+						.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
+
+					cf.target("div#compare-month-last")
+						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#compare-month-graph-last")
+						.create("rickshaw",{ unit:"day" })
+						.target("div#compare-month-this")
+						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#compare-month-graph-this")
+						.create("rickshaw",{ unit:"day" })
+						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+						.target("div#compare-month-compare")
+						.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
+
+					cf.target("div#compare-year-last")
+						.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#compare-year-graph-last")
+						.create("rickshaw",{ unit:"week" })
+						.target("div#compare-year-this")
+						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
+						.create("sunburst")
+						.target("div#compare-year-graph-this")
+						.create("rickshaw",{ unit:"week" })
+						.target("div#compare-year-last")
+						.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
+						.target("div#compare-year-compare")
+						.create("rickshaw",{ unit:"year", renderer:"line", axes_time:false });
+				</script>
+						</div>
+						<?php
+						break;
+		case 'users':
+			break;
+		case 'sales':
+			?>
+			<section class="paper">
+				<h4>Sales Graph</h4>
+				<div id="sales-graph" class="overview-container">
+					<div id="overview-sales-graph" class="chart-rickshaw-huge"></div>
+					<div class="chart-controls-box">
+						<div id="legend" class="chart-controls">
+							<p><strong>hover</strong> to highlight, <strong>click</strong> to toggle, <strong>drag</strong> to sort groups</p>
+						</div>
+						<div id="renderer_form" class="toggler chart-controls">
+							<input type="radio" name="renderer" id="area" value="area" checked="checked">
+							<label for="area"><i class="graph-control-area"></i>area</label>
+							<input type="radio" name="renderer" id="bar" value="bar">
+							<label for="bar"><i class="graph-control-bar"></i>bar</label>
+							<input type="radio" name="renderer" id="line" value="line">
+							<label for="line"><i class="graph-control-line"></i>line</label>
+							<input type="radio" name="renderer" id="scatter" value="scatterplot">
+							<label for="scatter"><i class="graph-control-scatter"></i>scatter</label>
+						</div>
+						<div id="offset_form" class="chart-controls">
+							<label for="value">
+								<input type="radio" name="offset" id="value" value="value">
+								<span><i class="graph-control-value"></i>value</span>
+							</label>
+							<label for="stack">
+								<input type="radio" name="offset" id="stack" value="zero" checked="checked">
+								<span><i class="graph-control-stack"></i>stack</span>
+							</label>
+							<label for="stream">
+								<input type="radio" name="offset" id="stream" value="wiggle">
+								<span><i class="graph-control-stream"></i>stream</span>
+							</label>
+							<label for="pct">
+								<input type="radio" name="offset" id="pct" value="expand">
+								<span><i class="graph-control-pct"></i>percent</span>
+							</label>
+						</div>
+						<div id="unit_form" class="chart-controls">
+							<label for="day">
+								<input type="radio" name="unit" id="day" value="day" checked="checked">
+								<span><i class="graph-control-day"></i>days</span>
+							</label>
+							<label for="week">
+								<input type="radio" name="unit" id="week" value="week">
+								<span><i class="graph-control-week"></i>weeks</span>
+							</label>
+							<label for="month">
+								<input type="radio" name="unit" id="month" value="month">
+								<span><i class="graph-control-bar"></i>months</span>
+							</label>
+							<label for="year">
+								<input type="radio" name="unit" id="year" value="year">
+								<span><i class="graph-control-year"></i>years</span>
+							</label>
+						</div>
+						<div id="range_form" class="chart-controls">
+							<label for="rangepicker">
+								<span class="jqui-daterangepicker-text">Select Range:</span>
+								<input class="jqui-daterangepicker" type="text" value="<?php echo gmdate('Y-01-01') . " - " . gmdate('Y-m-d'); ?>"/>
+								<span class="jqui-loading"></span>
+							</label>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+				<script type="text/javascript">
+					var cf = d3.chart.factory()
+						.source("sales")
+						.canvas(200, 200, 10)
+						.target("div#overview-sales-graph")
+						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("rickshaw",{ unit:"day", renderer:"area", legend:true });
+				</script>
+						</div>
+						<?php
+						break;
+		case 'all_time':
+			$start = date( "Y", strtotime( $stats['first_sale'] ) );
+			$end = date( "Y" );
 
-		<?php
- 		HTML_myCommon::endCommon();
+			$years = $start - $end;
+			?>
+			<section class="paper" id="chart">
+				<div id="all-time-cells" class="all-time-container">
+					<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
+						<div id="all-time-<?php echo $i; ?>" class="all-time-container-full">
+							<h4><?php echo $i; ?></h4>
+							<div id="all-time-year-<?php echo $i; ?>-sunburst" class="chart-sunburst"></div>
+							<div id="all-time-year-<?php echo $i; ?>-cells" class="chart-cellular"></div>
+							<div id="all-time-year-<?php echo $i; ?>-graph" class="chart-rickshaw-slim"></div>
+						</div>
+					<?php } ?>
+				</div>
+				<div id="all-time-suns" class="all-time-container-full">
+					<h4>All Time Total</h4>
+					<div id="all-suns" class="chart-sunburstxl"></div>
+				</div>
+				<script type="text/javascript">
+					var cf = d3.chart.factory()
+						.source("sales")
+						<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
+						.canvas(200, 200, 10)
+						.target("div#all-time-year-<?php echo $i; ?>-sunburst")
+						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+							"<?php echo $i . '-12-31 23:59:59'; ?>")
+						.create("sunburst")
+						.canvas(760, 160, 10)
+						.target("div#all-time-year-<?php echo $i; ?>-cells")
+						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+							"<?php echo $i . '-12-31 23:59:59'; ?>")
+						.create("cellular")
+						.target("div#all-time-year-<?php echo $i; ?>-graph")
+						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+							"<?php echo $i . '-12-31 23:59:59'; ?>")
+						.create("rickshaw",{ unit:"week" })
+						<?php } ?>
+						.canvas(500, 500, 10)
+						.target("div#all-suns")
+						.range(	"<?php echo gmdate('1960-01-01') .' 00:00:00'; ?>",
+							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("sunburst");
+				</script>
+						</div>
+						<?php
+						break;
+	}
+	?>
+	</td></tr>
+	</table>
+	</div>
+	</div>
+	</div>
+	</div>
+
+	<?php
+	HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -3769,55 +3769,55 @@ class HTML_AcctExp
 		$buttons = array(
 			'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ),
 			'' => array( 'style' => 'success', 'text' => JText::_('Import'), 'icon' => 'ok' )
-			);
+		);
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'import', '', false, $buttons, 'Import' );
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<div class="row">
 				<?php if ( $aecHTML->done || $aecHTML->form ) { ?>
-				<div class="col-sm-6 col-sm-offset-3">
-					<section class="paper">
-						<?php if ( $aecHTML->done ) { ?>
-							<p>The Import has been completed.</p>
-							<?php if ( !empty( $aecHTML->errors ) ) {?>
-								<p>However, the import failed on <?php $aecHTML->errors ?> entries. This might mean it wasn\'t successful at all.</p>';
+					<div class="col-sm-6 col-sm-offset-3">
+						<section class="paper">
+							<?php if ( $aecHTML->done ) { ?>
+								<p>The Import has been completed.</p>
+								<?php if ( !empty( $aecHTML->errors ) ) {?>
+									<p>However, the import failed on <?php $aecHTML->errors ?> entries. This might mean it wasn\'t successful at all.</p>';
+								<?php } ?>
+							<?php } else { ?>
+								<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+									echo $aecHTML->createSettingsParticle( $rowname );
+								} ?>
 							<?php } ?>
-						<?php } else { ?>
-							<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-								echo $aecHTML->createSettingsParticle( $rowname );
-							} ?>
-						<?php } ?>
-					</section>
-				</div>
+						</section>
+					</div>
 				<?php } else { ?>
-				<div class="col-sm-12">
 					<div class="col-sm-12">
-						<div class="aecadminform">
+						<div class="col-sm-12">
+							<div class="aecadminform">
 
-							<?php echo $aecHTML->createSettingsParticle( 'file_select' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'file_select' ); ?>
 
-							<table class="table table-striped table-hover table-selectable">
-								<thead>
-								<tr>
-									<th colspan="<?php echo count($aecHTML->columns); ?>"></th>
-								</tr>
-								</thead>
-								<tbody>
-								<?php
-								foreach ( $aecHTML->user_rows as $row ) {
-									echo '<tr>';
+								<table class="table table-striped table-hover table-selectable">
+									<thead>
+									<tr>
+										<th colspan="<?php echo count($aecHTML->columns); ?>"></th>
+									</tr>
+									</thead>
+									<tbody>
+									<?php
+									foreach ( $aecHTML->user_rows as $row ) {
+										echo '<tr>';
 
 										foreach ( $row as $k => $v ) {
 											echo '<td>' . $v . '</td>';
 										}
 
-									echo '</tr>';
-								} ?>
-								</tbody>
+										echo '</tr>';
+									} ?>
+									</tbody>
 
-								<tfoot>
-								<?php
+									<tfoot>
+									<?php
 									echo '<tr>';
 
 									foreach ( $aecHTML->columns as $column ) {
@@ -3825,37 +3825,37 @@ class HTML_AcctExp
 									}
 
 									echo '</tr>';
-								?>
-								<tr>
-									<td colspan="<?php echo count($aecHTML->columns); ?>">
-										<p class="text-right">Showing a selection of rows in your .csv file. The total number of rows is <strong><?php echo $aecHTML->user_rows_count; ?></strong></p>
-									</td>
-								</tr>
-								</tfoot>
-							</table>
+									?>
+									<tr>
+										<td colspan="<?php echo count($aecHTML->columns); ?>">
+											<p class="text-right">Showing a selection of rows in your .csv file. The total number of rows is <strong><?php echo $aecHTML->user_rows_count; ?></strong></p>
+										</td>
+									</tr>
+									</tfoot>
+								</table>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-sm-6 col-sm-offset-3">
-					<section class="paper">
-						<p>Please let us know what the columns in your .csv file mean.</p>
+					<div class="col-sm-6 col-sm-offset-3">
+						<section class="paper">
+							<p>Please let us know what the columns in your .csv file mean.</p>
 
-						<?php echo $aecHTML->createSettingsParticle( 'skip_first' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'assign_plan' ); ?>
-					</section>
-				</div>
+							<?php echo $aecHTML->createSettingsParticle( 'skip_first' ); ?>
+							<?php echo $aecHTML->createSettingsParticle( 'assign_plan' ); ?>
+						</section>
+					</div>
 				<?php } ?>
 			</div>
 
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="import" />
-		<input type="hidden" name="returnTask" value="import" />
+			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="task" value="import" />
+			<input type="hidden" name="returnTask" value="import" />
 		</form>
 
 		<?php
 		echo $aecHTML->loadJS();
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -3865,24 +3865,24 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
 
-$js = '
-jQuery(document).ready(function(jQuery) {
-	jQuery("#status-group-select")
-	.multiselect({	noneSelectedText: \'Select Status\',
-					selectedList: 8
-			});
+		$js = '
+	jQuery(document).ready(function(jQuery) {
+		jQuery("#status-group-select")
+		.multiselect({	noneSelectedText: \'Select Status\',
+						selectedList: 8
+				});
 
-	jQuery("#plan-filter-select")
-	.multiselect({	noneSelectedText: \'' . JText::_('PLAN_FILTER') . '\',
-					selectedList: 3
-			});
+		jQuery("#plan-filter-select")
+		.multiselect({	noneSelectedText: \'' . JText::_('PLAN_FILTER') . '\',
+						selectedList: 3
+				});
 
-	jQuery("#group-filter-select")
-	.multiselect({	noneSelectedText: \'' . JText::_('GROUP_FILTER') . '\',
-					selectedList: 3
-			});
-});
-';
+		jQuery("#group-filter-select")
+		.multiselect({	noneSelectedText: \'' . JText::_('GROUP_FILTER') . '\',
+						selectedList: 3
+				});
+	});
+	';
 		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 
@@ -3892,9 +3892,9 @@ jQuery(document).ready(function(jQuery) {
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<div class="col-sm-12">
-					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-						echo $aecHTML->createSettingsParticle( $rowname );
-					} ?>
+				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+					echo $aecHTML->createSettingsParticle( $rowname );
+				} ?>
 			</div>
 
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -3905,7 +3905,7 @@ jQuery(document).ready(function(jQuery) {
 		<?php
 		echo $aecHTML->loadJS();
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -3989,94 +3989,94 @@ jQuery(document).ready(function(jQuery) {
 	 */
 	static function editService( $option, $row, $aecHTML )
 	{
-		HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
+	HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'services', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'Service' );
+	HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'services', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'Service' );
 
-		HTML_myCommon::startForm();
+	HTML_myCommon::startForm();
 
-		?><div class="col-sm-12"><?php
+	?><div class="col-sm-12"><?php
 
-		$tabs = new bsPaneTabs;
-		$tabs->startTabs();
+	$tabs = new bsPaneTabs;
+	$tabs->startTabs();
 
-		$tabs->newTab( 'mi', JText::_('AEC_SERVICE_TITLE') );
+	$tabs->newTab( 'mi', JText::_('AEC_SERVICE_TITLE') );
 
-		if ( $aecHTML->hasSettings ) {
-			//$tabs->newTab( 'settings', JText::_('AEC_SERVICE_SETTINGS') );
-		}
+	if ( $aecHTML->hasSettings ) {
+		//$tabs->newTab( 'settings', JText::_('AEC_SERVICE_SETTINGS') );
+	}
 
-		if ( !empty( $aecHTML->customparams ) ) {
-			foreach ( $aecHTML->customparams as $name ) {
-				if ( strpos( $name, 'aectab_' ) === 0 ) {
-					$tabs->newTab( $name, $aecHTML->rows[$name][1] );
-				}
+	if ( !empty( $aecHTML->customparams ) ) {
+		foreach ( $aecHTML->customparams as $name ) {
+			if ( strpos( $name, 'aectab_' ) === 0 ) {
+				$tabs->newTab( $name, $aecHTML->rows[$name][1] );
 			}
 		}
+	}
 
-		$tabs->endTabs();
-		$tabs->startPanes();
+	$tabs->endTabs();
+	$tabs->startPanes();
 
-		$tabs->nextPane( 'mi', true ); ?>
-		<div class="row">
-			<div class="col-sm-6">
-				<section class="paper">
-					<h4><?php echo JText::_('AEC_SERVICE_TITLE_LONG'); ?></h4>
-					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-					<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
-						<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
-					<?php } else { ?>
-						<div class="form-group">
-							<div class="col-sm-4">
-								<label for="class_name">Service Type</label>
-							</div>
-							<div class="col-sm-8">
-								<p class="form-control-static">
-									<strong><?php echo $row->type; ?></strong>
-								</p>
-							</div>
-						</div>
-					<?php } ?>
-				</section>
-			</div>
-			<div class="col-sm-6">
-				<section class="paper">
-					<?php if ( $aecHTML->hasSettings ) { ?>
-						<h4><?php echo JText::_('AEC_SERVICE_SETTINGS'); ?></h4>
-						<?php foreach ( $aecHTML->customparams as $name ) { ?>
-							<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
-								</section></div></div>
-								<?php $tabs->nextPane( $name ); ?>
-								<div class="row">
-								<div class="col-sm-8 col-sm-offset-2">
-								<section class="paper">
-								<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
-							<?php } else {
-								echo $aecHTML->createSettingsParticle( $name );
-							} ?>
-						<?php } ?>
-					<?php } else { ?>
-
-					<?php } ?>
-				</section>
-			</div>
-		</div>
-		<?php $tabs->endPanes(); ?>
-		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
-		<?php if ( !empty( $row->type ) ) { ?>
-			<input type="hidden" name="type" value="<?php echo $row->type; ?>" />
+	$tabs->nextPane( 'mi', true ); ?>
+	<div class="row">
+	<div class="col-sm-6">
+		<section class="paper">
+			<h4><?php echo JText::_('AEC_SERVICE_TITLE_LONG'); ?></h4>
+			<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+			<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+			<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
+				<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
+			<?php } else { ?>
+				<div class="form-group">
+					<div class="col-sm-4">
+						<label for="class_name">Service Type</label>
+					</div>
+					<div class="col-sm-8">
+						<p class="form-control-static">
+							<strong><?php echo $row->type; ?></strong>
+						</p>
+					</div>
+				</div>
+			<?php } ?>
+		</section>
+	</div>
+	<div class="col-sm-6">
+	<section class="paper">
+	<?php if ( $aecHTML->hasSettings ) { ?>
+	<h4><?php echo JText::_('AEC_SERVICE_SETTINGS'); ?></h4>
+		<?php foreach ( $aecHTML->customparams as $name ) { ?>
+		<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
+	</section></div></div>
+	<?php $tabs->nextPane( $name ); ?>
+	<div class="row">
+	<div class="col-sm-8 col-sm-offset-2">
+	<section class="paper">
+	<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
+		<?php } else {
+			echo $aecHTML->createSettingsParticle( $name );
+		} ?>
 		<?php } ?>
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="" />
-		</form>
+	<?php } else { ?>
+
+	<?php } ?>
+	</section>
+	</div>
+	</div>
+	<?php $tabs->endPanes(); ?>
+	<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
+	<?php if ( !empty( $row->type ) ) { ?>
+		<input type="hidden" name="type" value="<?php echo $row->type; ?>" />
+	<?php } ?>
+	<input type="hidden" name="option" value="<?php echo $option; ?>" />
+	<input type="hidden" name="task" value="" />
+	</form>
 
 		</div>
 
-		<?php
-		echo $aecHTML->loadJS();
+	<?php
+	echo $aecHTML->loadJS();
 
-		HTML_myCommon::endCommon();
+	HTML_myCommon::endCommon();
 	}
 
 	static function aecExtensions( $focus )
@@ -4107,11 +4107,11 @@ jQuery(document).ready(function(jQuery) {
 		<table class="aecadminform">
 			<tr>
 				<td>
-				<?php if ( !$vaccount ) { ?>
-					<h3>Mangrove stuff goes here</h3>
-				<?php } else { ?>
+					<?php if ( !$vaccount ) { ?>
+						<h3>Mangrove stuff goes here</h3>
+					<?php } else { ?>
 
-				<?php } ?>
+					<?php } ?>
 				</td>
 			</tr>
 		</table>
@@ -4131,7 +4131,7 @@ jQuery(document).ready(function(jQuery) {
 
 		<?php
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	static function toolBox( $option, $cmd, $result, $title=null )
@@ -4180,7 +4180,7 @@ jQuery(document).ready(function(jQuery) {
 		</form>
 		<?php
 
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	/**
@@ -4219,25 +4219,25 @@ class aecAdmin
 		?>
 		<th class="text-<?php echo $align; ?>">
 			<?php
-				echo JText::_($text);
-				if ( !empty($filter) ) { ?>
-					<div class="popover-markup">
-						<a href="#" class="trigger"><i class="glyphicon glyphicon-filter"></i></a>
-						<div class="head hide">Filter this column</div>
-						<div class="content hide">
-							<?php
-							if ( !is_array($filter) ) $filter = array($filter);
+			echo JText::_($text);
+			if ( !empty($filter) ) { ?>
+				<div class="popover-markup">
+					<a href="#" class="trigger"><i class="glyphicon glyphicon-filter"></i></a>
+					<div class="head hide">Filter this column</div>
+					<div class="content hide">
+						<?php
+						if ( !is_array($filter) ) $filter = array($filter);
 
-							foreach ( $filter as $f ) {
-								?>
-								<div class="control"><?php echo $lists[$f]; ?></div>
-								<?php
-							}
+						foreach ( $filter as $f ) {
 							?>
-							<button type="submit" class="btn btn-default btn-block">Submit</button>
-						</div>
+							<div class="control"><?php echo $lists[$f]; ?></div>
+						<?php
+						}
+						?>
+						<button type="submit" class="btn btn-default btn-block">Submit</button>
 					</div>
-				<?php }
+				</div>
+			<?php }
 			?>
 			<span class="pull-<?php echo ($align == 'right') ? 'left' : 'right'; ?>">
 				<a href="#" class="order-select" data-ordering="<?php echo $key; ?> ASC">
@@ -4248,7 +4248,7 @@ class aecAdmin
 				</a>
 			</span>
 		</th>
-		<?php
+	<?php
 	}
 }
 
@@ -4356,11 +4356,11 @@ class bsPagination extends JPagination
 		$search[] = 'class="container"';
 
 		$replace = array(	'>' . aecHTML::Icon( 'fast-backward' ) . '<',
-							'>' . aecHTML::Icon( 'backward' ) . '<',
-							'>' . aecHTML::Icon( 'forward' ) . '<',
-							'>' . aecHTML::Icon( 'fast-forward' ) . '<',
-							'class="pagination-container"'
-						);
+			'>' . aecHTML::Icon( 'backward' ) . '<',
+			'>' . aecHTML::Icon( 'forward' ) . '<',
+			'>' . aecHTML::Icon( 'fast-forward' ) . '<',
+			'class="pagination-container"'
+		);
 
 		return str_replace( $search, $replace, $footer );
 	}

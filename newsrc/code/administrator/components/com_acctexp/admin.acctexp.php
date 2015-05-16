@@ -20,7 +20,7 @@ require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.
 require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.html.php' );
 
 $langlist = array(	'com_acctexp' => JPATH_ADMINISTRATOR,
-					'com_acctexp.iso4217' => JPATH_ADMINISTRATOR );
+					  'com_acctexp.iso4217' => JPATH_ADMINISTRATOR );
 
 xJLanguageHandler::loadList( $langlist );
 
@@ -266,9 +266,9 @@ switch( strtolower( $task ) ) {
 		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__acctexp_eventlog'
-				. ' SET `notify` = \'0\''
-				. ' WHERE `notify` = \'1\''
-				;
+			. ' SET `notify` = \'0\''
+			. ' WHERE `notify` = \'1\''
+		;
 		$db->setQuery( $query	);
 		$db->query();
 		exit;
@@ -280,9 +280,9 @@ switch( strtolower( $task ) ) {
 		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__acctexp_eventlog'
-				. ' SET `notify` = \'0\''
-				. ' WHERE `notify` = \'1\''
-				;
+			. ' SET `notify` = \'0\''
+			. ' WHERE `notify` = \'1\''
+		;
 		$db->setQuery( $query	);
 		$db->query();
 
@@ -519,38 +519,38 @@ class aecAdminEntity
 		$eventlog->issue( $short, $tags, $event, $level, $params );
 	}
 
-    public function getState( $params )
-    {
-        $option = 'com_acctexp';
+	public function getState( $params )
+	{
+		$option = 'com_acctexp';
 
-        $this->state->limit = $this->app->getUserStateFromRequest(
-            "viewlistlimit",
-            'limit',
-            $this->app->getCfg('list_limit')
-        );
+		$this->state->limit = $this->app->getUserStateFromRequest(
+			"viewlistlimit",
+			'limit',
+			$this->app->getCfg('list_limit')
+		);
 
-        $this->state->limitstart = $this->app->getUserStateFromRequest(
-            "viewconf{$option}limitstart",
-            'limitstart',
-            0
-        );
+		$this->state->limitstart = $this->app->getUserStateFromRequest(
+			"viewconf{$option}limitstart",
+			'limitstart',
+			0
+		);
 
-        $this->state->search = xJ::escape( $this->db, trim(
-            strtolower( $this->app->getUserStateFromRequest(
-                "search{$option}_subscr",
-                'search',
-                ''
-            ) )
-        ) );
+		$this->state->search = xJ::escape( $this->db, trim(
+				strtolower( $this->app->getUserStateFromRequest(
+						"search{$option}_subscr",
+						'search',
+						''
+					) )
+			) );
 
-        foreach ( $params as $key => $default ) {
-            $this->state->{$key} = $this->app->getUserStateFromRequest(
-                'aec_' . $this->entity . '_' . $key,
-                $this->entity . '_' . $key,
-                $default
-            );
-        }
-    }
+		foreach ( $params as $key => $default ) {
+			$this->state->{$key} = $this->app->getUserStateFromRequest(
+				'aec_' . $this->entity . '_' . $key,
+				$this->entity . '_' . $key,
+				$default
+			);
+		}
+	}
 
 	public function getRanges( $nums )
 	{
@@ -1092,14 +1092,14 @@ class aecAdminMembership extends aecAdminEntity
 		$app = JFactory::getApplication();
 
 
-        $this->state->orderby = $this->app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
+		$this->state->orderby = $this->app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
 
-        $this->state->groups = $this->app->getUserStateFromRequest(
-            "groups{$option}", 'groups', 'active'
-        );
+		$this->state->groups = $this->app->getUserStateFromRequest(
+			"groups{$option}", 'groups', 'active'
+		);
 
 
-        $state = $this->getState( array(array( 'orderby' => 'name ASC'), 'groups') );
+		$state = $this->getState( array('orderby' => 'name ASC', 'groups' => 'active') );
 
 		$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 		$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -4941,10 +4941,10 @@ class aecAdminInvoice extends aecAdminEntity
 			$unformatted = xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
 			$where = 'LOWER(`invoice_number`) LIKE \'%' . $unformatted . '%\''
-					. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
-					. ' OR `id` LIKE \'%' . $unformatted . '%\''
-					. ' OR LOWER(`invoice_number_format`) LIKE \'%' . $unformatted . '%\''
-					;
+				. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
+				. ' OR `id` LIKE \'%' . $unformatted . '%\''
+				. ' OR LOWER(`invoice_number_format`) LIKE \'%' . $unformatted . '%\''
+			;
 		}
 
 		$orderby = $this->app->getUserStateFromRequest( "orderby_invoices{$option}", 'orderby_invoices', 'created_date DESC' );
@@ -5029,9 +5029,9 @@ class aecAdminInvoice extends aecAdminEntity
 			$invoices[$id]->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoices[$id]->usage . '">' . $invoices[$id]->usage . '</a>';
 
 			$query = 'SELECT username'
-					. ' FROM #__users'
-					. ' WHERE `id` = \'' . $invoices[$id]->userid . '\''
-					;
+				. ' FROM #__users'
+				. ' WHERE `id` = \'' . $invoices[$id]->userid . '\''
+			;
 			$this->db->setQuery( $query );
 			$username = $this->db->loadResult();
 
@@ -5899,159 +5899,159 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	$aec_redirect_subscribe		= 'aecRedirect( JURI::root() . \'index.php?option=com_acctexp&task=subscribe\' );' . "\n";
 
 	$aec_normal_hack = $aec_hack_start
-					. $aec_global_call
-					. $aec_condition_start
-					. $aec_redirect_notallowed
-					. $aec_condition_end
-					. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. $aec_redirect_notallowed
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_jhack1 = $aec_hack_start
-					. 'function mosNotAuth($override=false) {' . "\n"
-					. $aec_global_call
-					. $aec_condition_start
-					. 'if (!$override) {' . "\n"
-					. $aec_redirect_notallowed
-					. $aec_condition_end
-					. $aec_condition_end
-					. $aec_hack_end;
+		. 'function mosNotAuth($override=false) {' . "\n"
+		. $aec_global_call
+		. $aec_condition_start
+		. 'if (!$override) {' . "\n"
+		. $aec_redirect_notallowed
+		. $aec_condition_end
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_jhack2 = $aec_hack_start
-					. $aec_global_call
-					. $aec_condition_start
-					. $aec_redirect_notallowed
-					. $aec_condition_end
-					. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. $aec_redirect_notallowed
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_jhack3 = $aec_hack_start
-					. $aec_global_call
-					. $aec_condition_start
-					. $aec_include_class
-					. sprintf( $aec_verification_check, '$credentials[\'username\']' )
-					. $aec_condition_end
-					. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. $aec_include_class
+		. sprintf( $aec_verification_check, '$credentials[\'username\']' )
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_cbmhack =	$aec_hack_start
-					. "mosNotAuth(true);" . "\n"
-					. $aec_hack_end;
+		. "mosNotAuth(true);" . "\n"
+		. $aec_hack_end;
 
 	$aec_uchangehack =	$aec_hack_start
-						. $aec_global_call
-						. $aec_condition_start
-						. $aec_include_class
-						. $aec_userchange_clause
-						. $aec_condition_end
-						. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. $aec_include_class
+		. $aec_userchange_clause
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_uchangehackCB12 = str_replace( '$row', '$userComplete', $aec_uchangehack );
 	$aec_uchangehackCB12x = str_replace( '$row', '$this', $aec_uchangehack );
 
 	$aec_uchangehackCB12 =	$aec_hack_start
-						. $aec_global_call
-						. $aec_condition_start
-						. $aec_include_class
-						. $aec_userchange_clauseCB12
-						. $aec_condition_end
-						. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. $aec_include_class
+		. $aec_userchange_clauseCB12
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_uchangehack15 =	$aec_hack_start
-						. $aec_global_call
-						. $aec_condition_start
-						. $aec_include_class
-						. $aec_userregchange_clause15
-						. $aec_condition_end
-						. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. $aec_include_class
+		. $aec_userregchange_clause15
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_uchangereghack15 =	$aec_hack_start
-						. $aec_global_call
-						. $aec_condition_start
-						. $aec_include_class
-						. $aec_userchange_clause15
-						. $aec_condition_end
-						. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. $aec_include_class
+		. $aec_userchange_clause15
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_rhackbefore =	$aec_hack_start
-						. $aec_global_call
-						. $aec_condition_start
-						. 'if (!isset($_POST[\'planid\'])) {' . "\n"
-						. $aec_include_class
-						. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
-						. $aec_condition_end
-						. $aec_condition_end
-						. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. 'if (!isset($_POST[\'planid\'])) {' . "\n"
+		. $aec_include_class
+		. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+		. $aec_condition_end
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_rhackbefore_fix = str_replace("planid", "usage", $aec_rhackbefore);
 
 	$aec_rhackbefore2 =	$aec_hack_start
-						. $aec_global_call . '$app = JFactory::getApplication();' . "\n"
-						. $aec_condition_start
-						. 'if (!isset($_POST[\'usage\'])) {' . "\n"
-						. $aec_include_class
-						. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
-						. $aec_condition_end
-						. $aec_condition_end
-						. $aec_hack_end;
+		. $aec_global_call . '$app = JFactory::getApplication();' . "\n"
+		. $aec_condition_start
+		. 'if (!isset($_POST[\'usage\'])) {' . "\n"
+		. $aec_include_class
+		. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+		. $aec_condition_end
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_optionhack =	$aec_hack_start
-						. $aec_global_call
-						. $aec_condition_start
-						. '$option = "com_acctexp";' . "\n"
-						. $aec_condition_end
-						. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. '$option = "com_acctexp";' . "\n"
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$aec_regvarshack =	'<?php' . "\n"
-						. $aec_hack_start
-						. $aec_global_call
-						. $aec_condition_start
-						. '?>' . "\n"
-						. '<input type="hidden" name="planid" value="<?php echo $_POST[\'planid\'];?>" />' . "\n"
-						. '<input type="hidden" name="processor" value="<?php echo $_POST[\'processor\'];?>" />' . "\n"
-						. '<?php' . "\n"
-						. 'if ( isset( $_POST[\'recurring\'] ) ) {'
-						. '?>' . "\n"
-						. '<input type="hidden" name="recurring" value="<?php echo $_POST[\'recurring\'];?>" />' . "\n"
-						. '<?php' . "\n"
-						. '}' . "\n"
-						. $aec_condition_end
-						. $aec_hack_end
-						. '?>' . "\n";
+		. $aec_hack_start
+		. $aec_global_call
+		. $aec_condition_start
+		. '?>' . "\n"
+		. '<input type="hidden" name="planid" value="<?php echo $_POST[\'planid\'];?>" />' . "\n"
+		. '<input type="hidden" name="processor" value="<?php echo $_POST[\'processor\'];?>" />' . "\n"
+		. '<?php' . "\n"
+		. 'if ( isset( $_POST[\'recurring\'] ) ) {'
+		. '?>' . "\n"
+		. '<input type="hidden" name="recurring" value="<?php echo $_POST[\'recurring\'];?>" />' . "\n"
+		. '<?php' . "\n"
+		. '}' . "\n"
+		. $aec_condition_end
+		. $aec_hack_end
+		. '?>' . "\n";
 
 	$aec_regvarshack_fix = str_replace( 'planid', 'usage', $aec_regvarshack);
 
 	$aec_regvarshack_fixcb = $aec_hack_start
-						. $aec_global_call
-						. $aec_condition_start
-						. 'if ( isset( $_POST[\'usage\'] ) ) {' . "\n"
-						. '$regFormTag .= \'<input type="hidden" name="usage" value="\' . $_POST[\'usage\'] . \'" />\';' . "\n"
-						. '}' . "\n"
-						. 'if ( isset( $_POST[\'processor\'] ) ) {' . "\n"
-						. '$regFormTag .= \'<input type="hidden" name="processor" value="\' . $_POST[\'processor\'] . \'" />\';' . "\n"
-						. '}' . "\n"
-						. 'if ( isset( $_POST[\'recurring\'] ) ) {' . "\n"
-						. '$regFormTag .= \'<input type="hidden" name="recurring" value="\' . $_POST[\'recurring\'] . \'" />\';' . "\n"
-						. '}' . "\n"
-						. $aec_condition_end
-						. $aec_hack_end
-						;
+		. $aec_global_call
+		. $aec_condition_start
+		. 'if ( isset( $_POST[\'usage\'] ) ) {' . "\n"
+		. '$regFormTag .= \'<input type="hidden" name="usage" value="\' . $_POST[\'usage\'] . \'" />\';' . "\n"
+		. '}' . "\n"
+		. 'if ( isset( $_POST[\'processor\'] ) ) {' . "\n"
+		. '$regFormTag .= \'<input type="hidden" name="processor" value="\' . $_POST[\'processor\'] . \'" />\';' . "\n"
+		. '}' . "\n"
+		. 'if ( isset( $_POST[\'recurring\'] ) ) {' . "\n"
+		. '$regFormTag .= \'<input type="hidden" name="recurring" value="\' . $_POST[\'recurring\'] . \'" />\';' . "\n"
+		. '}' . "\n"
+		. $aec_condition_end
+		. $aec_hack_end
+	;
 
 	$aec_regredirect = $aec_hack_start
-					. $aec_global_call
-					. $aec_condition_start
-					. $aec_redirect_subscribe
-					. $aec_condition_end
-					. $aec_hack_end;
+		. $aec_global_call
+		. $aec_condition_start
+		. $aec_redirect_subscribe
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$juser_blind = $aec_hack_start
-					. 'case \'blind\':'. "\n"
-					. 'break;'. "\n"
-					. $aec_hack_end;
+		. 'case \'blind\':'. "\n"
+		. 'break;'. "\n"
+		. $aec_hack_end;
 
 	$aec_j15hack1 =  $aec_hack_start
-					. 'if ( $error->message == JText::_("ALERTNOTAUTH") ) {'
-					. $aec_condition_start
-					. $aec_redirect_notallowed15
-					. $aec_condition_end
-					. $aec_condition_end
-					. $aec_hack_end;
+		. 'if ( $error->message == JText::_("ALERTNOTAUTH") ) {'
+		. $aec_condition_start
+		. $aec_redirect_notallowed15
+		. $aec_condition_end
+		. $aec_condition_end
+		. $aec_hack_end;
 
 	$n = 'errorphp';
 	$hacks[$n]['name']			=	'error.php ' . JText::_('AEC_HACK_HACK') . ' #1';
@@ -6081,9 +6081,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_uhp2_manage.php';
 		$hacks[$n]['read']			=	'<?php echo "$settings"; ?></a>';
 		$hacks[$n]['insert']		=	sprintf( $hacks[$n]['read'] . "\n</li>\n<?php " . $aec_hack_start . '?>'
-		. '<li class="latest<?php echo $moduleclass_sfx; ?>">'
-		. '<a href="index.php?option=com_acctexp&task=subscriptionDetails" class="latest<?php echo $moduleclass_sfx; ?>">'
-		. JText::_('AEC_SPEC_MENU_ENTRY') . '</a>'."\n<?php ".$aec_hack_end."?>", $n, $n );
+			. '<li class="latest<?php echo $moduleclass_sfx; ?>">'
+			. '<a href="index.php?option=com_acctexp&task=subscriptionDetails" class="latest<?php echo $moduleclass_sfx; ?>">'
+			. JText::_('AEC_SPEC_MENU_ENTRY') . '</a>'."\n<?php ".$aec_hack_end."?>", $n, $n );
 	}
 
 	if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
@@ -6356,9 +6356,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 				case 'menuentry':
 					$query = 'SELECT COUNT(*)'
-							. ' FROM #__menu'
-							. ' WHERE `link` = \'' . JURI::root()  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
-							;
+						. ' FROM #__menu'
+						. ' WHERE `link` = \'' . JURI::root()  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
+					;
 					$db->setQuery( $query );
 					$count = $db->loadResult();
 
@@ -6389,10 +6389,10 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 					if ( !$undohack ) { // hack
 						$newData = str_replace( $hacks[$filename]['read'], $hacks[$filename]['insert'], $oldData );
 
-							//make a backup
-							if ( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
+						//make a backup
+						if ( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
 							// Echo error message
-							}
+						}
 
 					} else { // undo hack
 						if ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) {
@@ -6410,14 +6410,14 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 						}
 					}
 
-						$oldperms = fileperms( $hacks[$filename]['filename'] );
-						chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
+					$oldperms = fileperms( $hacks[$filename]['filename'] );
+					chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
 
-						if ( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
-								fwrite( $fp, $newData, strlen( $newData ) );
-								fclose( $fp );
-								chmod( $hacks[$filename]['filename'], $oldperms );
-						}
+					if ( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
+						fwrite( $fp, $newData, strlen( $newData ) );
+						fclose( $fp );
+						chmod( $hacks[$filename]['filename'], $oldperms );
+					}
 				}
 				break;
 		}
@@ -6432,7 +6432,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 function backupFile( $file, $file_new )
 {
 	if ( !copy( $file, $file_new ) ) {
-			return false;
+		return false;
 	}
 	return true;
 }
@@ -6623,18 +6623,18 @@ function exportData( $option, $type, $cmd=null )
 
 	if ( $type == 'sales' ) {
 		$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
-							'filter' => array( 'date_start', 'date_end', 'method', 'planid', 'groupid', 'status', 'orderby' ),
-							'options' => array( 'collate', 'breakdown', 'breakdown_custom' ),
-							'params' => array( 'export_method' )
-						);
+							 'filter' => array( 'date_start', 'date_end', 'method', 'planid', 'groupid', 'status', 'orderby' ),
+							 'options' => array( 'collate', 'breakdown', 'breakdown_custom' ),
+							 'params' => array( 'export_method' )
+		);
 
 		$pf = 8;
 	} else {
 		$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
-							'filter' => array( 'planid', 'groupid', 'status', 'orderby' ),
-							'options' => array( 'rewrite_rule' ),
-							'params' => array( 'export_method' )
-						);
+							 'filter' => array( 'planid', 'groupid', 'status', 'orderby' ),
+							 'options' => array( 'rewrite_rule' ),
+							 'params' => array( 'export_method' )
+		);
 
 		$pf = 5;
 	}
@@ -6648,7 +6648,7 @@ function exportData( $option, $type, $cmd=null )
 			if ( !empty( $vvalue ) ) {
 				${$field}[$vname] = $vvalue;
 
-			 	$postfields++;
+				$postfields++;
 			}
 		}
 	}
@@ -6831,9 +6831,9 @@ function exportData( $option, $type, $cmd=null )
 	// Create a list of export options
 	// First, only the non-autosaved entries
 	$query = 'SELECT `id`, `name`, `created_date`, `lastused_date`'
-			. ' FROM #__acctexp_export' . ( ( $type == 'sales' ) ? '_sales' : '' )
-			. ' WHERE `system` = \''
-			;
+		. ' FROM #__acctexp_export' . ( ( $type == 'sales' ) ? '_sales' : '' )
+		. ' WHERE `system` = \''
+	;
 	$db->setQuery( $query . '0\'' );
 	$user_exports = $db->loadObjectList();
 
@@ -6879,9 +6879,9 @@ function exportData( $option, $type, $cmd=null )
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
-			. ' FROM #__acctexp_plans'
-			. ' ORDER BY `ordering`'
-			;
+		. ' FROM #__acctexp_plans'
+		. ' ORDER BY `ordering`'
+	;
 	$db->setQuery( $query );
 	$db_plans = $db->loadObjectList();
 
@@ -6912,7 +6912,7 @@ function exportData( $option, $type, $cmd=null )
 							'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
 							'hold'		=> JText::_('AEC_SEL_HOLD'),
 							'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
-							);
+		);
 
 		$lists['status'] = '<select id="status-group-select" name="status[]" multiple="multiple" size="5">';
 		foreach ( $status as $id => $txt ) {
