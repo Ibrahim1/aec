@@ -387,6 +387,26 @@ class aecAdminEntity
 	 */
 	public $entity;
 
+	/**
+	 * @var string
+	 */
+	public $table;
+
+	/**
+	 * @var string
+	 */
+	public $constraint;
+
+	/**
+	 * @var array
+	 */
+	public $sort = array();
+
+	/**
+	 * @var array
+	 */
+	public $filters = array();
+
 	public function __construct( $id )
 	{
 		$this->setID($id);
@@ -396,6 +416,8 @@ class aecAdminEntity
 		$this->lang = JFactory::getLanguage();
 
 		$this->db = JFactory::getDBO();
+
+		$this->getState();
 	}
 
 	public function setID( $id )
@@ -519,9 +541,11 @@ class aecAdminEntity
 		$eventlog->issue( $short, $tags, $event, $level, $params );
 	}
 
-	public function getState( $params )
+	public function getState()
 	{
 		$option = 'com_acctexp';
+
+		$this->state->filtered = false;
 
 		$this->state->limit = $this->app->getUserStateFromRequest(
 			"viewlistlimit",
@@ -535,21 +559,85 @@ class aecAdminEntity
 			0
 		);
 
-		$this->state->search = xJ::escape( $this->db, trim(
+		$this->state->search = xJ::escape(
+			$this->db,
+			trim(
 				strtolower( $this->app->getUserStateFromRequest(
 						"search{$option}_subscr",
 						'search',
 						''
 					) )
-			) );
+			)
+		);
 
-		foreach ( $params as $key => $default ) {
-			$this->state->{$key} = $this->app->getUserStateFromRequest(
-				'aec_' . $this->entity . '_' . $key,
-				$this->entity . '_' . $key,
-				$default
-			);
+		if ( !empty($this->state->search) ) {
+			$this->state->filtered = true;
 		}
+
+		if ( !empty($this->filters) ) {
+			foreach ( $params as $key => $default ) {
+				$this->state->filter->{$key} = $this->app->getUserStateFromRequest(
+					'aec_' . $this->entity . '_' . $key,
+					$this->entity . '_' . $key,
+					$default
+				);
+
+				if ( $this->state->filter->{$key} != $default ) {
+					$this->state->filtered = true;
+				}
+			}
+		}
+
+		if ( !empty($this->sort) ) {
+			foreach ( $params as $key => $default ) {
+				$this->state->{$key} = $this->app->getUserStateFromRequest(
+					'aec_' . $this->entity . '_' . $key,
+					$this->entity . '_' . $key,
+					$default
+				);
+			}
+		}
+	}
+
+	public function constrain( $constraint )
+	{
+		$this->constraint = $constraint;
+	}
+
+	public function getPagination( $total=null )
+	{
+		if ( empty($total) ) {
+			$this->db->setQuery(
+				'SELECT count(*)'
+				. ' FROM #__acctexp_' . $this->table
+				. $this->constraint
+			);
+
+			$total = $this->db->loadResult();
+		}
+
+		return new bsPagination( $total, $this->state );
+	}
+
+	public function getRows()
+	{
+		$pageNav = $this->getPagination();
+
+		// get the subset (based on limits) of records
+		$query = 'SELECT *'
+			. ' FROM #__acctexp_' . $this->table
+			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
+			. ' ORDER BY `' . str_replace(' ', '` ', $this->state->orderby)
+			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		;
+		$this->db->setQuery( $query );
+
+		$rows = $this->db->loadObjectList();
+		if ( $this->db->getErrorNum() ) {
+			echo $this->db->stderr();
+			return false;
+		}
+
 	}
 
 	public function getRanges( $nums )
@@ -1087,19 +1175,13 @@ class aecAdminMembership extends aecAdminEntity
 {
 	public $entity = 'Membership';
 
+	public $sort = array('orderby' => 'name ASC');
+
+	public $filters = array('groups' => 'active');
+
 	public function index( $subscriptionid, $userid=array(), $planid=null )
 	{
 		$app = JFactory::getApplication();
-
-
-		$this->state->orderby = $this->app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
-
-		$this->state->groups = $this->app->getUserStateFromRequest(
-			"groups{$option}", 'groups', 'active'
-		);
-
-
-		$state = $this->getState( array('orderby' => 'name ASC', 'groups' => 'active') );
 
 		$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 		$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -1109,10 +1191,8 @@ class aecAdminMembership extends aecAdminEntity
 		$search			= $app->getUserStateFromRequest( "search{$option}_subscr", 'search', '' );
 		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
-		if ( empty( $planid ) ) {
-			$filter_plan	= $app->getUserStateFromRequest( "filter_plan{$option}", 'filter_plan', 0 );
-		} else {
-			$filter_plan	= $planid;
+		if ( !empty( $planid ) ) {
+			$this->state->filter_plan = $planid;
 		}
 
 		if ( !is_array( $filter_plan ) ) {
@@ -1442,7 +1522,7 @@ class aecAdminMembership extends aecAdminEntity
 		$this->db->setQuery( $query );
 		$total = $this->db->loadResult();
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$pageNav = new bsPagination( $total, $this->state );
 
 		// get the subset (based on limits) of required records
 		if ( $notconfig ) {
@@ -1980,9 +2060,6 @@ class aecAdminMembership extends aecAdminEntity
 			$metaUser->meta->storeload();
 		}
 
-		$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart	= $app->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
-
 		$nexttask	= aecGetParam( 'nexttask', 'showSubscriptions' ) ;
 
 		if ( empty( $nexttask ) ) {
@@ -2009,9 +2086,6 @@ class aecAdminTemplate extends aecAdminEntity
 	{
 		$this->app = JFactory::getApplication();
 
-		$limit = $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
-		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
 		$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
 		foreach ( $list as $id => $name ) {
@@ -2020,15 +2094,9 @@ class aecAdminTemplate extends aecAdminEntity
 			}
 		}
 
-		$total = count($list);
+		$pageNav = $this->getPagination( count($list) );
 
-		if ( $limitstart > $total ) {
-			$limitstart = 0;
-		}
-
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
-
-		$names = array_slice( $list, $limitstart, $limit );
+		$names = array_slice( $list, $this->state->limitstart, $this->state->limit );
 
 		$rows = array();
 		foreach ( $names as $name ) {
@@ -2126,31 +2194,16 @@ class aecAdminProcessor extends aecAdminEntity
 {
 	public function index( $option )
 	{
-		$limit = $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
-		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$pageNav = $this->getPagination();
 
-		// get the total number of records
 		$this->db->setQuery(
-			'SELECT count(*)'
-			. ' FROM #__acctexp_config_processors'
-		);
-		$total = $this->db->loadResult();
-
-		if ( $limitstart > $total ) {
-			$limitstart = 0;
-		}
-
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
-
-		// get the subset (based on limits) of records
-		$query = 'SELECT name'
+			'SELECT name'
 			. ' FROM #__acctexp_config_processors'
 			. ' GROUP BY `id`'
-			//. ' ORDER BY `ordering`'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		;
-		$this->db->setQuery( $query );
-		$names = xJ::getDBArray( $this->db );
+		);
+
+		$names = xJ::getDBArray($this->db);
 
 		$rows = array();
 		foreach ( $names as $name ) {
@@ -2421,6 +2474,12 @@ class aecAdminProcessor extends aecAdminEntity
 
 class aecAdminSubscriptionPlan extends aecAdminEntity
 {
+	public $table = 'plans';
+
+	public $filters = array( 'group' => array() );
+
+	public $sort = array('orderby' => 'name ASC');
+
 	public function getList()
 	{
 		$rows = SubscriptionPlanHandler::getFullPlanList();
@@ -2556,20 +2615,17 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 	public function index( $option )
 	{
-		$limit			= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
-		$limitstart		= $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-		$filter_group	= $this->app->getUserStateFromRequest( "filter_group", 'filter_group', array() );
+		$filtered = !empty($this->state->filter->group);
 
-		$filtered = !empty($filter_group);
-
-		if ( !empty( $filter_group ) ) {
+		if ( !empty( $this->state->filter->group ) ) {
 			$subselect = ItemGroupHandler::getChildren( $filter_group, 'item' );
+
+			$this->constraint(
+				' WHERE id IN (' . implode( ',', $subselect ) . ')'
+			);
 		} else {
 			$subselect = array();
 		}
-
-		$search			= $this->app->getUserStateFromRequest( "search_subscr{$option}", 'search', '' );
-		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
 		$orderby = $this->app->getUserStateFromRequest( "orderby_plans{$option}", 'orderby_plans', 'name ASC' );
 
@@ -2585,10 +2641,16 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			$limitstart = 0;
 		}
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$pageNav = $this->getPagination();
 
 		// get the subset (based on limits) of records
-		$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect, $orderby, $search );
+		$rows = SubscriptionPlanHandler::getFullPlanList(
+			$pageNav->limitstart,
+			$pageNav->limit,
+			$subselect,
+			$this->state->sort,
+			$this->state->search
+		);
 
 		$gcolors = array();
 
@@ -4984,6 +5046,7 @@ class aecAdminInvoice extends aecAdminEntity
 			'free' => 'Free',
 			'none' => 'None'
 		);
+
 		foreach ( $processors as $processor ) {
 			$procs[$processor->processor_name] = $processor->processor->info['longname'];
 		}
@@ -5271,51 +5334,22 @@ class aecAdminInvoice extends aecAdminEntity
 
 class aecAdminService extends aecAdminEntity
 {
+	public $table = 'services';
+
 	public function index( $option )
 	{
-		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
-		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-		$search = $this->app->getUserStateFromRequest( "search_services{$option}", 'search', '' );
-		$search = xJ::escape( $this->db, trim( strtolower( $search ) ) );
-
-		$filtered = !empty($search);
-
-		$orderby = $this->app->getUserStateFromRequest( "orderby_services{$option}", 'orderby_services', 'name ASC' );
-
-		// get the total number of records
-		$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_services'
-			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-		;
-		$this->db->setQuery( $query );
-		$total = $this->db->loadResult();
-		echo $this->db->getErrorMsg();
-
-		if ( $limitstart > $total ) {
-			$limitstart = 0;
+		if ( $this->state->search ) {
+			$this->constrain(
+				' WHERE (`name` LIKE \'%'.$search.'%\')'
+			);
 		}
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
-
-		// get the subset (based on limits) of records
-		$query = 'SELECT *'
-			. ' FROM #__acctexp_services'
-			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		;
-		$this->db->setQuery( $query );
-
-		$rows = $this->db->loadObjectList();
-		if ( $this->db->getErrorNum() ) {
-			echo $this->db->stderr();
-			return false;
-		}
-
-		$lists = array();
-
-		HTML_AcctExp::listServices( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
+		HTML_AcctExp::listServices(
+			$this->getRows(),
+			$this->state,
+			$this->getPagination(),
+			array()
+		);
 	}
 
 	public function edit( $id, $option )

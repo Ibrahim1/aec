@@ -3912,7 +3912,7 @@ class HTML_AcctExp
 	 * @param boolean $filtered
 	 * @param bsPagination $pageNav
 	 */
-	static function listServices( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
+	static function listServices( $rows, $filtered, $pageNav, $lists, $search, $orderby )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze'); ?>
 
@@ -3952,7 +3952,7 @@ class HTML_AcctExp
 									<?php foreach ( $rows as $i => $row ) { ?>
 										<tr>
 											<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-											<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editService&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+											<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editService&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
 											<td class="text-center">
 												<?php HTML_myCommon::toggleBtn( 'services', 'active', $row->id, $row->active ); ?>
 											</td>
@@ -4343,6 +4343,17 @@ jimport('joomla.html.pagination');
 
 class bsPagination extends JPagination
 {
+	public function __construct( $total, $state )
+	{
+		$limitstart = $state->limitstart;
+
+		if ( $state->limitstart > $total ) {
+			$limitstart = 0;
+		}
+
+		parent::__construct($total, $limitstart, $state->limit);
+	}
+
 	public function getListFooter()
 	{
 		$footer = parent::getListFooter();
