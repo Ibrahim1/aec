@@ -924,11 +924,12 @@ class HTML_AcctExp
 	 * Builds a link plus button
 	 *
 	 * @param string	$link
+	 * @param string	$task
 	 * @param string	$image
 	 * @param string	$text
 	 * @param bool		$hideMenu
 	 */
-	static function quickiconButton( $link, $image, $text, $hideMenu = false )
+	static function quickiconButton( $entity, $task, $image, $text, $hideMenu = false )
 	{
 		if ( $hideMenu ) {
 			$hideMenu = '&amp;hidemainmenu=1';
@@ -1113,7 +1114,7 @@ class HTML_AcctExp
 								</td>
 							</tr>
 							<tr>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( 'ItemGroup', 'index', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-left', ' diorama-icon-w' ); ?></div></td>
 								<td><div class="cell-wrapper"><div class="dioarama-corner-w-s"></div></div></td>
 								<td></td>

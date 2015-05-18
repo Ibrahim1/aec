@@ -54,34 +54,6 @@ switch( strtolower( $task ) ) {
 		echo "wolves teeth";
 		break;
 
-	case 'showsubscriptions': listSubscriptions( $option, '', $subscriptionid, $userid, aecGetParam('plan') ); break;
-
-	case 'showexcluded': listSubscriptions( $option, 'excluded', $subscriptionid, $userid ); break;
-	case 'showactive': listSubscriptions( $option, 'active', $subscriptionid, $userid ); break;
-	case 'showexpired': listSubscriptions( $option, 'expired', $subscriptionid, $userid, aecGetParam('plan') ); break;
-	case 'showpending': listSubscriptions( $option, 'pending', $subscriptionid, $userid ); break;
-	case 'showcancelled': listSubscriptions( $option, 'cancelled', $subscriptionid, $userid ); break;
-	case 'showhold': listSubscriptions( $option, 'hold', $subscriptionid, $userid ); break;
-	case 'showclosed': listSubscriptions( $option, 'closed', $subscriptionid, $userid ); break;
-	case 'showmanual': listSubscriptions( $option, 'notconfig', $subscriptionid, $userid ); break;
-
-	case 'showsettings': editSettings( $option ); break;
-	case 'savesettings': saveSettings( $option ); break;
-	case 'applysettings': saveSettings( $option, 1 ); break;
-	case 'cancelsettings': aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_CANCELLED') ); break;
-
-	case 'showtemplates': listTemplates( $option ); break;
-	case 'edittemplate': editTemplate( $option, aecGetParam('name') ); break;
-	case 'savetemplate': saveTemplate( $option, aecGetParam('name') ); break;
-	case 'applytemplate': saveTemplate( $option, aecGetParam('name'), 1 ); break;
-	case 'canceltemplate': aecRedirect( 'index.php?option=' . $option . '&task=showTemplates', JText::_('AEC_CONFIG_CANCELLED') ); break;
-
-	case 'showprocessors': listProcessors( $option ); break;
-	case 'newprocessor': editProcessor( 0, $option ); break;
-	case 'editprocessor': editProcessor( $id[0], $option ); break;
-	case 'saveprocessor': saveProcessor( $option ); break;
-	case 'applyprocessor': saveProcessor( $option, 1 ); break;
-	case 'cancelprocessor': aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_CANCELLED') ); break;
 	case 'publishprocessor': changeProcessor( $id, 1, 'active', $option ); break;
 	case 'unpublishprocessor': changeProcessor( $id, 0, 'active', $option ); break;
 
@@ -89,45 +61,45 @@ switch( strtolower( $task ) ) {
 	case 'getsubscriptionplans': getSubscriptionPlans(); break;
 	case 'newsubscriptionplan': editSubscriptionPlan( 0, $option ); break;
 	case 'editsubscriptionplan': editSubscriptionPlan( $id, $option ); break;
-	case 'copysubscriptionplan': copyObject( $option, 'SubscriptionPlan', $id ); break;
+	case 'copysubscriptionplan': copyObject( 'SubscriptionPlan', $id ); break;
 	case 'savesubscriptionplan': saveSubscriptionPlan( $option ); break;
-	case 'applysubscriptionplan': saveSubscriptionPlan( $option, 1 ); break;
+	case 'applysubscriptionplan': saveSubscriptionPlan( 1 ); break;
 	case 'publishsubscriptionplan': changeSubscriptionPlan( $id, 1, 'active', $option ); break;
 	case 'unpublishsubscriptionplan': changeSubscriptionPlan( $id, 0, 'active', $option ); break;
 	case 'visiblesubscriptionplan': changeSubscriptionPlan( $id, 1, 'visible', $option ); break;
 	case 'invisiblesubscriptionplan': changeSubscriptionPlan( $id, 0, 'visible', $option ); break;
 	case 'removesubscriptionplan': removeSubscriptionPlan( $id, $option, $returnTask ); break;
 	case 'cancelsubscriptionplan': aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-	case 'orderplanup': orderObject( $option, 'SubscriptionPlan', $id, 1 ); break;
-	case 'orderplandown': orderObject( $option, 'SubscriptionPlan', $id, 0 ); break;
+	case 'orderplanup': orderObject( 'SubscriptionPlan', $id, 1 ); break;
+	case 'orderplandown': orderObject( 'SubscriptionPlan', $id, 0 ); break;
 
 	case 'showitemgroups': listItemGroups( $option ); break;
 	case 'newitemgroup': editItemGroup( 0, $option ); break;
 	case 'edititemgroup': editItemGroup( $id, $option ); break;
-	case 'copyitemgroup': copyObject( $option, 'ItemGroup', $id ); break;
+	case 'copyitemgroup': copyObject( 'ItemGroup', $id ); break;
 	case 'saveitemgroup': saveItemGroup( $option ); break;
-	case 'applyitemgroup': saveItemGroup( $option, 1 ); break;
+	case 'applyitemgroup': saveItemGroup( 1 ); break;
 	case 'publishitemgroup': changeItemGroup( $id, 1, 'active', $option ); break;
 	case 'unpublishitemgroup': changeItemGroup( $id, 0, 'active', $option ); break;
 	case 'visibleitemgroup': changeItemGroup( $id, 1, 'visible', $option ); break;
 	case 'invisibleitemgroup': changeItemGroup( $id, 0, 'visible', $option ); break;
 	case 'removeitemgroup': removeItemGroup( $id, $option, $returnTask ); break;
 	case 'cancelitemgroup': aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-	case 'ordergroupup': orderObject( $option, 'ItemGroup', $id, 1 ); break;
-	case 'ordergroupdown': orderObject( $option, 'ItemGroup', $id, 0 ); break;
+	case 'ordergroupup': orderObject( 'ItemGroup', $id, 1 ); break;
+	case 'ordergroupdown': orderObject( 'ItemGroup', $id, 0 ); break;
 
 	case 'showmicrointegrations': listMicroIntegrations( $option ); break;
 	case 'newmicrointegration': editMicroIntegration( 0, $option ); break;
 	case 'editmicrointegration': editMicroIntegration( $id, $option ); break;
 	case 'savemicrointegration': saveMicroIntegration( $option ); break;
-	case 'applymicrointegration': saveMicroIntegration( $option, 1 ); break;
-	case 'copymicrointegration': copyObject( $option, 'microIntegration', $id ); break;
+	case 'applymicrointegration': saveMicroIntegration( 1 ); break;
+	case 'copymicrointegration': copyObject( 'microIntegration', $id ); break;
 	case 'publishmicrointegration': changeMicroIntegration( $id, 1, $option ); break;
 	case 'unpublishmicrointegration': changeMicroIntegration( $id, 0, $option ); break;
 	case 'removemicrointegration': removeMicroIntegration( $id, $option, $returnTask ); break;
 	case 'cancelmicrointegration': cancelMicroIntegration( $option ); break;
-	case 'ordermiup': orderObject( $option, 'microIntegration', $id, 1 ); break;
-	case 'ordermidown': orderObject( $option, 'microIntegration', $id, 0 ); break;
+	case 'ordermiup': orderObject( 'microIntegration', $id, 1 ); break;
+	case 'ordermidown': orderObject( 'microIntegration', $id, 0 ); break;
 
 	case 'showcoupons': listCoupons( $option ); break;
 
@@ -147,8 +119,8 @@ switch( strtolower( $task ) ) {
 
 	case 'newcoupon': editCoupon( 0, $option, 1 ); break;
 	case 'editcoupon': editCoupon( $id, $option, 0 ); break;
-	case 'savecoupon': saveCoupon( $option, 0 ); break;
-	case 'applycoupon': saveCoupon( $option, 1 ); break;
+	case 'savecoupon': saveCoupon( 0 ); break;
+	case 'applycoupon': saveCoupon( 1 ); break;
 	case 'publishcoupon': changeCoupon( $id, 1, $option ); break;
 	case 'unpublishcoupon': changeCoupon( $id, 0, $option ); break;
 	case 'removecoupon': removeCoupon( $id, $option, $returnTask ); break;
@@ -159,56 +131,56 @@ switch( strtolower( $task ) ) {
 		$filename	= aecGetParam( 'filename', 0 );
 		$check_hack	= $filename ? 0 : 1;
 
-		hackcorefile( $option, $filename, $check_hack, $undohack );
+		hackcorefile( $filename, $check_hack, $undohack );
 
-		HTML_AcctExp::hacks( $option, hackcorefile( $option, 0, 1, 0 ) );
+		HTML_AcctExp::hacks( hackcorefile( 0, 1, 0 ) );
 		break;
 
 	case 'invoices': invoices( $option ); break;
 	case 'newinvoice': editInvoice( 0, $option, $returnTask, $userid ); break;
 	case 'editinvoice': editInvoice( $id, $option, $returnTask, $userid ); break;
-	case 'applyinvoice': saveInvoice( $option, 1 ); break;
+	case 'applyinvoice': saveInvoice( 1 ); break;
 	case 'saveinvoice': saveInvoice( $option ); break;
 
-	case 'clearinvoice': clearInvoice( $option, aecGetParam('invoice'), aecGetParam('applyplan'), $returnTask ); break;
+	case 'clearinvoice': clearInvoice( aecGetParam('invoice'), aecGetParam('applyplan'), $returnTask ); break;
 
-	case 'cancelinvoice': cancelInvoice( $option, aecGetParam('invoice'), $returnTask ); break;
+	case 'cancelinvoice': cancelInvoice( aecGetParam('invoice'), $returnTask ); break;
 
-	case 'printinvoice': AdminInvoicePrintout( $option, aecGetParam('invoice') ); break;
-	case 'pdfinvoice': AdminInvoicePDF( $option, aecGetParam('invoice') ); break;
+	case 'printinvoice': AdminInvoicePrintout( aecGetParam('invoice') ); break;
+	case 'pdfinvoice': AdminInvoicePDF( aecGetParam('invoice') ); break;
 
 	case 'history': history( $option ); break;
 	case 'eventlog': eventlog( $option ); break;
 
-	case 'stats': aec_stats( $option, aecGetParam('page') ); break;
+	case 'stats': aec_stats( aecGetParam('page') ); break;
 
-	case 'statrequest': aec_statrequest( $option, aecGetParam('type'), aecGetParam('start'), aecGetParam('end') ); break;
+	case 'statrequest': aec_statrequest( aecGetParam('type'), aecGetParam('start'), aecGetParam('end') ); break;
 
-	case 'testexportmembers': exportData( $option, 'members', 'export' ); break;
-	case 'exportmembers': exportData( $option, 'members' ); break;
-	case 'loadexportmembers': exportData( $option, 'members', 'load' ); break;
-	case 'applyexportmembers': exportData( $option, 'members', 'apply' ); break;
-	case 'exportexportmembers': exportData( $option, 'members', 'export' ); break;
-	case 'saveexportmembers': exportData( $option, 'members', 'save' ); break;
+	case 'testexportmembers': exportData( 'members', 'export' ); break;
+	case 'exportmembers': exportData( 'members' ); break;
+	case 'loadexportmembers': exportData( 'members', 'load' ); break;
+	case 'applyexportmembers': exportData( 'members', 'apply' ); break;
+	case 'exportexportmembers': exportData( 'members', 'export' ); break;
+	case 'saveexportmembers': exportData( 'members', 'save' ); break;
 
-	case 'testexportsales': exportData( $option, 'sales', 'export' ); break;
-	case 'exportsales': exportData( $option, 'sales' ); break;
-	case 'loadexportsales': exportData( $option, 'sales', 'load' ); break;
-	case 'applyexportsales': exportData( $option, 'sales', 'apply' ); break;
-	case 'exportexportsales': exportData( $option, 'sales', 'export' ); break;
-	case 'saveexportsales': exportData( $option, 'sales', 'save' ); break;
+	case 'testexportsales': exportData( 'sales', 'export' ); break;
+	case 'exportsales': exportData( 'sales' ); break;
+	case 'loadexportsales': exportData( 'sales', 'load' ); break;
+	case 'applyexportsales': exportData( 'sales', 'apply' ); break;
+	case 'exportexportsales': exportData( 'sales', 'export' ); break;
+	case 'saveexportsales': exportData( 'sales', 'save' ); break;
 
 	case 'import': importData( $option ); break;
 
-	case 'toolbox': toolBoxTool( $option, aecGetParam('cmd') ); break;
+	case 'toolbox': toolBoxTool( aecGetParam('cmd') ); break;
 
 	case 'services':
 	case 'showservices': listServices( $option ); break;
 	case 'newservice': editService( 0, $option ); break;
 	case 'editservice': editService( $id[0], $option ); break;
-	case 'copyservice': copyObject( $option, 'Service', $id ); break;
+	case 'copyservice': copyObject( 'Service', $id ); break;
 	case 'saveservice': saveService( $option ); break;
-	case 'applyservice': saveService( $option, 1 ); break;
+	case 'applyservice': saveService( 1 ); break;
 	case 'publishservice': changeService( $id, 1, 'active', $option ); break;
 	case 'unpublishservice': changeService( $id, 0, 'active', $option ); break;
 	case 'visibleservice': changeService( $id, 1, 'visible', $option ); break;
@@ -220,9 +192,9 @@ switch( strtolower( $task ) ) {
 	case 'showevents': listEvents( $option ); break;
 	case 'newevent': editEvent( 0, $option ); break;
 	case 'editevent': editEvent( $id[0], $option ); break;
-	case 'copyevent': copyObject( $option, 'Event', $id ); break;
+	case 'copyevent': copyObject( 'Event', $id ); break;
 	case 'saveevent': saveEvent( $option ); break;
-	case 'applyevent': saveEvent( $option, 1 ); break;
+	case 'applyevent': saveEvent( 1 ); break;
 	case 'publishevent': changeEvent( $id, 1, 'active', $option ); break;
 	case 'unpublishevent': changeEvent( $id, 0, 'active', $option ); break;
 	case 'visibleevent': changeEvent( $id, 1, 'visible', $option ); break;
@@ -236,9 +208,9 @@ switch( strtolower( $task ) ) {
 		$return = quicklookup( $option );
 
 		if ( is_array( $return ) ) {
-			aecCentral( $option, $return['return'], $return['search'] );
+			aecCentral( $return['return'], $return['search'] );
 		} elseif ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
-			aecCentral( $option, $return );
+			aecCentral( $return );
 		} elseif ( !empty( $return ) ) {
 			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $return, JText::_('AEC_QUICKSEARCH_THANKS') );
 		} else {
@@ -585,11 +557,14 @@ class aecAdminEntity
 		$this->db->setQuery( $query );
 
 		$rows = $this->db->loadObjectList();
+
 		if ( $this->db->getErrorNum() ) {
 			echo $this->db->stderr();
+
 			return false;
 		}
 
+		return $rows;
 	}
 
 	public function getRanges( $nums )
@@ -1708,7 +1683,7 @@ class aecAdminMembership extends aecAdminEntity
 		HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
 	}
 
-	public function edit( $option, $userid, $subscriptionid, $task, $page=0 )
+	public function edit( $userid, $subscriptionid, $task, $page=0 )
 	{
 		if ( !empty( $subscriptionid ) ) {
 			$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
@@ -1946,10 +1921,10 @@ class aecAdminMembership extends aecAdminEntity
 		$aecHTML->invoice_page	= $page;
 		$aecHTML->sid			= $sid;
 
-		HTML_AcctExp::userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
+		HTML_AcctExp::userForm( $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
 	}
 
-	public function save( $option, $apply=0 )
+	public function save( $apply=0 )
 	{
 		$app = JFactory::getApplication();
 
@@ -2148,7 +2123,7 @@ class aecAdminTemplate extends aecAdminEntity
 		HTML_AcctExp::listTemplates( $rows, $pageNav, $option );
 	}
 
-	public function edit( $option, $name )
+	public function edit( $name )
 	{
 		$temp = new configTemplate();
 		$temp->loadName( $name );
@@ -2167,10 +2142,10 @@ class aecAdminTemplate extends aecAdminEntity
 		$aecHTML->tempname	= $name;
 		$aecHTML->name		= $temp->info['longname'];
 
-		HTML_AcctExp::editTemplate( $option, $aecHTML, $tempsettings['tab_data'] );
+		HTML_AcctExp::editTemplate( $aecHTML, $tempsettings['tab_data'] );
 	}
 
-	public function save( $option, $name, $return=0 )
+	public function save( $name, $return=0 )
 	{
 		$temp = new configTemplate();
 		$temp->loadName( $name );
@@ -2214,7 +2189,7 @@ class aecAdminTemplate extends aecAdminEntity
 		$temp->storeload();
 
 		if ( $return ) {
-			editTemplate( $option, $name );
+			editTemplate( $name );
 		} else {
 			aecRedirect( 'index.php?option=' . $option . '&task=showTemplates', JText::_('AEC_CONFIG_SAVED') );
 		}
@@ -2389,7 +2364,7 @@ class aecAdminProcessor extends aecAdminEntity
 
 		$aecHTML->pp = $pp;
 
-		HTML_AcctExp::editProcessor( $option, $aecHTML );
+		HTML_AcctExp::editProcessor( $aecHTML );
 	}
 
 	public function change( $cid=null, $state=0, $type, $option )
@@ -2424,7 +2399,7 @@ class aecAdminProcessor extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', $msg );
 	}
 
-	public function save( $option, $return=0 )
+	public function save( $return=0 )
 	{
 		$pp = new PaymentProcessor();
 
@@ -2846,15 +2821,15 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			$row->ordering	= 9999;
 			$hasrecusers	= false;
 
-			$params_values['active']	= 1;
-			$params_values['visible']	= 0;
+			$params_values['active'] = 1;
+			$params_values['visible'] = 0;
 			$params_values['processors'] = 0;
 
 			$restrictions_values['gid_enabled']	= 1;
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
-				$restrictions_values['gid']			= 2;
+				$restrictions_values['gid'] = 2;
 			} else {
-				$restrictions_values['gid']			= 18;
+				$restrictions_values['gid'] = 18;
 			}
 		} else {
 			$params_values = $row->params;
@@ -3414,10 +3389,10 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			$aecHTML->customparams = $customparamsarray;
 		}
 
-		HTML_AcctExp::editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers );
+		HTML_AcctExp::editSubscriptionPlan( $aecHTML, $row, $hasrecusers );
 	}
 
-	public function save( $option, $apply=0 )
+	public function save( $apply=0 )
 	{
 		$row = new SubscriptionPlan();
 		$row->load( $_POST['id'] );
@@ -3878,10 +3853,10 @@ class aecAdminItemGroup extends aecAdminEntity
 			$aecHTML->customparams = $customparamsarray;
 		}
 
-		HTML_AcctExp::editItemGroup( $option, $aecHTML, $row );
+		HTML_AcctExp::editItemGroup( $aecHTML, $row );
 	}
 
-	public function save( $option, $apply=0 )
+	public function save( $apply=0 )
 	{
 		$row = new ItemGroup();
 		$row->load( $_POST['id'] );
@@ -4295,10 +4270,10 @@ class aecAdminMicroIntegration extends aecAdminEntity
 			$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', null );
 		}
 
-		HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML, $attached );
+		HTML_AcctExp::editMicroIntegration( $mi, $lists, $aecHTML, $attached );
 	}
 
-	public function save( $option, $apply=0 )
+	public function save( $apply=0 )
 	{
 		unset( $_POST['option'] );
 		unset( $_POST['task'] );
@@ -4853,10 +4828,10 @@ class aecAdminCoupon extends aecAdminEntity
 			$aecHTML->invoices[] = $invoice;
 		}
 
-		HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon );
+		HTML_AcctExp::editCoupon( $aecHTML, $cph->coupon );
 	}
 
-	public function save( $option, $apply=0 )
+	public function save( $apply=0 )
 	{
 		$new = 0;
 		$type = $_POST['type'];
@@ -5128,7 +5103,7 @@ class aecAdminInvoice extends aecAdminEntity
 			$invoices[$id]->processor = $procs[$invoices[$id]->method];
 		}
 
-		HTML_AcctExp::viewInvoices( $option, $invoices, $search, $pageNav, $orderby );
+		HTML_AcctExp::viewInvoices( $invoices, $search, $pageNav, $orderby );
 	}
 
 	public function edit( $id, $option, $returnTask, $userid )
@@ -5195,10 +5170,10 @@ class aecAdminInvoice extends aecAdminEntity
 
 		$aecHTML->params = $row->params;
 
-		HTML_AcctExp::editInvoice( $option, $aecHTML, $id );
+		HTML_AcctExp::editInvoice( $aecHTML, $id );
 	}
 
-	public function save( $option, $return=0 )
+	public function save( $return=0 )
 	{
 		$row = new Invoice();
 		$row->load( $_POST['id'] );
@@ -5259,7 +5234,7 @@ class aecAdminInvoice extends aecAdminEntity
 		}
 	}
 
-	public function clear( $option, $invoice_number, $applyplan, $task )
+	public function clear( $invoice_number, $applyplan, $task )
 	{
 		$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
@@ -5289,7 +5264,7 @@ class aecAdminInvoice extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('AEC_MSG_INVOICE_CLEARED') );
 	}
 
-	public function cancel( $option, $invoice_number, $task )
+	public function cancel( $invoice_number, $task )
 	{
 		$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
@@ -5308,7 +5283,7 @@ class aecAdminInvoice extends aecAdminEntity
 		aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('REMOVED') );
 	}
 
-	public function printout( $option, $invoice_number, $standalone=true )
+	public function printout( $invoice_number, $standalone=true )
 	{
 		$invoice = new Invoice();
 		$invoice->loadInvoiceNumber( $invoice_number );
@@ -5317,14 +5292,14 @@ class aecAdminInvoice extends aecAdminEntity
 		$iFactory->invoiceprint( $invoice->invoice_number, $standalone );
 	}
 
-	public function printoutPDF( $option, $invoice_number )
+	public function printoutPDF( $invoice_number )
 	{
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
 
 		ob_start();
 
-		AdminInvoicePrintout( $option, $invoice_number, false );
+		AdminInvoicePrintout( $invoice_number, false );
 
 		$buffer = ob_get_contents();
 
@@ -5434,10 +5409,10 @@ class aecAdminService extends aecAdminEntity
 
 		$aecHTML->hasSettings = $id ? true : false;
 
-		HTML_AcctExp::editService( $option, $row, $aecHTML );
+		HTML_AcctExp::editService( $row, $aecHTML );
 	}
 
-	public function save( $option, $apply=0 )
+	public function save( $apply=0 )
 	{
 		$post = AECToolbox::cleanPOST( $_POST, false );
 
@@ -5596,13 +5571,13 @@ class aecAdminHistory
 			return false;
 		}
 
-		HTML_AcctExp::viewHistory( $option, $rows, $search, $pageNav );
+		HTML_AcctExp::viewHistory( $rows, $search, $pageNav );
 	}
 }
 
 class aecAdminEventlog
 {
-	public function eventlog( $option )
+	public function index( $option )
 	{
 		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
 		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
@@ -5687,13 +5662,13 @@ class aecAdminEventlog
 			}
 		}
 
-		HTML_AcctExp::eventlog( $option, $events, $search, $pageNav );
+		HTML_AcctExp::eventlog( $events, $search, $pageNav );
 	}
 }
 
 class aecAdminStats
 {
-	public function index( $option, $page )
+	public function index( $page )
 	{
 		if ( empty( $page ) ) {
 			$page = 'overview';
@@ -5806,10 +5781,10 @@ class aecAdminStats
 			}
 		}
 
-		HTML_AcctExp::stats( $option, $page, $stats );
+		HTML_AcctExp::stats( $page, $stats );
 	}
 
-	public function request( $option, $type, $start, $end )
+	public function request( $type, $start, $end )
 	{
 		$tree = new stdClass();
 
@@ -5921,7 +5896,7 @@ function quicklookup( $option )
 	return '<div class="lookupresults">' . implode( $return ) . '</div>';
 }
 
-function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=false )
+function hackcorefile( $filename, $check_hack, $undohack, $checkonly=false )
 {
 	$db = JFactory::getDBO();
 
@@ -6654,10 +6629,10 @@ function importData( $option )
 		$aecHTML->columns = $columns;
 	}
 
-	HTML_AcctExp::import( $option, $aecHTML );
+	HTML_AcctExp::import( $aecHTML );
 }
 
-function exportData( $option, $type, $cmd=null )
+function exportData( $type, $cmd=null )
 {
 	$db = JFactory::getDBO();
 
@@ -7095,11 +7070,11 @@ function exportData( $option, $type, $cmd=null )
 	if ( $cmd_save ) {
 		aecRedirect( 'index.php?option=' . $option . '&task=showCentral' );
 	} else {
-		HTML_AcctExp::export( $option, $type, $aecHTML );
+		HTML_AcctExp::export( $type, $aecHTML );
 	}
 }
 
-function toolBoxTool( $option, $cmd )
+function toolBoxTool( $cmd )
 {
 	$path = JPATH_SITE . '/components/com_acctexp/toolbox';
 
@@ -7130,7 +7105,7 @@ function toolBoxTool( $option, $cmd )
 			$list[] = $info;
 		}
 
-		HTML_AcctExp::toolBox( $option, '', $list );
+		HTML_AcctExp::toolBox( '', $list );
 	} else {
 		$file = $path . '/' . $cmd . '.php';
 
@@ -7182,6 +7157,6 @@ function toolBoxTool( $option, $cmd )
 			$return .= $response;
 		}
 
-		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );
+		HTML_AcctExp::toolBox( $cmd, $return, $info['name'] );
 	}
 }
