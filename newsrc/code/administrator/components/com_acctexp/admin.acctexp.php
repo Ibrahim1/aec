@@ -400,6 +400,11 @@ class aecAdminEntity
 	/**
 	 * @var array
 	 */
+	public $state = array();
+
+	/**
+	 * @var array
+	 */
 	public $sort = array();
 
 	/**
@@ -575,12 +580,20 @@ class aecAdminEntity
 		}
 
 		if ( !empty($this->filters) ) {
-			foreach ( $params as $key => $default ) {
+			foreach ( $this->filters as $key => $default ) {
 				$this->state->filter->{$key} = $this->app->getUserStateFromRequest(
 					'aec_' . $this->entity . '_' . $key,
 					$this->entity . '_' . $key,
 					$default
 				);
+
+				if ( empty($this->state->filter->{$key}) && !empty($_REQUEST[$key]) ) {
+					$this->state->filter->{$key} = $_REQUEST[$key];
+				}
+
+				if ( is_array($default) && !is_array($this->state->filter->{$key}) ) {
+					$this->state->filter->{$key} = array( $this->state->filter->{$key} );
+				}
 
 				if ( $this->state->filter->{$key} != $default ) {
 					$this->state->filtered = true;
@@ -589,7 +602,7 @@ class aecAdminEntity
 		}
 
 		if ( !empty($this->sort) ) {
-			foreach ( $params as $key => $default ) {
+			foreach ( $this->sort as $key => $default ) {
 				$this->state->{$key} = $this->app->getUserStateFromRequest(
 					'aec_' . $this->entity . '_' . $key,
 					$this->entity . '_' . $key,
@@ -1177,58 +1190,21 @@ class aecAdminMembership extends aecAdminEntity
 
 	public $sort = array('orderby' => 'name ASC');
 
-	public $filters = array('groups' => 'active');
+	public $filters = array(
+		'status' => array('active'),
+		'group' => array(),
+		'plan' => array()
+	);
 
 	public function index( $subscriptionid, $userid=array(), $planid=null )
 	{
-		$app = JFactory::getApplication();
-
-		$limit			= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-		$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-		$orderby		= $app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
-		$groups			= $app->getUserStateFromRequest( "groups{$option}", 'groups', 'active' );
-		$search			= $app->getUserStateFromRequest( "search{$option}_subscr", 'search', '' );
-		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
-
-		if ( !empty( $planid ) ) {
-			$this->state->filter_plan = $planid;
-		}
-
-		if ( !is_array( $filter_plan ) ) {
-			$filter_plan = array( $filter_plan );
-		}
-
-		$filter_group	= $app->getUserStateFromRequest( "filter_group{$option}", 'filter_group', 0 );
-
-		if ( !is_array( $filter_group ) && !empty( $filter_group ) ) {
-			$filter_group = array( $filter_group );
-		} elseif ( empty( $filter_group ) ) {
-			$filter_group = array();
-		}
-
-		if ( !empty( $set_group ) && empty( $_REQUEST['groups'] ) ) {
-			if ( is_array( $set_group ) ) {
-				$groups		= $set_group;
-			} else {
-				$groups		= array();
-				$groups[]	= $set_group;
-			}
-		} else {
-			if ( $groups ) {
-				if ( is_array($groups ) ) {
-					if ( count( $groups ) == 1 ) {
-						if ( $groups[0] == 'all' ) {
-							$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
-						}
-					}
-				} else {
-					$groups		= array( $groups );
-				}
+		if ( is_array($this->state->filter->status) && count( $this->state->filter->status ) === 1 ) {
+			if ( $this->state->filter->status[0] == 'all' ) {
+				$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
 			}
 		}
 
-		if ( array_search( 'notconfig', $groups ) ) {
+		if ( array_search( 'notconfig', $this->state->filter->status ) ) {
 			$set_group	= 'notconfig';
 		} else {
 			$set_group	= $groups[0];
@@ -1609,10 +1585,12 @@ class aecAdminMembership extends aecAdminEntity
 		$this->db_plans = $this->db->loadObjectList();
 
 		$plans2[] = JHTML::_('select.option', '0', JText::_('BIND_USER'), 'id', 'name' );
+
 		if ( is_array( $this->db_plans ) ) {
 			$plans2 = array_merge( $plans2, $this->db_plans );
 		}
-		$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="form-control inputbox" size="1"', 'id', 'name', 0 );
+
+		$lists['set_plan']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="form-control inputbox" size="1"', 'id', 'name', 0 );
 
 		$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
 		foreach ( $this->db_plans as $plan ) {
@@ -1643,11 +1621,11 @@ class aecAdminMembership extends aecAdminEntity
 			'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
 		);
 
-		$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';
+		$lists['filter_status'] = '<select id="status-group-select" name="filter_status[]" multiple="multiple" size="5">';
 		foreach ( $status as $id => $txt ) {
-			$lists['groups'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected"' : '' ) . '>' . $txt . '</option>';
+			$lists['filter_status'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected"' : '' ) . '>' . $txt . '</option>';
 		}
-		$lists['groups'] .= '</select>';
+		$lists['filter_status'] .= '</select>';
 
 		$group_selection = array();
 		$group_selection[] = JHTML::_('select.option', '',			JText::_('Set Status') );
