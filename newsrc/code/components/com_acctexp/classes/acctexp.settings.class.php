@@ -14,6 +14,16 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class aecSettings
 {
 	/**
+	 * @var array
+	 */
+	public $settings;
+
+	/**
+	 * @var array
+	 */
+	public $lists;
+
+	/**
 	 * @param string $area
 	 */
 	public function aecSettings( $area, $subarea='' )

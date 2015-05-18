@@ -43,7 +43,7 @@ class HTML_myCommon
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION . '" />' );
 	}
 
-	static function addBackendJS( $ui=false )
+	static function addBackendJS()
 	{
 		$v = new JVersion();
 
@@ -141,9 +141,6 @@ class HTML_myCommon
 		echo '</form>';
 	}
 
-	/**
-	 * @param string $image
-	 */
 	static function getHeader( $page, $image, $extratext='', $search=false, $buttons=null, $object=false )
 	{
 		$value = $placeholder = '';
@@ -197,9 +194,6 @@ class HTML_myCommon
 		?><div class="aec-symbol aec-symbol-<?php echo $name; ?>"></div><?php
 	}
 
-	/**
-	 * @param boolean $object
-	 */
 	static function getButtons( $buttons, $object )
 	{
 		if ( !is_array( $buttons ) ) {
@@ -333,8 +327,6 @@ class HTML_myCommon
 	 */
 	static function getButton( $action, $object, $button, $fulltext=false )
 	{
-		$v = new JVersion();
-
 		if ( !empty($button['modal']) ) {
 			return '<a href="#' . $button['modal']
 			. '" id="' . $button['modal'] . '-trigger"'
@@ -377,13 +369,15 @@ class HTML_myCommon
 
 		$cssid = $csscl . '-' . $id;
 
+		$js .= "('" .  $type . "','" . $property . "','" . $id . "','" . $cssid . "','" . $csscl . "')";
+
 		if ( ( $property == 'default' ) && $state ) {
-			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-sm <?php echo $csscl;?> ui-disabled" id="<?php echo $cssid;?>" href="#" disabled="disabled" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
-			<?php echo aecHTML::Icon( $icons[$state] ); ?>
+			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-sm <?php echo $csscl;?> ui-disabled" id="<?php echo $cssid;?>" href="#" disabled="disabled" onClick="<?php echo $js; ?>">
+				<?php echo aecHTML::Icon( $icons[$state] ); ?>
 			</a><?php
 		} else {
-			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-sm <?php echo $csscl;?>" id="<?php echo $cssid;?>" href="#" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
-			<?php echo aecHTML::Icon( $icons[$state] ); ?>
+			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-sm <?php echo $csscl;?>" id="<?php echo $cssid;?>" href="#" onClick="<?php echo $js; ?>">
+				<?php echo aecHTML::Icon( $icons[$state] ); ?>
 			</a><?php
 		}
 	}
@@ -393,8 +387,14 @@ class HTML_AcctExp
 {
 	/**
 	 * @param metaUser $metaUser
+	 * @param $invoices
+	 * @param $coupons
+	 * @param $mi
+	 * @param $lists
+	 * @param $nexttask
+	 * @param aecHTML $aecHTML
 	 */
-	static function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
+	static function userForm( $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
 	?><script type="text/javascript">
 		jQuery(document).ready(function() {
@@ -901,7 +901,7 @@ class HTML_AcctExp
 		<?php } ?>
 	</div>
 	<?php $tabs->endPanes(); ?>
-	<input type="hidden" name="option" value="<?php echo $option; ?>" />
+	<input type="hidden" name="option" value="com_acctexp" />
 	<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
 	<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 	<input type="hidden" name="task" value="save" />
@@ -1324,13 +1324,13 @@ class HTML_AcctExp
 	<?php
 	}
 
-	static function hacks ( $option, $hacks )
+	static function hacks( $hacks )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_HACKS', 'settings' );
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="option" value="com_acctexp" />
 			<input type="hidden" name="task" value="save" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
@@ -1409,7 +1409,7 @@ class HTML_AcctExp
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
 						<h3>Don't Panic!</h3>
 					</div>
 					<div class="modal-body">
@@ -1443,7 +1443,7 @@ class HTML_AcctExp
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
 					<h3>Eventlog</h3>
 				</div>
 				<div class="modal-body">
@@ -1505,7 +1505,7 @@ class HTML_AcctExp
 					<ul class="nav nav-list affixnav" data-spy="affix" data-offset-top="148">
 						<input type="text" placeholder="filter settings here" id="settings-filter">
 						<?php
-						foreach ( $params as $rowname => $rowcontent ) {
+						foreach ( $params as $rowcontent ) {
 							if ( $rowcontent[0] == 'page-head' ) {
 								echo '<li><a href="#' . str_replace(" ", "_", strtolower($rowcontent[1]) ) . '">' . aecHTML::Icon( 'chevron-right' ) . $rowcontent[1] . '</a></li>';
 							}
@@ -1537,9 +1537,9 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param bsPagination $pageNav
+	 * @param bsPagination $nav
 	 */
-	static function listProcessors( $rows, $pageNav, $option )
+	static function listProcessors( $rows, $nav )
 	{
 		HTML_myCommon::startCommon('aec-wrap-mesh');
 		HTML_myCommon::startForm();
@@ -1571,7 +1571,7 @@ class HTML_AcctExp
 								<?php foreach ( $rows as $i => $row ) { ?>
 									<tr>
 										<td class="text-center"><?php echo $row->processor->id; ?> <?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
-										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
+										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
 										<td class="text-left"><?php echo $row->processor->info['statement']; ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
 									</tr>
@@ -1580,7 +1580,7 @@ class HTML_AcctExp
 								<tfoot>
 								<tr>
 									<td colspan="6">
-										<?php echo $pageNav->getListFooter(); ?>
+										<?php echo $nav->getListFooter(); ?>
 									</td>
 								</tr>
 								</tfoot>
@@ -1599,7 +1599,7 @@ class HTML_AcctExp
 	/**
 	 * @param aecHTML $aecHTML
 	 */
-	static function editProcessor( $option, $aecHTML )
+	static function editProcessor( $aecHTML )
 	{
 		$id = 0;
 		if ( !empty( $aecHTML->pp ) ) {
@@ -1635,9 +1635,9 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param bsPagination $pageNav
+	 * @param bsPagination $nav
 	 */
-	static function listTemplates( $rows, $pageNav, $option )
+	static function listTemplates( $rows, $nav )
 	{
 		HTML_myCommon::startCommon('aec-wrap-cream');
 		HTML_myCommon::startForm();
@@ -1654,10 +1654,10 @@ class HTML_AcctExp
 								<th class="text-left"><?php echo JText::_('TEMPLATE_DESC'); ?></th>
 							</tr></thead>
 							<tbody>
-							<?php foreach ( $rows as $i => $row ) { ?>
+							<?php foreach ( $rows as $row ) { ?>
 								<tr>
 									<td><?php if ( $row->id ) { HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); } ?></td>
-									<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
+									<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
 									<td class="text-left"><?php echo $row->info['description']; ?></td>
 								</tr>
 							<?php } ?>
@@ -1665,7 +1665,7 @@ class HTML_AcctExp
 							<tfoot>
 							<tr>
 								<td colspan="6">
-									<?php echo $pageNav->getListFooter(); ?>
+									<?php echo $nav->getListFooter(); ?>
 								</td>
 							</tr>
 							</tfoot>
@@ -1682,9 +1682,9 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param aecHTML $aecHTML
+	 * @param $aecHTML aecHTML
 	 */
-	static function editTemplate( $option, $aecHTML, $tab_data )
+	static function editTemplate( $aecHTML, $tab_data )
 	{
 		jimport( 'joomla.html.editor' );
 
@@ -1747,10 +1747,7 @@ class HTML_AcctExp
 		HTML_myCommon::endCommon();
 	}
 
-	/**
-	 * @param bsPagination $pageNav
-	 */
-	static function listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action )
+	static function listSubscriptions( $rows, $nav, $state, $lists, $subscriptionid, $action )
 	{
 		HTML_myCommon::startCommon('aec-wrap-geometry');
 
@@ -1777,10 +1774,10 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
 
-			HTML_myCommon::getHeader( $action[1], '' . $action[0], '', $search, 'bulk-edit', 'Subscription' );
+			HTML_myCommon::getHeader( $action[1], '' . $action[0], '', $state->search, 'bulk-edit', 'Subscription' );
 
 			?>
-			<input type="hidden" name="orderby_subscr" value="<?php echo $orderby; ?>"/>
+			<input type="hidden" name="orderby_subscr" value="<?php echo $state->orderby; ?>"/>
 
 			<div class="container-fluid">
 				<div class="row">
@@ -1792,7 +1789,7 @@ class HTML_AcctExp
 										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 									</th>
 									<th>&nbsp;</th>
-									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
+									<?php aecAdmin::th_set($th_list, $lists, $state->orderby); ?>
 									<?php if ( $action[0] == 'manual' ) { ?>
 										<th class="text-left"></th>
 										<th class="text-left"></th>
@@ -1827,7 +1824,7 @@ class HTML_AcctExp
 									<tr<?php echo $rowstyle; ?>>
 										<td class="text-center"><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 										<td class="text-center"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 										<td class="text-left"><?php echo $row->username; ?></td>
 										<td><?php echo $row->status; ?></td>
 										<td class="text-left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
@@ -1848,7 +1845,7 @@ class HTML_AcctExp
 								<tfoot>
 								<tr>
 									<td colspan="11">
-										<?php echo $pageNav->getListFooter(); ?>
+										<?php echo $nav->getListFooter(); ?>
 									</td>
 								</tr>
 								</tfoot>
@@ -1857,14 +1854,14 @@ class HTML_AcctExp
 					</div>
 				</div>
 			</div>
-			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="option" value="com_acctexp" />
 			<input type="hidden" name="entity" value="Membership" />
 
 			<div class="modal fade" id="bulk-edit">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
 							<h3>Bulk Edit Subscriptions</h3>
 						</div>
 						<div class="modal-body">
@@ -1906,18 +1903,14 @@ class HTML_AcctExp
 		HTML_myCommon::endCommon();
 	}
 
-	/**
-	 * @param boolean $filtered
-	 * @param bsPagination $pageNav
-	 */
-	static function listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
+	static function listMicroIntegrations( $rows, $state, $nav, $lists )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze'); ?>
 
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 
 			<?php
-			HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', '', $search, 'list', 'MicroIntegration' );
+			HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', '', $state->search, 'list', 'MicroIntegration' );
 
 			$th_list = array(
 				array('name', 'MI_NAME'),
@@ -1928,8 +1921,8 @@ class HTML_AcctExp
 			);
 
 			?>
-			<input type="hidden" name="orderby_mi" value="<?php echo $orderby; ?>"/>
-			<?php if ( empty( $rows )  && !$filtered ) { ?>
+			<input type="hidden" name="orderby_mi" value="<?php echo $state->orderby; ?>"/>
+			<?php if ( empty( $rows )  && !$state->filtered ) { ?>
 				<div class="clearfix"></div>
 				<div class="container" style="min-height: 50%; padding: 10% 0;">
 					<p style="text-align: center">There is no micro integration set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'MicroIntegration', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new micro integration' ), true )?></p>
@@ -1945,13 +1938,13 @@ class HTML_AcctExp
 											ID
 											<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 										</th>
-										<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
+										<?php aecAdmin::th_set($th_list, $lists, $state->orderby); ?>
 									</tr></thead>
 									<tbody>
 									<?php foreach ( $rows as $i => $row ) { ?>
 										<tr>
 											<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-											<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+											<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
 											<td class="text-left">
 												<?php
 												echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
@@ -1959,7 +1952,7 @@ class HTML_AcctExp
 											<td class="text-center">
 												<?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?>
 											</td>
-											<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
+											<td class="text-center"><?php $nav->ordering( $i, count($rows), 'mi', ($state->orderby == 'ordering ASC' || $state->orderby == 'ordering DESC') ); ?></td>
 											<td class="text-left"><?php echo $row->class_name; ?></td>
 										</tr>
 									<?php } ?>
@@ -1967,7 +1960,7 @@ class HTML_AcctExp
 									<tfoot>
 									<tr>
 										<td colspan="9">
-											<?php echo $pageNav->getListFooter(); ?>
+											<?php echo $nav->getListFooter(); ?>
 										</td>
 									</tr>
 									</tfoot>
@@ -1977,7 +1970,7 @@ class HTML_AcctExp
 					</div>
 				</div>
 			<?php } ?>
-			<input type="hidden" name="option" value="<?php echo $option; ?>" />
+			<input type="hidden" name="option" value="com_acctexp" />
 			<input type="hidden" name="entity" value="MicroIntegration" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
@@ -1985,11 +1978,7 @@ class HTML_AcctExp
 		HTML_myCommon::endCommon();
 	}
 
-	/**
-	 * @param microIntegration $row
-	 * @param null|aecHTML $aecHTML
-	 */
-	static function editMicroIntegration( $option, $row, $lists, $aecHTML, $attached )
+	static function editMicroIntegration( $row, $lists, $aecHTML, $attached )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
 
@@ -2113,7 +2102,7 @@ class HTML_AcctExp
 		<?php } ?>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="entity" value="MicroIntegration" />
 		<input type="hidden" name="task" value="save" />
 		</form>
@@ -2126,15 +2115,11 @@ class HTML_AcctExp
 		HTML_myCommon::endCommon();
 	}
 
-	/**
-	 * @param boolean $filtered
-	 * @param bsPagination $pageNav
-	 */
-	static function listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option )
+	static function listSubscriptionPlans( $rows, $state, $lists, $nav )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary');
 		HTML_myCommon::startForm();
-		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', '', $search, 'list', 'SubscriptionPlan' );
+		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', '', $state->search, 'list', 'SubscriptionPlan' );
 
 		$th_list = array(
 			array('name', 'PAYPLAN_NAME', 'left', array('filter_group')),
@@ -2145,8 +2130,8 @@ class HTML_AcctExp
 		);
 
 		?>
-		<input type="hidden" name="orderby_plans" value="<?php echo $orderby; ?>"/>
-		<?php if ( empty( $rows ) && !$filtered ) { ?>
+		<input type="hidden" name="orderby_plans" value="<?php echo $state->orderby; ?>"/>
+		<?php if ( empty( $rows ) && !$state->filtered ) { ?>
 		<div class="clearfix"></div>
 		<div class="container" style="min-height: 50%; padding: 10% 0;">
 			<p class="text-center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
@@ -2163,7 +2148,7 @@ class HTML_AcctExp
 										ID
 										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 									</th>
-									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
+									<?php aecAdmin::th_set($th_list, $lists, $state->orderby); ?>
 									<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
 									<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 								</tr></thead>
@@ -2180,11 +2165,11 @@ class HTML_AcctExp
 											<?php echo $row->id; ?>&nbsp;
 											<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
 										</td>
-										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 										<td class="text-left"><?php echo $row->desc; ?></td>
 										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
-										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'plan', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
+										<td class="text-center"><?php $nav->ordering( $i, count($rows), 'plan', ($state->orderby == 'ordering ASC' || $state->orderby == 'ordering DESC') ); ?></td>
 										<td>
 											<div class="progress-group">
 												<div class="progress">
@@ -2246,7 +2231,7 @@ class HTML_AcctExp
 								<tfoot>
 								<tr>
 									<td colspan="13">
-										<?php echo $pageNav->getListFooter(); ?>
+										<?php echo $nav->getListFooter(); ?>
 									</td>
 								</tr>
 								</tfoot>
@@ -2257,7 +2242,7 @@ class HTML_AcctExp
 			</div>
 		</div>
 	<?php } ?>
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="entity" value="SubscriptionPlan" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
@@ -2271,7 +2256,7 @@ class HTML_AcctExp
 	 * @param SubscriptionPlan $row
 	 * @param boolean $hasrecusers
 	 */
-	static function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
+	static function editSubscriptionPlan( $aecHTML, $row, $hasrecusers )
 	{
 		global $aecConfig;
 
@@ -2630,7 +2615,7 @@ class HTML_AcctExp
 		<?php } ?>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="entity" value="SubscriptionPlan" />
 		<input type="hidden" name="task" value="save" />
 		</form>
@@ -2658,15 +2643,15 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param bsPagination $pageNav
+	 * @param bsPagination $nav
 	 */
-	static function listItemGroups( $rows, $pageNav, $option, $orderby, $search )
+	static function listItemGroups( $rows, $nav, $state )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary');
 
 		HTML_myCommon::startForm();
 
-		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups', '', $search, 'list', 'ItemGroup' );
+		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups', '', $state->search, 'list', 'ItemGroup' );
 
 		$th_list = array(
 			array('name', 'ITEMGROUP_NAME'),
@@ -2677,7 +2662,7 @@ class HTML_AcctExp
 		);
 
 		?>
-		<input type="hidden" name="orderby_groups" value="<?php echo $orderby; ?>"/>
+		<input type="hidden" name="orderby_groups" value="<?php echo $state->orderby; ?>"/>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
@@ -2689,7 +2674,7 @@ class HTML_AcctExp
 										<?php echo JText::_('AEC_CMN_ID'); ?>
 										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 									</th>
-									<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
+									<?php aecAdmin::th_set($th_list, array(), $state->orderby); ?>
 								</tr></thead>
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
@@ -2709,19 +2694,19 @@ class HTML_AcctExp
 												<div class="group-colors-stripe" style="background: #<?php echo $row->color; ?>;">
 												</div>
 											</div>
-											<a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+											<a href="<?php echo 'index.php?option=com_acctexp&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
 										</td>
 										<td class="text-left"><?php echo $row->desc; ?></td>
 										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
-										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'group', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
+										<td class="text-center"><?php $nav->ordering( $i, count($rows), 'group', ($state->orderby == 'ordering ASC' || $state->orderby == 'ordering DESC') ); ?></td>
 									</tr>
 								<?php } ?>
 								</tbody>
 								<tfoot>
 								<tr>
 									<td colspan="10">
-										<?php echo $pageNav->getListFooter(); ?>
+										<?php echo $nav->getListFooter(); ?>
 									</td>
 								</tr>
 								</tfoot>
@@ -2731,7 +2716,7 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="entity" value="ItemGroup" />
 		</form>
 
@@ -2743,7 +2728,7 @@ class HTML_AcctExp
 	 * @param aecHTML $aecHTML
 	 * @param ItemGroup $row
 	 */
-	static function editItemGroup( $option, $aecHTML, $row )
+	static function editItemGroup( $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary', 'aec-wrap-inner-light');
 
@@ -2893,7 +2878,7 @@ class HTML_AcctExp
 		<?php $tabs->endPanes(); ?>
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="entity" value="ItemGroup" />
 		<input type="hidden" name="task" value="save" />
 		</form>
@@ -2905,16 +2890,16 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param boolean $filtered
-	 * @param bsPagination $pageNav
+	 * @param boolean $state->filtered
+	 * @param bsPagination $nav
 	 */
-	static function listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby )
+	static function listCoupons( $rows, $state, $nav )
 	{
 		HTML_myCommon::startCommon('aec-wrap-cream');
 
 		HTML_myCommon::startForm();
 
-		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons', '', $search, 'list', 'Coupon' );
+		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons', '', $state->search, 'list', 'Coupon' );
 
 		$th_list = array(
 			array('name', 'COUPON_NAME'),
@@ -2924,8 +2909,8 @@ class HTML_AcctExp
 		);
 
 		?>
-		<input type="hidden" name="orderby_coupons" value="<?php echo $orderby; ?>"/>
-		<?php if ( empty( $rows ) && !$filtered ) { ?>
+		<input type="hidden" name="orderby_coupons" value="<?php echo $state->orderby; ?>"/>
+		<?php if ( empty( $rows ) && !$state->filtered ) { ?>
 		<div class="clearfix"></div>
 		<div class="container" style="min-height: 50%; padding: 10% 0;">
 			<p style="text-align: center">There is no coupon set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Coupon', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new coupon' ), true )?></p>
@@ -2941,7 +2926,7 @@ class HTML_AcctExp
 									<?php echo JText::_('AEC_CMN_ID'); ?>
 									<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 								</th>
-								<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
+								<?php aecAdmin::th_set($th_list, array(), $state->orderby); ?>
 								<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 							</tr></thead>
 							<tbody>
@@ -2949,7 +2934,7 @@ class HTML_AcctExp
 								<tr>
 									<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
 									<td class="text-left">
-										<a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+										<a href="<?php echo 'index.php?option=com_acctexp&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
 									</td>
 									<td class="text-left"><strong><?php echo $row->coupon_code; ?></strong></td>
 									<td class="text-left"><?php echo $row->desc; ?></td>
@@ -2969,7 +2954,7 @@ class HTML_AcctExp
 							<tfoot>
 							<tr>
 								<td colspan="9">
-									<?php echo $pageNav->getListFooter(); ?>
+									<?php echo $nav->getListFooter(); ?>
 								</td>
 							</tr>
 							</tfoot>
@@ -2979,7 +2964,7 @@ class HTML_AcctExp
 			</div>
 		</div>
 	<?php } ?>
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="entity" value="Coupon" />
 		</form>
 
@@ -2991,7 +2976,7 @@ class HTML_AcctExp
 	 * @param aecHTML $aecHTML
 	 * @param Coupon $row
 	 */
-	static function editCoupon( $option, $aecHTML, $row )
+	static function editCoupon( $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon('aec-wrap-cream', 'aec-wrap-inner-light');
 
@@ -3112,7 +3097,7 @@ class HTML_AcctExp
 							<tr>
 								<td><?php echo $i + 1; ?></td>
 								<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $invoice->userid; ?>"><?php echo $invoice->username; ?></a></td>
-								<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editInvoice&amp;id=' . $invoice->id ?>" target="_blank" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
+								<td><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editInvoice&amp;id=' . $invoice->id ?>" target="_blank" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
 								<td><?php echo $invoice->secondary_ident; ?></td>
 								<td><?php echo $invoice->created_date; ?></td>
 								<td><?php echo $invoice->transaction_date; ?></td>
@@ -3130,7 +3115,7 @@ class HTML_AcctExp
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="oldtype" value="<?php echo $row->type; ?>" />
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="entity" value="Coupon" />
 		<input type="hidden" name="task" value="save" />
 		</form>
@@ -3142,15 +3127,15 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param bsPagination $pageNav
+	 * @param bsPagination $nav
 	 */
-	static function viewInvoices( $option, $rows, $search, $pageNav, $orderby )
+	static function viewInvoices( $rows, $nav, $state )
 	{
 		HTML_myCommon::startCommon('aec-wrap-net');
 
 		HTML_myCommon::startForm();
 
-		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices', '', $search );
+		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices', '', $state->search );
 
 		$th_list = array(
 			array('userid', 'INVOICE_USERID'),
@@ -3166,7 +3151,7 @@ class HTML_AcctExp
 		);
 
 		?>
-		<input type="hidden" name="orderby_invoices" value="<?php echo $orderby; ?>"/>
+		<input type="hidden" name="orderby_invoices" value="<?php echo $state->orderby; ?>"/>
 
 		<div class="container-fluid">
 			<div class="row">
@@ -3178,14 +3163,14 @@ class HTML_AcctExp
 									<?php echo JText::_('AEC_CMN_ID'); ?>
 									<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 								</th>
-								<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
+								<?php aecAdmin::th_set($th_list, array(), $state->orderby); ?>
 							</tr></thead>
 							<tbody>
 							<?php foreach ( $rows as $i => $row ) { ?>
 								<tr>
-									<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+									<td><?php echo $i + 1 + $nav->limitstart; ?></td>
 									<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $row->userid; ?>"><?php echo $row->username; ?></a></td>
-									<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editInvoice&returnTask=invoices&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
+									<td><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editInvoice&returnTask=invoices&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
 									<td><?php echo $row->secondary_ident; ?></td>
 									<td><?php echo $row->created_date; ?></td>
 									<td><?php echo $row->transaction_date; ?></td>
@@ -3200,7 +3185,7 @@ class HTML_AcctExp
 							<tfoot>
 							<tr>
 								<td colspan="11">
-									<?php echo $pageNav->getListFooter(); ?>
+									<?php echo $nav->getListFooter(); ?>
 								</td>
 							</tr>
 							</tfoot>
@@ -3209,7 +3194,7 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="entity" value="Invoice" />
 		</form>
 
@@ -3220,7 +3205,7 @@ class HTML_AcctExp
 	/**
 	 * @param aecHTML $aecHTML
 	 */
-	static function editInvoice( $option, $aecHTML, $id )
+	static function editInvoice( $aecHTML, $id )
 	{
 		HTML_myCommon::startCommon('aec-wrap-net', 'aec-wrap-inner-light');
 
@@ -3272,15 +3257,15 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param bsPagination $pageNav
+	 * @param bsPagination $nav
 	 */
-	static function viewHistory( $option, $rows, $search, $pageNav )
+	static function viewHistory( $rows, $nav, $state )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
 
 		HTML_myCommon::startForm();
 
-		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history', '', $search );
+		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history', '', $state->search );
 
 		?>
 		<div class="container-fluid">
@@ -3318,7 +3303,7 @@ class HTML_AcctExp
 								<tfoot>
 								<tr>
 									<td colspan="7">
-										<?php echo $pageNav->getListFooter(); ?>
+										<?php echo $nav->getListFooter(); ?>
 									</td>
 								</tr>
 								</tfoot>
@@ -3328,7 +3313,7 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="task" value="history" />
 		<input type="hidden" name="returnTask" value="history" />
 		<input type="hidden" name="boxchecked" value="0" />
@@ -3339,15 +3324,15 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param bsPagination $pageNav
+	 * @param bsPagination $nav
 	 */
-	static function eventlog( $option, $events, $search, $pageNav )
+	static function eventlog( $events, $nav, $state )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
 
 		HTML_myCommon::startForm();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog', '', $search );
+		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog', '', $state->search );
 
 		?>
 		<div class="container-fluid">
@@ -3384,7 +3369,7 @@ class HTML_AcctExp
 								<tfoot>
 								<tr>
 									<td colspan="8">
-										<?php echo $pageNav->getListFooter(); ?>
+										<?php echo $nav->getListFooter(); ?>
 									</td>
 								</tr>
 								</tfoot>
@@ -3395,7 +3380,7 @@ class HTML_AcctExp
 			</div>
 		</div>
 
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="task" value="eventlog" />
 		<input type="hidden" name="returnTask" value="eventlog" />
 		<input type="hidden" name="boxchecked" value="0" />
@@ -3404,7 +3389,7 @@ class HTML_AcctExp
 		HTML_myCommon::endCommon();
 	}
 
-	static function stats( $option, $page, $stats )
+	static function stats( $page, $stats )
 	{
 	global $aecConfig;
 
@@ -3416,8 +3401,8 @@ class HTML_AcctExp
 
 	?>
 	<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
-		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/charts.js"></script>
-		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
+		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/com_acctexp'; ?>/js/stats/charts.js"></script>
+		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/com_acctexp'; ?>/js/stats/grouped_sales.js"></script>
 		<script type="text/javascript">
 			var	amount_format = d3.format(".2f"),
 				amount_currency = "<?php echo html_entity_decode( AECToolbox::getCurrencySymbol( $aecConfig->cfg['standard_currency'] ), ENT_QUOTES, "UTF-8" ); ?>",
@@ -3762,7 +3747,7 @@ class HTML_AcctExp
 	/**
 	 * @param aecHTML $aecHTML
 	 */
-	static function import( $option, $aecHTML )
+	static function import( $aecHTML )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
 
@@ -3847,7 +3832,7 @@ class HTML_AcctExp
 				<?php } ?>
 			</div>
 
-			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="option" value="com_acctexp" />
 			<input type="hidden" name="task" value="import" />
 			<input type="hidden" name="returnTask" value="import" />
 		</form>
@@ -3861,7 +3846,7 @@ class HTML_AcctExp
 	/**
 	 * @param aecHTML $aecHTML
 	 */
-	static function export( $option, $task, $aecHTML )
+	static function export( $task, $aecHTML )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
 
@@ -3897,7 +3882,7 @@ class HTML_AcctExp
 				} ?>
 			</div>
 
-			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="option" value="com_acctexp" />
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="returnTask" value="<?php echo $task;?>" />
 		</form>
@@ -3908,18 +3893,14 @@ class HTML_AcctExp
 		HTML_myCommon::endCommon();
 	}
 
-	/**
-	 * @param boolean $filtered
-	 * @param bsPagination $pageNav
-	 */
-	static function listServices( $rows, $filtered, $pageNav, $lists, $search, $orderby )
+	static function listServices( $rows, $state, $nav, $lists )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze'); ?>
 
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 
 			<?php
-			HTML_myCommon::getHeader( 'AEC_SERVICE_TITLE', 'settings', '', $search, 'list', 'Service' );
+			HTML_myCommon::getHeader( 'AEC_SERVICE_TITLE', 'settings', '', $state->search, 'list', 'Service' );
 
 			$th_list = array(
 				array('name', 'AEC_SERVICE_NAME'),
@@ -3929,8 +3910,8 @@ class HTML_AcctExp
 			);
 
 			?>
-			<input type="hidden" name="orderby_mi" value="<?php echo $orderby; ?>"/>
-			<?php if ( empty( $rows )  && !$filtered ) { ?>
+			<input type="hidden" name="orderby_mi" value="<?php echo $state->orderby; ?>"/>
+			<?php if ( empty( $rows )  && !$state->filtered ) { ?>
 				<div class="clearfix"></div>
 				<div class="container" style="min-height: 50%; padding: 10% 0;">
 					<p style="text-align: center">There is no service set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Service', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new service' ), true )?></p>
@@ -3946,7 +3927,7 @@ class HTML_AcctExp
 											ID
 											<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 										</th>
-										<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
+										<?php aecAdmin::th_set($th_list, $lists, $state->orderby); ?>
 									</tr></thead>
 									<tbody>
 									<?php foreach ( $rows as $i => $row ) { ?>
@@ -3956,7 +3937,7 @@ class HTML_AcctExp
 											<td class="text-center">
 												<?php HTML_myCommon::toggleBtn( 'services', 'active', $row->id, $row->active ); ?>
 											</td>
-											<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
+											<td class="text-center"><?php $nav->ordering( $i, count($rows), 'mi', ($state->orderby == 'ordering ASC' || $state->orderby == 'ordering DESC') ); ?></td>
 											<td class="text-left"><?php echo $row->type; ?></td>
 										</tr>
 									<?php } ?>
@@ -3964,7 +3945,7 @@ class HTML_AcctExp
 									<tfoot>
 									<tr>
 										<td colspan="9">
-											<?php echo $pageNav->getListFooter(); ?>
+											<?php echo $nav->getListFooter(); ?>
 										</td>
 									</tr>
 									</tfoot>
@@ -3974,7 +3955,7 @@ class HTML_AcctExp
 					</div>
 				</div>
 			<?php } ?>
-			<input type="hidden" name="option" value="<?php echo $option; ?>" />
+			<input type="hidden" name="option" value="com_acctexp" />
 			<input type="hidden" name="task" value="showServices" />
 			<input type="hidden" name="returnTask" value="showServices" />
 			<input type="hidden" name="boxchecked" value="0" />
@@ -3984,10 +3965,10 @@ class HTML_AcctExp
 	}
 
 	/**
-	 * @param service $row
+	 * @param aecService $row
 	 * @param null|aecHTML $aecHTML
 	 */
-	static function editService( $option, $row, $aecHTML )
+	static function editService( $row, $aecHTML )
 	{
 	HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
 
@@ -4067,7 +4048,7 @@ class HTML_AcctExp
 	<?php if ( !empty( $row->type ) ) { ?>
 		<input type="hidden" name="type" value="<?php echo $row->type; ?>" />
 	<?php } ?>
-	<input type="hidden" name="option" value="<?php echo $option; ?>" />
+	<input type="hidden" name="option" value="com_acctexp" />
 	<input type="hidden" name="task" value="" />
 	</form>
 
@@ -4134,7 +4115,7 @@ class HTML_AcctExp
 		HTML_myCommon::endCommon();
 	}
 
-	static function toolBox( $option, $cmd, $result, $title=null )
+	static function toolBox( $cmd, $result, $title=null )
 	{
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon('aec-wrap-grid');
@@ -4174,7 +4155,7 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		<input type="hidden" name="task" value="toolbox" />
 		<input type="hidden" name="cmd" value="<?php echo $cmd;?>" />
 		</form>

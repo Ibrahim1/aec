@@ -548,68 +548,7 @@ class aecAdminEntity
 
 	public function getState()
 	{
-		$option = 'com_acctexp';
-
-		$this->state->filtered = false;
-
-		$this->state->limit = $this->app->getUserStateFromRequest(
-			"viewlistlimit",
-			'limit',
-			$this->app->getCfg('list_limit')
-		);
-
-		$this->state->limitstart = $this->app->getUserStateFromRequest(
-			"viewconf{$option}limitstart",
-			'limitstart',
-			0
-		);
-
-		$this->state->search = xJ::escape(
-			$this->db,
-			trim(
-				strtolower( $this->app->getUserStateFromRequest(
-						"search{$option}_subscr",
-						'search',
-						''
-					) )
-			)
-		);
-
-		if ( !empty($this->state->search) ) {
-			$this->state->filtered = true;
-		}
-
-		if ( !empty($this->filters) ) {
-			foreach ( $this->filters as $key => $default ) {
-				$this->state->filter->{$key} = $this->app->getUserStateFromRequest(
-					'aec_' . $this->entity . '_' . $key,
-					$this->entity . '_' . $key,
-					$default
-				);
-
-				if ( empty($this->state->filter->{$key}) && !empty($_REQUEST[$key]) ) {
-					$this->state->filter->{$key} = $_REQUEST[$key];
-				}
-
-				if ( is_array($default) && !is_array($this->state->filter->{$key}) ) {
-					$this->state->filter->{$key} = array( $this->state->filter->{$key} );
-				}
-
-				if ( $this->state->filter->{$key} != $default ) {
-					$this->state->filtered = true;
-				}
-			}
-		}
-
-		if ( !empty($this->sort) ) {
-			foreach ( $this->sort as $key => $default ) {
-				$this->state->{$key} = $this->app->getUserStateFromRequest(
-					'aec_' . $this->entity . '_' . $key,
-					$this->entity . '_' . $key,
-					$default
-				);
-			}
-		}
+		$this->state = new aecAdminState($this->entity);
 	}
 
 	public function constrain( $constraint )
@@ -672,7 +611,122 @@ class aecAdminEntity
 
 		return $ranges;
 	}
+}
 
+class aecAdminState
+{
+	/**
+	 * @var JApplication
+	 */
+	public $app;
+
+	/**
+	 * @var JDatabase|JDatabaseDriver
+	 */
+	public $db;
+
+	/**
+	 * @var bool
+	 */
+	public $filtered;
+
+	/**
+	 * @var int
+	 */
+	public $limit;
+
+	/**
+	 * @var int
+	 */
+	public $limitstart;
+
+	/**
+	 * @var string
+	 */
+	public $search;
+
+	/**
+	 * @var object
+	 */
+	public $filter;
+
+	/**
+	 * @var string
+	 */
+	public $sort;
+
+	/**
+	 * @param aecAdminEntity $entity
+	 */
+	public function __construct( $entity )
+	{
+		$this->app = JFactory::getApplication();
+
+		$this->db = JFactory::getDBO();
+
+		$option = 'com_acctexp';
+
+		$this->filtered = false;
+
+		$this->limit = $this->app->getUserStateFromRequest(
+			"viewlistlimit",
+			'limit',
+			$this->app->getCfg('list_limit')
+		);
+
+		$this->limitstart = $this->app->getUserStateFromRequest(
+			"viewconf{$option}limitstart",
+			'limitstart',
+			0
+		);
+
+		$this->search = xJ::escape(
+			$this->db,
+			trim(
+				strtolower( $this->app->getUserStateFromRequest(
+					"search{$option}_subscr",
+					'search',
+					''
+				) )
+			)
+		);
+
+		if ( !empty($this->search) ) {
+			$this->filtered = true;
+		}
+
+		if ( !empty($this->filters) ) {
+			foreach ( $this->filters as $key => $default ) {
+				$this->filter->{$key} = $this->app->getUserStateFromRequest(
+					'aec_' . $entity . '_' . $key,
+					$entity . '_' . $key,
+					$default
+				);
+
+				if ( empty($this->filter->{$key}) && !empty($_REQUEST[$key]) ) {
+					$this->filter->{$key} = $_REQUEST[$key];
+				}
+
+				if ( is_array($default) && !is_array($this->filter->{$key}) ) {
+					$this->filter->{$key} = array( $this->filter->{$key} );
+				}
+
+				if ( $this->filter->{$key} != $default ) {
+					$this->filtered = true;
+				}
+			}
+		}
+
+		if ( !empty($this->sort) ) {
+			foreach ( $this->sort as $key => $default ) {
+				$this->{$key} = $this->app->getUserStateFromRequest(
+					'aec_' . $entity . '_' . $key,
+					$entity . '_' . $key,
+					$default
+				);
+			}
+		}
+	}
 }
 
 class aecAdminCentral extends aecAdminEntity
@@ -1000,7 +1054,7 @@ class aecAdminSettings extends aecAdminEntity
 
 		$glist = array();
 
-		foreach ( $grouplist as $id => $glisti ) {
+		foreach ( $grouplist as $glisti ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
 			} else {
@@ -1057,7 +1111,7 @@ class aecAdminSettings extends aecAdminEntity
 			$aecConfig->cfg['apiapplist'] = "";
 		}
 
-		$settings = new aecSettings ( 'cfg', 'general' );
+		$settings = new aecSettings( 'cfg', 'general' );
 		$settings->fullSettingsArray( $params, $aecConfig->cfg, $lists ) ;
 
 		// Call HTML Class
@@ -1211,7 +1265,7 @@ class aecAdminMembership extends aecAdminEntity
 		}
 
 		if ( !empty( $orderby ) ) {
-			if ( $set_group == "notconfig" ) {
+			if ( $set_group == 'notconfig' ) {
 				$forder = array(
 					'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
 					'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
@@ -1274,7 +1328,6 @@ class aecAdminMembership extends aecAdminEntity
 				break;
 		}
 
-		$filter		= '';
 		$where		= array();
 		$where_or	= array();
 		$notconfig	= false;
@@ -1449,7 +1502,7 @@ class aecAdminMembership extends aecAdminEntity
 			}
 		}
 
-		$group_plans = ItemGroupHandler::getChildren( $filter_group, 'item' );
+		$group_plans = ItemGroupHandler::getChildren( $this->state->filter->group, 'item' );
 
 		if ( !empty( $filter_plan ) || !empty( $group_plans ) ) {
 			$plan_selection = array();
@@ -1505,7 +1558,7 @@ class aecAdminMembership extends aecAdminEntity
 			$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
 				'signup_date ASC', 'signup_date DESC' );
 
-			if ( !in_array( $orderby, $forder ) ) {
+			if ( !in_array( $this->state->orderby, $forder ) ) {
 				$orderby = 'name ASC';
 			}
 
@@ -2596,27 +2649,13 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		$filtered = !empty($this->state->filter->group);
 
 		if ( !empty( $this->state->filter->group ) ) {
-			$subselect = ItemGroupHandler::getChildren( $filter_group, 'item' );
+			$subselect = ItemGroupHandler::getChildren( $this->state->filter->group, 'item' );
 
-			$this->constraint(
+			$this->constrain(
 				' WHERE id IN (' . implode( ',', $subselect ) . ')'
 			);
 		} else {
 			$subselect = array();
-		}
-
-		$orderby = $this->app->getUserStateFromRequest( "orderby_plans{$option}", 'orderby_plans', 'name ASC' );
-
-		// get the total number of records
-		$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_plans'
-			. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
-		;
-		$this->db->setQuery( $query );
-		$total = $this->db->loadResult();
-
-		if ( $limitstart > $total ) {
-			$limitstart = 0;
 		}
 
 		$pageNav = $this->getPagination();
@@ -2784,7 +2823,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option );
+		HTML_AcctExp::listSubscriptionPlans( $rows, $this->state, $lists, $pageNav );
 	}
 
 	public function edit( $id, $option )

@@ -90,8 +90,10 @@ class metaUser
 	var $userid				= null;
 	/** @var object */
 	var $cmsUser			= null;
-	/** @var object */
+	/** @var Subscription */
 	var $objSubscription	= null;
+	/** @var Subscription */
+	var $focusSubscription	= null;
 	/** @var int */
 	var $hasSubscription	= null;
 
@@ -455,14 +457,15 @@ class metaUser
 	{
 		$db = JFactory::getDBO();
 
-		global $aecConfig;
-
 		// Create a new cmsUser from user details - only allowing basic details so far
 		// Try different types of usernames to make sure we have a unique one
-		$usernames = array( $user['username'],
-							$user['username'] . substr( md5( $user['name'] ), 0, 3 ),
-							$user['username'] . substr( md5( ( $user['name'] . ( (int) gmdate('U') ) ) ), 0, 3 )
-							);
+		$usernames = array(
+			$user['username'],
+			$user['username'] . substr( md5( $user['name'] ), 0, 3 ),
+			$user['username'] . substr( md5( ( $user['name'] . ( (int) gmdate('U') ) ) ), 0, 3 )
+		);
+
+		$username = '';
 
 		// Iterate through semi-random and pseudo-random usernames until a non-existing is found
 		$id = 1;
@@ -562,8 +565,6 @@ class metaUser
 
 				$existing_status = $db->loadResult();
 			}
-		} else {
-			$existing_record = 0;
 		}
 
 		$return = false;
@@ -697,7 +698,7 @@ class metaUser
 
 		$shandler = new xJSessionHandler();
 
-		$shandler->instantGIDchange( $this->userid, $gid, $removegid, $sessionextra );
+		return $shandler->instantGIDchange( $this->userid, $gid, $removegid, $sessionextra );
 	}
 
 	public function isAdmin()
@@ -1284,15 +1285,15 @@ class metaUserDB extends serialParamDBTable
 	var $created_date		= null;
 	/** @var datetime */
 	var $modified_date		= null;
-	/** @var serialized object */
+	/** @var object */
 	var $plan_history		= null;
-	/** @var serialized object */
+	/** @var object */
 	var $processor_params	= null;
-	/** @var serialized object */
+	/** @var object */
 	var $plan_params		= null;
-	/** @var serialized object */
+	/** @var object */
 	var $params 			= null;
-	/** @var serialized object */
+	/** @var object */
 	var $custom_params		= null;
 
 	public function metaUserDB()
