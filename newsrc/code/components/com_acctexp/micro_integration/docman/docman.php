@@ -65,11 +65,13 @@ class mi_docman
 	{
 		$db = JFactory::getDBO();
 
-		$db->setQuery(
-			"SHOW COLUMNS FROM #__docman_groups LIKE 'groups_members'"
-		);
+		if ( !defined( 'JPATH_MANIFESTS' ) ) {
+			$db->setQuery(
+				"SHOW COLUMNS FROM #__docman_groups LIKE 'groups_members'"
+			);
 
-		$result = $db->loadObject();
+			$result = $db->loadObject();
+		}
 
 		if ( (strcmp($result->Field, '`groups_members`') === 0) && (strcmp($result->Type, 'text') === 0) ) {
 			// Give extra space for the "too many users to hold all these feels" problem
