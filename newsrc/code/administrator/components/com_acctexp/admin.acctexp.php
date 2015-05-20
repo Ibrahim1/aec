@@ -457,12 +457,13 @@ class aecAdminEntity
 		$this->redirect();
 	}
 
-	public function toggle( $type, $id, $property )
+	public function toggle( $id, $property )
 	{
-		$query = 'SELECT `'.$property.'` FROM #__acctexp_' . $type
+		$this->db->setQuery(
+			'SELECT `'.$property.'` FROM #__acctexp_' . $this->table
 			. ' WHERE `id` = ' . $id
-		;
-		$this->db->setQuery( $query );
+		);
+
 		$newstate = $this->db->loadResult() ? 0 : 1;
 
 		if ( $property == 'default' ) {
@@ -473,19 +474,21 @@ class aecAdminEntity
 			}
 
 			// Reset all other items
-			$query = 'UPDATE #__acctexp_' . $type
+			$this->db->setQuery(
+				'UPDATE #__acctexp_' . $this->table
 				. ' SET `'.$property.'` = '.($newstate ? 0 : 1)
 				. ' WHERE `id` != ' . $id
-			;
-			$this->db->setQuery( $query );
+			);
+
 			$this->db->query();
 		}
 
-		$query = 'UPDATE #__acctexp_' . $type
+		$this->db->setQuery(
+			'UPDATE #__acctexp_' . $this->table
 			. ' SET `'.$property.'` = '.$newstate
 			. ' WHERE `id` = ' . $id
-		;
-		$this->db->setQuery( $query );
+		);
+
 		$this->db->query();
 
 		echo $newstate;
@@ -770,7 +773,7 @@ class aecAdminCentral extends aecAdminEntity
 		</div>';
 	}
 
-	function quicklookup( $option )
+	function quicklookup()
 	{
 		$searcc	= trim( aecGetParam( 'search', 0 ) );
 
@@ -2121,7 +2124,7 @@ class aecAdminMembership extends aecAdminEntity
 
 class aecAdminTemplate extends aecAdminEntity
 {
-	public function index( $option )
+	public function index()
 	{
 		$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
@@ -2229,7 +2232,7 @@ class aecAdminTemplate extends aecAdminEntity
 
 class aecAdminProcessor extends aecAdminEntity
 {
-	public function index( $option )
+	public function index()
 	{
 		$nav = $this->getPagination();
 
@@ -2252,10 +2255,10 @@ class aecAdminProcessor extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listProcessors( $rows, $nav, $option );
+		HTML_AcctExp::listProcessors($rows, $nav);
 	}
 
-	public function edit( $id, $option )
+	public function edit( $id )
 	{
 		if ( $id ) {
 			$pp = new PaymentProcessor();
@@ -2398,7 +2401,7 @@ class aecAdminProcessor extends aecAdminEntity
 		HTML_AcctExp::editProcessor( $aecHTML );
 	}
 
-	public function change( $cid=null, $state=0, $type, $option )
+	public function change( $cid=null, $state=0, $type )
 	{
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -2650,7 +2653,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		echo json_encode( $ret );exit;
 	}
 
-	public function index( $option )
+	public function index()
 	{
 		$filtered = !empty($this->state->filter->group);
 
@@ -2832,7 +2835,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		HTML_AcctExp::listSubscriptionPlans( $rows, $this->state, $lists, $nav );
 	}
 
-	public function edit( $id, $option )
+	public function edit( $id )
 	{
 		global $aecConfig;
 
@@ -3516,7 +3519,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		}
 	}
 
-	public function remove( $id, $option )
+	public function remove( $id )
 	{
 		$ids = implode( ',', $id );
 
@@ -3550,7 +3553,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		aecRedirect( 'index.php?option=com_acctexp&task=showSubscriptionPlans', $msg );
 	}
 
-	public function change( $cid=null, $state=0, $type, $option )
+	public function change( $cid=null, $state=0, $type )
 	{
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -3585,7 +3588,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 class aecAdminItemGroup extends aecAdminEntity
 {
-	public function index( $option )
+	public function index()
 	{
 		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -3697,10 +3700,10 @@ class aecAdminItemGroup extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listItemGroups( $rows, $nav, $state );
+		HTML_AcctExp::listItemGroups( $rows, $nav, $this->state );
 	}
 
-	public function edit( $id, $option )
+	public function edit( $id )
 	{
 		$lists = array();
 		$params_values = array();
@@ -3924,7 +3927,7 @@ class aecAdminItemGroup extends aecAdminEntity
 		}
 	}
 
-	public function remove( $id, $option )
+	public function remove( $id )
 	{
 		$ids = implode( ',', $id );
 
@@ -3963,7 +3966,7 @@ class aecAdminItemGroup extends aecAdminEntity
 		}
 	}
 
-	public function change( $cid=null, $state=0, $type, $option )
+	public function change( $cid=null, $state=0, $type )
 	{
 		if ( count( $cid ) < 1 ) {
 			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -3999,7 +4002,7 @@ class aecAdminItemGroup extends aecAdminEntity
 
 class aecAdminMicroIntegration extends aecAdminEntity
 {
-	public function index( $option )
+	public function index()
 	{
 		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart	= $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -4095,10 +4098,10 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		}
 		$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $this->state->filter->planid );
 
-		HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $nav, $option, $lists, $search, $orderby );
+		HTML_AcctExp::listMicroIntegrations( $rows, $state, $nav, $lists );
 	}
 
-	public function edit( $id, $option )
+	public function edit( $id )
 	{
 		$lists	= array();
 		$mi		= new microIntegration();
@@ -4407,7 +4410,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 	}
 
-	public function remove( $id, $option )
+	public function remove( $id )
 	{
 		$ids = implode( ',', $id );
 
@@ -4448,12 +4451,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', $msg );
 	}
 
-	public function cancel( $option )
-	{
-		aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', JText::_('AEC_CMN_EDIT_CANCELLED') );
-	}
-
-	public function change( $cid=null, $state=0, $option )
+	public function change( $cid=null, $state=0 )
 	{
 		if ( count( $cid ) < 1 ) {
 			$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH'): JText::_('AEC_CMN_TOUNPUBLISH');
@@ -4486,7 +4484,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 class aecAdminCoupon extends aecAdminEntity
 {
-	public function index( $option )
+	public function index()
 	{
 		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
 		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
@@ -4580,10 +4578,10 @@ class aecAdminCoupon extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listCoupons( $rows, $filtered, $nav, $option, $search, $orderby );
+		HTML_AcctExp::listCoupons($rows, $this->state, $nav);
 	}
 
-	public function edit( $id, $option, $new )
+	public function edit( $id,  $new )
 	{
 		$lists = array();
 
@@ -5548,7 +5546,7 @@ class aecAdminService extends aecAdminEntity
 	}
 }
 
-class aecAdminHistory
+class aecAdminHistory extends aecAdminEntity
 {
 	public function index( $option )
 	{
@@ -5606,7 +5604,7 @@ class aecAdminHistory
 	}
 }
 
-class aecAdminEventlog
+class aecAdminEventlog extends aecAdminEntity
 {
 	public function index( $option )
 	{
@@ -5697,7 +5695,7 @@ class aecAdminEventlog
 	}
 }
 
-class aecAdminStats
+class aecAdminStats extends aecAdminEntity
 {
 	public function index( $page )
 	{
@@ -6064,7 +6062,7 @@ class aecAdminImport extends aecAdminEntity
 	}
 }
 
-class aecAdminExport
+class aecAdminExport extends aecAdminEntity
 {
 	function export( $type, $cmd=null )
 	{
