@@ -1778,7 +1778,7 @@ class HTML_AcctExp
 			HTML_myCommon::getHeader( $action[1], '' . $action[0], '', $state->search, 'bulk-edit', 'Subscription' );
 
 			?>
-			<input type="hidden" name="orderby_subscr" value="<?php echo $state->orderby; ?>"/>
+			<input type="hidden" name="orderby_subscr" value="<?php echo $state->sort; ?>"/>
 
 			<div class="container-fluid">
 				<div class="row">
@@ -1790,7 +1790,7 @@ class HTML_AcctExp
 										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 									</th>
 									<th>&nbsp;</th>
-									<?php aecAdmin::th_set($th_list, $lists, $state->orderby); ?>
+									<?php aecAdmin::th_set($th_list, $lists, $state->sort); ?>
 									<?php if ( $action[0] == 'manual' ) { ?>
 										<th class="text-left"></th>
 										<th class="text-left"></th>
@@ -1922,7 +1922,7 @@ class HTML_AcctExp
 			);
 
 			?>
-			<input type="hidden" name="orderby_mi" value="<?php echo $state->orderby; ?>"/>
+			<input type="hidden" name="orderby_mi" value="<?php echo $state->sort; ?>"/>
 			<?php if ( empty( $rows )  && !$state->filtered ) { ?>
 				<div class="clearfix"></div>
 				<div class="container" style="min-height: 50%; padding: 10% 0;">
@@ -1939,7 +1939,7 @@ class HTML_AcctExp
 											ID
 											<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 										</th>
-										<?php aecAdmin::th_set($th_list, $lists, $state->orderby); ?>
+										<?php aecAdmin::th_set($th_list, $lists, $state->sort); ?>
 									</tr></thead>
 									<tbody>
 									<?php foreach ( $rows as $i => $row ) { ?>
@@ -1953,7 +1953,7 @@ class HTML_AcctExp
 											<td class="text-center">
 												<?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?>
 											</td>
-											<td class="text-center"><?php $nav->ordering( $i, count($rows), 'mi', ($state->orderby == 'ordering ASC' || $state->orderby == 'ordering DESC') ); ?></td>
+											<td class="text-center"><?php $nav->ordering( $i, count($rows), 'mi', ($state->sort == 'ordering ASC' || $state->sort == 'ordering DESC') ); ?></td>
 											<td class="text-left"><?php echo $row->class_name; ?></td>
 										</tr>
 									<?php } ?>
@@ -2131,7 +2131,7 @@ class HTML_AcctExp
 		);
 
 		?>
-		<input type="hidden" name="orderby_plans" value="<?php echo $state->orderby; ?>"/>
+		<input type="hidden" name="orderby_plans" value="<?php echo $state->sort; ?>"/>
 		<?php if ( empty( $rows ) && !$state->filtered ) { ?>
 		<div class="clearfix"></div>
 		<div class="container" style="min-height: 50%; padding: 10% 0;">
@@ -2149,7 +2149,7 @@ class HTML_AcctExp
 										ID
 										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 									</th>
-									<?php aecAdmin::th_set($th_list, $lists, $state->orderby); ?>
+									<?php aecAdmin::th_set($th_list, $lists, $state->sort); ?>
 									<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
 									<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 								</tr></thead>
@@ -2170,7 +2170,7 @@ class HTML_AcctExp
 										<td class="text-left"><?php echo $row->desc; ?></td>
 										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
-										<td class="text-center"><?php $nav->ordering( $i, count($rows), 'plan', ($state->orderby == 'ordering ASC' || $state->orderby == 'ordering DESC') ); ?></td>
+										<td class="text-center"><?php $nav->ordering( $i, count($rows), 'plan', ($state->sort == 'ordering ASC' || $state->sort == 'ordering DESC') ); ?></td>
 										<td>
 											<div class="progress-group">
 												<div class="progress">
@@ -2663,7 +2663,7 @@ class HTML_AcctExp
 		);
 
 		?>
-		<input type="hidden" name="orderby_groups" value="<?php echo $state->orderby; ?>"/>
+		<input type="hidden" name="orderby_groups" value="<?php echo $state->sort; ?>"/>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
@@ -2675,7 +2675,7 @@ class HTML_AcctExp
 										<?php echo JText::_('AEC_CMN_ID'); ?>
 										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 									</th>
-									<?php aecAdmin::th_set($th_list, array(), $state->orderby); ?>
+									<?php aecAdmin::th_set($th_list, array(), $state->sort); ?>
 								</tr></thead>
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
@@ -2700,7 +2700,7 @@ class HTML_AcctExp
 										<td class="text-left"><?php echo $row->desc; ?></td>
 										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
-										<td class="text-center"><?php $nav->ordering( $i, count($rows), 'group', ($state->orderby == 'ordering ASC' || $state->orderby == 'ordering DESC') ); ?></td>
+										<td class="text-center"><?php $nav->ordering( $i, count($rows), 'group', ($state->sort == 'ordering ASC' || $state->sort == 'ordering DESC') ); ?></td>
 									</tr>
 								<?php } ?>
 								</tbody>
@@ -2910,7 +2910,7 @@ class HTML_AcctExp
 		);
 
 		?>
-		<input type="hidden" name="orderby_coupons" value="<?php echo $state->orderby; ?>"/>
+		<input type="hidden" name="orderby_coupons" value="<?php echo $state->sort; ?>"/>
 		<?php if ( empty( $rows ) && !$state->filtered ) { ?>
 		<div class="clearfix"></div>
 		<div class="container" style="min-height: 50%; padding: 10% 0;">
@@ -2927,7 +2927,7 @@ class HTML_AcctExp
 									<?php echo JText::_('AEC_CMN_ID'); ?>
 									<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 								</th>
-								<?php aecAdmin::th_set($th_list, array(), $state->orderby); ?>
+								<?php aecAdmin::th_set($th_list, array(), $state->sort); ?>
 								<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 							</tr></thead>
 							<tbody>
@@ -3152,7 +3152,7 @@ class HTML_AcctExp
 		);
 
 		?>
-		<input type="hidden" name="orderby_invoices" value="<?php echo $state->orderby; ?>"/>
+		<input type="hidden" name="orderby_invoices" value="<?php echo $state->sort; ?>"/>
 
 		<div class="container-fluid">
 			<div class="row">
@@ -3164,7 +3164,7 @@ class HTML_AcctExp
 									<?php echo JText::_('AEC_CMN_ID'); ?>
 									<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 								</th>
-								<?php aecAdmin::th_set($th_list, array(), $state->orderby); ?>
+								<?php aecAdmin::th_set($th_list, array(), $state->sort); ?>
 							</tr></thead>
 							<tbody>
 							<?php foreach ( $rows as $i => $row ) { ?>
@@ -3911,7 +3911,7 @@ class HTML_AcctExp
 			);
 
 			?>
-			<input type="hidden" name="orderby_mi" value="<?php echo $state->orderby; ?>"/>
+			<input type="hidden" name="orderby_mi" value="<?php echo $state->sort; ?>"/>
 			<?php if ( empty( $rows )  && !$state->filtered ) { ?>
 				<div class="clearfix"></div>
 				<div class="container" style="min-height: 50%; padding: 10% 0;">
@@ -3928,7 +3928,7 @@ class HTML_AcctExp
 											ID
 											<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 										</th>
-										<?php aecAdmin::th_set($th_list, $lists, $state->orderby); ?>
+										<?php aecAdmin::th_set($th_list, $lists, $state->sort); ?>
 									</tr></thead>
 									<tbody>
 									<?php foreach ( $rows as $i => $row ) { ?>
@@ -3938,7 +3938,7 @@ class HTML_AcctExp
 											<td class="text-center">
 												<?php HTML_myCommon::toggleBtn( 'services', 'active', $row->id, $row->active ); ?>
 											</td>
-											<td class="text-center"><?php $nav->ordering( $i, count($rows), 'mi', ($state->orderby == 'ordering ASC' || $state->orderby == 'ordering DESC') ); ?></td>
+											<td class="text-center"><?php $nav->ordering( $i, count($rows), 'mi', ($state->sort == 'ordering ASC' || $state->sort == 'ordering DESC') ); ?></td>
 											<td class="text-left"><?php echo $row->type; ?></td>
 										</tr>
 									<?php } ?>

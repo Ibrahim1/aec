@@ -69,7 +69,7 @@ switch( strtolower( $task ) ) {
 	case 'visiblesubscriptionplan': changeSubscriptionPlan( $id, 1, 'visible', $option ); break;
 	case 'invisiblesubscriptionplan': changeSubscriptionPlan( $id, 0, 'visible', $option ); break;
 	case 'removesubscriptionplan': removeSubscriptionPlan( $id, $option, $returnTask ); break;
-	case 'cancelsubscriptionplan': aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'cancelsubscriptionplan': aecRedirect( 'index.php?option=com_acctexp&task=showSubscriptionPlans', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
 	case 'orderplanup': orderObject( 'SubscriptionPlan', $id, 1 ); break;
 	case 'orderplandown': orderObject( 'SubscriptionPlan', $id, 0 ); break;
 
@@ -84,7 +84,7 @@ switch( strtolower( $task ) ) {
 	case 'visibleitemgroup': changeItemGroup( $id, 1, 'visible', $option ); break;
 	case 'invisibleitemgroup': changeItemGroup( $id, 0, 'visible', $option ); break;
 	case 'removeitemgroup': removeItemGroup( $id, $option, $returnTask ); break;
-	case 'cancelitemgroup': aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'cancelitemgroup': aecRedirect( 'index.php?option=com_acctexp&task=showItemGroups', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
 	case 'ordergroupup': orderObject( 'ItemGroup', $id, 1 ); break;
 	case 'ordergroupdown': orderObject( 'ItemGroup', $id, 0 ); break;
 
@@ -124,7 +124,7 @@ switch( strtolower( $task ) ) {
 	case 'publishcoupon': changeCoupon( $id, 1, $option ); break;
 	case 'unpublishcoupon': changeCoupon( $id, 0, $option ); break;
 	case 'removecoupon': removeCoupon( $id, $option, $returnTask ); break;
-	case 'cancelcoupon': aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'cancelcoupon': aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
 
 	case 'hacks':
 		$undohack	= aecGetParam( 'undohack', 0 );
@@ -186,7 +186,7 @@ switch( strtolower( $task ) ) {
 	case 'visibleservice': changeService( $id, 1, 'visible', $option ); break;
 	case 'invisibleservice': changeService( $id, 0, 'visible', $option ); break;
 	case 'removeservice': removeService( $id, $option, $returnTask ); break;
-	case 'cancelservice': aecRedirect( 'index.php?option=' . $option . '&task=showServices', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'cancelservice': aecRedirect( 'index.php?option=com_acctexp&task=showServices', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
 
 	case 'events':
 	case 'showevents': listEvents( $option ); break;
@@ -200,7 +200,7 @@ switch( strtolower( $task ) ) {
 	case 'visibleevent': changeEvent( $id, 1, 'visible', $option ); break;
 	case 'invisibleevent': changeEvent( $id, 0, 'visible', $option ); break;
 	case 'removeevent': removeEvent( $id, $option, $returnTask ); break;
-	case 'cancelevent': aecRedirect( 'index.php?option=' . $option . '&task=showEvents', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'cancelevent': aecRedirect( 'index.php?option=com_acctexp&task=showEvents', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
 
 	case 'credits': HTML_AcctExp::credits(); break;
 
@@ -212,9 +212,9 @@ switch( strtolower( $task ) ) {
 		} elseif ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
 			aecCentral( $return );
 		} elseif ( !empty( $return ) ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $return, JText::_('AEC_QUICKSEARCH_THANKS') );
+			aecRedirect( 'index.php?option=com_acctexp&task=editMembership&userid=' . $return, JText::_('AEC_QUICKSEARCH_THANKS') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showcentral', JText::_('AEC_QUICKSEARCH_NOTFOUND') );
+			aecRedirect( 'index.php?option=com_acctexp&task=showcentral', JText::_('AEC_QUICKSEARCH_NOTFOUND') );
 		}
 		break;
 
@@ -367,22 +367,12 @@ class aecAdminEntity
 	/**
 	 * @var string
 	 */
-	public $constraint;
+	public $constraints;
 
 	/**
-	 * @var array
+	 * @var aecAdminState
 	 */
 	public $state = array();
-
-	/**
-	 * @var array
-	 */
-	public $sort = array();
-
-	/**
-	 * @var array
-	 */
-	public $filters = array();
 
 	public function __construct( $id )
 	{
@@ -523,9 +513,14 @@ class aecAdminEntity
 		$this->state = new aecAdminState($this->entity);
 	}
 
-	public function constrain( $constraint )
+	public function addConstraint( $constraint )
 	{
-		$this->constraint = $constraint;
+		$this->constraints[] = $constraint;
+	}
+
+	public function getConstraints()
+	{
+		return implode(' AND ', $this->constraints);
 	}
 
 	public function getPagination( $total=null )
@@ -534,7 +529,7 @@ class aecAdminEntity
 			$this->db->setQuery(
 				'SELECT count(*)'
 				. ' FROM #__acctexp_' . $this->table
-				. $this->constraint
+				. ' WHERE ' . $this->getConstraints()
 			);
 
 			$total = $this->db->loadResult();
@@ -545,14 +540,14 @@ class aecAdminEntity
 
 	public function getRows()
 	{
-		$pageNav = $this->getPagination();
+		$nav = $this->getPagination();
 
 		// get the subset (based on limits) of records
 		$query = 'SELECT *'
 			. ' FROM #__acctexp_' . $this->table
 			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-			. ' ORDER BY `' . str_replace(' ', '` ', $this->state->orderby)
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			. ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort)
+			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 		;
 		$this->db->setQuery( $query );
 
@@ -701,6 +696,8 @@ class aecAdminState
 				);
 			}
 		}
+
+		if ( empty($this->sort) ) $this->sort = 'id';
 	}
 }
 
@@ -771,6 +768,41 @@ class aecAdminCentral extends aecAdminEntity
 			<p>' . substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ) . '</p>
 			<span class="help-block">' . $notice->datetime . '</span>
 		</div>';
+	}
+
+	function quicklookup( $option )
+	{
+		$searcc	= trim( aecGetParam( 'search', 0 ) );
+
+		if ( empty( $searcc ) ) {
+			return false;
+		}
+
+		$search = xJ::escape( JFactory::getDBO(), strtolower( $searcc ) );
+
+		$s = AECToolbox::searchUser( $search );
+
+		if ( empty( $s ) || !is_array( $s ) ) {
+			return false;
+		}
+
+		$return = array();
+		foreach ( $s as $user ) {
+			$JTableUser = new cmsUser();
+			$JTableUser->load( $user );
+
+			$userlink = '<div class="lookupresult">';
+			$userlink .= '<a href="';
+			$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $JTableUser->id;
+			$userlink .= '">';
+			$userlink .= str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->name ) . ' (' . str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->username ) . ')';
+			$userlink .= '</a>';
+			$userlink .= '</div>';
+
+			$return[] = $userlink;
+		}
+
+		return '<div class="lookupresults">' . implode( $return ) . '</div>';
 	}
 }
 
@@ -1227,6 +1259,7 @@ class aecAdminMembership extends aecAdminEntity
 
 	public function index( $subscriptionid, $userid=array(), $planid=null )
 	{
+		$groups = $this->state->filter->status;
 		if ( is_array($this->state->filter->status) && count( $this->state->filter->status ) === 1 ) {
 			if ( $this->state->filter->status[0] == 'all' ) {
 				$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
@@ -1479,11 +1512,11 @@ class aecAdminMembership extends aecAdminEntity
 
 		$group_plans = ItemGroupHandler::getChildren( $this->state->filter->group, 'item' );
 
-		if ( !empty( $filter_plan ) || !empty( $group_plans ) ) {
+		if ( !empty( $this->state->filter->plan ) || !empty( $group_plans ) ) {
 			$plan_selection = array();
 
-			if ( !empty( $filter_plan ) ) {
-				$plan_selection = $filter_plan;
+			if ( !empty( $this->state->filter->plan ) ) {
+				$plan_selection = $this->state->filter->plan;
 			}
 
 			if ( !empty( $group_plans ) ) {
@@ -1526,14 +1559,14 @@ class aecAdminMembership extends aecAdminEntity
 		$this->db->setQuery( $query );
 		$total = $this->db->loadResult();
 
-		$pageNav = new bsPagination( $total, $this->state );
+		$nav = new bsPagination( $total, $this->state );
 
 		// get the subset (based on limits) of required records
 		if ( $notconfig ) {
 			$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
 				'signup_date ASC', 'signup_date DESC' );
 
-			if ( !in_array( $this->state->orderby, $forder ) ) {
+			if ( !in_array( $this->state->sort, $forder ) ) {
 				$orderby = 'name ASC';
 			}
 
@@ -1546,7 +1579,7 @@ class aecAdminMembership extends aecAdminEntity
 				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
 				. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 				. ' ORDER BY ' . str_replace( 'signup_date', 'registerDate', $orderby )
-				. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+				. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 			;
 
 			if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
@@ -1563,7 +1596,7 @@ class aecAdminMembership extends aecAdminEntity
 				. ' LEFT JOIN #__acctexp_plans AS c ON a.plan = c.id'
 				. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 				. ' ORDER BY ' . $orderby
-				. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+				. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 			;
 
 			if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
@@ -1610,19 +1643,19 @@ class aecAdminMembership extends aecAdminEntity
 			. ' ORDER BY `ordering`'
 		;
 		$this->db->setQuery( $query );
-		$this->db_plans = $this->db->loadObjectList();
+		$db_plans = $this->db->loadObjectList();
 
 		$plans2[] = JHTML::_('select.option', '0', JText::_('BIND_USER'), 'id', 'name' );
 
-		if ( is_array( $this->db_plans ) ) {
-			$plans2 = array_merge( $plans2, $this->db_plans );
+		if ( is_array( $db_plans ) ) {
+			$plans2 = array_merge( $plans2, $db_plans );
 		}
 
 		$lists['set_plan']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="form-control inputbox" size="1"', 'id', 'name', 0 );
 
 		$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
-		foreach ( $this->db_plans as $plan ) {
-			$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected"' : '' ) . '>' . $plan->name . '</option>';
+		foreach ( $db_plans as $plan ) {
+			$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $this->state->filter->plan ) ? ' selected="selected"' : '' ) . '>' . $plan->name . '</option>';
 		}
 		$lists['filter_plan'] .= '</select>';
 
@@ -1631,9 +1664,9 @@ class aecAdminMembership extends aecAdminEntity
 		$lists['filter_group'] = '<select id="group-filter-select" name="filter_group[]" multiple="multiple" size="5">';
 		foreach ( $grouplist as $glisti ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
-				$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
+				$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $this->state->filter->group ) ? ' selected="selected"' : '' ) . '>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
 			} else {
-				$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '>' . $glisti[1] . '</option>';
+				$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $this->state->filter->group ) ? ' selected="selected"' : '' ) . '>' . $glisti[1] . '</option>';
 			}
 		}
 		$lists['filter_group'] .= '</select>';
@@ -1680,7 +1713,7 @@ class aecAdminMembership extends aecAdminEntity
 
 		$lists['set_time_unit'] = JHTML::_('select.genericlist', $perunit, 'set_time_unit', 'class="form-control inputbox" size="1"', 'value', 'text');
 
-		HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
+		HTML_AcctExp::listSubscriptions( $rows, $nav, $this->state, $lists, $subscriptionid, $action );
 	}
 
 	public function edit( $userid, $subscriptionid, $task, $page=0 )
@@ -1788,7 +1821,7 @@ class aecAdminMembership extends aecAdminEntity
 			$rowstyle	= '';
 
 			if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-				$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number );
+				$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number );
 
 				$actions = array(
 					array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info', '', $checkoutlink ),
@@ -1810,7 +1843,7 @@ class aecAdminMembership extends aecAdminEntity
 				if ( !empty( $action[5] ) ) {
 					$alink = $action[5];
 				} else {
-					$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=editMembership&userid=' . $metaUser->userid;
+					$alink = 'index.php?option=com_acctexp&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=editMembership&userid=' . $metaUser->userid;
 
 					if ( !empty( $action[4] ) ) {
 						$alink .= $action[4];
@@ -2076,12 +2109,12 @@ class aecAdminMembership extends aecAdminEntity
 			$subID = !empty($post['subscriptionid']) ? $post['subscriptionid'] : $metaUser->focusSubscription->id;
 
 			if ( empty( $subID ) ) {
-				aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $metaUser->userid, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+				aecRedirect( 'index.php?option=com_acctexp&task=editMembership&userid=' . $metaUser->userid, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 			} else {
-				aecRedirect( 'index.php?option=' . $option . '&task=editMembership&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+				aecRedirect( 'index.php?option=com_acctexp&task=editMembership&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 			}
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=' . $nexttask, JText::_('SAVED') );
 		}
 	}
 }
@@ -2090,8 +2123,6 @@ class aecAdminTemplate extends aecAdminEntity
 {
 	public function index( $option )
 	{
-		$this->app = JFactory::getApplication();
-
 		$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
 		foreach ( $list as $id => $name ) {
@@ -2100,7 +2131,7 @@ class aecAdminTemplate extends aecAdminEntity
 			}
 		}
 
-		$pageNav = $this->getPagination( count($list) );
+		$nav = $this->getPagination( count($list) );
 
 		$names = array_slice( $list, $this->state->limitstart, $this->state->limit );
 
@@ -2120,7 +2151,7 @@ class aecAdminTemplate extends aecAdminEntity
 			$rows[] = $t;
 		}
 
-		HTML_AcctExp::listTemplates( $rows, $pageNav, $option );
+		HTML_AcctExp::listTemplates( $rows, $nav );
 	}
 
 	public function edit( $name )
@@ -2191,7 +2222,7 @@ class aecAdminTemplate extends aecAdminEntity
 		if ( $return ) {
 			editTemplate( $name );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showTemplates', JText::_('AEC_CONFIG_SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=showTemplates', JText::_('AEC_CONFIG_SAVED') );
 		}
 	}
 }
@@ -2200,13 +2231,13 @@ class aecAdminProcessor extends aecAdminEntity
 {
 	public function index( $option )
 	{
-		$pageNav = $this->getPagination();
+		$nav = $this->getPagination();
 
 		$this->db->setQuery(
 			'SELECT name'
 			. ' FROM #__acctexp_config_processors'
 			. ' GROUP BY `id`'
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 		);
 
 		$names = xJ::getDBArray($this->db);
@@ -2221,7 +2252,7 @@ class aecAdminProcessor extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
+		HTML_AcctExp::listProcessors( $rows, $nav, $option );
 	}
 
 	public function edit( $id, $option )
@@ -2396,7 +2427,7 @@ class aecAdminProcessor extends aecAdminEntity
 
 		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showProcessors', $msg );
 	}
 
 	public function save( $return=0 )
@@ -2407,7 +2438,7 @@ class aecAdminProcessor extends aecAdminEntity
 			$pp->loadId( $_POST['id'] );
 
 			if ( empty( $pp->id ) ) {
-				cancel($option);
+				$this->cancel();
 			}
 
 			$procname = $pp->processor_name;
@@ -2471,9 +2502,9 @@ class aecAdminProcessor extends aecAdminEntity
 		$pp->storeload();
 
 		if ( $return ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->processor->id, JText::_('AEC_CONFIG_SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=editProcessor&id=' . $pp->processor->id, JText::_('AEC_CONFIG_SAVED') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
 		}
 	}
 }
@@ -2633,12 +2664,12 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			$subselect = array();
 		}
 
-		$pageNav = $this->getPagination();
+		$nav = $this->getPagination();
 
 		// get the subset (based on limits) of records
 		$rows = SubscriptionPlanHandler::getFullPlanList(
-			$pageNav->limitstart,
-			$pageNav->limit,
+			$nav->limitstart,
+			$nav->limit,
 			$subselect,
 			$this->state->sort,
 			$this->state->search
@@ -2705,7 +2736,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 		$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 
-		if ( empty( $filter_group ) ) {
+		if ( empty( $this->state->filter->group ) ) {
 			$sel_groups[] = JHTML::_('select.option', 0, '- - - - - -' );
 		}
 
@@ -2716,8 +2747,8 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 				$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
 			}
 
-			if ( !empty( $filter_group ) ) {
-				if ( in_array( $glisti[0], $filter_group ) ) {
+			if ( !empty( $this->state->filter->group ) ) {
+				if ( in_array( $glisti[0], $this->state->filter->group ) ) {
 					$sel_groups[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
 				}
 			}
@@ -2798,7 +2829,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listSubscriptionPlans( $rows, $this->state, $lists, $pageNav );
+		HTML_AcctExp::listSubscriptionPlans( $rows, $this->state, $lists, $nav );
 	}
 
 	public function edit( $id, $option )
@@ -3479,9 +3510,9 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		}
 
 		if ( $apply ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=editSubscriptionPlan&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=showSubscriptionPlans', JText::_('SAVED') );
 		}
 	}
 
@@ -3505,7 +3536,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			if ( SubscriptionPlanHandler::getPlanUserCount( $planid ) > 0 ) {
 				$msg = JText::_('AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER');
 
-				aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+				aecRedirect( 'index.php?option=com_acctexp&task=showSubscriptionPlans', $msg );
 			} else {
 				$plan = new SubscriptionPlan();
 				$plan->load( $planid );
@@ -3516,7 +3547,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showSubscriptionPlans', $msg );
 	}
 
 	public function change( $cid=null, $state=0, $type, $option )
@@ -3548,7 +3579,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showSubscriptionPlans', $msg );
 	}
 }
 
@@ -3577,7 +3608,7 @@ class aecAdminItemGroup extends aecAdminEntity
 			$limitstart = 0;
 		}
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$nav = new bsPagination( $total, $limitstart, $limit );
 
 		// get the subset (based on limits) of records
 		$query = 'SELECT *'
@@ -3585,7 +3616,7 @@ class aecAdminItemGroup extends aecAdminEntity
 			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
 			. ' GROUP BY `id`'
 			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 		;
 		$this->db->setQuery( $query );
 
@@ -3666,7 +3697,7 @@ class aecAdminItemGroup extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listItemGroups( $rows, $pageNav, $option, $orderby, $search );
+		HTML_AcctExp::listItemGroups( $rows, $nav, $state );
 	}
 
 	public function edit( $id, $option )
@@ -3887,9 +3918,9 @@ class aecAdminItemGroup extends aecAdminEntity
 		}
 
 		if ( $apply ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editItemGroup&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=editItemGroup&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=showItemGroups', JText::_('SAVED') );
 		}
 	}
 
@@ -3928,7 +3959,7 @@ class aecAdminItemGroup extends aecAdminEntity
 		} else {
 			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
 
-			aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', $msg );
+			aecRedirect( 'index.php?option=com_acctexp&task=showItemGroups', $msg );
 		}
 	}
 
@@ -3961,7 +3992,7 @@ class aecAdminItemGroup extends aecAdminEntity
 
 		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showItemGroups', $msg );
 	}
 
 }
@@ -3977,9 +4008,9 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		$search			= $this->app->getUserStateFromRequest( "search{$option}_mi", 'search', '' );
 		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
 
-		$filter_planid	= intval( $this->app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
+		$this->state->filter->planid	= intval( $this->app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
 
-		$filtered = !empty($filter_planid) || !empty($search);
+		$filtered = !empty($this->state->filter->planid) || !empty($search);
 
 		// get the total number of records
 		$this->db->setQuery(
@@ -3994,7 +4025,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 			$limitstart = 0;
 		}
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$nav = new bsPagination( $total, $limitstart, $limit );
 
 		$where = array();
 		$where[] = '`hidden` = \'0\'';
@@ -4003,13 +4034,13 @@ class aecAdminMicroIntegration extends aecAdminEntity
 			$where[] = "(`name` LIKE '%$search%' OR `desc` LIKE '%$search%' OR `class_name` LIKE '%$search%')";
 		}
 
-		if ( isset( $filter_planid ) && $filter_planid > 0 ) {
-			$mis = microIntegrationHandler::getMIsbyPlan( $filter_planid );
+		if ( isset( $this->state->filter->planid ) && $this->state->filter->planid > 0 ) {
+			$mis = microIntegrationHandler::getMIsbyPlan( $this->state->filter->planid );
 
 			if ( !empty( $mis ) ) {
 				$where[] = "(id IN (" . implode( ',', $mis ) . "))";
 			} else {
-				$filter_planid = "";
+				$this->state->filter->planid = "";
 			}
 		}
 
@@ -4019,7 +4050,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
 
 		$query .= ' ORDER BY `' . str_replace(' ', '` ', $orderby);
-		$query .= ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
+		$query .= ' LIMIT ' . $nav->limitstart . ',' . $nav->limit;
 
 		$this->db->setQuery( $query );
 
@@ -4056,15 +4087,15 @@ class aecAdminMicroIntegration extends aecAdminEntity
 			. ' ORDER BY `ordering`'
 		;
 		$this->db->setQuery( $query );
-		$this->db_plans = $this->db->loadObjectList();
+		$db_plans = $this->db->loadObjectList();
 
 		$plans[] = JHTML::_('select.option', '0', JText::_('FILTER_PLAN'), 'id', 'name' );
-		if ( is_array( $this->db_plans ) ) {
-			$plans = array_merge( $plans, $this->db_plans );
+		if ( is_array( $db_plans ) ) {
+			$plans = array_merge( $plans, $db_plans );
 		}
-		$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
+		$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $this->state->filter->planid );
 
-		HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
+		HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $nav, $option, $lists, $search, $orderby );
 	}
 
 	public function edit( $id, $option )
@@ -4366,12 +4397,12 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 		if ( $id ) {
 			if ( $apply ) {
-				aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+				aecRedirect( 'index.php?option=com_acctexp&task=editMicroIntegration&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 			} else {
-				aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+				aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 			}
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->id , JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=editMicroIntegration&id=' . $mi->id , JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 		}
 
 	}
@@ -4414,12 +4445,12 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', $msg );
 	}
 
 	public function cancel( $option )
 	{
-		aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('AEC_CMN_EDIT_CANCELLED') );
+		aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', JText::_('AEC_CMN_EDIT_CANCELLED') );
 	}
 
 	public function change( $cid=null, $state=0, $option )
@@ -4449,7 +4480,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UNPUBLISHED');
 		}
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', $msg );
 	}
 }
 
@@ -4485,7 +4516,7 @@ class aecAdminCoupon extends aecAdminEntity
 			$limitstart = 0;
 		}
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$nav = new bsPagination( $total, $limitstart, $limit );
 
 		$where = array();
 		if ( isset( $search ) && $search!= '' ) {
@@ -4503,7 +4534,7 @@ class aecAdminCoupon extends aecAdminEntity
 			. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 			. ')'
 			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 		;
 
 		$this->db->setQuery( $query );
@@ -4549,7 +4580,7 @@ class aecAdminCoupon extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby );
+		HTML_AcctExp::listCoupons( $rows, $filtered, $nav, $option, $search, $orderby );
 	}
 
 	public function edit( $id, $option, $new )
@@ -4887,12 +4918,12 @@ class aecAdminCoupon extends aecAdminEntity
 			}
 
 			if ( $apply ) {
-				aecRedirect( 'index.php?option=' . $option . '&task=editCoupon&id=' . $cph->coupon->type.'.'.$cph->coupon->id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+				aecRedirect( 'index.php?option=com_acctexp&task=editCoupon&id=' . $cph->coupon->type.'.'.$cph->coupon->id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 			} else {
-				aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+				aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 			}
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_MSG_NO_COUPON_CODE') );
+			aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', JText::_('AEC_MSG_NO_COUPON_CODE') );
 		}
 
 	}
@@ -4936,7 +4967,7 @@ class aecAdminCoupon extends aecAdminEntity
 
 		$msg = JText::_('AEC_MSG_ITEMS_DELETED');
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', $msg );
 	}
 
 	public function change( $id=null, $state=0, $option )
@@ -4978,7 +5009,7 @@ class aecAdminCoupon extends aecAdminEntity
 
 		$msg = count( $id ) . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED');
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', $msg );
 	}
 
 }
@@ -5011,7 +5042,7 @@ class aecAdminInvoice extends aecAdminEntity
 		$total = $this->db->loadResult();
 
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$nav = new bsPagination( $total, $limitstart, $limit );
 
 		// Lets grab the data and fill it in.
 		$this->db->setQuery(
@@ -5019,7 +5050,7 @@ class aecAdminInvoice extends aecAdminEntity
 			. ' FROM #__acctexp_invoices'
 			. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
 			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 		);
 		$ids = xJ::getDBArray( $this->db );
 
@@ -5103,7 +5134,7 @@ class aecAdminInvoice extends aecAdminEntity
 			$invoices[$id]->processor = $procs[$invoices[$id]->method];
 		}
 
-		HTML_AcctExp::viewInvoices( $invoices, $search, $pageNav, $orderby );
+		HTML_AcctExp::viewInvoices( $invoices, $search, $nav, $orderby );
 	}
 
 	public function edit( $id, $option, $returnTask, $userid )
@@ -5224,12 +5255,12 @@ class aecAdminInvoice extends aecAdminEntity
 		$row->storeload();
 
 		if ( $return ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editInvoice&id=' . $row->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=editInvoice&id=' . $row->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
 		} else {
 			if ( $returnTask ) {
-				aecRedirect( 'index.php?option=' . $option . '&task=' . $returnTask . '&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );
+				aecRedirect( 'index.php?option=com_acctexp&task=' . $returnTask . '&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );
 			} else {
-				aecRedirect( 'index.php?option=' . $option . '&task=invoices', JText::_('AEC_CONFIG_SAVED') );
+				aecRedirect( 'index.php?option=com_acctexp&task=invoices', JText::_('AEC_CONFIG_SAVED') );
 			}
 		}
 	}
@@ -5261,7 +5292,7 @@ class aecAdminInvoice extends aecAdminEntity
 			}
 		}
 
-		aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('AEC_MSG_INVOICE_CLEARED') );
+		aecRedirect( 'index.php?option=com_acctexp&task=' . $task . $userid, JText::_('AEC_MSG_INVOICE_CLEARED') );
 	}
 
 	public function cancel( $invoice_number, $task )
@@ -5280,7 +5311,7 @@ class aecAdminInvoice extends aecAdminEntity
 			}
 		}
 
-		aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('REMOVED') );
+		aecRedirect( 'index.php?option=com_acctexp&task=' . $task . $userid, JText::_('REMOVED') );
 	}
 
 	public function printout( $invoice_number, $standalone=true )
@@ -5331,8 +5362,8 @@ class aecAdminService extends aecAdminEntity
 	public function index( $option )
 	{
 		if ( $this->state->search ) {
-			$this->constrain(
-				' WHERE (`name` LIKE \'%'.$search.'%\')'
+			$this->addConstraint(
+				'`name` LIKE \'%' . $this->state->search . '%\''
 			);
 		}
 
@@ -5442,9 +5473,9 @@ class aecAdminService extends aecAdminEntity
 		}
 
 		if ( $apply ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editService&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=editService&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showServices', JText::_('SAVED') );
+			aecRedirect( 'index.php?option=com_acctexp&task=showServices', JText::_('SAVED') );
 		}
 	}
 
@@ -5478,7 +5509,7 @@ class aecAdminService extends aecAdminEntity
 
 			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
 
-			aecRedirect( 'index.php?option=' . $option . '&task=showServices', $msg );
+			aecRedirect( 'index.php?option=com_acctexp&task=showServices', $msg );
 		}
 	}
 
@@ -5513,7 +5544,7 @@ class aecAdminService extends aecAdminEntity
 
 		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
-		aecRedirect( 'index.php?option=' . $option . '&task=showServices', $msg );
+		aecRedirect( 'index.php?option=com_acctexp&task=showServices', $msg );
 	}
 }
 
@@ -5545,7 +5576,7 @@ class aecAdminHistory
 		$total = $this->db->loadResult();
 		echo $this->db->getErrorMsg();
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$nav = new bsPagination( $total, $limitstart, $limit );
 
 		// Lets grab the data and fill it in.
 		$query = 'SELECT id'
@@ -5553,7 +5584,7 @@ class aecAdminHistory
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			. ' GROUP BY `transaction_date`'
 			. ' ORDER BY `transaction_date` DESC'
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 		;
 		$this->db->setQuery( $query );
 		$rowids = xJ::getDBArray( $this->db );
@@ -5571,7 +5602,7 @@ class aecAdminHistory
 			return false;
 		}
 
-		HTML_AcctExp::viewHistory( $rows, $search, $pageNav );
+		HTML_AcctExp::viewHistory( $rows, $search, $nav );
 	}
 }
 
@@ -5599,14 +5630,14 @@ class aecAdminEventlog
 		$total = $this->db->loadResult();
 		echo $this->db->getErrorMsg();
 
-		$pageNav = new bsPagination( $total, $limitstart, $limit );
+		$nav = new bsPagination( $total, $limitstart, $limit );
 
 		// Lets grab the data and fill it in.
 		$query = 'SELECT id'
 			. ' FROM #__acctexp_eventlog'
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			. ' ORDER BY `id` DESC'
-			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 		;
 		$this->db->setQuery( $query );
 		$rows = xJ::getDBArray( $this->db );
@@ -5662,7 +5693,7 @@ class aecAdminEventlog
 			}
 		}
 
-		HTML_AcctExp::eventlog( $events, $search, $pageNav );
+		HTML_AcctExp::eventlog( $events, $search, $nav );
 	}
 }
 
@@ -5677,12 +5708,12 @@ class aecAdminStats
 		$stats = array();
 
 		$document= JFactory::getDocument();
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.min.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.time.min.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.layout.min.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.js"></script>' );
-		$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
-		$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/com_acctexp/js/d3/d3.min.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/com_acctexp/js/d3/d3.layout.min.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/com_acctexp/js/rickshaw/rickshaw.js"></script>' );
+		$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/com_acctexp/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
+		$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/com_acctexp/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 
 		$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_log_history'
@@ -5861,1302 +5892,1278 @@ class aecAdminStats
 	}
 }
 
-function quicklookup( $option )
+class aecAdminImport extends aecAdminEntity
 {
-	$searcc	= trim( aecGetParam( 'search', 0 ) );
+	public function import()
+	{
+		$show_form = false;
+		$done = false;
 
-	if ( empty( $searcc ) ) {
-		return false;
+		$temp_dir = JPATH_SITE . '/tmp';
+
+		$file_list = xJUtility::getFileArray( $temp_dir, 'csv', false, true );
+
+		$params = array();
+		$lists = array();
+
+		if ( !empty( $_FILES ) ) {
+			if ( strpos( $_FILES['import_file']['name'], '.csv' ) === false ) {
+				$last = strrpos( $_FILES['import_file']['name'], '.' );
+
+				$filename = substr( $_FILES['import_file']['name'], 0, $last ) . '.csv';
+			} else {
+				$filename = $_FILES['import_file']['name'];
+			}
+
+			$destination = $temp_dir . '/' . $filename;
+
+			if ( move_uploaded_file( $_FILES['import_file']['tmp_name'], $destination ) ) {
+				$file_select = $filename;
+			}
+		}
+
+		if ( empty( $file_select ) ) {
+			$file_select = aecGetParam( 'file_select', '' );
+		}
+
+		if ( empty( $file_select ) ) {
+			$show_form = true;
+
+			$params['file_select']			= array( 'list', '' );
+			$params['MAX_FILE_SIZE']		= array( 'hidden', '5120000' );
+			$params['import_file']			= array( 'file', 'Upload', 'Upload a file and select it for importing', '' );
+
+			$file_htmllist		= array();
+			$file_htmllist[]	= JHTML::_('select.option', '', JText::_('AEC_CMN_NONE_SELECTED') );
+
+			if ( !empty( $file_list ) ) {
+				foreach ( $file_list as $name ) {
+					$file_htmllist[] = JHTML::_('select.option', $name, $name );
+				}
+			}
+
+			$lists['file_select'] = JHTML::_('select.genericlist', $file_htmllist, 'file_select', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '"', 'value', 'text', 0 );
+		} else {
+			$options = array();
+
+			if ( !empty( $_POST['assign_plan'] ) ) {
+				$options['assign_plan'] = $_POST['assign_plan'];
+			}
+
+			$import = new aecImport( $temp_dir . '/' . $file_select, $options );
+
+			if ( !$import->read() ) {
+				die( 'could not read file' );
+			}
+
+			$import->parse();
+
+			if ( empty( $import->rows ) ) {
+				die( 'could not find any entries in this file' );
+			}
+
+			$params['file_select'] = array( 'hidden', $file_select );
+
+			if ( !isset( $_POST['convert_field_0'] ) ) {
+				$fields = array(
+					'id' => 'User ID',
+					'name' => 'User Full Name',
+					'username' => 'Username',
+					'email' => 'User Email',
+					'password' => 'Password',
+					'plan_id' => 'Payment Plan ID',
+					'invoice_number' => 'Invoice Number',
+					'expiration' => 'Membership Expiration'
+				);
+
+				$mis = array_merge(
+					microIntegrationHandler::getMIList(false, false, false, false, 'mi_aecuserdetails')
+				);
+
+				foreach( $mis as $entry ) {
+					$mi = new microIntegration();
+					$mi->load($entry->id);
+
+					if ( $mi->callIntegration() ) {
+						$fields = array_merge(
+							$fields,
+							$mi->mi_class->getCustomFields()
+						);
+					}
+				}
+
+				$field_htmllist		= array();
+				$field_htmllist[]	= JHTML::_('select.option', 0, 'Ignore' );
+
+				foreach ( $fields as $name => $longname ) {
+					$field_htmllist[] = JHTML::_('select.option', $name, $longname );
+				}
+
+				$cols = count( $import->rows[0] );
+
+				$columns = array();
+				for ( $i=0; $i<$cols; $i++ ) {
+					$columns[] = 'convert_field_'.$i;
+
+					$params['convert_field_'.$i] = array( 'list', '', '', '' );
+
+					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="select2-bootstrap"', 'value', 'text', 0 );
+				}
+
+				$rows_count = count( $import->rows );
+
+				$rowcount = min( $rows_count, 5 );
+
+				$rows = array();
+				for ( $i=0; $i<$rowcount; $i++ ) {
+					$rows[] = $import->rows[$i];
+				}
+
+				$params['assign_plan'] = array( 'list', 'Assign Plan', 'Assign users to a specific payment plan. Is overridden if you provide an individual plan ID with the "Payment Plan ID" field assignment.' );
+
+				$params['skip_first'] = array( 'toggle', 'Skip First Line', 'Do not import the first line (use this if you have column names in the first line).' );
+
+				$available_plans	= SubscriptionPlanHandler::getActivePlanList();
+
+				$lists['assign_plan'] = JHTML::_('select.genericlist', $available_plans, 'assign_plan', 'size="5"', 'value', 'text', 0 );
+			} else {
+				$import->getConversionList();
+
+				$import->import(
+					array(
+						'skip_first' => $_POST['skip_first']
+					)
+				);
+
+				$done = true;
+			}
+		}
+
+		$settingsparams = array();
+
+		$settings = new aecSettings ( 'import', 'general' );
+		$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+		$aecHTML->form		= $show_form;
+		$aecHTML->done		= $done;
+
+		if ( !empty( $import->errors ) ) {
+			$aecHTML->errors	= $import->errors;
+		}
+
+		if ( !$show_form && !$done ) {
+			$aecHTML->user_rows = $rows;
+			$aecHTML->user_rows_count = $rows_count;
+			$aecHTML->columns = $columns;
+		}
+
+		HTML_AcctExp::import( $aecHTML );
 	}
-
-	$search = xJ::escape( JFactory::getDBO(), strtolower( $searcc ) );
-
-	$s = AECToolbox::searchUser( $search );
-
-	if ( empty( $s ) || !is_array( $s ) ) {
-		return false;
-	}
-
-	$return = array();
-	foreach ( $s as $user ) {
-		$JTableUser = new cmsUser();
-		$JTableUser->load( $user );
-
-		$userlink = '<div class="lookupresult">';
-		$userlink .= '<a href="';
-		$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $JTableUser->id;
-		$userlink .= '">';
-		$userlink .= str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->name ) . ' (' . str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->username ) . ')';
-		$userlink .= '</a>';
-		$userlink .= '</div>';
-
-		$return[] = $userlink;
-	}
-
-	return '<div class="lookupresults">' . implode( $return ) . '</div>';
 }
 
-function hackcorefile( $filename, $check_hack, $undohack, $checkonly=false )
+class aecAdminExport
 {
-	$db = JFactory::getDBO();
+	function export( $type, $cmd=null )
+	{
+		$db = JFactory::getDBO();
 
-	$app = JFactory::getApplication();
+		$cmd_save = ( strcmp( 'save', $cmd ) === 0 );
+		$cmd_apply = ( strcmp( 'apply', $cmd ) === 0 );
+		$cmd_load = ( strcmp( 'load', $cmd ) === 0 );
+		$cmd_export = ( strcmp( 'export', $cmd ) === 0 );
+		$use_original = 0;
 
-	$aec_hack_start				= "// AEC HACK %s START" . "\n";
-	$aec_hack_end				= "// AEC HACK %s END" . "\n";
+		$system_values = array();
+		$filter_values = array();
+		$options_values = array();
+		$params_values = array();
 
-	$aec_condition_start		= 'if (file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" )) {' . "\n";
+		if ( $type == 'sales' ) {
+			$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
+								 'filter' => array( 'date_start', 'date_end', 'method', 'planid', 'groupid', 'status', 'orderby' ),
+								 'options' => array( 'collate', 'breakdown', 'breakdown_custom' ),
+								 'params' => array( 'export_method' )
+			);
 
-	$aec_condition_end			= '}' . "\n";
-
-	$aec_include_class			= 'include_once(JPATH_SITE . "/components/com_acctexp/acctexp.class.php");' . "\n";
-
-	$aec_verification_check		= "AECToolBox::VerifyUsername( %s );" . "\n";
-	$aec_userchange_clause		= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($row, $_POST, \'%s\');' . "\n";
-	$aec_userchange_clauseCB12	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userComplete, $_POST, \'%s\');' . "\n";
-	$aec_userchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userid, $post, \'%s\');' . "\n";
-	$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
-
-	$aec_global_call			= "\n";
-
-	$aec_redirect_notallowed	= 'aecRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
-	$aec_redirect_notallowed15	= '$app = JFactory::getApplication();' . "\n" . '$app->redirect( "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
-
-	$aec_redirect_subscribe		= 'aecRedirect( JURI::root() . \'index.php?option=com_acctexp&task=subscribe\' );' . "\n";
-
-	$aec_normal_hack = $aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. $aec_redirect_notallowed
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_jhack1 = $aec_hack_start
-		. 'function mosNotAuth($override=false) {' . "\n"
-		. $aec_global_call
-		. $aec_condition_start
-		. 'if (!$override) {' . "\n"
-		. $aec_redirect_notallowed
-		. $aec_condition_end
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_jhack2 = $aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. $aec_redirect_notallowed
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_jhack3 = $aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. $aec_include_class
-		. sprintf( $aec_verification_check, '$credentials[\'username\']' )
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_cbmhack =	$aec_hack_start
-		. "mosNotAuth(true);" . "\n"
-		. $aec_hack_end;
-
-	$aec_uchangehack =	$aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. $aec_include_class
-		. $aec_userchange_clause
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_uchangehackCB12 = str_replace( '$row', '$userComplete', $aec_uchangehack );
-	$aec_uchangehackCB12x = str_replace( '$row', '$this', $aec_uchangehack );
-
-	$aec_uchangehackCB12 =	$aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. $aec_include_class
-		. $aec_userchange_clauseCB12
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_uchangehack15 =	$aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. $aec_include_class
-		. $aec_userregchange_clause15
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_uchangereghack15 =	$aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. $aec_include_class
-		. $aec_userchange_clause15
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_rhackbefore =	$aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. 'if (!isset($_POST[\'planid\'])) {' . "\n"
-		. $aec_include_class
-		. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
-		. $aec_condition_end
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_rhackbefore_fix = str_replace("planid", "usage", $aec_rhackbefore);
-
-	$aec_rhackbefore2 =	$aec_hack_start
-		. $aec_global_call . '$app = JFactory::getApplication();' . "\n"
-		. $aec_condition_start
-		. 'if (!isset($_POST[\'usage\'])) {' . "\n"
-		. $aec_include_class
-		. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
-		. $aec_condition_end
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_optionhack =	$aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. '$option = "com_acctexp";' . "\n"
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$aec_regvarshack =	'<?php' . "\n"
-		. $aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. '?>' . "\n"
-		. '<input type="hidden" name="planid" value="<?php echo $_POST[\'planid\'];?>" />' . "\n"
-		. '<input type="hidden" name="processor" value="<?php echo $_POST[\'processor\'];?>" />' . "\n"
-		. '<?php' . "\n"
-		. 'if ( isset( $_POST[\'recurring\'] ) ) {'
-		. '?>' . "\n"
-		. '<input type="hidden" name="recurring" value="<?php echo $_POST[\'recurring\'];?>" />' . "\n"
-		. '<?php' . "\n"
-		. '}' . "\n"
-		. $aec_condition_end
-		. $aec_hack_end
-		. '?>' . "\n";
-
-	$aec_regvarshack_fix = str_replace( 'planid', 'usage', $aec_regvarshack);
-
-	$aec_regvarshack_fixcb = $aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. 'if ( isset( $_POST[\'usage\'] ) ) {' . "\n"
-		. '$regFormTag .= \'<input type="hidden" name="usage" value="\' . $_POST[\'usage\'] . \'" />\';' . "\n"
-		. '}' . "\n"
-		. 'if ( isset( $_POST[\'processor\'] ) ) {' . "\n"
-		. '$regFormTag .= \'<input type="hidden" name="processor" value="\' . $_POST[\'processor\'] . \'" />\';' . "\n"
-		. '}' . "\n"
-		. 'if ( isset( $_POST[\'recurring\'] ) ) {' . "\n"
-		. '$regFormTag .= \'<input type="hidden" name="recurring" value="\' . $_POST[\'recurring\'] . \'" />\';' . "\n"
-		. '}' . "\n"
-		. $aec_condition_end
-		. $aec_hack_end
-	;
-
-	$aec_regredirect = $aec_hack_start
-		. $aec_global_call
-		. $aec_condition_start
-		. $aec_redirect_subscribe
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$juser_blind = $aec_hack_start
-		. 'case \'blind\':'. "\n"
-		. 'break;'. "\n"
-		. $aec_hack_end;
-
-	$aec_j15hack1 =  $aec_hack_start
-		. 'if ( $error->message == JText::_("ALERTNOTAUTH") ) {'
-		. $aec_condition_start
-		. $aec_redirect_notallowed15
-		. $aec_condition_end
-		. $aec_condition_end
-		. $aec_hack_end;
-
-	$n = 'errorphp';
-	$hacks[$n]['name']			=	'error.php ' . JText::_('AEC_HACK_HACK') . ' #1';
-	$hacks[$n]['desc']			=	JText::_('AEC_HACKS_NOTAUTH');
-	$hacks[$n]['type']			=	'file';
-	$hacks[$n]['filename']		=	JPATH_SITE . '/libraries/joomla/error/error.php';
-	$hacks[$n]['read']			=	'// Initialize variables';
-	$hacks[$n]['insert']		=	sprintf( $aec_j15hack1, $n, $n ) . "\n" . $hacks[$n]['read'];
-	$hacks[$n]['legacy']		=	1;
-
-	$n = 'joomlaphp4';
-	$hacks[$n]['name']			=	'authentication.php';
-	$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY_PLUGIN');
-	$hacks[$n]['uncondition']	=	'joomlaphp';
-	$hacks[$n]['type']			=	'file';
-	$hacks[$n]['filename']		=	JPATH_SITE . '/libraries/joomla/user/authentication.php';
-	$hacks[$n]['read'] 			=	'if(empty($response->username)) {';
-	$hacks[$n]['insert']		=	sprintf($aec_jhack3, $n, $n) . "\n" . $hacks[$n]['read'];
-	$hacks[$n]['legacy']		=	1;
-
-	if ( aecComponentHelper::detect_component( 'UHP2' ) ) {
-		$n = 'uhp2menuentry';
-		$hacks[$n]['name']			=	JText::_('AEC_HACKS_UHP2');
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_UHP2_DESC');
-		$hacks[$n]['uncondition']	=	'uhp2managephp';
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_uhp2_manage.php';
-		$hacks[$n]['read']			=	'<?php echo "$settings"; ?></a>';
-		$hacks[$n]['insert']		=	sprintf( $hacks[$n]['read'] . "\n</li>\n<?php " . $aec_hack_start . '?>'
-			. '<li class="latest<?php echo $moduleclass_sfx; ?>">'
-			. '<a href="index.php?option=com_acctexp&task=subscriptionDetails" class="latest<?php echo $moduleclass_sfx; ?>">'
-			. JText::_('AEC_SPEC_MENU_ENTRY') . '</a>'."\n<?php ".$aec_hack_end."?>", $n, $n );
-	}
-
-	if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
-		$n = 'comprofilerphp2';
-		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-		$hacks[$n]['read']			=	'function registerForm( $option, $emailpass, $regErrorMSG = null ) {';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_optionhack, $n, $n);
-		$hacks[$n]['legacy']		=	1;
-
-		$n = 'comprofilerphp6';
-		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #6';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB6');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm( $option, $emailpass, $userComplete, $regErrorMSG );';
-		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
-		$hacks[$n]['legacy']		=	1;
-
-		$n = 'comprofilerhtml2';
-		$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('AEC_HACK_HACK') . ' #2';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB_HTML2');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'echo HTML_comprofiler::_cbTemplateRender( $user, \'RegisterForm\'';
-		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fixcb, $n, $n) . "\n" . $hacks[$n]['read'];
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
-		$hacks[$n]['legacy']		=	1;
-
-	} elseif ( aecComponentHelper::detect_component( 'CB' ) ) {
-		$n = 'comprofilerphp2';
-		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-		$hacks[$n]['read']			=	'if ($regErrorMSG===null) {';
-		$hacks[$n]['insert']		=	sprintf($aec_optionhack, $n, $n) . "\n" . $hacks[$n]['read'];
-
-		$n = 'comprofilerphp6';
-		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #6';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB6');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['condition']		=	'comprofilerphp2';
-		$hacks[$n]['uncondition']	=	'comprofilerphp3';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm';
-		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
-
-		$n = 'comprofilerhtml2';
-		$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('AEC_HACK_HACK') . ' #2';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB_HTML2');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['uncondition']	=	'comprofilerhtml';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-
-	} elseif ( aecComponentHelper::detect_component( 'CBE' ) ) {
-		$n = 'comprofilerphp2';
-		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-		$hacks[$n]['read']			=	'$rowFieldValues=array();';
-		$hacks[$n]['insert']		=	sprintf($aec_optionhack, $n, $n) . "\n" . $hacks[$n]['read'];
-
-		$n = 'comprofilerphp6';
-		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #6';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB6');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['condition']		=	'comprofilerphp2';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm';
-		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore2, $n, $n) . "\n" . $hacks[$n]['read'];
-
-		$n = 'comprofilerhtml2';
-		$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('AEC_HACK_HACK') . ' #2';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB_HTML2');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['uncondition']	=	'comprofilerhtml';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-	} elseif ( aecComponentHelper::detect_component( 'JUSER' ) ) {
-		$n = 'juserhtml1';
-		$hacks[$n]['name']			=	'juser.html.php ' . JText::_('AEC_HACK_HACK') . ' #1';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_JUSER_HTML1');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.html.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="option" value="com_juser" />';
-		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fix, $n, $n) . "\n" . '<input type="hidden" name="option" value="com_acctexp" />';
-
-		$n = 'juserphp1';
-		$hacks[$n]['name']			=	'juser.php ' . JText::_('AEC_HACK_HACK') . ' #1';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_JUSER_PHP1');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.php';
-		$hacks[$n]['read']			=	'HTML_JUser::userEdit( $row, $option, $params, $ext_row, \'saveUserRegistration\' );';
-		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
-
-		$n = 'juserphp2';
-		$hacks[$n]['name']			=	'juser.php ' . JText::_('AEC_HACK_HACK') . ' #2';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_JUSER_PHP2');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.php';
-		$hacks[$n]['read']			=	'default:';
-		$hacks[$n]['insert']		=	sprintf($juser_blind, $n, $n) . "\n" . $hacks[$n]['read'];
-	} else {
-
-		$n = 'registrationhtml2';
-		$hacks[$n]['name']			=	'registration.html.php ' . JText::_('AEC_HACK_HACK') . ' #2';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['uncondition']	=	'registrationhtml';
-		$hacks[$n]['condition']		=	'registrationphp2';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/views/register/tmpl/default.php';
-		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="register_save" />';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-		$hacks[$n]['legacy']		=	1;
-
-		$n = 'registrationphp6';
-		$hacks[$n]['name']			=	'user.php';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_REG5');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['uncondition']	=	'registrationphp5';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
-		$hacks[$n]['read']			=	'JRequest::setVar(\'view\', \'register\');';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
-		$hacks[$n]['legacy']		=	1;
-	}
-
-	if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
-		if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
-			$n = 'comprofilerphp7';
-			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #7';
-			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
-			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
-			$hacks[$n]['insert']		=	sprintf( $aec_uchangehackCB12, $n, 'registration', $n ) . "\n" . $hacks[$n]['read'];
-			$hacks[$n]['legacy']		=	1;
-
-			$n = 'comprofilerphp8';
-			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #8';
-			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
-			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	JPATH_SITE . '/administrator/components/com_comprofiler/library/cb/cb.tables.php';
-			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array( &$this, &$this, true ) );';
-			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehackCB12x, $n, 'user', $n );
-			$hacks[$n]['legacy']		=	1;
+			$pf = 8;
 		} else {
-			$n = 'comprofilerphp4';
-			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #4';
-			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
-			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	JPATH_SITE . "/components/com_comprofiler/comprofiler.php";
-			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
-			$hacks[$n]['insert']		=	sprintf($aec_uchangehack, $n, "user", $n) . "\n" . $hacks[$n]['read'];
-			$hacks[$n]['legacy']		=	1;
+			$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
+								 'filter' => array( 'planid', 'groupid', 'status', 'orderby' ),
+								 'options' => array( 'rewrite_rule' ),
+								 'params' => array( 'export_method' )
+			);
 
-			$n = 'comprofilerphp5';
-			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #5';
-			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI2');
-			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	JPATH_SITE . "/components/com_comprofiler/comprofiler.php";
-			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array($row, $rowExtras, true));';
-			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_uchangehack, $n, "registration",$n);
-			$hacks[$n]['legacy']		=	1;
-
-			$n = 'comprofilerphp7';
-			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #7';
-			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
-			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['uncondition']	=	'comprofilerphp4';
-			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
-			$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'registration', $n ) . "\n" . $hacks[$n]['read'];
-
-			$n = 'comprofilerphp8';
-			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #8';
-			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
-			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['uncondition']	=	'comprofilerphp5';
-			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
-			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array($row, $rowExtras, true));';
-			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehack, $n, 'user', $n );
+			$pf = 5;
 		}
-	} else {
-		$n = 'userphp';
-		$hacks[$n]['name']			=	'user.php';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
-		$hacks[$n]['read']			=	'if ($model->store($post)) {';
-		$hacks[$n]['insert']		=	sprintf( $aec_uchangehack15, $n, "user", $n ) . "\n" . $hacks[$n]['read'];
-		$hacks[$n]['legacy']		=	1;
 
-		$n = 'registrationphp1';
-		$hacks[$n]['name']			=	'registration.php ' . JText::_('AEC_HACK_HACK') . ' #1';
-		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
-		$hacks[$n]['type']			=	'file';
-		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
-		$hacks[$n]['read']			=	'UserController::_sendMail($user, $password);';
-		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangereghack15, $n, "registration", $n );
-		$hacks[$n]['legacy']		=	1;
-	}
+		$postfields = 0;
+		foreach( $getpost as $name => $array ) {
+			$field = $name . '_values';
 
-	$n = 'adminuserphp';
-	$hacks[$n]['name']			=	'admin.user.php';
-	$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
-	$hacks[$n]['type']			=	'file';
-	$hacks[$n]['filename']		=	JPATH_SITE . '/administrator/components/com_users/controller.php';
-	$hacks[$n]['read']			=	'if (!$user->save())';
-	$hacks[$n]['insert']		=	sprintf( $aec_uchangehack15, $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
-	$hacks[$n]['legacy']	=	1;
+			foreach( $array as $vname ) {
+				$vvalue = aecGetParam( $vname, '' );
+				if ( !empty( $vvalue ) ) {
+					${$field}[$vname] = $vvalue;
 
-	if ( aecComponentHelper::detect_component( 'CBM' ) ) {
-		if ( !aecComponentHelper::detect_component( 'CB1.2' ) ) {
-			$n = 'comprofilermoderator';
-			$hacks[$n]['name']			=	'comprofilermoderator.php';
-			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CBM');
-			$hacks[$n]['type']			=	'file';
-			$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_comprofilermoderator.php';
-			$hacks[$n]['read']			=	'mosNotAuth();';
-			$hacks[$n]['insert']		=	sprintf( $aec_cbmhack, $n, $n );
+					$postfields++;
+				}
+			}
 		}
-	}
 
-	$mih = new microIntegrationHandler();
-	$new_hacks = $mih->getHacks();
+		if ( !empty( $params_values['export_method'] ) ) {
+			$is_test = $params_values['export_method'] == 'test';
+		} else {
+			$is_test = false;
+		}
 
-	if ( is_array( $new_hacks ) ) {
-		$hacks = array_merge( $hacks, $new_hacks );
-	}
+		$lists = array();
 
-	// Receive the status for the hacks
-	foreach ( $hacks as $name => $hack ) {
+		$pname = "";
 
-		$hacks[$name]['status'] = 0;
+		if ( !empty( $system_values['selected_export'] ) || $cmd_save || $cmd_apply || $is_test ) {
+			$row = new aecExport( ( $type == 'sales' ) );
+			if ( isset( $system_values['selected_export'] ) ) {
+				$row->load( $system_values['selected_export'] );
 
-		if ( !empty( $hack['filename'] ) ) {
-			if ( !file_exists( $hack['filename'] ) ) {
+				$pname = $row->name;
+			} else {
+				$row->load(0);
+			}
+
+			if ( !empty( $system_values['delete'] ) ) {
+				// User wants to delete the entry
+				$row->delete();
+			} elseif ( ( $cmd_save || $cmd_apply ) && ( !empty( $system_values['selected_export'] ) || !empty( $system_values['save_name'] ) ) ) {
+				// User wants to save an entry
+				if ( !empty( $system_values['save'] ) ) {
+					// But as a copy of another entry
+					$row->load( 0 );
+				}
+
+				$row->saveComplex( $system_values['save_name'], $filter_values, $options_values, $params_values );
+
+				if ( !empty( $system_values['save'] ) ) {
+					$system_values['selected_export'] = $row->getMax();
+				}
+			} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) && !$is_test ) {
+				// User wants to save a new entry
+				$row->saveComplex( $system_values['save_name'], $filter_values, $options_values, $params_values );
+			}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && ( $cmd_export || $is_test ) )  ) {
+				if ( $row->id ) {
+					// User wants to load an entry
+					$filter_values = $row->filter;
+					$options_values = $row->options;
+					$params_values = $row->params;
+					$pname = $row->name;
+
+					$use_original = 1;
+				}
+			}
+		}
+
+		// Always store the last ten calls, but only if something is happening
+		if ( $cmd_save || $cmd_apply || $cmd_export ) {
+			$autorow = new aecExport( ( $type == 'sales' ) );
+			$autorow->load(0);
+			$autorow->saveComplex( 'Autosave', $filter_values, $options_values, $params_values, true );
+
+			if ( isset( $row ) ) {
+				if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
+					$use_original = 1;
+				}
+			}
+		}
+
+		$filters = array( 'planid', 'groupid', 'status' );
+
+		foreach ( $filters as $filter ) {
+			if ( !isset( $filter_values[$filter] ) ) {
+				$filter_values[$filter] = array();
+
 				continue;
 			}
-		}
 
-		if ( $hack['type'] ) {
-			switch( $hack['type'] ) {
-				case 'file':
-					if ( $hack['filename'] != 'UNKNOWN' ) {
-						$originalFileHandle = fopen( $hack['filename'], 'r' );
-						$oldData			= fread( $originalFileHandle, filesize($hack['filename'] ) );
-						fclose( $originalFileHandle );
-
-						if ( strpos( $oldData, 'AEC HACK START' ) || strpos( $oldData, 'AEC CHANGE START' )) {
-							$hacks[$name]['status'] = 'legacy';
-						} else {
-							if ( ( strpos( $oldData, 'AEC HACK ' . $name . ' START' ) > 0 ) || ( strpos( $oldData, 'AEC CHANGE ' . $name . ' START' ) > 0 )) {
-								$hacks[$name]['status'] = 1;
-							}
-						}
-
-						if ( function_exists( 'posix_getpwuid' ) ) {
-							$hacks[$name]['fileinfo'] = posix_getpwuid( fileowner( $hack['filename'] ) );
-						}
-					}
-					break;
-
-				case 'menuentry':
-					$query = 'SELECT COUNT(*)'
-						. ' FROM #__menu'
-						. ' WHERE `link` = \'' . JURI::root()  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
-					;
-					$db->setQuery( $query );
-					$count = $db->loadResult();
-
-					if ( $count ) {
-						$hacks[$name]['status'] = 1;
-					}
-					break;
-			}
-		}
-	}
-
-	if ( $checkonly ) {
-		return $hacks[$filename]['status'];
-	}
-
-	// Commit the hacks
-	if ( !$check_hack ) {
-
-		switch( $hacks[$filename]['type'] ) {
-			case 'file':
-				// mic: fix if CMS is not Joomla or Mambo
-				if ( $hack['filename'] != 'UNKNOWN' ) {
-					$originalFileHandle = fopen( $hacks[$filename]['filename'], 'r' ) or die ("Cannot open ".$hacks[$filename]['filename']);
-					// Transfer File into variable $oldData
-					$oldData = fread( $originalFileHandle, filesize( $hacks[$filename]['filename'] ) );
-					fclose( $originalFileHandle );
-
-					if ( !$undohack ) { // hack
-						$newData = str_replace( $hacks[$filename]['read'], $hacks[$filename]['insert'], $oldData );
-
-						//make a backup
-						if ( !backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
-							// Echo error message
-						}
-
-					} else { // undo hack
-						if ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) {
-							$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).START\\n.*\/\/.AEC.(HACK|CHANGE).END\\n/s', $hacks[$filename]['read'], $oldData );
-						} else {
-							if ( strpos( $oldData, $hacks[$filename]['insert'] ) ) {
-								if ( isset( $hacks[$filename]['oldread'] ) && isset( $hacks[$filename]['oldinsert'] ) ) {
-									$newData = str_replace( $hacks[$filename]['oldinsert'], $hacks[$filename]['oldread'], $oldData );
-								}
-
-								$newData = str_replace( $hacks[$filename]['insert'], $hacks[$filename]['read'], $oldData );
-							} else {
-								$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).' . $filename . '.START\\n.*\/\/.AEC.(HACK|CHANGE).' . $filename . '.END\\n/s', $hacks[$filename]['read'], $oldData );
-							}
-						}
-					}
-
-					$oldperms = fileperms( $hacks[$filename]['filename'] );
-					chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
-
-					if ( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
-						fwrite( $fp, $newData, strlen( $newData ) );
-						fclose( $fp );
-						chmod( $hacks[$filename]['filename'], $oldperms );
-					}
-				}
-				break;
-		}
-	}
-
-	return $hacks;
-}
-
-/**
- * @param string $file_new
- */
-function backupFile( $file, $file_new )
-{
-	if ( !copy( $file, $file_new ) ) {
-		return false;
-	}
-	return true;
-}
-
-function importData( $option )
-{
-	$show_form = false;
-	$done = false;
-
-	$temp_dir = JPATH_SITE . '/tmp';
-
-	$file_list = xJUtility::getFileArray( $temp_dir, 'csv', false, true );
-
-	$params = array();
-	$lists = array();
-
-	if ( !empty( $_FILES ) ) {
-		if ( strpos( $_FILES['import_file']['name'], '.csv' ) === false ) {
-			$last = strrpos( $_FILES['import_file']['name'], '.' );
-
-			$filename = substr( $_FILES['import_file']['name'], 0, $last ) . '.csv';
-		} else {
-			$filename = $_FILES['import_file']['name'];
-		}
-
-		$destination = $temp_dir . '/' . $filename;
-
-		if ( move_uploaded_file( $_FILES['import_file']['tmp_name'], $destination ) ) {
-			$file_select = $filename;
-		}
-	}
-
-	if ( empty( $file_select ) ) {
-		$file_select = aecGetParam( 'file_select', '' );
-	}
-
-	if ( empty( $file_select ) ) {
-		$show_form = true;
-
-		$params['file_select']			= array( 'list', '' );
-		$params['MAX_FILE_SIZE']		= array( 'hidden', '5120000' );
-		$params['import_file']			= array( 'file', 'Upload', 'Upload a file and select it for importing', '' );
-
-		$file_htmllist		= array();
-		$file_htmllist[]	= JHTML::_('select.option', '', JText::_('AEC_CMN_NONE_SELECTED') );
-
-		if ( !empty( $file_list ) ) {
-			foreach ( $file_list as $name ) {
-				$file_htmllist[] = JHTML::_('select.option', $name, $name );
-			}
-		}
-
-		$lists['file_select'] = JHTML::_('select.genericlist', $file_htmllist, 'file_select', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '"', 'value', 'text', 0 );
-	} else {
-		$options = array();
-
-		if ( !empty( $_POST['assign_plan'] ) ) {
-			$options['assign_plan'] = $_POST['assign_plan'];
-		}
-
-		$import = new aecImport( $temp_dir . '/' . $file_select, $options );
-
-		if ( !$import->read() ) {
-			die( 'could not read file' );
-		}
-
-		$import->parse();
-
-		if ( empty( $import->rows ) ) {
-			die( 'could not find any entries in this file' );
-		}
-
-		$params['file_select'] = array( 'hidden', $file_select );
-
-		if ( !isset( $_POST['convert_field_0'] ) ) {
-			$fields = array(
-				'id' => 'User ID',
-				'name' => 'User Full Name',
-				'username' => 'Username',
-				'email' => 'User Email',
-				'password' => 'Password',
-				'plan_id' => 'Payment Plan ID',
-				'invoice_number' => 'Invoice Number',
-				'expiration' => 'Membership Expiration'
-			);
-
-			$mis = array_merge(
-				microIntegrationHandler::getMIList(false, false, false, false, 'mi_aecuserdetails')
-			);
-
-			foreach( $mis as $entry ) {
-				$mi = new microIntegration();
-				$mi->load($entry->id);
-
-				if ( $mi->callIntegration() ) {
-					$fields = array_merge(
-						$fields,
-						$mi->mi_class->getCustomFields()
-					);
+			if ( !is_array( $filter_values[$filter] ) ) {
+				if ( !empty( $filter_values[$filter] ) ) {
+					$filter_values[$filter] = array( $filter_values[$filter] );
+				} else {
+					$filter_values[$filter] = array();
 				}
 			}
-
-			$field_htmllist		= array();
-			$field_htmllist[]	= JHTML::_('select.option', 0, 'Ignore' );
-
-			foreach ( $fields as $name => $longname ) {
-				$field_htmllist[] = JHTML::_('select.option', $name, $longname );
-			}
-
-			$cols = count( $import->rows[0] );
-
-			$columns = array();
-			for ( $i=0; $i<$cols; $i++ ) {
-				$columns[] = 'convert_field_'.$i;
-
-				$params['convert_field_'.$i] = array( 'list', '', '', '' );
-
-				$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="select2-bootstrap"', 'value', 'text', 0 );
-			}
-
-			$rows_count = count( $import->rows );
-
-			$rowcount = min( $rows_count, 5 );
-
-			$rows = array();
-			for ( $i=0; $i<$rowcount; $i++ ) {
-				$rows[] = $import->rows[$i];
-			}
-
-			$params['assign_plan'] = array( 'list', 'Assign Plan', 'Assign users to a specific payment plan. Is overridden if you provide an individual plan ID with the "Payment Plan ID" field assignment.' );
-
-			$params['skip_first'] = array( 'toggle', 'Skip First Line', 'Do not import the first line (use this if you have column names in the first line).' );
-
-			$available_plans	= SubscriptionPlanHandler::getActivePlanList();
-
-			$lists['assign_plan'] = JHTML::_('select.genericlist', $available_plans, 'assign_plan', 'size="5"', 'value', 'text', 0 );
-		} else {
-			$import->getConversionList();
-
-			$import->import(
-				array(
-					'skip_first' => $_POST['skip_first']
-				)
-			);
-
-			$done = true;
-		}
-	}
-
-	$settingsparams = array();
-
-	$settings = new aecSettings ( 'import', 'general' );
-	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
-
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-	$aecHTML->form		= $show_form;
-	$aecHTML->done		= $done;
-
-	if ( !empty( $import->errors ) ) {
-		$aecHTML->errors	= $import->errors;
-	}
-
-	if ( !$show_form && !$done ) {
-		$aecHTML->user_rows = $rows;
-		$aecHTML->user_rows_count = $rows_count;
-		$aecHTML->columns = $columns;
-	}
-
-	HTML_AcctExp::import( $aecHTML );
-}
-
-function exportData( $type, $cmd=null )
-{
-	$db = JFactory::getDBO();
-
-	$cmd_save = ( strcmp( 'save', $cmd ) === 0 );
-	$cmd_apply = ( strcmp( 'apply', $cmd ) === 0 );
-	$cmd_load = ( strcmp( 'load', $cmd ) === 0 );
-	$cmd_export = ( strcmp( 'export', $cmd ) === 0 );
-	$use_original = 0;
-
-	$system_values = array();
-	$filter_values = array();
-	$options_values = array();
-	$params_values = array();
-
-	if ( $type == 'sales' ) {
-		$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
-							 'filter' => array( 'date_start', 'date_end', 'method', 'planid', 'groupid', 'status', 'orderby' ),
-							 'options' => array( 'collate', 'breakdown', 'breakdown_custom' ),
-							 'params' => array( 'export_method' )
-		);
-
-		$pf = 8;
-	} else {
-		$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
-							 'filter' => array( 'planid', 'groupid', 'status', 'orderby' ),
-							 'options' => array( 'rewrite_rule' ),
-							 'params' => array( 'export_method' )
-		);
-
-		$pf = 5;
-	}
-
-	$postfields = 0;
-	foreach( $getpost as $name => $array ) {
-		$field = $name . '_values';
-
-		foreach( $array as $vname ) {
-			$vvalue = aecGetParam( $vname, '' );
-			if ( !empty( $vvalue ) ) {
-				${$field}[$vname] = $vvalue;
-
-				$postfields++;
-			}
-		}
-	}
-
-	if ( !empty( $params_values['export_method'] ) ) {
-		$is_test = $params_values['export_method'] == 'test';
-	} else {
-		$is_test = false;
-	}
-
-	$lists = array();
-
-	$pname = "";
-
-	if ( !empty( $system_values['selected_export'] ) || $cmd_save || $cmd_apply || $is_test ) {
-		$row = new aecExport( ( $type == 'sales' ) );
-		if ( isset( $system_values['selected_export'] ) ) {
-			$row->load( $system_values['selected_export'] );
-
-			$pname = $row->name;
-		} else {
-			$row->load(0);
 		}
 
-		if ( !empty( $system_values['delete'] ) ) {
-			// User wants to delete the entry
-			$row->delete();
-		} elseif ( ( $cmd_save || $cmd_apply ) && ( !empty( $system_values['selected_export'] ) || !empty( $system_values['save_name'] ) ) ) {
-			// User wants to save an entry
-			if ( !empty( $system_values['save'] ) ) {
-				// But as a copy of another entry
-				$row->load( 0 );
-			}
-
-			$row->saveComplex( $system_values['save_name'], $filter_values, $options_values, $params_values );
-
-			if ( !empty( $system_values['save'] ) ) {
-				$system_values['selected_export'] = $row->getMax();
-			}
-		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) && !$is_test ) {
-			// User wants to save a new entry
-			$row->saveComplex( $system_values['save_name'], $filter_values, $options_values, $params_values );
-		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && ( $cmd_export || $is_test ) )  ) {
-			if ( $row->id ) {
-				// User wants to load an entry
-				$filter_values = $row->filter;
-				$options_values = $row->options;
-				$params_values = $row->params;
-				$pname = $row->name;
-
-				$use_original = 1;
-			}
-		}
-	}
-
-	// Always store the last ten calls, but only if something is happening
-	if ( $cmd_save || $cmd_apply || $cmd_export ) {
-		$autorow = new aecExport( ( $type == 'sales' ) );
-		$autorow->load(0);
-		$autorow->saveComplex( 'Autosave', $filter_values, $options_values, $params_values, true );
-
-		if ( isset( $row ) ) {
-			if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
-				$use_original = 1;
-			}
-		}
-	}
-
-	$filters = array( 'planid', 'groupid', 'status' );
-
-	foreach ( $filters as $filter ) {
-		if ( !isset( $filter_values[$filter] ) ) {
-			$filter_values[$filter] = array();
-
-			continue;
+		if ( $is_test ) {
+			$row->params['export_method'] = 'test';
 		}
 
-		if ( !is_array( $filter_values[$filter] ) ) {
-			if ( !empty( $filter_values[$filter] ) ) {
-				$filter_values[$filter] = array( $filter_values[$filter] );
-			} else {
-				$filter_values[$filter] = array();
-			}
-		}
-	}
+		// Create Parameters
 
-	if ( $is_test ) {
-		$row->params['export_method'] = 'test';
-	}
-
-	// Create Parameters
-
-	$params[] = array( 'userinfobox', 5 );
-
-	if ( $type == 'members' ) {
-		$params[] = array( 'section_paper', 'Compose Export' );
-		$params['params_remap']		= array( 'subarea_change', 'params' );
-		$params[] = array( 'div', '<div class="alert alert-info">' );
-		$params[] = array( 'p', '<p>Take users that fit these criteria:</p>' );
-		$params['groupid']			= array( 'list', '' );
-		$params['planid']			= array( 'list', '' );
-		$params['status']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="alert alert-warning">' );
-		$params[] = array( 'p', '<p>Order them like this:</p>' );
-		$params['orderby']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="alert alert-success">' );
-		$params[] = array( 'p', '<p>And use these details for each line of the export:</p>' );
-		$params['rewrite_rule']	= array( 'inputD', '[[user_id]];[[user_username]];[[subscription_expiration_date]]' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'section_end', '' );
-	} else {
-		$monthago = ( (int) gmdate('U') ) - ( 60*60*24 * 31 );
-
-		$params[] = array( 'section_paper', 'Compose Export' );
-		$params['params_remap']		= array( 'subarea_change', 'params' );
-		$params[] = array( 'div', '<div class="alert alert-info">' );
-		$params[] = array( 'p', '<p>Collect Sales Data from this range:</p>' );
-		$params['date_start']		= array( 'list_date', date( 'Y-m-d', $monthago ) );
-		$params['date_end']			= array( 'list_date', date( 'Y-m-d' ) );
-		$params['method']			= array( 'list', '' );
-		$params['planid']			= array( 'list', '' );
-		$params['groupid']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="alert alert-warning">' );
-		$params[] = array( 'p', '<p>Collate it like this:</p>' );
-		$params['collate']			= array( 'list', 'day' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="alert alert-success">' );
-		$params[] = array( 'p', '<p>Break down the data in each line like so:</p>' );
-		$params['breakdown']		= array( 'list', 'month' );
-		$params['breakdown_custom']	= array( 'inputD', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'section_end', '' );
-	}
-
-	if ( $type == 'members' ) {
 		$params[] = array( 'userinfobox', 5 );
-		$params[] = array( 'section_paper' );
-		$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
-		$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+
+		if ( $type == 'members' ) {
+			$params[] = array( 'section_paper', 'Compose Export' );
+			$params['params_remap']		= array( 'subarea_change', 'params' );
+			$params[] = array( 'div', '<div class="alert alert-info">' );
+			$params[] = array( 'p', '<p>Take users that fit these criteria:</p>' );
+			$params['groupid']			= array( 'list', '' );
+			$params['planid']			= array( 'list', '' );
+			$params['status']			= array( 'list', '' );
+			$params[] = array( 'div_end', '' );
+			$params[] = array( 'div', '<div class="alert alert-warning">' );
+			$params[] = array( 'p', '<p>Order them like this:</p>' );
+			$params['orderby']			= array( 'list', '' );
+			$params[] = array( 'div_end', '' );
+			$params[] = array( 'div', '<div class="alert alert-success">' );
+			$params[] = array( 'p', '<p>And use these details for each line of the export:</p>' );
+			$params['rewrite_rule']	= array( 'inputD', '[[user_id]];[[user_username]];[[subscription_expiration_date]]' );
+			$params[] = array( 'div_end', '' );
+			$params[] = array( 'section_end', '' );
+		} else {
+			$monthago = ( (int) gmdate('U') ) - ( 60*60*24 * 31 );
+
+			$params[] = array( 'section_paper', 'Compose Export' );
+			$params['params_remap']		= array( 'subarea_change', 'params' );
+			$params[] = array( 'div', '<div class="alert alert-info">' );
+			$params[] = array( 'p', '<p>Collect Sales Data from this range:</p>' );
+			$params['date_start']		= array( 'list_date', date( 'Y-m-d', $monthago ) );
+			$params['date_end']			= array( 'list_date', date( 'Y-m-d' ) );
+			$params['method']			= array( 'list', '' );
+			$params['planid']			= array( 'list', '' );
+			$params['groupid']			= array( 'list', '' );
+			$params[] = array( 'div_end', '' );
+			$params[] = array( 'div', '<div class="alert alert-warning">' );
+			$params[] = array( 'p', '<p>Collate it like this:</p>' );
+			$params['collate']			= array( 'list', 'day' );
+			$params[] = array( 'div_end', '' );
+			$params[] = array( 'div', '<div class="alert alert-success">' );
+			$params[] = array( 'p', '<p>Break down the data in each line like so:</p>' );
+			$params['breakdown']		= array( 'list', 'month' );
+			$params['breakdown_custom']	= array( 'inputD', '' );
+			$params[] = array( 'div_end', '' );
+			$params[] = array( 'section_end', '' );
+		}
+
+		if ( $type == 'members' ) {
+			$params[] = array( 'userinfobox', 5 );
+			$params[] = array( 'section_paper' );
+			$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
+			$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+			$params[] = array( 'section_end', '' );
+			$params[] = array( '2div_end', '' );
+		}
+
+		$params[] = array( '2div_end', '' );
+
+		$params[] = array( 'userinfobox', 5 );
+		$params[] = array( 'section_paper', 'Save or Load Export Presets' );
+		$params[] = array( 'div', '<div class="form-wide">' );
+		$params['selected_export']	= array( 'list', '' );
+		$params['delete']			= array( 'checkbox' );
+		$params['save']				= array( 'checkbox' );
+		$params['save_name']		= array( 'inputC', $pname );
+		$params[] = array( 'div_end', '' );
+		$params[] = array( 'div', '<div class="right-btns">' );
+		$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">' . aecHTML::Icon( 'upload' ) . '&nbsp;Load Preset</a>' );
+		$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download' ) . '&nbsp;Save Preset</a>' );
+		$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download-alt' ) . '&nbsp;Save Preset &amp; Exit</a>' );
+		$params[] = array( 'div_end', '' );
 		$params[] = array( 'section_end', '' );
 		$params[] = array( '2div_end', '' );
-	}
 
-	$params[] = array( '2div_end', '' );
+		$params[] = array( 'userinfobox', 5 );
+		$params[] = array( 'section_paper', 'Export' );
+		$params['export_method']	= array( 'list', '' );
+		$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
+		$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result">' . aecHTML::Icon( 'eye-open' ) . '&nbsp;Test Export</a>' );
+		$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">' . aecHTML::Icon( 'file' ) . '&nbsp;Export Now</a>' );
+		$params[] = array( '2div_end', '' );
+		$params[] = array( 'section_end', '' );
+		$params[] = array( '2div_end', '' );
 
-	$params[] = array( 'userinfobox', 5 );
-	$params[] = array( 'section_paper', 'Save or Load Export Presets' );
-	$params[] = array( 'div', '<div class="form-wide">' );
-	$params['selected_export']	= array( 'list', '' );
-	$params['delete']			= array( 'checkbox' );
-	$params['save']				= array( 'checkbox' );
-	$params['save_name']		= array( 'inputC', $pname );
-	$params[] = array( 'div_end', '' );
-	$params[] = array( 'div', '<div class="right-btns">' );
-	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">' . aecHTML::Icon( 'upload' ) . '&nbsp;Load Preset</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download' ) . '&nbsp;Save Preset</a>' );
-	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download-alt' ) . '&nbsp;Save Preset &amp; Exit</a>' );
-	$params[] = array( 'div_end', '' );
-	$params[] = array( 'section_end', '' );
-	$params[] = array( '2div_end', '' );
+		$params[] = array( 'userinfobox', 5 );
+		$params[] = array( 'div', '<div class="aec-settings-container" id="export-result">' );
+		$params[] = array( 'h4', '<h4>Preview</h4>' );
+		$params[] = array( '2div_end', '' );
 
-	$params[] = array( 'userinfobox', 5 );
-	$params[] = array( 'section_paper', 'Export' );
-	$params['export_method']	= array( 'list', '' );
-	$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
-	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result">' . aecHTML::Icon( 'eye-open' ) . '&nbsp;Test Export</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">' . aecHTML::Icon( 'file' ) . '&nbsp;Export Now</a>' );
-	$params[] = array( '2div_end', '' );
-	$params[] = array( 'section_end', '' );
-	$params[] = array( '2div_end', '' );
+		// Create a list of export options
+		// First, only the non-autosaved entries
+		$query = 'SELECT `id`, `name`, `created_date`, `lastused_date`'
+			. ' FROM #__acctexp_export' . ( ( $type == 'sales' ) ? '_sales' : '' )
+			. ' WHERE `system` = \''
+		;
+		$db->setQuery( $query . '0\'' );
+		$user_exports = $db->loadObjectList();
 
-	$params[] = array( 'userinfobox', 5 );
-	$params[] = array( 'div', '<div class="aec-settings-container" id="export-result">' );
-	$params[] = array( 'h4', '<h4>Preview</h4>' );
-	$params[] = array( '2div_end', '' );
+		// Then the autosaved entries
+		$db->setQuery( $query . '1\'' );
+		$system_exports = $db->loadObjectList();
 
-	// Create a list of export options
-	// First, only the non-autosaved entries
-	$query = 'SELECT `id`, `name`, `created_date`, `lastused_date`'
-		. ' FROM #__acctexp_export' . ( ( $type == 'sales' ) ? '_sales' : '' )
-		. ' WHERE `system` = \''
-	;
-	$db->setQuery( $query . '0\'' );
-	$user_exports = $db->loadObjectList();
+		$entries = count( $user_exports ) + count( $system_exports );
 
-	// Then the autosaved entries
-	$db->setQuery( $query . '1\'' );
-	$system_exports = $db->loadObjectList();
+		$m = 0;
+		if ( $entries > 0 ) {
+			$listitems = array();
+			$listitems[] = JHTML::_('select.option', 0, " --- Your Exports --- " );
 
-	$entries = count( $user_exports ) + count( $system_exports );
+			$user = false;
+			for ( $i=0; $i < $entries; $i++ ) {
+				if ( ( $i >= count( $user_exports ) ) && ( $user === false ) ) {
+					$user = $i;
 
-	$m = 0;
-	if ( $entries > 0 ) {
-		$listitems = array();
-		$listitems[] = JHTML::_('select.option', 0, " --- Your Exports --- " );
-
-		$user = false;
-		for ( $i=0; $i < $entries; $i++ ) {
-			if ( ( $i >= count( $user_exports ) ) && ( $user === false ) ) {
-				$user = $i;
-
-				$listitems[] = JHTML::_('select.option', 0, " --- Autosaves --- " );
-			}
-
-			if ( $user === false ) {
-				if ( !empty( $user_exports[$i]->name ) ) {
-					$used_date = ( $user_exports[$i]->lastused_date == '0000-00-00 00:00:00' ) ? 'never' : $user_exports[$i]->lastused_date;
-					$listitems[] = JHTML::_('select.option', $user_exports[$i]->id, substr( $user_exports[$i]->name, 0, 64 ) . ' - ' . 'last used: ' . $used_date . ', created: ' . $user_exports[$i]->created_date );
-				} else {
-					$m--;
+					$listitems[] = JHTML::_('select.option', 0, " --- Autosaves --- " );
 				}
+
+				if ( $user === false ) {
+					if ( !empty( $user_exports[$i]->name ) ) {
+						$used_date = ( $user_exports[$i]->lastused_date == '0000-00-00 00:00:00' ) ? 'never' : $user_exports[$i]->lastused_date;
+						$listitems[] = JHTML::_('select.option', $user_exports[$i]->id, substr( $user_exports[$i]->name, 0, 64 ) . ' - ' . 'last used: ' . $used_date . ', created: ' . $user_exports[$i]->created_date );
+					} else {
+						$m--;
+					}
+				} else {
+					$ix = $i - $user;
+					$used_date = ( $system_exports[$ix]->lastused_date == '0000-00-00 00:00:00' ) ? 'never' : $system_exports[$ix]->lastused_date;
+					$listitems[] = JHTML::_('select.option', $system_exports[$ix]->id, substr( $system_exports[$ix]->name, 0, 64 ) . ' - ' . 'last used: ' . $used_date . ', created: ' . $system_exports[$ix]->created_date );
+				}
+			}
+		} else {
+			$listitems[] = JHTML::_('select.option', 0, " --- No saved Preset available --- " );
+			$listitems[] = JHTML::_('select.option', 0, " --- Your Exports --- ", 'value', 'text', true );
+			$listitems[] = JHTML::_('select.option', 0, " --- Autosaves --- ", 'value', 'text', true );
+		}
+
+		$lists['selected_export'] = JHTML::_('select.genericlist', $listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries+$m+2 ) ) . '" class="col-sm-7"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );
+
+		// Get list of plans for filter
+		$query = 'SELECT `id`, `name`'
+			. ' FROM #__acctexp_plans'
+			. ' ORDER BY `ordering`'
+		;
+		$db->setQuery( $query );
+		$db_plans = $db->loadObjectList();
+
+		$lists['planid'] = '<select id="plan-filter-select" class="col-sm-3" name="planid[]" multiple="multiple" size="5">';
+		foreach ( $db_plans as $plan ) {
+			$lists['planid'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_values['planid'] ) ? ' selected="selected"' : '' ) . '>' . $plan->name . '</option>';
+		}
+		$lists['planid'] .= '</select>';
+
+		$grouplist = ItemGroupHandler::getTree();
+
+		$lists['groupid'] = '<select id="group-filter-select" class="col-sm-3" name="groupid[]" multiple="multiple" size="5">';
+		foreach ( $grouplist as $glisti ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected"' : '' ) . '>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
 			} else {
-				$ix = $i - $user;
-				$used_date = ( $system_exports[$ix]->lastused_date == '0000-00-00 00:00:00' ) ? 'never' : $system_exports[$ix]->lastused_date;
-				$listitems[] = JHTML::_('select.option', $system_exports[$ix]->id, substr( $system_exports[$ix]->name, 0, 64 ) . ' - ' . 'last used: ' . $used_date . ', created: ' . $system_exports[$ix]->created_date );
+				$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected"' : '' ) . '>' . $glisti[1] . '</option>';
 			}
 		}
-	} else {
-		$listitems[] = JHTML::_('select.option', 0, " --- No saved Preset available --- " );
-		$listitems[] = JHTML::_('select.option', 0, " --- Your Exports --- ", 'value', 'text', true );
-		$listitems[] = JHTML::_('select.option', 0, " --- Autosaves --- ", 'value', 'text', true );
-	}
+		$lists['groupid'] .= '</select>';
 
-	$lists['selected_export'] = JHTML::_('select.genericlist', $listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries+$m+2 ) ) . '" class="col-sm-7"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );
+		if ( $type == 'members' ) {
+			$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
+								'pending'	=> JText::_('AEC_SEL_PENDING'),
+								'active'	=> JText::_('AEC_SEL_ACTIVE'),
+								'expired'	=> JText::_('AEC_SEL_EXPIRED'),
+								'closed'	=> JText::_('AEC_SEL_CLOSED'),
+								'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
+								'hold'		=> JText::_('AEC_SEL_HOLD'),
+								'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
+			);
 
-	// Get list of plans for filter
-	$query = 'SELECT `id`, `name`'
-		. ' FROM #__acctexp_plans'
-		. ' ORDER BY `ordering`'
-	;
-	$db->setQuery( $query );
-	$db_plans = $db->loadObjectList();
+			$lists['status'] = '<select id="status-group-select" name="status[]" multiple="multiple" size="5">';
+			foreach ( $status as $id => $txt ) {
+				$lists['status'] .= '<option value="' . $id . '"' . ( in_array( $id, $filter_values['status'] ) ? ' selected="selected"' : '' ) . '>' . $txt . '</option>';
+			}
+			$lists['status'] .= '</select>';
 
-	$lists['planid'] = '<select id="plan-filter-select" class="col-sm-3" name="planid[]" multiple="multiple" size="5">';
-	foreach ( $db_plans as $plan ) {
-		$lists['planid'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_values['planid'] ) ? ' selected="selected"' : '' ) . '>' . $plan->name . '</option>';
-	}
-	$lists['planid'] .= '</select>';
+			// Ordering
+			$sel = array();
+			$sel[] = JHTML::_('select.option', 'expiration ASC',	JText::_('EXP_ASC') );
+			$sel[] = JHTML::_('select.option', 'expiration DESC',	JText::_('EXP_DESC') );
+			$sel[] = JHTML::_('select.option', 'name ASC',			JText::_('NAME_ASC') );
+			$sel[] = JHTML::_('select.option', 'name DESC',			JText::_('NAME_DESC') );
+			$sel[] = JHTML::_('select.option', 'username ASC',		JText::_('LOGIN_ASC') );
+			$sel[] = JHTML::_('select.option', 'username DESC',		JText::_('LOGIN_DESC') );
+			$sel[] = JHTML::_('select.option', 'signup_date ASC',	JText::_('SIGNUP_ASC') );
+			$sel[] = JHTML::_('select.option', 'signup_date DESC',	JText::_('SIGNUP_DESC') );
+			$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	JText::_('LASTPAY_ASC') );
+			$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	JText::_('LASTPAY_DESC') );
+			$sel[] = JHTML::_('select.option', 'plan_name ASC',		JText::_('PLAN_ASC') );
+			$sel[] = JHTML::_('select.option', 'plan_name DESC',	JText::_('PLAN_DESC') );
+			$sel[] = JHTML::_('select.option', 'status ASC',		JText::_('STATUS_ASC') );
+			$sel[] = JHTML::_('select.option', 'status DESC',		JText::_('STATUS_DESC') );
+			$sel[] = JHTML::_('select.option', 'type ASC',			JText::_('TYPE_ASC') );
+			$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('TYPE_DESC') );
 
-	$grouplist = ItemGroupHandler::getTree();
-
-	$lists['groupid'] = '<select id="group-filter-select" class="col-sm-3" name="groupid[]" multiple="multiple" size="5">';
-	foreach ( $grouplist as $glisti ) {
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected"' : '' ) . '>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
+			$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="1"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
 		} else {
-			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected"' : '' ) . '>' . $glisti[1] . '</option>';
-		}
-	}
-	$lists['groupid'] .= '</select>';
+			$collate_selection = array();
+			$collate_selection[] = JHTML::_('select.option', 'day',	JText::_('Day') );
+			$collate_selection[] = JHTML::_('select.option', 'week',	JText::_('Week') );
+			$collate_selection[] = JHTML::_('select.option', 'month',		JText::_('Month') );
+			$collate_selection[] = JHTML::_('select.option', 'year',		JText::_('Year') );
 
-	if ( $type == 'members' ) {
-		$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
-							'pending'	=> JText::_('AEC_SEL_PENDING'),
-							'active'	=> JText::_('AEC_SEL_ACTIVE'),
-							'expired'	=> JText::_('AEC_SEL_EXPIRED'),
-							'closed'	=> JText::_('AEC_SEL_CLOSED'),
-							'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
-							'hold'		=> JText::_('AEC_SEL_HOLD'),
-							'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
-		);
+			$selected_collate = 0;
+			if ( !empty( $options_values['collate'] ) ) {
+				$selected_collate = $options_values['collate'];
+			} else {
+				$selected_collate = 'day';
+			}
 
-		$lists['status'] = '<select id="status-group-select" name="status[]" multiple="multiple" size="5">';
-		foreach ( $status as $id => $txt ) {
-			$lists['status'] .= '<option value="' . $id . '"' . ( in_array( $id, $filter_values['status'] ) ? ' selected="selected"' : '' ) . '>' . $txt . '</option>';
-		}
-		$lists['status'] .= '</select>';
+			$lists['collate'] = JHTML::_('select.genericlist', $collate_selection, 'collate', 'size="1"', 'value', 'text', $selected_collate);
 
-		// Ordering
-		$sel = array();
-		$sel[] = JHTML::_('select.option', 'expiration ASC',	JText::_('EXP_ASC') );
-		$sel[] = JHTML::_('select.option', 'expiration DESC',	JText::_('EXP_DESC') );
-		$sel[] = JHTML::_('select.option', 'name ASC',			JText::_('NAME_ASC') );
-		$sel[] = JHTML::_('select.option', 'name DESC',			JText::_('NAME_DESC') );
-		$sel[] = JHTML::_('select.option', 'username ASC',		JText::_('LOGIN_ASC') );
-		$sel[] = JHTML::_('select.option', 'username DESC',		JText::_('LOGIN_DESC') );
-		$sel[] = JHTML::_('select.option', 'signup_date ASC',	JText::_('SIGNUP_ASC') );
-		$sel[] = JHTML::_('select.option', 'signup_date DESC',	JText::_('SIGNUP_DESC') );
-		$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	JText::_('LASTPAY_ASC') );
-		$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	JText::_('LASTPAY_DESC') );
-		$sel[] = JHTML::_('select.option', 'plan_name ASC',		JText::_('PLAN_ASC') );
-		$sel[] = JHTML::_('select.option', 'plan_name DESC',	JText::_('PLAN_DESC') );
-		$sel[] = JHTML::_('select.option', 'status ASC',		JText::_('STATUS_ASC') );
-		$sel[] = JHTML::_('select.option', 'status DESC',		JText::_('STATUS_DESC') );
-		$sel[] = JHTML::_('select.option', 'type ASC',			JText::_('TYPE_ASC') );
-		$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('TYPE_DESC') );
+			$breakdown_selection = array();
+			$breakdown_selection[] = JHTML::_('select.option', '0',	JText::_('None') );
+			$breakdown_selection[] = JHTML::_('select.option', 'plan',	JText::_('Plan') );
+			$breakdown_selection[] = JHTML::_('select.option', 'group',	JText::_('Group') );
 
-		$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="1"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
-	} else {
-		$collate_selection = array();
-		$collate_selection[] = JHTML::_('select.option', 'day',	JText::_('Day') );
-		$collate_selection[] = JHTML::_('select.option', 'week',	JText::_('Week') );
-		$collate_selection[] = JHTML::_('select.option', 'month',		JText::_('Month') );
-		$collate_selection[] = JHTML::_('select.option', 'year',		JText::_('Year') );
+			$selected_breakdown = 0;
+			if ( !empty( $options_values['breakdown'] ) ) {
+				$selected_breakdown = $options_values['breakdown'];
+			}
 
-		$selected_collate = 0;
-		if ( !empty( $options_values['collate'] ) ) {
-			$selected_collate = $options_values['collate'];
-		} else {
-			$selected_collate = 'day';
-		}
+			$lists['breakdown'] = JHTML::_('select.genericlist', $breakdown_selection, 'breakdown', 'size="1"', 'value', 'text', $selected_breakdown);
 
-		$lists['collate'] = JHTML::_('select.genericlist', $collate_selection, 'collate', 'size="1"', 'value', 'text', $selected_collate);
+			$processors = PaymentProcessorHandler::getInstalledObjectList();
 
-		$breakdown_selection = array();
-		$breakdown_selection[] = JHTML::_('select.option', '0',	JText::_('None') );
-		$breakdown_selection[] = JHTML::_('select.option', 'plan',	JText::_('Plan') );
-		$breakdown_selection[] = JHTML::_('select.option', 'group',	JText::_('Group') );
+			$proc_list = array();
+			$selected_proc = array();
+			foreach ( $processors as $proc ) {
+				$pp = new PaymentProcessor();
+				$pp->loadName( $proc->name );
+				$pp->getInfo();
 
-		$selected_breakdown = 0;
-		if ( !empty( $options_values['breakdown'] ) ) {
-			$selected_breakdown = $options_values['breakdown'];
-		}
+				$proc_list[] = JHTML::_('select.option', $pp->id, $pp->info['longname'] );
 
-		$lists['breakdown'] = JHTML::_('select.genericlist', $breakdown_selection, 'breakdown', 'size="1"', 'value', 'text', $selected_breakdown);
-
-		$processors = PaymentProcessorHandler::getInstalledObjectList();
-
-		$proc_list = array();
-		$selected_proc = array();
-		foreach ( $processors as $proc ) {
-			$pp = new PaymentProcessor();
-			$pp->loadName( $proc->name );
-			$pp->getInfo();
-
-			$proc_list[] = JHTML::_('select.option', $pp->id, $pp->info['longname'] );
-
-			if ( !empty( $filter_values['method'] ) ) {
-				foreach ( $filter_values['method'] as $id ) {
-					if ( $id == $pp->id ) {
-						$selected_proc[] = JHTML::_('select.option', $id, $pp->info['longname'] );
+				if ( !empty( $filter_values['method'] ) ) {
+					foreach ( $filter_values['method'] as $id ) {
+						if ( $id == $pp->id ) {
+							$selected_proc[] = JHTML::_('select.option', $id, $pp->info['longname'] );
+						}
 					}
 				}
 			}
+
+			$lists['method'] = JHTML::_('select.genericlist', $proc_list, 'method[]', 'size="8" multiple="multiple"', 'value', 'text', $selected_proc);
 		}
 
-		$lists['method'] = JHTML::_('select.genericlist', $proc_list, 'method[]', 'size="8" multiple="multiple"', 'value', 'text', $selected_proc);
-	}
+		// Export Method
+		$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/lib/export', 'php', false, true );
 
-	// Export Method
-	$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/lib/export', 'php', false, true );
-
-	$sel = array();
-	foreach ( $list as $ltype ) {
-		$ltype = str_replace( '.php', '', $ltype );
-		if ( $ltype != 'test' ) {
-			$sel[] = JHTML::_('select.option', $ltype, $ltype );
-		}
-	}
-
-	if ( empty( $params_values['export_method'] ) ) {
-		$params_values['export_method'] = 'csv';
-	}
-
-	$lists['export_method'] = JHTML::_('select.genericlist', $sel, 'export_method', 'class="inputbox" size="1"', 'value', 'text', $params_values['export_method'] );
-
-	$settings = new aecSettings ( 'export', 'general' );
-
-	// Repackage the objects as array
-	foreach( $getpost as $name => $array ) {
-		$field = $name . '_values';
-		foreach( $array as $vname ) {
-			if ( !empty( $$field->$name ) ) {
-				$settingsparams[$name] = $$field->$name;
-			} else {
-				$settingsparams[$name] = "";
+		$sel = array();
+		foreach ( $list as $ltype ) {
+			$ltype = str_replace( '.php', '', $ltype );
+			if ( $ltype != 'test' ) {
+				$sel[] = JHTML::_('select.option', $ltype, $ltype );
 			}
 		}
-	}
 
-	if ( empty( $params_values['rewrite_rule'] ) ) {
-		//$params_values['rewrite_rule'] = '[[user_id]];[[user_username]];[[subscription_expiration_date]]';
-	}
+		if ( empty( $params_values['export_method'] ) ) {
+			$params_values['export_method'] = 'csv';
+		}
 
-	$settingsparams = array_merge( $filter_values, $options_values, $params_values );
+		$lists['export_method'] = JHTML::_('select.genericlist', $sel, 'export_method', 'class="inputbox" size="1"', 'value', 'text', $params_values['export_method'] );
 
-	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+		$settings = new aecSettings ( 'export', 'general' );
 
-	// Call HTML Class
-	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+		// Repackage the objects as array
+		foreach( $getpost as $name => $array ) {
+			$field = $name . '_values';
+			foreach( $array as $vname ) {
+				if ( !empty( $$field->$name ) ) {
+					$settingsparams[$name] = $$field->$name;
+				} else {
+					$settingsparams[$name] = "";
+				}
+			}
+		}
 
-	if ( ( $cmd_export ) && !empty( $params_values['export_method'] ) ) {
-		if ( $use_original ) {
-			$row->useExport();
+		if ( empty( $params_values['rewrite_rule'] ) ) {
+			//$params_values['rewrite_rule'] = '[[user_id]];[[user_username]];[[subscription_expiration_date]]';
+		}
+
+		$settingsparams = array_merge( $filter_values, $options_values, $params_values );
+
+		$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+		// Call HTML Class
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+		if ( ( $cmd_export ) && !empty( $params_values['export_method'] ) ) {
+			if ( $use_original ) {
+				$row->useExport();
+			} else {
+				$autorow->useExport();
+			}
+		}
+
+		if ( $cmd_save ) {
+			aecRedirect( 'index.php?option=com_acctexp&task=showCentral' );
 		} else {
-			$autorow->useExport();
+			HTML_AcctExp::export( $type, $aecHTML );
 		}
 	}
 
-	if ( $cmd_save ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=showCentral' );
-	} else {
-		HTML_AcctExp::export( $type, $aecHTML );
+}
+
+class aecAdminHacks extends aecAdminEntity
+{
+	public function hack( $filename, $check_hack, $undohack, $checkonly=false )
+	{
+		$db = JFactory::getDBO();
+
+		$app = JFactory::getApplication();
+
+		$aec_hack_start				= "// AEC HACK %s START" . "\n";
+		$aec_hack_end				= "// AEC HACK %s END" . "\n";
+
+		$aec_condition_start		= 'if (file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" )) {' . "\n";
+
+		$aec_condition_end			= '}' . "\n";
+
+		$aec_include_class			= 'include_once(JPATH_SITE . "/components/com_acctexp/acctexp.class.php");' . "\n";
+
+		$aec_verification_check		= "AECToolBox::VerifyUsername( %s );" . "\n";
+		$aec_userchange_clause		= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($row, $_POST, \'%s\');' . "\n";
+		$aec_userchange_clauseCB12	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userComplete, $_POST, \'%s\');' . "\n";
+		$aec_userchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($userid, $post, \'%s\');' . "\n";
+		$aec_userregchange_clause15	= '$mih = new microIntegrationHandler();' . "\n" . '$mih->userchange($user, $post, \'%s\');' . "\n";
+
+		$aec_global_call			= "\n";
+
+		$aec_redirect_notallowed	= 'aecRedirect( $mosConfig_live_site . "/index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+		$aec_redirect_notallowed15	= '$app = JFactory::getApplication();' . "\n" . '$app->redirect( "index.php?option=com_acctexp&task=NotAllowed" );' . "\n";
+
+		$aec_redirect_subscribe		= 'aecRedirect( JURI::root() . \'index.php?option=com_acctexp&task=subscribe\' );' . "\n";
+
+		$aec_normal_hack = $aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. $aec_redirect_notallowed
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_jhack1 = $aec_hack_start
+			. 'function mosNotAuth($override=false) {' . "\n"
+			. $aec_global_call
+			. $aec_condition_start
+			. 'if (!$override) {' . "\n"
+			. $aec_redirect_notallowed
+			. $aec_condition_end
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_jhack2 = $aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. $aec_redirect_notallowed
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_jhack3 = $aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. $aec_include_class
+			. sprintf( $aec_verification_check, '$credentials[\'username\']' )
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_cbmhack =	$aec_hack_start
+			. "mosNotAuth(true);" . "\n"
+			. $aec_hack_end;
+
+		$aec_uchangehack =	$aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. $aec_include_class
+			. $aec_userchange_clause
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_uchangehackCB12 = str_replace( '$row', '$userComplete', $aec_uchangehack );
+		$aec_uchangehackCB12x = str_replace( '$row', '$this', $aec_uchangehack );
+
+		$aec_uchangehackCB12 =	$aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. $aec_include_class
+			. $aec_userchange_clauseCB12
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_uchangehack15 =	$aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. $aec_include_class
+			. $aec_userregchange_clause15
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_uchangereghack15 =	$aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. $aec_include_class
+			. $aec_userchange_clause15
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_rhackbefore =	$aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. 'if (!isset($_POST[\'planid\'])) {' . "\n"
+			. $aec_include_class
+			. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+			. $aec_condition_end
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_rhackbefore_fix = str_replace("planid", "usage", $aec_rhackbefore);
+
+		$aec_rhackbefore2 =	$aec_hack_start
+			. $aec_global_call . '$app = JFactory::getApplication();' . "\n"
+			. $aec_condition_start
+			. 'if (!isset($_POST[\'usage\'])) {' . "\n"
+			. $aec_include_class
+			. 'aecRedirect(JURI::root() . "index.php?option=com_acctexp&amp;task=subscribe");' . "\n"
+			. $aec_condition_end
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_optionhack =	$aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. '$option = "com_acctexp";' . "\n"
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$aec_regvarshack =	'<?php' . "\n"
+			. $aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. '?>' . "\n"
+			. '<input type="hidden" name="planid" value="<?php echo $_POST[\'planid\'];?>" />' . "\n"
+			. '<input type="hidden" name="processor" value="<?php echo $_POST[\'processor\'];?>" />' . "\n"
+			. '<?php' . "\n"
+			. 'if ( isset( $_POST[\'recurring\'] ) ) {'
+			. '?>' . "\n"
+			. '<input type="hidden" name="recurring" value="<?php echo $_POST[\'recurring\'];?>" />' . "\n"
+			. '<?php' . "\n"
+			. '}' . "\n"
+			. $aec_condition_end
+			. $aec_hack_end
+			. '?>' . "\n";
+
+		$aec_regvarshack_fix = str_replace( 'planid', 'usage', $aec_regvarshack);
+
+		$aec_regvarshack_fixcb = $aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. 'if ( isset( $_POST[\'usage\'] ) ) {' . "\n"
+			. '$regFormTag .= \'<input type="hidden" name="usage" value="\' . $_POST[\'usage\'] . \'" />\';' . "\n"
+			. '}' . "\n"
+			. 'if ( isset( $_POST[\'processor\'] ) ) {' . "\n"
+			. '$regFormTag .= \'<input type="hidden" name="processor" value="\' . $_POST[\'processor\'] . \'" />\';' . "\n"
+			. '}' . "\n"
+			. 'if ( isset( $_POST[\'recurring\'] ) ) {' . "\n"
+			. '$regFormTag .= \'<input type="hidden" name="recurring" value="\' . $_POST[\'recurring\'] . \'" />\';' . "\n"
+			. '}' . "\n"
+			. $aec_condition_end
+			. $aec_hack_end
+		;
+
+		$aec_regredirect = $aec_hack_start
+			. $aec_global_call
+			. $aec_condition_start
+			. $aec_redirect_subscribe
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$juser_blind = $aec_hack_start
+			. 'case \'blind\':'. "\n"
+			. 'break;'. "\n"
+			. $aec_hack_end;
+
+		$aec_j15hack1 =  $aec_hack_start
+			. 'if ( $error->message == JText::_("ALERTNOTAUTH") ) {'
+			. $aec_condition_start
+			. $aec_redirect_notallowed15
+			. $aec_condition_end
+			. $aec_condition_end
+			. $aec_hack_end;
+
+		$n = 'errorphp';
+		$hacks[$n]['name']			=	'error.php ' . JText::_('AEC_HACK_HACK') . ' #1';
+		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_NOTAUTH');
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/libraries/joomla/error/error.php';
+		$hacks[$n]['read']			=	'// Initialize variables';
+		$hacks[$n]['insert']		=	sprintf( $aec_j15hack1, $n, $n ) . "\n" . $hacks[$n]['read'];
+		$hacks[$n]['legacy']		=	1;
+
+		$n = 'joomlaphp4';
+		$hacks[$n]['name']			=	'authentication.php';
+		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY_PLUGIN');
+		$hacks[$n]['uncondition']	=	'joomlaphp';
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/libraries/joomla/user/authentication.php';
+		$hacks[$n]['read'] 			=	'if(empty($response->username)) {';
+		$hacks[$n]['insert']		=	sprintf($aec_jhack3, $n, $n) . "\n" . $hacks[$n]['read'];
+		$hacks[$n]['legacy']		=	1;
+
+		if ( aecComponentHelper::detect_component( 'UHP2' ) ) {
+			$n = 'uhp2menuentry';
+			$hacks[$n]['name']			=	JText::_('AEC_HACKS_UHP2');
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_UHP2_DESC');
+			$hacks[$n]['uncondition']	=	'uhp2managephp';
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_uhp2_manage.php';
+			$hacks[$n]['read']			=	'<?php echo "$settings"; ?></a>';
+			$hacks[$n]['insert']		=	sprintf( $hacks[$n]['read'] . "\n</li>\n<?php " . $aec_hack_start . '?>'
+				. '<li class="latest<?php echo $moduleclass_sfx; ?>">'
+				. '<a href="index.php?option=com_acctexp&task=subscriptionDetails" class="latest<?php echo $moduleclass_sfx; ?>">'
+				. JText::_('AEC_SPEC_MENU_ENTRY') . '</a>'."\n<?php ".$aec_hack_end."?>", $n, $n );
+		}
+
+		if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
+			$n = 'comprofilerphp2';
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['read']			=	'function registerForm( $option, $emailpass, $regErrorMSG = null ) {';
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_optionhack, $n, $n);
+			$hacks[$n]['legacy']		=	1;
+
+			$n = 'comprofilerphp6';
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #6';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB6');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['read']			=	'HTML_comprofiler::registerForm( $option, $emailpass, $userComplete, $regErrorMSG );';
+			$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
+			$hacks[$n]['legacy']		=	1;
+
+			$n = 'comprofilerhtml2';
+			$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('AEC_HACK_HACK') . ' #2';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB_HTML2');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
+			$hacks[$n]['read']			=	'echo HTML_comprofiler::_cbTemplateRender( $user, \'RegisterForm\'';
+			$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fixcb, $n, $n) . "\n" . $hacks[$n]['read'];
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
+			$hacks[$n]['legacy']		=	1;
+
+		} elseif ( aecComponentHelper::detect_component( 'CB' ) ) {
+			$n = 'comprofilerphp2';
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['read']			=	'if ($regErrorMSG===null) {';
+			$hacks[$n]['insert']		=	sprintf($aec_optionhack, $n, $n) . "\n" . $hacks[$n]['read'];
+
+			$n = 'comprofilerphp6';
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #6';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB6');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['condition']		=	'comprofilerphp2';
+			$hacks[$n]['uncondition']	=	'comprofilerphp3';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['read']			=	'HTML_comprofiler::registerForm';
+			$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
+
+			$n = 'comprofilerhtml2';
+			$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('AEC_HACK_HACK') . ' #2';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB_HTML2');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['uncondition']	=	'comprofilerhtml';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
+			$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
+
+		} elseif ( aecComponentHelper::detect_component( 'CBE' ) ) {
+			$n = 'comprofilerphp2';
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['read']			=	'$rowFieldValues=array();';
+			$hacks[$n]['insert']		=	sprintf($aec_optionhack, $n, $n) . "\n" . $hacks[$n]['read'];
+
+			$n = 'comprofilerphp6';
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #6';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB6');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['condition']		=	'comprofilerphp2';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+			$hacks[$n]['read']			=	'HTML_comprofiler::registerForm';
+			$hacks[$n]['insert']		=	sprintf($aec_rhackbefore2, $n, $n) . "\n" . $hacks[$n]['read'];
+
+			$n = 'comprofilerhtml2';
+			$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('AEC_HACK_HACK') . ' #2';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB_HTML2');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['uncondition']	=	'comprofilerhtml';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
+			$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
+		} elseif ( aecComponentHelper::detect_component( 'JUSER' ) ) {
+			$n = 'juserhtml1';
+			$hacks[$n]['name']			=	'juser.html.php ' . JText::_('AEC_HACK_HACK') . ' #1';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_JUSER_HTML1');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.html.php';
+			$hacks[$n]['read']			=	'<input type="hidden" name="option" value="com_juser" />';
+			$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fix, $n, $n) . "\n" . '<input type="hidden" name="option" value="com_acctexp" />';
+
+			$n = 'juserphp1';
+			$hacks[$n]['name']			=	'juser.php ' . JText::_('AEC_HACK_HACK') . ' #1';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_JUSER_PHP1');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.php';
+			$hacks[$n]['read']			=	'HTML_JUser::userEdit( $row, $option, $params, $ext_row, \'saveUserRegistration\' );';
+			$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
+
+			$n = 'juserphp2';
+			$hacks[$n]['name']			=	'juser.php ' . JText::_('AEC_HACK_HACK') . ' #2';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_JUSER_PHP2');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.php';
+			$hacks[$n]['read']			=	'default:';
+			$hacks[$n]['insert']		=	sprintf($juser_blind, $n, $n) . "\n" . $hacks[$n]['read'];
+		} else {
+
+			$n = 'registrationhtml2';
+			$hacks[$n]['name']			=	'registration.html.php ' . JText::_('AEC_HACK_HACK') . ' #2';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['uncondition']	=	'registrationhtml';
+			$hacks[$n]['condition']		=	'registrationphp2';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/views/register/tmpl/default.php';
+			$hacks[$n]['read']			=	'<input type="hidden" name="task" value="register_save" />';
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
+			$hacks[$n]['legacy']		=	1;
+
+			$n = 'registrationphp6';
+			$hacks[$n]['name']			=	'user.php';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_REG5');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['uncondition']	=	'registrationphp5';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
+			$hacks[$n]['read']			=	'JRequest::setVar(\'view\', \'register\');';
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regredirect, $n, $n);
+			$hacks[$n]['legacy']		=	1;
+		}
+
+		if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
+			if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
+				$n = 'comprofilerphp7';
+				$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #7';
+				$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
+				$hacks[$n]['type']			=	'file';
+				$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+				$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
+				$hacks[$n]['insert']		=	sprintf( $aec_uchangehackCB12, $n, 'registration', $n ) . "\n" . $hacks[$n]['read'];
+				$hacks[$n]['legacy']		=	1;
+
+				$n = 'comprofilerphp8';
+				$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #8';
+				$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
+				$hacks[$n]['type']			=	'file';
+				$hacks[$n]['filename']		=	JPATH_SITE . '/administrator/components/com_comprofiler/library/cb/cb.tables.php';
+				$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array( &$this, &$this, true ) );';
+				$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehackCB12x, $n, 'user', $n );
+				$hacks[$n]['legacy']		=	1;
+			} else {
+				$n = 'comprofilerphp4';
+				$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #4';
+				$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
+				$hacks[$n]['type']			=	'file';
+				$hacks[$n]['filename']		=	JPATH_SITE . "/components/com_comprofiler/comprofiler.php";
+				$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
+				$hacks[$n]['insert']		=	sprintf($aec_uchangehack, $n, "user", $n) . "\n" . $hacks[$n]['read'];
+				$hacks[$n]['legacy']		=	1;
+
+				$n = 'comprofilerphp5';
+				$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #5';
+				$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI2');
+				$hacks[$n]['type']			=	'file';
+				$hacks[$n]['filename']		=	JPATH_SITE . "/components/com_comprofiler/comprofiler.php";
+				$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array($row, $rowExtras, true));';
+				$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_uchangehack, $n, "registration",$n);
+				$hacks[$n]['legacy']		=	1;
+
+				$n = 'comprofilerphp7';
+				$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #7';
+				$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
+				$hacks[$n]['type']			=	'file';
+				$hacks[$n]['uncondition']	=	'comprofilerphp4';
+				$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+				$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
+				$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'registration', $n ) . "\n" . $hacks[$n]['read'];
+
+				$n = 'comprofilerphp8';
+				$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #8';
+				$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
+				$hacks[$n]['type']			=	'file';
+				$hacks[$n]['uncondition']	=	'comprofilerphp5';
+				$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
+				$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array($row, $rowExtras, true));';
+				$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangehack, $n, 'user', $n );
+			}
+		} else {
+			$n = 'userphp';
+			$hacks[$n]['name']			=	'user.php';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
+			$hacks[$n]['read']			=	'if ($model->store($post)) {';
+			$hacks[$n]['insert']		=	sprintf( $aec_uchangehack15, $n, "user", $n ) . "\n" . $hacks[$n]['read'];
+			$hacks[$n]['legacy']		=	1;
+
+			$n = 'registrationphp1';
+			$hacks[$n]['name']			=	'registration.php ' . JText::_('AEC_HACK_HACK') . ' #1';
+			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
+			$hacks[$n]['type']			=	'file';
+			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
+			$hacks[$n]['read']			=	'UserController::_sendMail($user, $password);';
+			$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf( $aec_uchangereghack15, $n, "registration", $n );
+			$hacks[$n]['legacy']		=	1;
+		}
+
+		$n = 'adminuserphp';
+		$hacks[$n]['name']			=	'admin.user.php';
+		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
+		$hacks[$n]['type']			=	'file';
+		$hacks[$n]['filename']		=	JPATH_SITE . '/administrator/components/com_users/controller.php';
+		$hacks[$n]['read']			=	'if (!$user->save())';
+		$hacks[$n]['insert']		=	sprintf( $aec_uchangehack15, $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
+		$hacks[$n]['legacy']	=	1;
+
+		if ( aecComponentHelper::detect_component( 'CBM' ) ) {
+			if ( !aecComponentHelper::detect_component( 'CB1.2' ) ) {
+				$n = 'comprofilermoderator';
+				$hacks[$n]['name']			=	'comprofilermoderator.php';
+				$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CBM');
+				$hacks[$n]['type']			=	'file';
+				$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_comprofilermoderator.php';
+				$hacks[$n]['read']			=	'mosNotAuth();';
+				$hacks[$n]['insert']		=	sprintf( $aec_cbmhack, $n, $n );
+			}
+		}
+
+		$mih = new microIntegrationHandler();
+		$new_hacks = $mih->getHacks();
+
+		if ( is_array( $new_hacks ) ) {
+			$hacks = array_merge( $hacks, $new_hacks );
+		}
+
+		// Receive the status for the hacks
+		foreach ( $hacks as $name => $hack ) {
+
+			$hacks[$name]['status'] = 0;
+
+			if ( !empty( $hack['filename'] ) ) {
+				if ( !file_exists( $hack['filename'] ) ) {
+					continue;
+				}
+			}
+
+			if ( $hack['type'] ) {
+				switch( $hack['type'] ) {
+					case 'file':
+						if ( $hack['filename'] != 'UNKNOWN' ) {
+							$originalFileHandle = fopen( $hack['filename'], 'r' );
+							$oldData			= fread( $originalFileHandle, filesize($hack['filename'] ) );
+							fclose( $originalFileHandle );
+
+							if ( strpos( $oldData, 'AEC HACK START' ) || strpos( $oldData, 'AEC CHANGE START' )) {
+								$hacks[$name]['status'] = 'legacy';
+							} else {
+								if ( ( strpos( $oldData, 'AEC HACK ' . $name . ' START' ) > 0 ) || ( strpos( $oldData, 'AEC CHANGE ' . $name . ' START' ) > 0 )) {
+									$hacks[$name]['status'] = 1;
+								}
+							}
+
+							if ( function_exists( 'posix_getpwuid' ) ) {
+								$hacks[$name]['fileinfo'] = posix_getpwuid( fileowner( $hack['filename'] ) );
+							}
+						}
+						break;
+
+					case 'menuentry':
+						$query = 'SELECT COUNT(*)'
+							. ' FROM #__menu'
+							. ' WHERE `link` = \'' . JURI::root()  . '/index.php?option=com_acctexp&task=subscriptionDetails\''
+						;
+						$db->setQuery( $query );
+						$count = $db->loadResult();
+
+						if ( $count ) {
+							$hacks[$name]['status'] = 1;
+						}
+						break;
+				}
+			}
+		}
+
+		if ( $checkonly ) {
+			return $hacks[$filename]['status'];
+		}
+
+		// Commit the hacks
+		if ( !$check_hack ) {
+
+			switch( $hacks[$filename]['type'] ) {
+				case 'file':
+					// mic: fix if CMS is not Joomla or Mambo
+					if ( $hack['filename'] != 'UNKNOWN' ) {
+						$originalFileHandle = fopen( $hacks[$filename]['filename'], 'r' ) or die ("Cannot open ".$hacks[$filename]['filename']);
+						// Transfer File into variable $oldData
+						$oldData = fread( $originalFileHandle, filesize( $hacks[$filename]['filename'] ) );
+						fclose( $originalFileHandle );
+
+						if ( !$undohack ) { // hack
+							$newData = str_replace( $hacks[$filename]['read'], $hacks[$filename]['insert'], $oldData );
+
+							//make a backup
+							if ( !$this->backupFile( $hacks[$filename]['filename'], $hacks[$filename]['filename'] . '.aec-backup' ) ) {
+								// Echo error message
+							}
+
+						} else { // undo hack
+							if ( strcmp( $hacks[$filename]['status'], 'legacy' ) === 0 ) {
+								$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).START\\n.*\/\/.AEC.(HACK|CHANGE).END\\n/s', $hacks[$filename]['read'], $oldData );
+							} else {
+								if ( strpos( $oldData, $hacks[$filename]['insert'] ) ) {
+									if ( isset( $hacks[$filename]['oldread'] ) && isset( $hacks[$filename]['oldinsert'] ) ) {
+										$newData = str_replace( $hacks[$filename]['oldinsert'], $hacks[$filename]['oldread'], $oldData );
+									}
+
+									$newData = str_replace( $hacks[$filename]['insert'], $hacks[$filename]['read'], $oldData );
+								} else {
+									$newData = preg_replace( '/\/\/.AEC.(HACK|CHANGE).' . $filename . '.START\\n.*\/\/.AEC.(HACK|CHANGE).' . $filename . '.END\\n/s', $hacks[$filename]['read'], $oldData );
+								}
+							}
+						}
+
+						$oldperms = fileperms( $hacks[$filename]['filename'] );
+						chmod( $hacks[$filename]['filename'], $oldperms | 0222 );
+
+						if ( $fp = fopen( $hacks[$filename]['filename'], 'wb' ) ) {
+							fwrite( $fp, $newData, strlen( $newData ) );
+							fclose( $fp );
+							chmod( $hacks[$filename]['filename'], $oldperms );
+						}
+					}
+					break;
+			}
+		}
+
+		return $hacks;
+	}
+
+	function backupFile( $file, $file_new )
+	{
+		if ( !copy( $file, $file_new ) ) {
+			return false;
+		}
+		return true;
 	}
 }
 
-function toolBoxTool( $cmd )
+
+class aecToolbox extends aecAdminEntity
 {
-	$path = JPATH_SITE . '/components/com_acctexp/toolbox';
+	public function toolBoxTool( $cmd )
+	{
+		$path = JPATH_SITE . '/components/com_acctexp/toolbox';
 
-	if ( empty( $cmd ) ) {
-		$list = array();
+		if ( empty( $cmd ) ) {
+			$list = array();
 
-		$files = xJUtility::getFileArray( $path, 'php', false, true );
+			$files = xJUtility::getFileArray( $path, 'php', false, true );
 
-		asort( $files );
+			asort( $files );
 
-		foreach ( $files as $n => $name ) {
-			$file = $path . '/' . $name;
+			foreach ( $files as $n => $name ) {
+				$file = $path . '/' . $name;
+
+				include_once $file;
+
+				$class = str_replace( '.php', '', $name );
+
+				$tool = new $class();
+
+				if ( !method_exists( $tool, 'Info' ) ) {
+					continue;
+				}
+
+				$info = $tool->Info();
+
+				$info['link'] = AECToolbox::deadsureURL( 'administrator/index.php?option=com_acctexp&task=toolbox&cmd=' . $class );
+
+				$list[] = $info;
+			}
+
+			HTML_AcctExp::toolBox( '', $list );
+		} else {
+			$file = $path . '/' . $cmd . '.php';
 
 			include_once $file;
 
-			$class = str_replace( '.php', '', $name );
-
-			$tool = new $class();
-
-			if ( !method_exists( $tool, 'Info' ) ) {
-				continue;
-			}
+			$tool = new $cmd();
 
 			$info = $tool->Info();
 
-			$info['link'] = AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=toolbox&cmd=' . $class );
+			$return = '';
+			if ( !method_exists( $tool, 'Action' ) ) {
+				$return .= '<section class="paper">' . '<p>Tool doesn\'t have an action to carry out!</p>' . '</section>';
+			} else {
+				$response = '</section><section class="paper"><h4>' . JText::_('Response') . '</h4>' . $tool->Action() . '</section>';
 
-			$list[] = $info;
-		}
+				if ( method_exists( $tool, 'Settings' ) ) {
+					$tb_settings = $tool->Settings();
 
-		HTML_AcctExp::toolBox( '', $list );
-	} else {
-		$file = $path . '/' . $cmd . '.php';
+					if ( !empty( $tb_settings ) ) {
 
-		include_once $file;
+						$lists = array();
+						if ( isset( $tb_settings['lists'] ) ) {
+							$lists = $tb_settings['lists'];
 
-		$tool = new $cmd();
-
-		$info = $tool->Info();
-
-		$return = '';
-		if ( !method_exists( $tool, 'Action' ) ) {
-			$return .= '<section class="paper">' . '<p>Tool doesn\'t have an action to carry out!</p>' . '</section>';
-		} else {
-			$response = '</section><section class="paper"><h4>' . JText::_('Response') . '</h4>' . $tool->Action() . '</section>';
-
-			if ( method_exists( $tool, 'Settings' ) ) {
-				$tb_settings = $tool->Settings();
-
-				if ( !empty( $tb_settings ) ) {
-
-					$lists = array();
-					if ( isset( $tb_settings['lists'] ) ) {
-						$lists = $tb_settings['lists'];
-
-						unset( $tb_settings['lists'] );
-					}
-
-					// Get preset values from POST
-					foreach ( $tb_settings as $n => $v ) {
-						if ( isset( $_POST[$n] ) ) {
-							$tb_settings[$n][3] = $_POST[$n];
+							unset( $tb_settings['lists'] );
 						}
+
+						// Get preset values from POST
+						foreach ( $tb_settings as $n => $v ) {
+							if ( isset( $_POST[$n] ) ) {
+								$tb_settings[$n][3] = $_POST[$n];
+							}
+						}
+
+						$settings = new aecSettings( 'TOOLBOX', 'E' );
+						$settings->fullSettingsArray( $tb_settings, array(), $lists );
+
+						// Call HTML Class
+						$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+						foreach ( $tb_settings as $n => $v ) {
+							$return .= $aecHTML->createSettingsParticle( $n );
+						}
+
+						$return .= '<input type="submit" class="btn btn-primary pull-right"/><br/><br/>';
 					}
-
-					$settings = new aecSettings( 'TOOLBOX', 'E' );
-					$settings->fullSettingsArray( $tb_settings, array(), $lists );
-
-					// Call HTML Class
-					$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-					foreach ( $tb_settings as $n => $v ) {
-						$return .= $aecHTML->createSettingsParticle( $n );
-					}
-
-					$return .= '<input type="submit" class="btn btn-primary pull-right"/><br/><br/>';
 				}
+
+				$return .= $response;
 			}
 
-			$return .= $response;
+			HTML_AcctExp::toolBox( $cmd, $return, $info['name'] );
 		}
-
-		HTML_AcctExp::toolBox( $cmd, $return, $info['name'] );
 	}
 }
