@@ -520,7 +520,11 @@ class aecAdminEntity
 
 	public function getState()
 	{
-		$this->state = new aecAdminState($this->entity);
+		if ( empty($this->state) ) {
+			$this->state = new aecAdminState($this->entity);
+		}
+
+		return $this->state;
 	}
 
 	public function addSearchConstraints()
@@ -545,7 +549,19 @@ class aecAdminEntity
 	{
 		if ( empty($this->constraints) ) return '';
 
-		return ' WHERE )' . implode(') AND (', $this->constraints);
+		return ' WHERE (' . implode(') AND (', $this->constraints) . ')';
+	}
+
+	public function getOrdering()
+	{
+		return ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort);
+	}
+
+	public function getLimit()
+	{
+		$nav = $this->getPagination();
+
+		return ' LIMIT ' . $nav->limitstart . ',' . $nav->limit;
 	}
 
 	public function getPagination( $total=null )
@@ -566,20 +582,18 @@ class aecAdminEntity
 			$total = $cache;
 		}
 
-		// TODO: Optimize
-		return new bsPagination( $total, $this->state );
+		// TODO: Optimize by cache
+		return new bsPagination( $total, $this->state->limitstart, $this->state->limit );
 	}
 
-	public function getRows()
+	public function getRows( $class=null )
 	{
-		$nav = $this->getPagination();
-
 		// get the subset (based on limits) of records
 		$query = 'SELECT *'
 			. ' FROM #__acctexp_' . $this->table
 			. $this->getConstraints()
-			. ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort)
-			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
+			. $this->getOrdering()
+			. $this->getLimit()
 		;
 		$this->db->setQuery( $query );
 
@@ -589,6 +603,13 @@ class aecAdminEntity
 			echo $this->db->stderr();
 
 			return false;
+		}
+
+		if ( $class ) {
+			foreach ( $rows as $k => $id ) {
+				$rows[$k] = new $class();
+				$rows[$k]->load($id);
+			}
 		}
 
 		return $rows;
@@ -653,12 +674,12 @@ class aecAdminState
 	public $filter;
 
 	/**
-	 * @var string
+	 * @var array
 	 */
 	public $sort;
 
 	/**
-	 * @param aecAdminEntity $entity
+	 * @param string $entity
 	 */
 	public function __construct( $entity )
 	{
@@ -1289,7 +1310,7 @@ class aecAdminMembership extends aecAdminEntity
 		'plan' => array()
 	);
 
-	public function index( $subscriptionid, $userid=array(), $planid=null )
+	public function index( $subscriptionid, $userid=array() )
 	{
 		$groups = $this->state->filter->status;
 		if ( is_array($this->state->filter->status) && count( $this->state->filter->status ) === 1 ) {
@@ -1589,14 +1610,21 @@ class aecAdminMembership extends aecAdminEntity
 		}
 
 		$this->db->setQuery( $query );
-		$total = $this->db->loadResult();
 
-		$nav = new bsPagination( $total, $this->state );
+		$nav = $this->getPagination(
+			$this->db->loadResult()
+		);
+
+		$orderby = $this->state->sort;
 
 		// get the subset (based on limits) of required records
 		if ( $notconfig ) {
-			$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
-				'signup_date ASC', 'signup_date DESC' );
+			$forder = array(
+				'name ASC', 'name DESC',
+				'lastname ASC', 'lastname DESC',
+				'username ASC', 'username DESC',
+				'signup_date ASC', 'signup_date DESC'
+			);
 
 			if ( !in_array( $this->state->sort, $forder ) ) {
 				$orderby = 'name ASC';
@@ -1635,6 +1663,8 @@ class aecAdminMembership extends aecAdminEntity
 				$orderby = str_replace( 'SUBSTRING_INDEX(b.name, \' \', -1)', 'lastname', $orderby );
 			}
 		}
+
+		$this->state->sort = $orderby;
 
 		$this->db->setQuery( 'SET SQL_BIG_SELECTS=1');
 		$this->db->query();
@@ -3612,7 +3642,7 @@ class aecAdminItemGroup extends aecAdminEntity
 
 	public function index()
 	{
-		$rows = $this->getRows();
+		$rows = $this->getRows('ItemGroup');
 
 		$gcolors = array();
 
@@ -3991,50 +4021,19 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 	public $searchable = array('name', 'desc', 'class_name');
 
+	public $filters = array( 'plan' => array() );
+
 	public function index()
 	{
-		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
-		$limitstart	= $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-		$orderby		= $this->app->getUserStateFromRequest( "orderby_mi{$option}", 'orderby_mi', 'ordering ASC' );
-		$search			= $this->app->getUserStateFromRequest( "search{$option}_mi", 'search', '' );
-		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
-
-		$this->state->filter->planid	= intval( $this->app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
-
-		$filtered = !empty($this->state->filter->planid) || !empty($search);
-
-		// get the total number of records
-		$this->db->setQuery(
-			'SELECT count(*)'
-			. ' FROM #__acctexp_microintegrations'
-			. ' WHERE `hidden` = \'0\''
-			. ( empty( $search ) ? '' : ' AND (`name` LIKE \'%'.$search.'%\' OR `desc` LIKE \'%'.$search.'%\' OR `class_name` LIKE \'%'.$search.'%\')' )
-		);
-		$total = $this->db->loadResult();
-
-		if ( $limitstart > $total ) {
-			$limitstart = 0;
-		}
-
-		$nav = new bsPagination( $total, $limitstart, $limit );
-
-		$where = array();
-		$where[] = '`hidden` = \'0\'';
-
-		if ( isset( $search ) && $search!= '' ) {
-			$where[] = "(`name` LIKE '%$search%' OR `desc` LIKE '%$search%' OR `class_name` LIKE '%$search%')";
-		}
-
-		if ( isset( $this->state->filter->planid ) && $this->state->filter->planid > 0 ) {
-			$mis = microIntegrationHandler::getMIsbyPlan( $this->state->filter->planid );
+		if ( isset( $this->state->filter->plan ) && $this->state->filter->plan > 0 ) {
+			$mis = microIntegrationHandler::getMIsbyPlan( $this->state->filter->plan );
 
 			if ( !empty( $mis ) ) {
 				$this->addConstraint(
 					"id IN (" . implode( ',', $mis ) . ")"
 				);
 			} else {
-				$this->state->filter->planid = "";
+				$this->state->filter->plan = "";
 			}
 		}
 
@@ -4059,7 +4058,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		$sel[] = JHTML::_('select.option', 'class_name ASC',	JText::_('CLASSNAME_ASC') );
 		$sel[] = JHTML::_('select.option', 'class_name DESC',	JText::_('CLASSNAME_DESC') );
 
-		$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+		$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->state->sort );
 
 		// Get list of plans for filter
 		$query = 'SELECT `id`, `name`'
@@ -4073,9 +4072,9 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		if ( is_array( $db_plans ) ) {
 			$plans = array_merge( $plans, $db_plans );
 		}
-		$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $this->state->filter->planid );
+		$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $this->state->filter->plan );
 
-		HTML_AcctExp::listMicroIntegrations( $rows, $state, $nav, $lists );
+		HTML_AcctExp::listMicroIntegrations( $rows, $this->state, $this->getPagination(), $lists );
 	}
 
 	public function edit( $id )
@@ -4461,55 +4460,44 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 class aecAdminCoupon extends aecAdminEntity
 {
+	public $table = 'coupons';
+
+	public $searchable = array('name', 'coupon_code');
+
 	public function index()
 	{
-		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
-		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-		$search			= $this->app->getUserStateFromRequest( "search{$option}_coupons", 'search', '' );
-		$search			= xJ::escape( $this->db, trim( strtolower( $search ) ) );
-
-		$filtered = !empty($search);
-
-		$orderby = $this->app->getUserStateFromRequest( "orderby_coupons{$option}", 'orderby_coupons', 'name ASC' );
-
 		$total = 0;
 
-		$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_coupons'
-			. ( empty( $search ) ? '' : "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')" )
-		;
-		$this->db->setQuery( $query );
+		$this->db->setQuery(
+			'SELECT count(*)'
+			. ' FROM #__acctexp_' . $this->table
+			. $this->getConstraints()
+		);
+
 		$total += $this->db->loadResult();
 
-		$query = 'SELECT count(*)'
+		$this->db->setQuery(
+			'SELECT count(*)'
 			. ' FROM #__acctexp_coupons_static'
-		;
-		$this->db->setQuery( $query );
-		$total += $this->db->loadResult();
+			. $this->getConstraints()
+		);
 
-		if ( $limitstart > $total ) {
-			$limitstart = 0;
-		}
-
-		$nav = new bsPagination( $total, $limitstart, $limit );
-
-		$where = array();
-		if ( isset( $search ) && $search!= '' ) {
-			$where[] = "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')";
-		}
+		$nav = $this->getPagination(
+			$total + $this->db->loadResult()
+		);
 
 		// get the subset (based on limits) of required records
 		$query = '(SELECT *, "0" as `type`'
 			. ' FROM #__acctexp_coupons'
-			. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+			. $this->getConstraints()
 			. ')'
 			. ' UNION '
 			. '(SELECT *, "1" as `type`'
 			. ' FROM #__acctexp_coupons_static'
-			. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+			. $this->getConstraints()
 			. ')'
-			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
+			. $this->getOrdering()
+			. $this->getLimit()
 		;
 
 		$this->db->setQuery( $query );
@@ -4991,50 +4979,13 @@ class aecAdminCoupon extends aecAdminEntity
 
 class aecAdminInvoice extends aecAdminEntity
 {
-	public function index( $option )
+	public $table = 'invoices';
+
+	public $searchable = array('invoice_number', 'secondary_ident', 'id', 'invoice_number_format');
+
+	public function index()
 	{
-		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
-		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-		$search 	= $this->app->getUserStateFromRequest( "search_{$option}invoices", 'search', '' );
-
-		if ( $search ) {
-			$unformatted = xJ::escape( $this->db, trim( strtolower( $search ) ) );
-
-			$where = 'LOWER(`invoice_number`) LIKE \'%' . $unformatted . '%\''
-				. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
-				. ' OR `id` LIKE \'%' . $unformatted . '%\''
-				. ' OR LOWER(`invoice_number_format`) LIKE \'%' . $unformatted . '%\''
-			;
-		}
-
-		$orderby = $this->app->getUserStateFromRequest( "orderby_invoices{$option}", 'orderby_invoices', 'created_date DESC' );
-
-		// get the total number of records
-		$this->db->setQuery(
-			'SELECT count(*)'
-			. ' FROM #__acctexp_invoices'
-		);
-		$total = $this->db->loadResult();
-
-
-		$nav = new bsPagination( $total, $limitstart, $limit );
-
-		// Lets grab the data and fill it in.
-		$this->db->setQuery(
-			'SELECT id'
-			. ' FROM #__acctexp_invoices'
-			. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
-			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
-		);
-		$ids = xJ::getDBArray( $this->db );
-
-		if ( $this->db->getErrorNum() ) {
-			echo $this->db->stderr();
-			return false;
-		}
-
-		$cclist = array();
+		$ids = $this->getRows();
 
 		$processors = PaymentProcessorHandler::getObjectList(
 			PaymentProcessorHandler::getProcessorList()
@@ -5050,6 +5001,7 @@ class aecAdminInvoice extends aecAdminEntity
 		}
 
 		$invoices = array();
+		$cclist = array();
 		foreach ( $ids as $id ) {
 			$invoices[$id] = new Invoice();
 			$invoices[$id]->load( $id );
@@ -5109,7 +5061,7 @@ class aecAdminInvoice extends aecAdminEntity
 			$invoices[$id]->processor = $procs[$invoices[$id]->method];
 		}
 
-		HTML_AcctExp::viewInvoices( $invoices, $search, $nav, $orderby );
+		HTML_AcctExp::viewInvoices( $invoices, $this->getPagination(), $this->state );
 	}
 
 	public function edit( $id, $option, $returnTask, $userid )
@@ -5521,102 +5473,29 @@ class aecAdminService extends aecAdminEntity
 
 class aecAdminHistory extends aecAdminEntity
 {
+	public $table = 'log_history';
+
+	public $searchable = array('user_name', 'invoice_number', 'proc_name');
+
 	public function index( $option )
 	{
-		$this->app = JFactory::getApplication();
-
-		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
-		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-		$search 	= $this->app->getUserStateFromRequest( "search{$option}_log_history", 'search', '' );
-
-		$where = array();
-		if ( $search ) {
-			$where[] = 'LOWER(`user_name`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
-			$where[] = 'LOWER(`invoice_number`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
-			$where[] = 'LOWER(`proc_name`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
-		}
-
-		$orderby = $this->app->getUserStateFromRequest( "orderby_history{$option}", 'orderby_history', 'transaction_date DESC' );
-
-		// get the total number of records
-		$query = 'SELECT count(*)'
-			. '  FROM #__acctexp_log_history'
-			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
-		;
-		$this->db->setQuery( $query );
-		$total = $this->db->loadResult();
-		echo $this->db->getErrorMsg();
-
-		$nav = new bsPagination( $total, $limitstart, $limit );
-
-		// Lets grab the data and fill it in.
-		$query = 'SELECT id'
-			. ' FROM #__acctexp_log_history'
-			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
-			. ' GROUP BY `transaction_date`'
-			. ' ORDER BY `transaction_date` DESC'
-			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
-		;
-		$this->db->setQuery( $query );
-		$rowids = xJ::getDBArray( $this->db );
-
-		$rows = array();
-		foreach ( $rowids as $rid ) {
-			$entry = new logHistory();
-			$entry->load( $rid );
-
-			$rows[] = $entry;
-		}
-
-		if ( $this->db->getErrorNum() ) {
-			echo $this->db->stderr();
-			return false;
-		}
-
-		HTML_AcctExp::viewHistory( $rows, $search, $nav );
+		HTML_AcctExp::viewHistory(
+			$this->getRows('logHistory'),
+			$this->getPagination(),
+			$this->state
+		);
 	}
 }
 
 class aecAdminEventlog extends aecAdminEntity
 {
+	public $table = 'eventlog';
+
+	public $searchable = array('short', 'event', 'tags');
+
 	public function index( $option )
 	{
-		$limit 		= intval( $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) ) );
-		$limitstart = intval( $this->app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-		$search 	= $this->app->getUserStateFromRequest( "search{$option}_eventlog", 'search', '' );
-
-		$where = array();
-		if ( $search ) {
-			$where[] = 'LOWER(`short`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
-			$where[] = 'LOWER(`event`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
-			$where[] = 'LOWER(`tags`) LIKE \'%' . xJ::escape( $this->db, trim( strtolower( $search ) ) ) . '%\'';
-		}
-
-		// get the total number of records
-		$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_eventlog'
-			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
-		;
-		$this->db->setQuery( $query );
-		$total = $this->db->loadResult();
-		echo $this->db->getErrorMsg();
-
-		$nav = new bsPagination( $total, $limitstart, $limit );
-
-		// Lets grab the data and fill it in.
-		$query = 'SELECT id'
-			. ' FROM #__acctexp_eventlog'
-			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
-			. ' ORDER BY `id` DESC'
-			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
-		;
-		$this->db->setQuery( $query );
-		$rows = xJ::getDBArray( $this->db );
-
-		if ( $this->db->getErrorNum() ) {
-			echo $this->db->stderr();
-			return false;
-		}
+		$rows = $this->getRows();
 
 		$events = array();
 		foreach ( $rows as $id ) {
@@ -5664,7 +5543,7 @@ class aecAdminEventlog extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::eventlog( $events, $search, $nav );
+		HTML_AcctExp::eventlog($events, $this->getPagination(), $this->getState());
 	}
 }
 

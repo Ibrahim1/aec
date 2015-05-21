@@ -27,7 +27,7 @@ class eventLog extends serialParamDBTable
 	var $level		= null;
 	/** @var int */
 	var $notify		= null;
-	/** @var string */
+	/** @var array */
 	var $params		= null;
 
 	public function __construct()

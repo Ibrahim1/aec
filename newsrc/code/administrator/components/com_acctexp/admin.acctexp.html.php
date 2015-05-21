@@ -4325,15 +4325,13 @@ jimport('joomla.html.pagination');
 
 class bsPagination extends JPagination
 {
-	public function __construct( $total, $state )
+	public function __construct( $total, $limitstart, $limit )
 	{
-		$limitstart = $state->limitstart;
-
-		if ( $state->limitstart > $total ) {
+		if ( $limitstart > $total ) {
 			$limitstart = 0;
 		}
 
-		parent::__construct($total, $limitstart, $state->limit);
+		parent::__construct($total, $limitstart, $limit);
 	}
 
 	public function getListFooter()
