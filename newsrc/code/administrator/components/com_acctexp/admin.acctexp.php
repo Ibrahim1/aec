@@ -374,6 +374,11 @@ class aecAdminEntity
 	 */
 	public $state = array();
 
+	/**
+	 * @var string[]
+	 */
+	public $searchable = array();
+
 	public function __construct( $id )
 	{
 		$this->setID($id);
@@ -385,6 +390,8 @@ class aecAdminEntity
 		$this->db = JFactory::getDBO();
 
 		$this->getState();
+
+		$this->addSearchConstraints();
 	}
 
 	public function setID( $id )
@@ -516,6 +523,19 @@ class aecAdminEntity
 		$this->state = new aecAdminState($this->entity);
 	}
 
+	public function addSearchConstraints()
+	{
+		if ( empty($this->searchable) ) return;
+
+		foreach( $this->searchable as $field ) {
+			$this->addConstraint(
+				'LOWER(`' . $field . '`) LIKE \'%'
+				. xJ::escape( $this->db, trim( strtolower($this->state->search) ) )
+				. '%\''
+			);
+		}
+	}
+
 	public function addConstraint( $constraint )
 	{
 		$this->constraints[] = $constraint;
@@ -523,21 +543,30 @@ class aecAdminEntity
 
 	public function getConstraints()
 	{
-		return implode(' AND ', $this->constraints);
+		if ( empty($this->constraints) ) return '';
+
+		return ' WHERE )' . implode(') AND (', $this->constraints);
 	}
 
 	public function getPagination( $total=null )
 	{
-		if ( empty($total) ) {
+		static $cache;
+
+		if ( empty($total) && empty($cache) ) {
 			$this->db->setQuery(
 				'SELECT count(*)'
 				. ' FROM #__acctexp_' . $this->table
-				. ' WHERE ' . $this->getConstraints()
+				. $this->getConstraints()
 			);
 
 			$total = $this->db->loadResult();
+
+			$cache = $total;
+		} elseif ( !empty($cache) ) {
+			$total = $cache;
 		}
 
+		// TODO: Optimize
 		return new bsPagination( $total, $this->state );
 	}
 
@@ -548,7 +577,7 @@ class aecAdminEntity
 		// get the subset (based on limits) of records
 		$query = 'SELECT *'
 			. ' FROM #__acctexp_' . $this->table
-			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
+			. $this->getConstraints()
 			. ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort)
 			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
 		;
@@ -2232,30 +2261,21 @@ class aecAdminTemplate extends aecAdminEntity
 
 class aecAdminProcessor extends aecAdminEntity
 {
+	public $table = 'config_processors';
+
 	public function index()
 	{
-		$nav = $this->getPagination();
-
-		$this->db->setQuery(
-			'SELECT name'
-			. ' FROM #__acctexp_config_processors'
-			. ' GROUP BY `id`'
-			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
-		);
-
-		$names = xJ::getDBArray($this->db);
-
-		$rows = array();
-		foreach ( $names as $name ) {
+		$rows = $this->getRows();
+		foreach ( $rows as $k => $id ) {
 			$pp = new PaymentProcessor();
-			$pp->loadName( $name );
+			$pp->loadId($id);
 
 			if ( $pp->fullInit() ) {
-				$rows[] = $pp;
+				$rows[$k] = $pp;
 			}
 		}
 
-		HTML_AcctExp::listProcessors($rows, $nav);
+		HTML_AcctExp::listProcessors($rows, $this->getPagination());
 	}
 
 	public function edit( $id )
@@ -2655,13 +2675,11 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 	public function index()
 	{
-		$filtered = !empty($this->state->filter->group);
-
 		if ( !empty( $this->state->filter->group ) ) {
 			$subselect = ItemGroupHandler::getChildren( $this->state->filter->group, 'item' );
 
-			$this->constrain(
-				' WHERE id IN (' . implode( ',', $subselect ) . ')'
+			$this->addConstraint(
+				'id IN (' . implode( ',', $subselect ) . ')'
 			);
 		} else {
 			$subselect = array();
@@ -3588,46 +3606,13 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 class aecAdminItemGroup extends aecAdminEntity
 {
+	public $searchable = array('name');
+
+	public $table = 'itemgroups';
+
 	public function index()
 	{
-		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
-		$limitstart = $this->app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-		$search = $this->app->getUserStateFromRequest( "search_groups{$option}", 'search', '' );
-		$search = xJ::escape( $this->db, trim( strtolower( $search ) ) );
-
-		$orderby = $this->app->getUserStateFromRequest( "orderby_groups{$option}", 'orderby_groups', 'name ASC' );
-
-		// get the total number of records
-		$query = 'SELECT count(*)'
-			. ' FROM #__acctexp_itemgroups'
-			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-		;
-		$this->db->setQuery( $query );
-		$total = $this->db->loadResult();
-		echo $this->db->getErrorMsg();
-
-		if ( $limitstart > $total ) {
-			$limitstart = 0;
-		}
-
-		$nav = new bsPagination( $total, $limitstart, $limit );
-
-		// get the subset (based on limits) of records
-		$query = 'SELECT *'
-			. ' FROM #__acctexp_itemgroups'
-			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
-			. ' GROUP BY `id`'
-			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
-			. ' LIMIT ' . $nav->limitstart . ',' . $nav->limit
-		;
-		$this->db->setQuery( $query );
-
-		$rows = $this->db->loadObjectList();
-		if ( $this->db->getErrorNum() ) {
-			echo $this->db->stderr();
-			return false;
-		}
+		$rows = $this->getRows();
 
 		$gcolors = array();
 
@@ -3700,7 +3685,7 @@ class aecAdminItemGroup extends aecAdminEntity
 			}
 		}
 
-		HTML_AcctExp::listItemGroups( $rows, $nav, $this->state );
+		HTML_AcctExp::listItemGroups( $rows, $this->getPagination(), $this->state );
 	}
 
 	public function edit( $id )
@@ -4002,6 +3987,10 @@ class aecAdminItemGroup extends aecAdminEntity
 
 class aecAdminMicroIntegration extends aecAdminEntity
 {
+	public $table = 'microintegrations';
+
+	public $searchable = array('name', 'desc', 'class_name');
+
 	public function index()
 	{
 		$limit		= $this->app->getUserStateFromRequest( "viewlistlimit", 'limit', $this->app->getCfg( 'list_limit' ) );
@@ -4041,27 +4030,15 @@ class aecAdminMicroIntegration extends aecAdminEntity
 			$mis = microIntegrationHandler::getMIsbyPlan( $this->state->filter->planid );
 
 			if ( !empty( $mis ) ) {
-				$where[] = "(id IN (" . implode( ',', $mis ) . "))";
+				$this->addConstraint(
+					"id IN (" . implode( ',', $mis ) . ")"
+				);
 			} else {
 				$this->state->filter->planid = "";
 			}
 		}
 
-		// get the subset (based on limits) of required records
-		$query = 'SELECT * FROM #__acctexp_microintegrations';
-
-		$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
-
-		$query .= ' ORDER BY `' . str_replace(' ', '` ', $orderby);
-		$query .= ' LIMIT ' . $nav->limitstart . ',' . $nav->limit;
-
-		$this->db->setQuery( $query );
-
-		$rows = $this->db->loadObjectList();
-		if ( $this->db->getErrorNum() ) {
-			echo $this->db->stderr();
-			return false;
-		}
+		$rows = $this->getRows();
 
 		foreach ( $rows as $rid => $row ) {
 			if ( !empty( $row->desc ) ) {
@@ -4581,7 +4558,7 @@ class aecAdminCoupon extends aecAdminEntity
 		HTML_AcctExp::listCoupons($rows, $this->state, $nav);
 	}
 
-	public function edit( $id,  $new )
+	public function edit( $id, $new )
 	{
 		$lists = array();
 
@@ -5357,14 +5334,10 @@ class aecAdminService extends aecAdminEntity
 {
 	public $table = 'services';
 
-	public function index( $option )
-	{
-		if ( $this->state->search ) {
-			$this->addConstraint(
-				'`name` LIKE \'%' . $this->state->search . '%\''
-			);
-		}
+	public $searchable = array('name');
 
+	public function index()
+	{
 		HTML_AcctExp::listServices(
 			$this->getRows(),
 			$this->state,
@@ -5373,7 +5346,7 @@ class aecAdminService extends aecAdminEntity
 		);
 	}
 
-	public function edit( $id, $option )
+	public function edit( $id )
 	{
 		$lists = array();
 		$params_values = array();
