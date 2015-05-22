@@ -54,55 +54,6 @@ switch( strtolower( $task ) ) {
 		echo "wolves teeth";
 		break;
 
-	case 'publishprocessor': changeProcessor( $id, 1, 'active', $option ); break;
-	case 'unpublishprocessor': changeProcessor( $id, 0, 'active', $option ); break;
-
-	case 'showsubscriptionplans': listSubscriptionPlans( $option ); break;
-	case 'getsubscriptionplans': getSubscriptionPlans(); break;
-	case 'newsubscriptionplan': editSubscriptionPlan( 0, $option ); break;
-	case 'editsubscriptionplan': editSubscriptionPlan( $id, $option ); break;
-	case 'copysubscriptionplan': copyObject( 'SubscriptionPlan', $id ); break;
-	case 'savesubscriptionplan': saveSubscriptionPlan( $option ); break;
-	case 'applysubscriptionplan': saveSubscriptionPlan( 1 ); break;
-	case 'publishsubscriptionplan': changeSubscriptionPlan( $id, 1, 'active', $option ); break;
-	case 'unpublishsubscriptionplan': changeSubscriptionPlan( $id, 0, 'active', $option ); break;
-	case 'visiblesubscriptionplan': changeSubscriptionPlan( $id, 1, 'visible', $option ); break;
-	case 'invisiblesubscriptionplan': changeSubscriptionPlan( $id, 0, 'visible', $option ); break;
-	case 'removesubscriptionplan': removeSubscriptionPlan( $id, $option, $returnTask ); break;
-	case 'cancelsubscriptionplan': aecRedirect( 'index.php?option=com_acctexp&task=showSubscriptionPlans', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-	case 'orderplanup': orderObject( 'SubscriptionPlan', $id, 1 ); break;
-	case 'orderplandown': orderObject( 'SubscriptionPlan', $id, 0 ); break;
-
-	case 'showitemgroups': listItemGroups( $option ); break;
-	case 'newitemgroup': editItemGroup( 0, $option ); break;
-	case 'edititemgroup': editItemGroup( $id, $option ); break;
-	case 'copyitemgroup': copyObject( 'ItemGroup', $id ); break;
-	case 'saveitemgroup': saveItemGroup( $option ); break;
-	case 'applyitemgroup': saveItemGroup( 1 ); break;
-	case 'publishitemgroup': changeItemGroup( $id, 1, 'active', $option ); break;
-	case 'unpublishitemgroup': changeItemGroup( $id, 0, 'active', $option ); break;
-	case 'visibleitemgroup': changeItemGroup( $id, 1, 'visible', $option ); break;
-	case 'invisibleitemgroup': changeItemGroup( $id, 0, 'visible', $option ); break;
-	case 'removeitemgroup': removeItemGroup( $id, $option, $returnTask ); break;
-	case 'cancelitemgroup': aecRedirect( 'index.php?option=com_acctexp&task=showItemGroups', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-	case 'ordergroupup': orderObject( 'ItemGroup', $id, 1 ); break;
-	case 'ordergroupdown': orderObject( 'ItemGroup', $id, 0 ); break;
-
-	case 'showmicrointegrations': listMicroIntegrations( $option ); break;
-	case 'newmicrointegration': editMicroIntegration( 0, $option ); break;
-	case 'editmicrointegration': editMicroIntegration( $id, $option ); break;
-	case 'savemicrointegration': saveMicroIntegration( $option ); break;
-	case 'applymicrointegration': saveMicroIntegration( 1 ); break;
-	case 'copymicrointegration': copyObject( 'microIntegration', $id ); break;
-	case 'publishmicrointegration': changeMicroIntegration( $id, 1, $option ); break;
-	case 'unpublishmicrointegration': changeMicroIntegration( $id, 0, $option ); break;
-	case 'removemicrointegration': removeMicroIntegration( $id, $option, $returnTask ); break;
-	case 'cancelmicrointegration': cancelMicroIntegration( $option ); break;
-	case 'ordermiup': orderObject( 'microIntegration', $id, 1 ); break;
-	case 'ordermidown': orderObject( 'microIntegration', $id, 0 ); break;
-
-	case 'showcoupons': listCoupons( $option ); break;
-
 	case 'copycoupon':
 		$db = JFactory::getDBO();
 
@@ -117,15 +68,6 @@ switch( strtolower( $task ) ) {
 		aecRedirect( 'index.php?option='. $option . '&task=showCoupons' );
 		break;
 
-	case 'newcoupon': editCoupon( 0, $option, 1 ); break;
-	case 'editcoupon': editCoupon( $id, $option, 0 ); break;
-	case 'savecoupon': saveCoupon( 0 ); break;
-	case 'applycoupon': saveCoupon( 1 ); break;
-	case 'publishcoupon': changeCoupon( $id, 1, $option ); break;
-	case 'unpublishcoupon': changeCoupon( $id, 0, $option ); break;
-	case 'removecoupon': removeCoupon( $id, $option, $returnTask ); break;
-	case 'cancelcoupon': aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-
 	case 'hacks':
 		$undohack	= aecGetParam( 'undohack', 0 );
 		$filename	= aecGetParam( 'filename', 0 );
@@ -135,74 +77,6 @@ switch( strtolower( $task ) ) {
 
 		HTML_AcctExp::hacks( hackcorefile( 0, 1, 0 ) );
 		break;
-
-	case 'invoices': invoices( $option ); break;
-	case 'newinvoice': editInvoice( 0, $option, $returnTask, $userid ); break;
-	case 'editinvoice': editInvoice( $id, $option, $returnTask, $userid ); break;
-	case 'applyinvoice': saveInvoice( 1 ); break;
-	case 'saveinvoice': saveInvoice( $option ); break;
-
-	case 'clearinvoice': clearInvoice( aecGetParam('invoice'), aecGetParam('applyplan'), $returnTask ); break;
-
-	case 'cancelinvoice': cancelInvoice( aecGetParam('invoice'), $returnTask ); break;
-
-	case 'printinvoice': AdminInvoicePrintout( aecGetParam('invoice') ); break;
-	case 'pdfinvoice': AdminInvoicePDF( aecGetParam('invoice') ); break;
-
-	case 'history': history( $option ); break;
-	case 'eventlog': eventlog( $option ); break;
-
-	case 'stats': aec_stats( aecGetParam('page') ); break;
-
-	case 'statrequest': aec_statrequest( aecGetParam('type'), aecGetParam('start'), aecGetParam('end') ); break;
-
-	case 'testexportmembers': exportData( 'members', 'export' ); break;
-	case 'exportmembers': exportData( 'members' ); break;
-	case 'loadexportmembers': exportData( 'members', 'load' ); break;
-	case 'applyexportmembers': exportData( 'members', 'apply' ); break;
-	case 'exportexportmembers': exportData( 'members', 'export' ); break;
-	case 'saveexportmembers': exportData( 'members', 'save' ); break;
-
-	case 'testexportsales': exportData( 'sales', 'export' ); break;
-	case 'exportsales': exportData( 'sales' ); break;
-	case 'loadexportsales': exportData( 'sales', 'load' ); break;
-	case 'applyexportsales': exportData( 'sales', 'apply' ); break;
-	case 'exportexportsales': exportData( 'sales', 'export' ); break;
-	case 'saveexportsales': exportData( 'sales', 'save' ); break;
-
-	case 'import': importData( $option ); break;
-
-	case 'toolbox': toolBoxTool( aecGetParam('cmd') ); break;
-
-	case 'services':
-	case 'showservices': listServices( $option ); break;
-	case 'newservice': editService( 0, $option ); break;
-	case 'editservice': editService( $id[0], $option ); break;
-	case 'copyservice': copyObject( 'Service', $id ); break;
-	case 'saveservice': saveService( $option ); break;
-	case 'applyservice': saveService( 1 ); break;
-	case 'publishservice': changeService( $id, 1, 'active', $option ); break;
-	case 'unpublishservice': changeService( $id, 0, 'active', $option ); break;
-	case 'visibleservice': changeService( $id, 1, 'visible', $option ); break;
-	case 'invisibleservice': changeService( $id, 0, 'visible', $option ); break;
-	case 'removeservice': removeService( $id, $option, $returnTask ); break;
-	case 'cancelservice': aecRedirect( 'index.php?option=com_acctexp&task=showServices', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-
-	case 'events':
-	case 'showevents': listEvents( $option ); break;
-	case 'newevent': editEvent( 0, $option ); break;
-	case 'editevent': editEvent( $id[0], $option ); break;
-	case 'copyevent': copyObject( 'Event', $id ); break;
-	case 'saveevent': saveEvent( $option ); break;
-	case 'applyevent': saveEvent( 1 ); break;
-	case 'publishevent': changeEvent( $id, 1, 'active', $option ); break;
-	case 'unpublishevent': changeEvent( $id, 0, 'active', $option ); break;
-	case 'visibleevent': changeEvent( $id, 1, 'visible', $option ); break;
-	case 'invisibleevent': changeEvent( $id, 0, 'visible', $option ); break;
-	case 'removeevent': removeEvent( $id, $option, $returnTask ); break;
-	case 'cancelevent': aecRedirect( 'index.php?option=com_acctexp&task=showEvents', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-
-	case 'credits': HTML_AcctExp::credits(); break;
 
 	case 'quicklookup':
 		$return = quicklookup( $option );
@@ -302,6 +176,7 @@ switch( strtolower( $task ) ) {
 	default:
 		$class = 'aecAdmin' . ucfirst($entity);
 
+		/** @var aecAdminEntity $class */
 		$class = new $class($id);
 
 		$class->call($task);

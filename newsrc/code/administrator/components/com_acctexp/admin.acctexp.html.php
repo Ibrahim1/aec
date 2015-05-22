@@ -929,7 +929,7 @@ class HTML_AcctExp
 	 * @param string	$text
 	 * @param bool		$hideMenu
 	 */
-	static function quickiconButton( $entity, $task, $image, $text, $hideMenu = false )
+	static function quickiconButton( $link, $image, $text, $hideMenu = false )
 	{
 		if ( $hideMenu ) {
 			$hideMenu = '&amp;hidemainmenu=1';
@@ -1007,24 +1007,24 @@ class HTML_AcctExp
 				'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
 				'short'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
 				'items'	=> array(
-					array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
+					array( 'index&entity=Membership&status=Excluded', JText::_('AEC_CENTR_EXCLUDED') ),
 
 					'div',
 
-					array( 'showPending', 'pending', JText::_('AEC_CENTR_PENDING') ),
-					array( 'showActive', 'active', JText::_('AEC_CENTR_ACTIVE') ),
-					array( 'showExpired', 'expired', JText::_('AEC_CENTR_EXPIRED') ),
-					array( 'showCancelled', 'cancelled', JText::_('AEC_CENTR_CANCELLED') ),
-					array( 'showHold', 'hold', JText::_('AEC_CENTR_HOLD') ),
-					array( 'showClosed', 'closed', JText::_('AEC_CENTR_CLOSED') ),
+					array( 'index&entity=Membership&status=Pending', JText::_('AEC_CENTR_PENDING') ),
+					array( 'index&entity=Membership&status=Active', JText::_('AEC_CENTR_ACTIVE') ),
+					array( 'index&entity=Membership&status=Expired', JText::_('AEC_CENTR_EXPIRED') ),
+					array( 'index&entity=Membership&status=Cancelled', JText::_('AEC_CENTR_CANCELLED') ),
+					array( 'index&entity=Membership&status=Hold', JText::_('AEC_CENTR_HOLD') ),
+					array( 'index&entity=Membership&status=Closed', JText::_('AEC_CENTR_CLOSED') ),
 
 					'div',
 
-					array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ),
+					array( 'index&entity=Membership&status=Manual', JText::_('AEC_CENTR_MANUAL') ),
 
 					'div',
 
-					array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') )
+					array( 'index&entity=Invoice', JText::_('AEC_CENTR_V_INVOICES') )
 				)
 			),
 			'payment' => array(
@@ -1033,16 +1033,16 @@ class HTML_AcctExp
 				'short'	=> JText::_('AEC_CENTR_AREA_PAYMENT_SHORT'),
 
 				'items'	=> array(
-					array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
-					array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
+					array( 'index&entity=SubscriptionPlan', JText::_('AEC_CENTR_PLANS') ),
+					array( 'index&entity=ItemGroup', JText::_('AEC_CENTR_GROUPS') ),
 
 					'div',
 
-					array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
+					array( 'index&entity=MicroIntegration', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
 
 					'div',
 
-					array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') )
+					array( 'index&entity=Coupon', JText::_('AEC_CENTR_COUPONS') )
 				)
 			),
 
@@ -1052,21 +1052,21 @@ class HTML_AcctExp
 				'short'	=> JText::_('AEC_CENTR_AREA_SETTINGS_SHORT'),
 
 				'items'	=> array(
-					array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
+					array( 'index&entity=Settings', JText::_('AEC_CENTR_SETTINGS') ),
 
 					'div',
 
-					array( 'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ),
+					array( 'index&entity=Template', JText::_('AEC_CENTR_TEMPLATES') ),
 
-					array( 'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ),
-
-					'div',
-
-					array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
+					array( 'index&entity=Processor', JText::_('AEC_CENTR_PROCESSORS') ),
 
 					'div',
 
-					array( 'services', 'services', JText::_('AEC_CENTR_SERVICES') )
+					array( 'index&entity=Toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
+
+					'div',
+
+					array( 'index&entity=Service', JText::_('AEC_CENTR_SERVICES') )
 				)
 			),
 
@@ -1075,18 +1075,18 @@ class HTML_AcctExp
 				'short'	=> JText::_('AEC_CENTR_AREA_DATA_SHORT'),
 
 				'items'	=> array(
-					array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
+					array( 'index&entity=Stats', JText::_('AEC_CENTR_STATS') ),
 
 					'div',
 
-					array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
-					array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
-					array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
+					array( 'index&entity=Export&type=Members', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
+					array( 'index&entity=ExportSales', JText::_('AEC_CENTR_EXPORT_SALES') ),
+					array( 'index&entity=Import', JText::_('AEC_CENTR_IMPORT') ),
 
 					'div',
 
-					array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY'), JText::_('AEC_CENTR_M_VIEW_HISTORY') ),
-					array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
+					array( 'index&entity=History', JText::_('AEC_CENTR_VIEW_HISTORY'), JText::_('AEC_CENTR_M_VIEW_HISTORY') ),
+					array( 'index&entity=Eventlog', JText::_('AEC_CENTR_LOG') )
 				)
 			),
 			'help' => array(

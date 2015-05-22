@@ -94,6 +94,8 @@ class metaUser
 	var $objSubscription	= null;
 	/** @var Subscription */
 	var $focusSubscription	= null;
+	/** @var Subscription */
+	var $allSubscriptions	= null;
 	/** @var int */
 	var $hasSubscription	= null;
 
