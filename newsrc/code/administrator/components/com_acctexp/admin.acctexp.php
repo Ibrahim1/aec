@@ -409,7 +409,7 @@ class aecAdminEntity
 
 	public function addSearchConstraints()
 	{
-		if ( empty($this->searchable) ) return;
+		if ( empty($this->searchable) || empty($this->state->search) ) return;
 
 		if ( empty($this->state->search) ) return;
 
@@ -436,7 +436,7 @@ class aecAdminEntity
 
 	public function getOrdering()
 	{
-		return ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort);
+		return ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort) . '`';
 	}
 
 	public function getLimit()
