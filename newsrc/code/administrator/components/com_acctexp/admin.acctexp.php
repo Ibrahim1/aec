@@ -404,7 +404,7 @@ class aecAdminEntity
 
 	public function addSearchConstraints()
 	{
-		if ( empty($this->searchable) ) return;
+		if ( empty($this->searchable) || empty($this->state->search) ) return;
 
 		foreach( $this->searchable as $field ) {
 			$this->addConstraint(
@@ -429,7 +429,7 @@ class aecAdminEntity
 
 	public function getOrdering()
 	{
-		return ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort);
+		return ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort) . '`';
 	}
 
 	public function getLimit()
@@ -6803,7 +6803,7 @@ class aecAdminHacks extends aecAdminEntity
 }
 
 
-class aecToolbox extends aecAdminEntity
+class aecAdminToolbox extends aecAdminEntity
 {
 	public function toolBoxTool( $cmd )
 	{

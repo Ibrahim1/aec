@@ -977,7 +977,7 @@ class HTML_AcctExp
 									<?php
 									foreach ( $m['items'] as $item ) {
 										if ( is_array( $item ) ) {
-											echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
+											echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[1] . '</a></li>';
 										} else {
 											echo '<li class="divider"></li>';
 										}
@@ -1007,24 +1007,24 @@ class HTML_AcctExp
 				'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
 				'short'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
 				'items'	=> array(
-					array( 'index&entity=Membership&status=Excluded', JText::_('AEC_CENTR_EXCLUDED') ),
+					array( 'index&entity=Membership&status=Excluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
 
 					'div',
 
-					array( 'index&entity=Membership&status=Pending', JText::_('AEC_CENTR_PENDING') ),
-					array( 'index&entity=Membership&status=Active', JText::_('AEC_CENTR_ACTIVE') ),
-					array( 'index&entity=Membership&status=Expired', JText::_('AEC_CENTR_EXPIRED') ),
-					array( 'index&entity=Membership&status=Cancelled', JText::_('AEC_CENTR_CANCELLED') ),
-					array( 'index&entity=Membership&status=Hold', JText::_('AEC_CENTR_HOLD') ),
-					array( 'index&entity=Membership&status=Closed', JText::_('AEC_CENTR_CLOSED') ),
+					array( 'index&entity=Membership&status=Pending', 'pending', JText::_('AEC_CENTR_PENDING') ),
+					array( 'index&entity=Membership&status=Active', 'active', JText::_('AEC_CENTR_ACTIVE') ),
+					array( 'index&entity=Membership&status=Expired', 'expire', JText::_('AEC_CENTR_EXPIRED') ),
+					array( 'index&entity=Membership&status=Cancelled', 'cancelled', JText::_('AEC_CENTR_CANCELLED') ),
+					array( 'index&entity=Membership&status=Hold', 'hold', JText::_('AEC_CENTR_HOLD') ),
+					array( 'index&entity=Membership&status=Closed', 'closed', JText::_('AEC_CENTR_CLOSED') ),
 
 					'div',
 
-					array( 'index&entity=Membership&status=Manual', JText::_('AEC_CENTR_MANUAL') ),
+					array( 'index&entity=Membership&status=Manual', 'manual', JText::_('AEC_CENTR_MANUAL') ),
 
 					'div',
 
-					array( 'index&entity=Invoice', JText::_('AEC_CENTR_V_INVOICES') )
+					array( 'index&entity=Invoice', 'invoices', JText::_('AEC_CENTR_V_INVOICES') )
 				)
 			),
 			'payment' => array(
@@ -1033,16 +1033,16 @@ class HTML_AcctExp
 				'short'	=> JText::_('AEC_CENTR_AREA_PAYMENT_SHORT'),
 
 				'items'	=> array(
-					array( 'index&entity=SubscriptionPlan', JText::_('AEC_CENTR_PLANS') ),
-					array( 'index&entity=ItemGroup', JText::_('AEC_CENTR_GROUPS') ),
+					array( 'index&entity=SubscriptionPlan', 'plans', JText::_('AEC_CENTR_PLANS') ),
+					array( 'index&entity=ItemGroup', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
 
 					'div',
 
-					array( 'index&entity=MicroIntegration', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
+					array( 'index&entity=MicroIntegration', 'microintegrations', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
 
 					'div',
 
-					array( 'index&entity=Coupon', JText::_('AEC_CENTR_COUPONS') )
+					array( 'index&entity=Coupon', 'coupons', JText::_('AEC_CENTR_COUPONS') )
 				)
 			),
 
@@ -1052,21 +1052,21 @@ class HTML_AcctExp
 				'short'	=> JText::_('AEC_CENTR_AREA_SETTINGS_SHORT'),
 
 				'items'	=> array(
-					array( 'index&entity=Settings', JText::_('AEC_CENTR_SETTINGS') ),
+					array( 'index&entity=Settings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
 
 					'div',
 
-					array( 'index&entity=Template', JText::_('AEC_CENTR_TEMPLATES') ),
+					array( 'index&entity=Template', 'templates', JText::_('AEC_CENTR_TEMPLATES') ),
 
-					array( 'index&entity=Processor', JText::_('AEC_CENTR_PROCESSORS') ),
-
-					'div',
-
-					array( 'index&entity=Toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
+					array( 'index&entity=Processor', 'processors', JText::_('AEC_CENTR_PROCESSORS') ),
 
 					'div',
 
-					array( 'index&entity=Service', JText::_('AEC_CENTR_SERVICES') )
+					array( 'index&entity=Toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
+
+					'div',
+
+					array( 'index&entity=Service', 'services', JText::_('AEC_CENTR_SERVICES') )
 				)
 			),
 
@@ -1075,18 +1075,18 @@ class HTML_AcctExp
 				'short'	=> JText::_('AEC_CENTR_AREA_DATA_SHORT'),
 
 				'items'	=> array(
-					array( 'index&entity=Stats', JText::_('AEC_CENTR_STATS') ),
+					array( 'index&entity=Stats', 'stats', JText::_('AEC_CENTR_STATS') ),
 
 					'div',
 
-					array( 'index&entity=Export&type=Members', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
-					array( 'index&entity=ExportSales', JText::_('AEC_CENTR_EXPORT_SALES') ),
-					array( 'index&entity=Import', JText::_('AEC_CENTR_IMPORT') ),
+					array( 'index&entity=Export&type=Members', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
+					array( 'index&entity=ExportSales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
+					array( 'index&entity=Import', 'import', JText::_('AEC_CENTR_IMPORT') ),
 
 					'div',
 
-					array( 'index&entity=History', JText::_('AEC_CENTR_VIEW_HISTORY'), JText::_('AEC_CENTR_M_VIEW_HISTORY') ),
-					array( 'index&entity=Eventlog', JText::_('AEC_CENTR_LOG') )
+					array( 'index&entity=History', 'history', JText::_('AEC_CENTR_VIEW_HISTORY'), JText::_('AEC_CENTR_M_VIEW_HISTORY') ),
+					array( 'index&entity=Eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
 				)
 			),
 			'help' => array(
@@ -1114,18 +1114,18 @@ class HTML_AcctExp
 								</td>
 							</tr>
 							<tr>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( 'ItemGroup', 'index', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( 'index&entity=ItemGroup', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-left', ' diorama-icon-w' ); ?></div></td>
 								<td><div class="cell-wrapper"><div class="dioarama-corner-w-s"></div></div></td>
 								<td></td>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Membership&status=Manual', 'manual', JText::_('AEC_CENTR_MANUAL') ) ?></div></td>
 								<td></td>
 								<td></td>
 								<td></td>
 								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'stats', 'stats', JText::_('AEC_CENTR_STATS') ) ?></div></td>
 								<td></td>
 								<td></td>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Membership&status=Excluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ) ?></div></td>
 								<td></td>
 							</tr>
 							<tr>
@@ -1143,16 +1143,16 @@ class HTML_AcctExp
 							<tr>
 								<td><div class="cell-wrapper"><div class="dioarama-corner-n-s-f"></div></div></td>
 								<td></td>
-								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
+								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=SubscriptionPlan', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Invoice', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ) ?></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Processor', 'processors', JText::_('AEC_CENTR_PROCESSORS') ) ?></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'history', 'history', JText::_('AEC_CENTR_M_VIEW_HISTORY') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=History', 'history', JText::_('AEC_CENTR_M_VIEW_HISTORY') ) ?></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
-								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showActive', 'active', JText::_('Members') ) ?></div></td>
+								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Membership&status=Active', 'active', JText::_('Members') ) ?></div></td>
 								<td></td>
 							</tr>
 							<tr>
@@ -1168,18 +1168,18 @@ class HTML_AcctExp
 								<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
 							</tr>
 							<tr>
-								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ) ?></div></td>
+								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=MicroIntegration', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ) ?></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
 								<td><div class="cell-wrapper"><div class="dioarama-corner-e-n"></div></div></td>
 								<td></td>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Coupon', 'coupons', JText::_('AEC_CENTR_COUPONS') ) ?></div></td>
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Export&type=sales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ) ?></div></td>
 								<td></td>
 								<td></td>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Export&type=members', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ) ?></div></td>
 								<td></td>
 							</tr>
 							<tr><td colspan="12"></td></tr>
@@ -1213,26 +1213,26 @@ class HTML_AcctExp
 						<div class="row">
 							<div class="col-sm-12 col-md-6 col-lg-12">
 								<div>
-									<?php HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
+									<?php HTML_AcctExp::quickiconButton( $linkroot.'edit&entity=Settings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
 									<p>Change the way AEC behaves.</p>
 									<br/>
 								</div>
 							</div>
 							<div class="col-sm-12 col-md-6 col-lg-12">
 								<div>
-									<?php HTML_AcctExp::quickiconButton( $linkroot.'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ) ?>
+									<?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Template', 'templates', JText::_('AEC_CENTR_TEMPLATES') ) ?>
 									<p>Change what AEC looks like.</p>
 								</div>
 							</div>
 							<div class="col-sm-12 col-md-6 col-lg-12">
 								<div>
-									<?php HTML_AcctExp::quickiconButton( $linkroot.'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ) ?>
+									<?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ) ?>
 									<p>Nifty tools for AEC Experts.</p>
 								</div>
 							</div>
 							<div class="col-sm-12 col-md-6 col-lg-12">
 								<div>
-									<?php HTML_AcctExp::quickiconButton( $linkroot.'import', 'import', JText::_('AEC_CENTR_IMPORT') ) ?>
+									<?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=Import', 'import', JText::_('AEC_CENTR_IMPORT') ) ?>
 									<p>Import Users into AEC.</p>
 								</div>
 							</div>
