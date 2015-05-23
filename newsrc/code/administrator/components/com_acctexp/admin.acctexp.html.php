@@ -964,7 +964,7 @@ class HTML_AcctExp
 		?>
 		<div class="navbar aec-navbar navbar-inverse">
 			<div class="container">
-				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
+				<a href="index.php?option=com_acctexp" class="brand">&nbsp;</a>
 				<?php if ( !empty( $notices ) ) { ?>
 					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" class="toolbar-notify"><?php echo aecHTML::Icon( 'envelope' ); ?> <?php echo $notices ?></a>
 				<?php } ?>

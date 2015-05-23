@@ -250,6 +250,11 @@ class aecAdminEntity
 	public $state = array();
 
 	/**
+	 * @var array
+	 */
+	public $init = array();
+
+	/**
 	 * @var string[]
 	 */
 	public $searchable = array();
@@ -396,7 +401,7 @@ class aecAdminEntity
 	public function getState()
 	{
 		if ( empty($this->state) ) {
-			$this->state = new aecAdminState($this->entity);
+			$this->state = new aecAdminState($this->entity, $this->init);
 		}
 
 		return $this->state;
@@ -405,6 +410,8 @@ class aecAdminEntity
 	public function addSearchConstraints()
 	{
 		if ( empty($this->searchable) ) return;
+
+		if ( empty($this->state->search) ) return;
 
 		foreach( $this->searchable as $field ) {
 			$this->addConstraint(
@@ -556,7 +563,7 @@ class aecAdminState
 	/**
 	 * @param string $entity
 	 */
-	public function __construct( $entity )
+	public function __construct( $entity, $init )
 	{
 		$this->app = JFactory::getApplication();
 
@@ -593,8 +600,10 @@ class aecAdminState
 			$this->filtered = true;
 		}
 
-		if ( !empty($this->filters) ) {
-			foreach ( $this->filters as $key => $default ) {
+		$this->filter = new stdClass();
+
+		if ( !empty($init['filters']) ) {
+			foreach ( $init['filters'] as $key => $default ) {
 				$this->filter->{$key} = $this->app->getUserStateFromRequest(
 					'aec_' . $entity . '_' . $key,
 					$entity . '_' . $key,
@@ -615,17 +624,15 @@ class aecAdminState
 			}
 		}
 
-		if ( !empty($this->sort) ) {
-			foreach ( $this->sort as $key => $default ) {
-				$this->{$key} = $this->app->getUserStateFromRequest(
-					'aec_' . $entity . '_' . $key,
-					$entity . '_' . $key,
-					$default
-				);
-			}
+		if ( !empty($init['sort']) ) {
+			$this->{$key} = $this->app->getUserStateFromRequest(
+				'aec_' . $entity . '_sort',
+				$entity . '_sort',
+				$init['sort']
+			);
 		}
 
-		if ( empty($this->sort) ) $this->sort = 'id';
+		if ( empty($this->sort) ) $this->sort = 'id ASC';
 	}
 }
 
@@ -1177,12 +1184,13 @@ class aecAdminMembership extends aecAdminEntity
 {
 	public $entity = 'Membership';
 
-	public $sort = array('orderby' => 'name ASC');
-
-	public $filters = array(
-		'status' => array('active'),
-		'group' => array(),
-		'plan' => array()
+	public $init = array(
+		'sort' => 'name ASC',
+		'filters' => array(
+			'status' => array('active'),
+			'group' => array(),
+			'plan' => array()
+		)
 	);
 
 	public function index( $subscriptionid, $userid=array() )
@@ -2441,9 +2449,12 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 {
 	public $table = 'plans';
 
-	public $filters = array( 'group' => array() );
-
-	public $sort = array('orderby' => 'name ASC');
+	public $init = array(
+		'sort' => 'name ASC',
+		'filters' => array(
+			'group' => array()
+		)
+	);
 
 	public function getList()
 	{
@@ -3896,7 +3907,11 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 	public $searchable = array('name', 'desc', 'class_name');
 
-	public $filters = array( 'plan' => array() );
+	public $init = array(
+		'filters' => array(
+			'plan' => array()
+		)
+	);
 
 	public function index()
 	{
@@ -5097,7 +5112,7 @@ class aecAdminInvoice extends aecAdminEntity
 		aecRedirect( 'index.php?option=com_acctexp&task=' . $task . $userid, JText::_('AEC_MSG_INVOICE_CLEARED') );
 	}
 
-	public function cancel( $invoice_number, $task )
+	public function cancelEntity( $invoice_number, $task )
 	{
 		$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
@@ -6803,7 +6818,7 @@ class aecAdminHacks extends aecAdminEntity
 }
 
 
-class aecToolbox extends aecAdminEntity
+class aecAdminToolbox extends aecAdminEntity
 {
 	public function toolBoxTool( $cmd )
 	{
