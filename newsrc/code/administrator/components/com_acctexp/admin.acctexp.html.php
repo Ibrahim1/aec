@@ -977,7 +977,7 @@ class HTML_AcctExp
 									<?php
 									foreach ( $m['items'] as $item ) {
 										if ( is_array( $item ) ) {
-											echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[1] . '</a></li>';
+											echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[1] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
 										} else {
 											echo '<li class="divider"></li>';
 										}
@@ -1114,7 +1114,7 @@ class HTML_AcctExp
 								</td>
 							</tr>
 							<tr>
-								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( 'index&entity=ItemGroup', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'index&entity=ItemGroup', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
 								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-left', ' diorama-icon-w' ); ?></div></td>
 								<td><div class="cell-wrapper"><div class="dioarama-corner-w-s"></div></div></td>
 								<td></td>
@@ -1572,7 +1572,7 @@ class HTML_AcctExp
 								<?php foreach ( $rows as $i => $row ) { ?>
 									<tr>
 										<td class="text-center"><?php echo $row->processor->id; ?> <?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
-										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
+										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=Processor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
 										<td class="text-left"><?php echo $row->processor->info['statement']; ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
 									</tr>
@@ -1658,7 +1658,7 @@ class HTML_AcctExp
 							<?php foreach ( $rows as $row ) { ?>
 								<tr>
 									<td><?php if ( $row->id ) { HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); } ?></td>
-									<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
+									<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=Template&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
 									<td class="text-left"><?php echo $row->info['description']; ?></td>
 								</tr>
 							<?php } ?>
@@ -1825,7 +1825,7 @@ class HTML_AcctExp
 									<tr<?php echo $rowstyle; ?>>
 										<td class="text-center"><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 										<td class="text-center"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=Membership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 										<td class="text-left"><?php echo $row->username; ?></td>
 										<td><?php echo $row->status; ?></td>
 										<td class="text-left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
@@ -1945,7 +1945,7 @@ class HTML_AcctExp
 									<?php foreach ( $rows as $i => $row ) { ?>
 										<tr>
 											<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-											<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+											<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=MicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
 											<td class="text-left">
 												<?php
 												echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
@@ -2166,7 +2166,7 @@ class HTML_AcctExp
 											<?php echo $row->id; ?>&nbsp;
 											<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
 										</td>
-										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=SubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 										<td class="text-left"><?php echo $row->desc; ?></td>
 										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
@@ -2695,7 +2695,7 @@ class HTML_AcctExp
 												<div class="group-colors-stripe" style="background: #<?php echo $row->color; ?>;">
 												</div>
 											</div>
-											<a href="<?php echo 'index.php?option=com_acctexp&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+											<a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=ItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
 										</td>
 										<td class="text-left"><?php echo $row->desc; ?></td>
 										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
@@ -2935,7 +2935,7 @@ class HTML_AcctExp
 								<tr>
 									<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
 									<td class="text-left">
-										<a href="<?php echo 'index.php?option=com_acctexp&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+										<a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=Coupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
 									</td>
 									<td class="text-left"><strong><?php echo $row->coupon_code; ?></strong></td>
 									<td class="text-left"><?php echo $row->desc; ?></td>
@@ -3171,7 +3171,7 @@ class HTML_AcctExp
 								<tr>
 									<td><?php echo $i + 1 + $nav->limitstart; ?></td>
 									<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $row->userid; ?>"><?php echo $row->username; ?></a></td>
-									<td><a href="<?php echo 'index.php?option=com_acctexp&amp;task=editInvoice&returnTask=invoices&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
+									<td><a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=Invoice&returnTask=invoices&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
 									<td><?php echo $row->secondary_ident; ?></td>
 									<td><?php echo $row->created_date; ?></td>
 									<td><?php echo $row->transaction_date; ?></td>

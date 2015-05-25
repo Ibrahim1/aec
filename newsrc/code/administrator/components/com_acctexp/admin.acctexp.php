@@ -177,7 +177,7 @@ switch( strtolower( $task ) ) {
 		$class = 'aecAdmin' . ucfirst($entity);
 
 		/** @var aecAdminEntity $class */
-		$class = new $class($id);
+		$class = new $class($id, $entity);
 
 		$class->call($task);
 		break;
@@ -259,7 +259,13 @@ class aecAdminEntity
 	 */
 	public $searchable = array();
 
-	public function __construct( $id )
+	public $redirect;
+
+	public $params = array();
+
+	public $message = null;
+
+	public function __construct( $id, $entity=null )
 	{
 		$this->setID($id);
 
@@ -272,6 +278,10 @@ class aecAdminEntity
 		$this->getState();
 
 		$this->addSearchConstraints();
+
+		if ( !empty($entity) ) {
+			$this->entity = $entity;
+		}
 	}
 
 	public function setID( $id )
@@ -300,9 +310,15 @@ class aecAdminEntity
 		}
 	}
 
-	public function call( $task='browse' )
+	public function call( $task='index' )
 	{
-		if ( ($task == 'edit') && empty($this->id) ) $task = 'new';
+		//if ( ($task == 'edit') && empty($this->id) ) $task = 'new';
+
+		if ($task == 'apply') {
+			$task = 'save';
+
+			$this->redirect = 'edit';
+		}
 
 		$r = new ReflectionMethod(
 			get_class($this),
@@ -311,19 +327,44 @@ class aecAdminEntity
 
 		$params = $r->getParameters();
 
-		$parameters = array();
+		$this->params = array();
 		foreach ( $params as $k ) {
-			$parameters[$k->getName()] = aecGetParam($k);
+			$this->params[$k->getName()] = aecGetParam($k->getName());
 		}
 
-		call_user_func_array(array($this, $task), $parameters);
+		call_user_func_array(array($this, $task), $this->params);
+
+		if ($task != 'save') return;
+
+		if ( $this->redirect ) {
+			$this->redirect($this->redirect, null, $this->params);
+		} elseif ( $task != 'index' ) {
+			$this->redirect();
+		}
 	}
 
-	public function redirect( $task='browse', $entity=null )
+	public function redirect( $task='index', $entity=null, $parameters=null )
 	{
 		if ( empty($entity) ) $entity = $this->entity;
 
-		aecRedirect( 'index.php?option=com_acctexp&task=' . $task . '&entity=' . $entity );
+		$params = array(
+			'option' => 'com_acctexp',
+			'task' => $task,
+			'entity' => $entity
+		);
+
+		if( !empty($inject) )  {
+			foreach ( $inject as $k => $v ) {
+				$params[$k] = $v;
+			}
+		}
+
+		aecRedirect( 'index.php?' . http_build_query($params), $this->message );
+	}
+
+	public function setMessage( $message=null )
+	{
+		$this->message = $message;
 	}
 
 	public function cancel()
@@ -436,7 +477,7 @@ class aecAdminEntity
 
 	public function getOrdering()
 	{
-		return ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort) . '`';
+		return ' ORDER BY `' . str_replace(' ', '` ', $this->state->sort);
 	}
 
 	public function getLimit()
@@ -488,9 +529,9 @@ class aecAdminEntity
 		}
 
 		if ( $class ) {
-			foreach ( $rows as $k => $id ) {
+			foreach ( $rows as $k => $obj ) {
 				$rows[$k] = new $class();
-				$rows[$k]->load($id);
+				$rows[$k]->load($obj->id);
 			}
 		}
 
@@ -1065,17 +1106,13 @@ class aecAdminSettings extends aecAdminEntity
 		HTML_AcctExp::Settings( $aecHTML, $params, $tab_data );
 	}
 
-	public function save( $return=0 )
+	public function save()
 	{
-		$user= JFactory::getUser();
+		$user = JFactory::getUser();
 
 		global $aecConfig;
 
-		unset( $_POST['id'] );
-		unset( $_POST['task'] );
-		unset( $_POST['option'] );
-
-		$general_settings = $_POST;
+		$general_settings = AECToolbox::cleanPOST( $_POST, false );
 
 		if ( !empty( $general_settings['apiapplist'] ) ) {
 			$list = explode( "\n", $general_settings['apiapplist'] );
@@ -1177,13 +1214,13 @@ class aecAdminSettings extends aecAdminEntity
 		} else {
 			$this->redirect('browse', 'Central', JText::_('AEC_CONFIG_SAVED'));
 		}
+
+		$this->setMessage( JText::_('AEC_CONFIG_SAVED') );
 	}
 }
 
 class aecAdminMembership extends aecAdminEntity
 {
-	public $entity = 'Membership';
-
 	public $init = array(
 		'sort' => 'name ASC',
 		'filters' => array(
@@ -1902,7 +1939,7 @@ class aecAdminMembership extends aecAdminEntity
 		HTML_AcctExp::userForm( $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
 	}
 
-	public function save( $apply=0 )
+	public function save()
 	{
 		$app = JFactory::getApplication();
 
@@ -2043,24 +2080,6 @@ class aecAdminMembership extends aecAdminEntity
 
 			$metaUser->meta->storeload();
 		}
-
-		$nexttask	= aecGetParam( 'nexttask', 'showSubscriptions' ) ;
-
-		if ( empty( $nexttask ) ) {
-			$nexttask = 'showSubscriptions';
-		}
-
-		if ( $apply ) {
-			$subID = !empty($post['subscriptionid']) ? $post['subscriptionid'] : $metaUser->focusSubscription->id;
-
-			if ( empty( $subID ) ) {
-				aecRedirect( 'index.php?option=com_acctexp&task=editMembership&userid=' . $metaUser->userid, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-			} else {
-				aecRedirect( 'index.php?option=com_acctexp&task=editMembership&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-			}
-		} else {
-			aecRedirect( 'index.php?option=com_acctexp&task=' . $nexttask, JText::_('SAVED') );
-		}
 	}
 }
 
@@ -2121,7 +2140,7 @@ class aecAdminTemplate extends aecAdminEntity
 		HTML_AcctExp::editTemplate( $aecHTML, $tempsettings['tab_data'] );
 	}
 
-	public function save( $name, $return=0 )
+	public function save( $name )
 	{
 		$temp = new configTemplate();
 		$temp->loadName( $name );
@@ -2163,12 +2182,6 @@ class aecAdminTemplate extends aecAdminEntity
 		$temp->settings = $_POST;
 
 		$temp->storeload();
-
-		if ( $return ) {
-			editTemplate( $name );
-		} else {
-			aecRedirect( 'index.php?option=com_acctexp&task=showTemplates', JText::_('AEC_CONFIG_SAVED') );
-		}
 	}
 }
 
@@ -2363,7 +2376,7 @@ class aecAdminProcessor extends aecAdminEntity
 
 		$msg = sprintf( JText::_('AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
-		aecRedirect( 'index.php?option=com_acctexp&task=showProcessors', $msg );
+		$this->setMessage($msg);
 	}
 
 	public function save( $return=0 )
@@ -2437,11 +2450,7 @@ class aecAdminProcessor extends aecAdminEntity
 
 		$pp->storeload();
 
-		if ( $return ) {
-			aecRedirect( 'index.php?option=com_acctexp&task=editProcessor&id=' . $pp->processor->id, JText::_('AEC_CONFIG_SAVED') );
-		} else {
-			aecRedirect( 'index.php?option=com_acctexp&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
-		}
+		$this->setMessage( JText::_('AEC_CONFIG_SAVED') );
 	}
 }
 
@@ -3360,7 +3369,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		HTML_AcctExp::editSubscriptionPlan( $aecHTML, $row, $hasrecusers );
 	}
 
-	public function save( $apply=0 )
+	public function save()
 	{
 		$row = new SubscriptionPlan();
 		$row->load( $_POST['id'] );
@@ -3446,11 +3455,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			}
 		}
 
-		if ( $apply ) {
-			aecRedirect( 'index.php?option=com_acctexp&task=editSubscriptionPlan&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		} else {
-			aecRedirect( 'index.php?option=com_acctexp&task=showSubscriptionPlans', JText::_('SAVED') );
-		}
+		$this->setMessage( JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	}
 
 	public function remove( $id )
@@ -3791,7 +3796,7 @@ class aecAdminItemGroup extends aecAdminEntity
 		HTML_AcctExp::editItemGroup( $aecHTML, $row );
 	}
 
-	public function save( $apply=0 )
+	public function save()
 	{
 		$row = new ItemGroup();
 		$row->load( $_POST['id'] );
@@ -3821,11 +3826,7 @@ class aecAdminItemGroup extends aecAdminEntity
 			ItemGroupHandler::setChildren( 1, array( $id ), 'group' );
 		}
 
-		if ( $apply ) {
-			aecRedirect( 'index.php?option=com_acctexp&task=editItemGroup&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		} else {
-			aecRedirect( 'index.php?option=com_acctexp&task=showItemGroups', JText::_('SAVED') );
-		}
+		$this->setMessage( JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	}
 
 	public function remove( $id )
@@ -4173,7 +4174,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		HTML_AcctExp::editMicroIntegration( $mi, $lists, $aecHTML, $attached );
 	}
 
-	public function save( $apply=0 )
+	public function save()
 	{
 		unset( $_POST['option'] );
 		unset( $_POST['task'] );
@@ -4312,9 +4313,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 			exit();
 		}
 
-		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
-
-		aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', $msg );
+		$this->setMessage( $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED') );
 	}
 
 	public function change( $cid=null, $state=0 )
@@ -4339,12 +4338,10 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		}
 
 		if ( $state ) {
-			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_PUBLISHED');
+			$this->setMessage( $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_PUBLISHED') );
 		} else {
-			$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UNPUBLISHED');
+			$this->setMessage( $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UNPUBLISHED') );
 		}
-
-		aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', $msg );
 	}
 }
 
@@ -4715,7 +4712,7 @@ class aecAdminCoupon extends aecAdminEntity
 		HTML_AcctExp::editCoupon( $aecHTML, $cph->coupon );
 	}
 
-	public function save( $apply=0 )
+	public function save( $coupon_code )
 	{
 		$new = 0;
 		$type = $_POST['type'];
@@ -4818,9 +4815,7 @@ class aecAdminCoupon extends aecAdminEntity
 			}
 		}
 
-		$msg = JText::_('AEC_MSG_ITEMS_DELETED');
-
-		aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', $msg );
+		$this->setMessage( JText::_('AEC_MSG_ITEMS_DELETED') );
 	}
 
 	public function change( $id=null, $state=0, $option )
@@ -4860,9 +4855,7 @@ class aecAdminCoupon extends aecAdminEntity
 			$this->db->query();
 		}
 
-		$msg = count( $id ) . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED');
-
-		aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', $msg );
+		$this->setMessage( count( $id ) . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED') );
 	}
 
 }
@@ -5021,7 +5014,7 @@ class aecAdminInvoice extends aecAdminEntity
 		HTML_AcctExp::editInvoice( $aecHTML, $id );
 	}
 
-	public function save( $return=0 )
+	public function save()
 	{
 		$row = new Invoice();
 		$row->load( $_POST['id'] );
@@ -5071,15 +5064,7 @@ class aecAdminInvoice extends aecAdminEntity
 
 		$row->storeload();
 
-		if ( $return ) {
-			aecRedirect( 'index.php?option=com_acctexp&task=editInvoice&id=' . $row->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
-		} else {
-			if ( $returnTask ) {
-				aecRedirect( 'index.php?option=com_acctexp&task=' . $returnTask . '&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );
-			} else {
-				aecRedirect( 'index.php?option=com_acctexp&task=invoices', JText::_('AEC_CONFIG_SAVED') );
-			}
-		}
+		$this->setMessage( JText::_('AEC_CONFIG_SAVED') );
 	}
 
 	public function clear( $invoice_number, $applyplan, $task )
@@ -5256,12 +5241,12 @@ class aecAdminService extends aecAdminEntity
 		HTML_AcctExp::editService( $row, $aecHTML );
 	}
 
-	public function save( $apply=0 )
+	public function save($id)
 	{
 		$post = AECToolbox::cleanPOST( $_POST, false );
 
-		if ( $_POST['id'] ) {
-			$row = aecService::getById($_POST['id']);
+		if ($id) {
+			$row = aecService::getById($id);
 		} else {
 			$row = aecService::getByType($post['type']);
 		}
@@ -5279,16 +5264,8 @@ class aecAdminService extends aecAdminEntity
 
 		$row->reorder();
 
-		if ( $_POST['id'] ) {
-			$id = $_POST['id'];
-		} else {
-			$id = $row->getMax();
-		}
-
-		if ( $apply ) {
-			aecRedirect( 'index.php?option=com_acctexp&task=editService&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		} else {
-			aecRedirect( 'index.php?option=com_acctexp&task=showServices', JText::_('SAVED') );
+		if ( empty($id) ) {
+			$this->params['id'] = $row->getMax();
 		}
 	}
 
