@@ -133,8 +133,6 @@ class HTML_myCommon
 		$options = array( 'id' => $id, 'option' => 'com_acctexp', 'entity' => $entity, 'task' => $task );
 
 		foreach ( $options as $name => $value ) {
-			if ( empty($value) ) continue;
-
 			echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
 		}
 
@@ -337,7 +335,7 @@ class HTML_myCommon
 			. '</a>';
 		} else {
 			return '<a'
-			. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' btn-aec-submit"'
+			. ' class="btn btn-aec-submit btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' btn-aec-submit"'
 			. ' data-task="' . $action . '" data-entity="' . $object . '"'
 			. ( !empty($button['actionable']) ? ' disabled="disabled"' : '' )
 			. ' href="#"'

@@ -1209,12 +1209,6 @@ class aecAdminSettings extends aecAdminEntity
 			}
 		}
 
-		if ( $return ) {
-			$this->redirect('edit', 'Settings', JText::_('AEC_CONFIG_SAVED'));
-		} else {
-			$this->redirect('browse', 'Central', JText::_('AEC_CONFIG_SAVED'));
-		}
-
 		$this->setMessage( JText::_('AEC_CONFIG_SAVED') );
 	}
 }
@@ -4265,16 +4259,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 
 		$mi->reorder();
 
-		if ( $id ) {
-			if ( $apply ) {
-				aecRedirect( 'index.php?option=com_acctexp&task=editMicroIntegration&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-			} else {
-				aecRedirect( 'index.php?option=com_acctexp&task=showMicroIntegrations', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-			}
-		} else {
-			aecRedirect( 'index.php?option=com_acctexp&task=editMicroIntegration&id=' . $mi->id , JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-		}
-
+		$this->setMessage( JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	}
 
 	public function remove( $id )
@@ -4719,63 +4704,59 @@ class aecAdminCoupon extends aecAdminEntity
 
 		$_POST['coupon_code'] = aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-		if ( $_POST['coupon_code'] != '' ) {
+		if ( $_POST['coupon_code'] == '' ) {
+			$this->setMessage( JText::_('AEC_MSG_NO_COUPON_CODE') );
 
-			$cph = new couponHandler();
-
-			if ( !empty( $_POST['id'] ) ) {
-				$cph->coupon = new Coupon( $_POST['oldtype'] );
-				$cph->coupon->load( $_POST['id'] );
-
-				if ( $cph->coupon->id ) {
-					$cph->status = true;
-				}
-			} else {
-				$cph->load( $_POST['coupon_code'] );
-			}
-
-			if ( !$cph->status ) {
-				$cph->coupon = new Coupon( $type );
-				$cph->coupon->createNew( $_POST['coupon_code'] );
-				$cph->status = true;
-				$new = 1;
-			}
-
-			if ( $cph->status ) {
-				if ( !$new ) {
-					if ( $cph->coupon->type != $_POST['type'] ) {
-						$cph->switchType();
-					}
-				}
-
-				unset( $_POST['type'] );
-				unset( $_POST['oldtype'] );
-				unset( $_POST['id'] );
-
-				$post = AECToolbox::cleanPOST( $_POST, false );
-
-				$cph->coupon->savePOSTsettings( $post );
-
-				$cph->coupon->storeload();
-			} else {
-				$short	= 'coupon store failure';
-				$event	= 'When trying to store coupon';
-				$tags	= 'coupon,loading,error';
-				$params = array();
-
-				$eventlog = new eventLog();
-				$eventlog->issue( $short, $tags, $event, 128, $params );
-			}
-
-			if ( $apply ) {
-				aecRedirect( 'index.php?option=com_acctexp&task=editCoupon&id=' . $cph->coupon->type.'.'.$cph->coupon->id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-			} else {
-				aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
-			}
-		} else {
-			aecRedirect( 'index.php?option=com_acctexp&task=showCoupons', JText::_('AEC_MSG_NO_COUPON_CODE') );
+			return;
 		}
 
+		$cph = new couponHandler();
+
+		if ( !empty( $_POST['id'] ) ) {
+			$cph->coupon = new Coupon( $_POST['oldtype'] );
+			$cph->coupon->load( $_POST['id'] );
+
+			if ( $cph->coupon->id ) {
+				$cph->status = true;
+			}
+		} else {
+			$cph->load( $_POST['coupon_code'] );
+		}
+
+		if ( !$cph->status ) {
+			$cph->coupon = new Coupon( $type );
+			$cph->coupon->createNew( $_POST['coupon_code'] );
+			$cph->status = true;
+			$new = 1;
+		}
+
+		if ( $cph->status ) {
+			if ( !$new ) {
+				if ( $cph->coupon->type != $_POST['type'] ) {
+					$cph->switchType();
+				}
+			}
+
+			unset( $_POST['type'] );
+			unset( $_POST['oldtype'] );
+			unset( $_POST['id'] );
+
+			$post = AECToolbox::cleanPOST( $_POST, false );
+
+			$cph->coupon->savePOSTsettings( $post );
+
+			$cph->coupon->storeload();
+		} else {
+			$short	= 'coupon store failure';
+			$event	= 'When trying to store coupon';
+			$tags	= 'coupon,loading,error';
+			$params = array();
+
+			$eventlog = new eventLog();
+			$eventlog->issue( $short, $tags, $event, 128, $params );
+		}
+
+		$this->setMessage( JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	}
 
 	public function remove( $id, $option, $returnTask )
@@ -4885,26 +4866,26 @@ class aecAdminInvoice extends aecAdminEntity
 
 		$invoices = array();
 		$cclist = array();
-		foreach ( $ids as $id ) {
-			$invoices[$id] = new Invoice();
-			$invoices[$id]->load( $id );
+		foreach ( $ids as $data ) {
+			$invoice = new Invoice();
+			$invoice->load( $data->id );
 
-			$invoices[$id]->formatInvoiceNumber();
+			$invoice->formatInvoiceNumber();
 
-			if ( empty($invoices[$id]->invoice_number_formatted) ) {
-				$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number;
+			if ( empty($invoice->invoice_number_formatted) ) {
+				$invoice->invoice_number_formatted = $invoice->invoice_number;
 			} else {
-				$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number . ( ($invoices[$id]->invoice_number_formatted != $invoices[$id]->invoice_number) ? "\n" . '(' . $invoices[$id]->invoice_number_formatted . ')' : '' );
+				$invoice->invoice_number_formatted = $invoice->invoice_number . ( ($invoice->invoice_number_formatted != $invoice->invoice_number) ? "\n" . '(' . $invoice->invoice_number_formatted . ')' : '' );
 			}
 
-			if ( !empty( $invoices[$id]->coupons ) ) {
-				$coupons = $invoices[$id]->coupons;
+			if ( !empty( $invoice->coupons ) ) {
+				$coupons = $invoice->coupons;
 			} else {
 				$coupons = null;
 			}
 
 			if ( !empty( $coupons ) ) {
-				$invoices[$id]->coupons = "";
+				$invoice->coupons = "";
 
 				$couponslist = array();
 				foreach ( $coupons as $coupon_code ) {
@@ -4917,37 +4898,43 @@ class aecAdminInvoice extends aecAdminEntity
 					}
 				}
 
-				$invoices[$id]->coupons = implode( ", ", $couponslist );
+				$invoice->coupons = implode( ", ", $couponslist );
 			} else {
-				$invoices[$id]->coupons = null;
+				$invoice->coupons = null;
 			}
 
-			$invoices[$id]->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoices[$id]->usage . '">' . $invoices[$id]->usage . '</a>';
+			$invoice->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoice->usage . '">' . $invoice->usage . '</a>';
 
 			$query = 'SELECT username'
 				. ' FROM #__users'
-				. ' WHERE `id` = \'' . $invoices[$id]->userid . '\''
+				. ' WHERE `id` = \'' . $invoice->userid . '\''
 			;
 			$this->db->setQuery( $query );
 			$username = $this->db->loadResult();
 
-			$invoices[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoices[$id]->userid . '">';
+			$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoice->userid . '">';
 
 			if ( !empty( $username ) ) {
-				$invoices[$id]->username .= $username . '</a>';
+				$invoice->username .= $username . '</a>';
 			} else {
-				$invoices[$id]->username .= $invoices[$id]->userid;
+				$invoice->username .= $invoice->userid;
 			}
 
-			$invoices[$id]->username .= '</a>';
+			$invoice->username .= '</a>';
 
-			$invoices[$id]->processor = $procs[$invoices[$id]->method];
+			if ( isset($procs[$invoice->method]) ) {
+				$invoice->processor = $procs[$invoice->method];
+			} else {
+				$invoice->processor = $invoice->method;
+			}
+
+			$invoices[$data->id] = $invoice;
 		}
 
 		HTML_AcctExp::viewInvoices( $invoices, $this->getPagination(), $this->state );
 	}
 
-	public function edit( $id, $option, $returnTask, $userid )
+	public function edit( $id, $returnTask, $userid )
 	{
 		$row = new Invoice();
 		$row->load( $id );
