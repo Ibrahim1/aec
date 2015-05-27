@@ -312,7 +312,7 @@ class aecAdminEntity
 
 	public function call( $task='index' )
 	{
-		//if ( ($task == 'edit') && empty($this->id) ) $task = 'new';
+		if ($task == 'new') $task = 'edit';
 
 		if ($task == 'apply') {
 			$task = 'save';
@@ -4418,14 +4418,21 @@ class aecAdminCoupon extends aecAdminEntity
 		HTML_AcctExp::listCoupons($rows, $this->state, $nav);
 	}
 
-	public function edit( $id, $new )
+	public function edit( $id )
 	{
 		$lists = array();
 
 		$cph = new couponHandler();
 
-		if ( !$new ) {
-			$idx = explode( ".", $id );
+		if ( empty($id) ) {
+			$cph->coupon = new Coupon();
+			$cph->coupon->createNew();
+
+			$params_values			= array();
+			$discount_values		= array();
+			$restrictions_values	= array();
+		} else {
+			$idx = explode( ".", $id[0] );
 
 			$cph->coupon = new Coupon( $idx[0] );
 			$cph->coupon->load( $idx[1] );
@@ -4433,13 +4440,6 @@ class aecAdminCoupon extends aecAdminEntity
 			$params_values			= $cph->coupon->params;
 			$discount_values		= $cph->coupon->discount;
 			$restrictions_values	= $cph->coupon->restrictions;
-		} else {
-			$cph->coupon = new Coupon();
-			$cph->coupon->createNew();
-
-			$params_values			= array();
-			$discount_values		= array();
-			$restrictions_values	= array();
 		}
 
 		// We need to convert the values that are set as object properties
@@ -4934,7 +4934,7 @@ class aecAdminInvoice extends aecAdminEntity
 		HTML_AcctExp::viewInvoices( $invoices, $this->getPagination(), $this->state );
 	}
 
-	public function edit( $id, $returnTask, $userid )
+	public function edit( $id, $userid )
 	{
 		$row = new Invoice();
 		$row->load( $id );
@@ -4942,7 +4942,6 @@ class aecAdminInvoice extends aecAdminEntity
 		$params['fixed']				= array( 'toggle',		0 );
 		$params['userid']				= array( 'hidden',		$userid );
 		$params['active']				= array( 'toggle',		1 );
-		$params['returnTask']			= array( 'hidden',		$returnTask );
 		$params['created_date']			= array( 'list_date',	date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) );
 		$params['amount']				= array( 'inputB',		'' );
 		$params['usage']				= array( 'list', 		0 );
