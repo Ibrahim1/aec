@@ -389,10 +389,9 @@ class HTML_AcctExp
 	 * @param $coupons
 	 * @param $mi
 	 * @param $lists
-	 * @param $nexttask
 	 * @param aecHTML $aecHTML
 	 */
-	static function userForm( $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
+	static function userForm( $metaUser, $invoices, $coupons, $mi, $lists, $aecHTML )
 	{
 	?><script type="text/javascript">
 		jQuery(document).ready(function() {
@@ -470,16 +469,16 @@ class HTML_AcctExp
 	}
 
 	$buttons = array(
-		'applyMembership' => array(
+		'apply' => array(
 			'style' => 'info',
 			'text' => JText::_('APPLY'),
 			'icon' => 'ok-sign' ),
-		'saveMembership' => array(
+		'save' => array(
 			'style' => 'success',
 			'text' => JText::_('SAVE'),
 			'icon' => 'ok' ),
 		'hl1' => array(),
-		'cancelMembership' => array(
+		'cancel' => array(
 			'style' => 'danger',
 			'text' => JText::_('CANCEL'),
 			'icon' => 'remove'
@@ -488,7 +487,7 @@ class HTML_AcctExp
 
 	HTML_myCommon::startForm();
 
-	HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, '' );
+	HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, 'Membership' );
 
 	?><div class="col-sm-12"><?php
 
@@ -903,7 +902,7 @@ class HTML_AcctExp
 	<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
 	<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 	<input type="hidden" name="task" value="save" />
-	<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
+	<input type="hidden" name="entity" value="Membership" />
 	</form>
 
 	<?php
@@ -1757,7 +1756,7 @@ class HTML_AcctExp
 			array('signup_date', 'SUBSCR_DATE')
 		);
 
-		if ( $action[0] != 'manual' ) {
+		if ( $state->filter->status[0] != 'manual' ) {
 			$th_list = array_merge(
 				$th_list,
 				array(

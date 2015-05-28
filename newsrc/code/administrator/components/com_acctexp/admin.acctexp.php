@@ -320,10 +320,7 @@ class aecAdminEntity
 			$this->redirect = 'edit';
 		}
 
-		$r = new ReflectionMethod(
-			get_class($this),
-			$task
-		);
+		$r = new ReflectionMethod( get_class($this), $task );
 
 		$params = $r->getParameters();
 
@@ -337,13 +334,22 @@ class aecAdminEntity
 		if ($task != 'save') return;
 
 		if ( $this->redirect ) {
+			$r = new ReflectionMethod( get_class($this), $this->redirect );
+
+			$params = $r->getParameters();
+
+			$this->params = array();
+			foreach ( $params as $k ) {
+				$this->params[$k->getName()] = aecGetParam($k->getName());
+			}
+
 			$this->redirect($this->redirect, null, $this->params);
 		} elseif ( $task != 'index' ) {
 			$this->redirect();
 		}
 	}
 
-	public function redirect( $task='index', $entity=null, $parameters=null )
+	public function redirect( $task='index', $entity=null, $inject=null )
 	{
 		if ( empty($entity) ) $entity = $this->entity;
 
@@ -1238,7 +1244,7 @@ class aecAdminMembership extends aecAdminEntity
 		if ( array_search( 'notconfig', $this->state->filter->status ) ) {
 			$set_group	= 'notconfig';
 		} else {
-			$set_group	= $groups[0];
+			$set_group	= strtolower($this->state->filter->status[0]);
 		}
 
 		if ( !empty( $orderby ) ) {
@@ -1257,7 +1263,7 @@ class aecAdminMembership extends aecAdminEntity
 			}
 
 			if ( !in_array( $orderby, $forder ) ) {
-				$orderby = 'name ASC';
+				$this->state->sort = 'name ASC';
 			}
 		}
 
@@ -1935,20 +1941,20 @@ class aecAdminMembership extends aecAdminEntity
 		HTML_AcctExp::userForm( $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
 	}
 
-	public function save()
+	public function save($userid, $subscriptionid, $assignto_plan)
 	{
-		$app = JFactory::getApplication();
-
 		$post = $_POST;
 
-		if ( $post['assignto_plan'][0] == 0 ) {
-			unset( $post['assignto_plan'][0] );
+		if ( !empty($assignto_plan) ) {
+			if ( $assignto_plan[0] == 0 ) {
+				unset( $assignto_plan[0] );
+			}
 		}
 
-		$metaUser = new metaUser( $post['userid'] );
+		$metaUser = new metaUser($userid);
 
-		if ( $metaUser->hasSubscription && !empty( $post['subscriptionid'] ) ) {
-			$metaUser->moveFocus( $post['subscriptionid'] );
+		if ( $metaUser->hasSubscription && !empty($subscriptionid) ) {
+			$metaUser->moveFocus($subscriptionid);
 		}
 
 		$ck_primary = aecGetParam( 'ck_primary' );
@@ -1957,8 +1963,8 @@ class aecAdminMembership extends aecAdminEntity
 			$metaUser->focusSubscription->makePrimary();
 		}
 
-		if ( !empty( $post['assignto_plan'] ) && is_array( $post['assignto_plan'] ) ) {
-			foreach ( $post['assignto_plan'] as $assign_planid ) {
+		if ( !empty($assignto_plan) && is_array($assignto_plan) ) {
+			foreach ( $assignto_plan as $assign_planid ) {
 				$plan = new SubscriptionPlan();
 				$plan->load( $assign_planid );
 
@@ -1967,7 +1973,7 @@ class aecAdminMembership extends aecAdminEntity
 				$metaUser->focusSubscription->applyUsage( $assign_planid, 'none', 1 );
 
 				// We have to reload the metaUser object because of the changes
-				$metaUser = new metaUser( $post['userid'] );
+				$metaUser = new metaUser($userid);
 			}
 		}
 
@@ -1987,7 +1993,7 @@ class aecAdminMembership extends aecAdminEntity
 			}
 		}
 
-		if ( empty( $post['assignto_plan'] ) ) {
+		if ( empty( $assignto_plan ) ) {
 			if ( $ck_lifetime ) {
 				$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
 				$metaUser->focusSubscription->status		= 'Active';
