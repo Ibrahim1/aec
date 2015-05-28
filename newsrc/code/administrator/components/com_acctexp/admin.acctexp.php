@@ -643,21 +643,23 @@ class aecAdminState
 
 		$this->filter = new stdClass();
 
-		if ( !empty($init['filters']) ) {
-			foreach ( $init['filters'] as $key => $default ) {
-				$this->filter->{$key} = $this->app->getUserStateFromRequest(
+		if ( !empty($init['filter']) ) {
+			foreach ( $init['filter'] as $key => $default ) {
+				$value = $this->app->getUserStateFromRequest(
 					'aec_' . $entity . '_' . $key,
 					$entity . '_' . $key,
 					$default
 				);
 
-				if ( empty($this->filter->{$key}) && !empty($_REQUEST[$key]) ) {
-					$this->filter->{$key} = $_REQUEST[$key];
+				if ( !empty($_REQUEST[$key]) ) {
+					$value = $_REQUEST[$key];
 				}
 
-				if ( is_array($default) && !is_array($this->filter->{$key}) ) {
-					$this->filter->{$key} = array( $this->filter->{$key} );
+				if ( is_array($default) && !is_array($value) ) {
+					$value = array( $value );
 				}
+
+				$this->filter->{$key} = $value;
 
 				if ( $this->filter->{$key} != $default ) {
 					$this->filtered = true;
@@ -1217,7 +1219,7 @@ class aecAdminMembership extends aecAdminEntity
 {
 	public $init = array(
 		'sort' => 'name ASC',
-		'filters' => array(
+		'filter' => array(
 			'status' => array('active'),
 			'group' => array(),
 			'plan' => array()
@@ -2454,7 +2456,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 
 	public $init = array(
 		'sort' => 'name ASC',
-		'filters' => array(
+		'filter' => array(
 			'group' => array()
 		)
 	);
@@ -3903,7 +3905,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 	public $searchable = array('name', 'desc', 'class_name');
 
 	public $init = array(
-		'filters' => array(
+		'filter' => array(
 			'plan' => array()
 		)
 	);
