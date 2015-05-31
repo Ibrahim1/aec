@@ -617,15 +617,15 @@ jQuery(document).ready(function(jQuery) {
 	}
 
 
-	function aecSubmitBtn(command, entity, inject) {
-		var task = command + entity;
-
-		if (typeof(form) === 'undefined') {
-			form = document.getElementById('adminForm');
-		}
+	function aecSubmitBtn(task, entity, inject) {
+		var form = document.getElementById('adminForm');
 
 		if (typeof(task) !== 'undefined' && task !== "") {
 			form.task.value = task;
+		}
+
+		if (typeof(entity) !== 'undefined' && entity !== "") {
+			form.entity.value = entity;
 		}
 
 		if (inject.length) {
