@@ -133,8 +133,6 @@ class HTML_myCommon
 		$options = array( 'id' => $id, 'option' => 'com_acctexp', 'entity' => $entity, 'task' => $task );
 
 		foreach ( $options as $name => $value ) {
-			if ( empty($value) ) continue;
-
 			echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
 		}
 
@@ -337,7 +335,7 @@ class HTML_myCommon
 			. '</a>';
 		} else {
 			return '<a'
-			. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' btn-aec-submit"'
+			. ' class="btn btn-aec-submit btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . ' btn-aec-submit"'
 			. ' data-task="' . $action . '" data-entity="' . $object . '"'
 			. ( !empty($button['actionable']) ? ' disabled="disabled"' : '' )
 			. ' href="#"'
@@ -391,10 +389,9 @@ class HTML_AcctExp
 	 * @param $coupons
 	 * @param $mi
 	 * @param $lists
-	 * @param $nexttask
 	 * @param aecHTML $aecHTML
 	 */
-	static function userForm( $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
+	static function userForm( $metaUser, $invoices, $coupons, $mi, $lists, $aecHTML )
 	{
 	?><script type="text/javascript">
 		jQuery(document).ready(function() {
@@ -472,16 +469,16 @@ class HTML_AcctExp
 	}
 
 	$buttons = array(
-		'applyMembership' => array(
+		'apply' => array(
 			'style' => 'info',
 			'text' => JText::_('APPLY'),
 			'icon' => 'ok-sign' ),
-		'saveMembership' => array(
+		'save' => array(
 			'style' => 'success',
 			'text' => JText::_('SAVE'),
 			'icon' => 'ok' ),
 		'hl1' => array(),
-		'cancelMembership' => array(
+		'cancel' => array(
 			'style' => 'danger',
 			'text' => JText::_('CANCEL'),
 			'icon' => 'remove'
@@ -490,7 +487,7 @@ class HTML_AcctExp
 
 	HTML_myCommon::startForm();
 
-	HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, '' );
+	HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, 'Membership' );
 
 	?><div class="col-sm-12"><?php
 
@@ -905,7 +902,7 @@ class HTML_AcctExp
 	<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
 	<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 	<input type="hidden" name="task" value="save" />
-	<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
+	<input type="hidden" name="entity" value="Membership" />
 	</form>
 
 	<?php
@@ -1759,7 +1756,7 @@ class HTML_AcctExp
 			array('signup_date', 'SUBSCR_DATE')
 		);
 
-		if ( $action[0] != 'manual' ) {
+		if ( $state->filter->status[0] != 'manual' ) {
 			$th_list = array_merge(
 				$th_list,
 				array(
@@ -1855,8 +1852,6 @@ class HTML_AcctExp
 					</div>
 				</div>
 			</div>
-			<input type="hidden" name="option" value="com_acctexp" />
-			<input type="hidden" name="entity" value="Membership" />
 
 			<div class="modal fade" id="bulk-edit">
 				<div class="modal-dialog">
@@ -1896,11 +1891,10 @@ class HTML_AcctExp
 					</div>
 				</div>
 			</div>
-		</form>
+			<?php
 
-		</div>
+		HTML_myCommon::endForm('Membership');
 
-		<?php
 		HTML_myCommon::endCommon();
 	}
 
@@ -1970,12 +1964,10 @@ class HTML_AcctExp
 						</div>
 					</div>
 				</div>
-			<?php } ?>
-			<input type="hidden" name="option" value="com_acctexp" />
-			<input type="hidden" name="entity" value="MicroIntegration" />
-			<input type="hidden" name="boxchecked" value="0" />
-		</form>
-		<?php
+			<?php }
+
+		HTML_myCommon::endForm('MicroIntegration');
+
 		HTML_myCommon::endCommon();
 	}
 
@@ -2132,123 +2124,121 @@ class HTML_AcctExp
 
 		?>
 		<input type="hidden" name="orderby_plans" value="<?php echo $state->sort; ?>"/>
+
 		<?php if ( empty( $rows ) && !$state->filtered ) { ?>
-		<div class="clearfix"></div>
-		<div class="container" style="min-height: 50%; padding: 10% 0;">
-			<p class="text-center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
-		</div>
-	<?php } else { ?>
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12">
+			<div class="clearfix"></div>
+			<div class="container" style="min-height: 50%; padding: 10% 0;">
+				<p class="text-center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
+			</div>
+		<?php } else { ?>
+			<div class="container-fluid">
+				<div class="row">
 					<div class="col-sm-12">
-						<div class="aecadminform">
-							<table class="table table-striped table-hover table-selectable">
-								<thead><tr>
-									<th class="text-center">
-										ID
-										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
-									</th>
-									<?php aecAdmin::th_set($th_list, $lists, $state->sort); ?>
-									<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
-									<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
-								</tr></thead>
-								<tbody>
-								<?php foreach ( $rows as $i => $row ) { ?>
-									<tr>
-										<td class="text-right">
-											<div class="group-colors">
-												<?php foreach ( $row->groups as $group ) { ?>
-													<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
-													</div>
-												<?php } ?>
-											</div>
-											<?php echo $row->id; ?>&nbsp;
-											<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
-										</td>
-										<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=SubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-										<td class="text-left"><?php echo $row->desc; ?></td>
-										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
-										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
-										<td class="text-center"><?php $nav->ordering( $i, count($rows), 'plan', ($state->sort == 'ordering ASC' || $state->sort == 'ordering DESC') ); ?></td>
-										<td>
-											<div class="progress-group">
-												<div class="progress">
-													<div class="progress-bar progress-bar-danger" style="width: <?php echo $row->expired_percentage; ?>%;">
-														<?php if ( !$row->expired_inner ) {
-															echo '</div>';
-														} ?>
-														<div class="progress-bar-content">
-															<?php if ( $row->expiredcount ) { ?>
-																<a href="<?php echo $row->link_expired; ?>">
-																	<strong><?php echo $row->expiredcount; ?></strong>
-																</a>
-															<?php } ?>
+						<div class="col-sm-12">
+							<div class="aecadminform">
+								<table class="table table-striped table-hover table-selectable">
+									<thead><tr>
+										<th class="text-center">
+											ID
+											<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+										</th>
+										<?php aecAdmin::th_set($th_list, $lists, $state->sort); ?>
+										<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
+										<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+									</tr></thead>
+									<tbody>
+									<?php foreach ( $rows as $i => $row ) { ?>
+										<tr>
+											<td class="text-right">
+												<div class="group-colors">
+													<?php foreach ( $row->groups as $group ) { ?>
+														<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
 														</div>
-														<?php if ( $row->expired_inner ) {
-															echo '</div>';
-														} ?>
-													</div>
+													<?php } ?>
+												</div>
+												<?php echo $row->id; ?>&nbsp;
+												<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
+											</td>
+											<td class="text-left"><a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=SubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+											<td class="text-left"><?php echo $row->desc; ?></td>
+											<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
+											<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
+											<td class="text-center"><?php $nav->ordering( $i, count($rows), 'plan', ($state->sort == 'ordering ASC' || $state->sort == 'ordering DESC') ); ?></td>
+											<td>
+												<div class="progress-group">
 													<div class="progress">
-														<div class="progress-bar progress-bar-succcess progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
-															<?php if ( !$row->active_inner ) {
+														<div class="progress-bar progress-bar-danger" style="width: <?php echo $row->expired_percentage; ?>%;">
+															<?php if ( !$row->expired_inner ) {
 																echo '</div>';
 															} ?>
 															<div class="progress-bar-content">
-																<?php if ( $row->usercount ) { ?>
-																	<a href="<?php echo $row->link_active; ?>">
-																		<strong><?php echo $row->usercount; ?></strong>
+																<?php if ( $row->expiredcount ) { ?>
+																	<a href="<?php echo $row->link_expired; ?>">
+																		<strong><?php echo $row->expiredcount; ?></strong>
 																	</a>
 																<?php } ?>
 															</div>
-															<?php if ( $row->active_inner ) {
+															<?php if ( $row->expired_inner ) {
 																echo '</div>';
 															} ?>
 														</div>
+														<div class="progress">
+															<div class="progress-bar progress-bar-succcess progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
+																<?php if ( !$row->active_inner ) {
+																	echo '</div>';
+																} ?>
+																<div class="progress-bar-content">
+																	<?php if ( $row->usercount ) { ?>
+																		<a href="<?php echo $row->link_active; ?>">
+																			<strong><?php echo $row->usercount; ?></strong>
+																		</a>
+																	<?php } ?>
+																</div>
+																<?php if ( $row->active_inner ) {
+																	echo '</div>';
+																} ?>
+															</div>
+														</div>
+											</td>
+											<td>
+												<div class="progress">
+													<?php if ( $row->usercount + $row->expiredcount ) { ?>
+													<div class="progress-bar progress-short progress-bar-info progress-bar-striped" style="width: <?php echo $row->total_percentage; ?>%;">
+														<?php if ( !$row->total_inner ) {
+															echo '</div>';
+														} ?>
+														<div class="progress-bar-content">
+															<a href="<?php echo $row->link; ?>">
+																<strong><?php echo $row->usercount + $row->expiredcount; ?></strong>
+															</a>
+														</div>
+														<?php if ( $row->total_inner ) {
+															echo '</div>';
+														} ?>
+														<?php } ?>
 													</div>
-										</td>
-										<td>
-											<div class="progress">
-												<?php if ( $row->usercount + $row->expiredcount ) { ?>
-												<div class="progress-bar progress-short progress-bar-info progress-bar-striped" style="width: <?php echo $row->total_percentage; ?>%;">
-													<?php if ( !$row->total_inner ) {
-														echo '</div>';
-													} ?>
-													<div class="progress-bar-content">
-														<a href="<?php echo $row->link; ?>">
-															<strong><?php echo $row->usercount + $row->expiredcount; ?></strong>
-														</a>
-													</div>
-													<?php if ( $row->total_inner ) {
-														echo '</div>';
-													} ?>
-													<?php } ?>
 												</div>
-											</div>
+											</td>
+										</tr>
+									<?php } ?>
+									</tbody>
+									<tfoot>
+									<tr>
+										<td colspan="13">
+											<?php echo $nav->getListFooter(); ?>
 										</td>
 									</tr>
-								<?php } ?>
-								</tbody>
-								<tfoot>
-								<tr>
-									<td colspan="13">
-										<?php echo $nav->getListFooter(); ?>
-									</td>
-								</tr>
-								</tfoot>
-							</table>
+									</tfoot>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	<?php } ?>
-		<input type="hidden" name="option" value="com_acctexp" />
-		<input type="hidden" name="entity" value="SubscriptionPlan" />
-		<input type="hidden" name="boxchecked" value="0" />
-		</form>
+		<?php }
 
-		<?php
+		HTML_myCommon::endForm('SubscriptionPlan');
+
 		HTML_myCommon::endCommon();
 	}
 
@@ -2717,11 +2707,10 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="option" value="com_acctexp" />
-		<input type="hidden" name="entity" value="ItemGroup" />
-		</form>
-
 		<?php
+
+		HTML_myCommon::endForm('ItemGroup');
+
 		HTML_myCommon::endCommon();
 	}
 
@@ -2910,66 +2899,66 @@ class HTML_AcctExp
 		);
 
 		?>
+
 		<input type="hidden" name="orderby_coupons" value="<?php echo $state->sort; ?>"/>
+
 		<?php if ( empty( $rows ) && !$state->filtered ) { ?>
-		<div class="clearfix"></div>
-		<div class="container" style="min-height: 50%; padding: 10% 0;">
-			<p style="text-align: center">There is no coupon set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Coupon', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new coupon' ), true )?></p>
-		</div>
-	<?php } else { ?>
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12">
+			<div class="clearfix"></div>
+			<div class="container" style="min-height: 50%; padding: 10% 0;">
+				<p style="text-align: center">There is no coupon set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Coupon', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new coupon' ), true )?></p>
+			</div>
+		<?php } else { ?>
+			<div class="container-fluid">
+				<div class="row">
 					<div class="col-sm-12">
-						<table class="table table-hover table-striped table-selectable">
-							<thead><tr>
-								<th class="text-center">
-									<?php echo JText::_('AEC_CMN_ID'); ?>
-									<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
-								</th>
-								<?php aecAdmin::th_set($th_list, array(), $state->sort); ?>
-								<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
-							</tr></thead>
-							<tbody>
-							<?php foreach ( $rows as $i => $row ) { ?>
+						<div class="col-sm-12">
+							<table class="table table-hover table-striped table-selectable">
+								<thead><tr>
+									<th class="text-center">
+										<?php echo JText::_('AEC_CMN_ID'); ?>
+										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+									</th>
+									<?php aecAdmin::th_set($th_list, array(), $state->sort); ?>
+									<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
+								</tr></thead>
+								<tbody>
+								<?php foreach ( $rows as $i => $row ) { ?>
+									<tr>
+										<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
+										<td class="text-left">
+											<a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=Coupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+										</td>
+										<td class="text-left"><strong><?php echo $row->coupon_code; ?></strong></td>
+										<td class="text-left"><?php echo $row->desc; ?></td>
+										<td class="text-center">
+											<?php HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?>
+										</td>
+										<td class="text-center">
+											<div class="progress progress-info progress-striped">
+												<?php if ( $row->usecount ) { ?>
+													<div class="bar" style="width: <?php echo $row->percentage; ?>%;"><?php if ( $row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?></div><?php if ( !$row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?>
+												<?php } ?>
+											</div>
+										</td>
+									</tr>
+								<?php } ?>
+								</tbody>
+								<tfoot>
 								<tr>
-									<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
-									<td class="text-left">
-										<a href="<?php echo 'index.php?option=com_acctexp&amp;task=edit&entity=Coupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
-									</td>
-									<td class="text-left"><strong><?php echo $row->coupon_code; ?></strong></td>
-									<td class="text-left"><?php echo $row->desc; ?></td>
-									<td class="text-center">
-										<?php HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?>
-									</td>
-									<td class="text-center">
-										<div class="progress progress-info progress-striped">
-											<?php if ( $row->usecount ) { ?>
-												<div class="bar" style="width: <?php echo $row->percentage; ?>%;"><?php if ( $row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?></div><?php if ( !$row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?>
-											<?php } ?>
-										</div>
+									<td colspan="9">
+										<?php echo $nav->getListFooter(); ?>
 									</td>
 								</tr>
-							<?php } ?>
-							</tbody>
-							<tfoot>
-							<tr>
-								<td colspan="9">
-									<?php echo $nav->getListFooter(); ?>
-								</td>
-							</tr>
-							</tfoot>
-						</table>
+								</tfoot>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	<?php } ?>
-		<input type="hidden" name="option" value="com_acctexp" />
-		<input type="hidden" name="entity" value="Coupon" />
-		</form>
+		<?php }
 
-		<?php
+		HTML_myCommon::endForm('Coupon');
+
 		HTML_myCommon::endCommon();
 	}
 
@@ -3195,11 +3184,10 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="option" value="com_acctexp" />
-		<input type="hidden" name="entity" value="Invoice" />
-		</form>
-
 		<?php
+
+		HTML_myCommon::endForm('Invoice');
+
 		HTML_myCommon::endCommon();
 	}
 
@@ -3314,13 +3302,10 @@ class HTML_AcctExp
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="option" value="com_acctexp" />
-		<input type="hidden" name="task" value="history" />
-		<input type="hidden" name="returnTask" value="history" />
-		<input type="hidden" name="boxchecked" value="0" />
-		</form>
-
 		<?php
+
+		HTML_myCommon::endForm('History');
+
 		HTML_myCommon::endCommon();
 	}
 
@@ -3387,362 +3372,365 @@ class HTML_AcctExp
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 		<?php
+
+		HTML_myCommon::endForm('Eventlog');
+
 		HTML_myCommon::endCommon();
 	}
 
 	static function stats( $page, $stats )
 	{
-	global $aecConfig;
+		global $aecConfig;
 
-	HTML_myCommon::startCommon('aec-wrap-dots');
+		HTML_myCommon::startCommon('aec-wrap-dots');
 
-	HTML_myCommon::startForm();
+		HTML_myCommon::startForm();
 
-	HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' );
 
-	?>
-	<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
-		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/com_acctexp'; ?>/js/stats/charts.js"></script>
-		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/com_acctexp'; ?>/js/stats/grouped_sales.js"></script>
-		<script type="text/javascript">
-			var	amount_format = d3.format(".2f"),
-				amount_currency = "<?php echo html_entity_decode( AECToolbox::getCurrencySymbol( $aecConfig->cfg['standard_currency'] ), ENT_QUOTES, "UTF-8" ); ?>",
-				range_start=2007,
-				range_end=2012,
-				request_url="index.php?option=com_acctexp&task=statrequest",
-				avg_sale = <?php echo $stats['avg_sale']; ?>,
-				first_sale = "<?php echo $stats['first_sale']; ?>",
-				group_names = ["<?php echo implode( '","', $stats['group_names'] ); ?>"],
-				plan_names = ["<?php echo implode( '","', $stats['plan_names'] ); ?>"];
-		</script>
-	<form action="index.php" method="post" name="adminForm" id="adminForm">
-
-	<ul class="nav nav-pills">
-		<?php
-		$menus = array( 'overview' => "Overview",
-						'compare' => "Compare",
-			//'users' => "Users",
-						'sales' => "Sales Graph",
-						'all_time' => "All Time Sales"
-		);
-
-		foreach ( $menus as $menu => $menutext ) {
-			echo '<li' . ( ( $page == $menu ) ? ' class="active"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats&page=' . $menu . '">' . $menutext . '</a></li>';
-		}
 		?>
-	</ul>
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
+			<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/com_acctexp'; ?>/js/stats/charts.js"></script>
+			<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/com_acctexp'; ?>/js/stats/grouped_sales.js"></script>
+			<script type="text/javascript">
+				var	amount_format = d3.format(".2f"),
+					amount_currency = "<?php echo html_entity_decode( AECToolbox::getCurrencySymbol( $aecConfig->cfg['standard_currency'] ), ENT_QUOTES, "UTF-8" ); ?>",
+					range_start=2007,
+					range_end=2012,
+					request_url="index.php?option=com_acctexp&task=statrequest",
+					avg_sale = <?php echo $stats['avg_sale']; ?>,
+					first_sale = "<?php echo $stats['first_sale']; ?>",
+					group_names = ["<?php echo implode( '","', $stats['group_names'] ); ?>"],
+					plan_names = ["<?php echo implode( '","', $stats['plan_names'] ); ?>"];
+			</script>
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 
-	<div class="container-fluid">
-	<div class="row">
-	<div class="col-sm-12">
-	<div class="col-sm-12">
-	<table class="aecadminform">
-	<tr><td>
+		<ul class="nav nav-pills">
+			<?php
+			$menus = array( 'overview' => "Overview",
+							'compare' => "Compare",
+				//'users' => "Users",
+							'sales' => "Sales Graph",
+							'all_time' => "All Time Sales"
+			);
 
-	<?php
-	switch ( $page ) {
-		case 'overview':
+			foreach ( $menus as $menu => $menutext ) {
+				echo '<li' . ( ( $page == $menu ) ? ' class="active"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats&page=' . $menu . '">' . $menutext . '</a></li>';
+			}
 			?>
-			<section class="paper" id="chart">
-				<div id="overview-day" class="overview-container">
-					<h4><?php echo gmdate('l, jS M Y'); ?></h4>
-					<div id="overview-day-this" class="chart-sunburst"></div>
-					<div id="overview-day-hourly-graph" class="chart-rickshaw"></div>
-				</div>
-				<div id="overview-month" class="overview-container">
-					<h4><?php echo gmdate('F'); ?></h4>
-					<div id="overview-month-this" class="chart-sunburst"></div>
-					<div id="overview-month-graph" class="chart-rickshaw"></div>
-				</div>
-				<div id="overview-year" class="overview-container">
-					<h4><?php echo gmdate('Y'); ?></h4>
-					<div id="overview-year-sun" class="chart-sunburst"></div>
-					<div id="overview-year-cell" class="chart-cellular"></div>
-				</div>
-				<script type="text/javascript">
-					var cf = d3.chart.factory()
-						.source("sales")
-						.canvas(200, 200, 10)
-						.target("div#overview-day-this")
-						.range(	"<?php echo gmdate('Y-m-d') . ' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#overview-day-hourly-graph")
-						.create("rickshaw",{ unit:"hour" });
+		</ul>
 
-					cf.target("div#overview-month-this")
-						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#overview-month-graph")
-						.create("rickshaw",{ unit:"day" });
+		<div class="container-fluid">
+		<div class="row">
+		<div class="col-sm-12">
+		<div class="col-sm-12">
+		<table class="aecadminform">
+		<tr><td>
 
-					cf.canvas(200, 200, 10)
-						.target("div#overview-year-sun")
-						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst", 200)
-						.canvas(760, 160, 10)
-						.target("div#overview-year-cell")
-						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("cellular");
-				</script>
-						</div>
-						<?php
-						break;
-		case 'compare':
-			?>
-			<section class="paper" id="chart">
-				<div id="compare-day" class="compare-container">
-					<h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4>
-					<div id="compare-day-last" class="chart-sunburst"></div>
-					<div id="compare-day-compare" class="chart-rickshaw-bump"></div>
-					<div id="compare-day-this" class="chart-sunburst"></div>
-					<div id="compare-day-graph-last" class="chart-rickshaw-wide-slim"></div>
-					<div id="compare-day-graph-this" class="chart-rickshaw-wide-slim"></div>
-				</div>
-				<div id="compare-week" class="compare-container">
-					<h4>Week <?php echo gmdate('W', gmdate("U")-86400*7); ?> &rarr; Week <?php echo gmdate('W'); ?></h4>
-					<div id="compare-week-last" class="chart-sunburst"></div>
-					<div id="compare-week-compare" class="chart-rickshaw-bump"></div>
-					<div id="compare-week-this" class="chart-sunburst"></div>
-					<div id="compare-week-graph-last" class="chart-rickshaw-wide-slim"></div>
-					<div id="compare-week-graph-this" class="chart-rickshaw-wide-slim"></div>
-				</div>
-				<div id="compare-month" class="compare-container">
-					<h4><?php echo gmdate('F', strtotime("last month",gmdate("U"))); ?> &rarr; <?php echo gmdate('F'); ?></h4>
-					<div id="compare-month-last" class="chart-sunburst"></div>
-					<div id="compare-month-compare" class="chart-rickshaw-bump"></div>
-					<div id="compare-month-this" class="chart-sunburst"></div>
-					<div id="compare-month-graph-last" class="chart-rickshaw-wide-slim"></div>
-					<div id="compare-month-graph-this" class="chart-rickshaw-wide-slim"></div>
-				</div>
-				<div id="compare-year" class="compare-container">
-					<h4><?php echo gmdate('Y', strtotime("last year",gmdate("U"))); ?> &rarr; <?php echo gmdate('Y'); ?></h4>
-					<div id="compare-year-last" class="chart-sunburst"></div>
-					<div id="compare-year-compare" class="chart-rickshaw-bump"></div>
-					<div id="compare-year-this" class="chart-sunburst"></div>
-					<div id="compare-year-graph-last" class="chart-rickshaw-wide-slim"></div>
-					<div id="compare-year-graph-this" class="chart-rickshaw-wide-slim"></div>
-				</div>
-				<script type="text/javascript">
-					var cf = d3.chart.factory()
-						.source("sales")
-						.canvas(200, 200, 10);
+		<?php
+		switch ( $page ) {
+			case 'overview':
+				?>
+				<section class="paper" id="chart">
+					<div id="overview-day" class="overview-container">
+						<h4><?php echo gmdate('l, jS M Y'); ?></h4>
+						<div id="overview-day-this" class="chart-sunburst"></div>
+						<div id="overview-day-hourly-graph" class="chart-rickshaw"></div>
+					</div>
+					<div id="overview-month" class="overview-container">
+						<h4><?php echo gmdate('F'); ?></h4>
+						<div id="overview-month-this" class="chart-sunburst"></div>
+						<div id="overview-month-graph" class="chart-rickshaw"></div>
+					</div>
+					<div id="overview-year" class="overview-container">
+						<h4><?php echo gmdate('Y'); ?></h4>
+						<div id="overview-year-sun" class="chart-sunburst"></div>
+						<div id="overview-year-cell" class="chart-cellular"></div>
+					</div>
+					<script type="text/javascript">
+						var cf = d3.chart.factory()
+							.source("sales")
+							.canvas(200, 200, 10)
+							.target("div#overview-day-this")
+							.range(	"<?php echo gmdate('Y-m-d') . ' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#overview-day-hourly-graph")
+							.create("rickshaw",{ unit:"hour" });
 
-					cf.target("div#compare-day-last")
-						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-day-graph-last")
-						.create("rickshaw",{ unit:"hour" })
-						.target("div#compare-day-this")
-						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-day-graph-this")
-						.create("rickshaw",{ unit:"hour" })
-						.target("div#compare-day-last")
-						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
-						.target("div#compare-day-compare")
-						.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
+						cf.target("div#overview-month-this")
+							.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#overview-month-graph")
+							.create("rickshaw",{ unit:"day" });
 
-					cf.target("div#compare-week-last")
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-week-graph-last")
-						.create("rickshaw",{ unit:"day" })
-						.target("div#compare-week-this")
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-week-graph-this")
-						.create("rickshaw",{ unit:"day" })
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
-						.target("div#compare-week-compare")
-						.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
+						cf.canvas(200, 200, 10)
+							.target("div#overview-year-sun")
+							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("sunburst", 200)
+							.canvas(760, 160, 10)
+							.target("div#overview-year-cell")
+							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("cellular");
+					</script>
+							</div>
+							<?php
+							break;
+			case 'compare':
+				?>
+				<section class="paper" id="chart">
+					<div id="compare-day" class="compare-container">
+						<h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4>
+						<div id="compare-day-last" class="chart-sunburst"></div>
+						<div id="compare-day-compare" class="chart-rickshaw-bump"></div>
+						<div id="compare-day-this" class="chart-sunburst"></div>
+						<div id="compare-day-graph-last" class="chart-rickshaw-wide-slim"></div>
+						<div id="compare-day-graph-this" class="chart-rickshaw-wide-slim"></div>
+					</div>
+					<div id="compare-week" class="compare-container">
+						<h4>Week <?php echo gmdate('W', gmdate("U")-86400*7); ?> &rarr; Week <?php echo gmdate('W'); ?></h4>
+						<div id="compare-week-last" class="chart-sunburst"></div>
+						<div id="compare-week-compare" class="chart-rickshaw-bump"></div>
+						<div id="compare-week-this" class="chart-sunburst"></div>
+						<div id="compare-week-graph-last" class="chart-rickshaw-wide-slim"></div>
+						<div id="compare-week-graph-this" class="chart-rickshaw-wide-slim"></div>
+					</div>
+					<div id="compare-month" class="compare-container">
+						<h4><?php echo gmdate('F', strtotime("last month",gmdate("U"))); ?> &rarr; <?php echo gmdate('F'); ?></h4>
+						<div id="compare-month-last" class="chart-sunburst"></div>
+						<div id="compare-month-compare" class="chart-rickshaw-bump"></div>
+						<div id="compare-month-this" class="chart-sunburst"></div>
+						<div id="compare-month-graph-last" class="chart-rickshaw-wide-slim"></div>
+						<div id="compare-month-graph-this" class="chart-rickshaw-wide-slim"></div>
+					</div>
+					<div id="compare-year" class="compare-container">
+						<h4><?php echo gmdate('Y', strtotime("last year",gmdate("U"))); ?> &rarr; <?php echo gmdate('Y'); ?></h4>
+						<div id="compare-year-last" class="chart-sunburst"></div>
+						<div id="compare-year-compare" class="chart-rickshaw-bump"></div>
+						<div id="compare-year-this" class="chart-sunburst"></div>
+						<div id="compare-year-graph-last" class="chart-rickshaw-wide-slim"></div>
+						<div id="compare-year-graph-this" class="chart-rickshaw-wide-slim"></div>
+					</div>
+					<script type="text/javascript">
+						var cf = d3.chart.factory()
+							.source("sales")
+							.canvas(200, 200, 10);
 
-					cf.target("div#compare-month-last")
-						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-month-graph-last")
-						.create("rickshaw",{ unit:"day" })
-						.target("div#compare-month-this")
-						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-month-graph-this")
-						.create("rickshaw",{ unit:"day" })
-						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-						.target("div#compare-month-compare")
-						.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
+						cf.target("div#compare-day-last")
+							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-day-graph-last")
+							.create("rickshaw",{ unit:"hour" })
+							.target("div#compare-day-this")
+							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-day-graph-this")
+							.create("rickshaw",{ unit:"hour" })
+							.target("div#compare-day-last")
+							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
+							.target("div#compare-day-compare")
+							.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
 
-					cf.target("div#compare-year-last")
-						.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-year-graph-last")
-						.create("rickshaw",{ unit:"week" })
-						.target("div#compare-year-this")
-						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-year-graph-this")
-						.create("rickshaw",{ unit:"week" })
-						.target("div#compare-year-last")
-						.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
-						.target("div#compare-year-compare")
-						.create("rickshaw",{ unit:"year", renderer:"line", axes_time:false });
-				</script>
-						</div>
-						<?php
-						break;
-		case 'users':
-			break;
-		case 'sales':
-			?>
-			<section class="paper">
-				<h4>Sales Graph</h4>
-				<div id="sales-graph" class="overview-container">
-					<div id="overview-sales-graph" class="chart-rickshaw-huge"></div>
-					<div class="chart-controls-box">
-						<div id="legend" class="chart-controls">
-							<p><strong>hover</strong> to highlight, <strong>click</strong> to toggle, <strong>drag</strong> to sort groups</p>
-						</div>
-						<div id="renderer_form" class="toggler chart-controls">
-							<input type="radio" name="renderer" id="area" value="area" checked="checked">
-							<label for="area"><i class="graph-control-area"></i>area</label>
-							<input type="radio" name="renderer" id="bar" value="bar">
-							<label for="bar"><i class="graph-control-bar"></i>bar</label>
-							<input type="radio" name="renderer" id="line" value="line">
-							<label for="line"><i class="graph-control-line"></i>line</label>
-							<input type="radio" name="renderer" id="scatter" value="scatterplot">
-							<label for="scatter"><i class="graph-control-scatter"></i>scatter</label>
-						</div>
-						<div id="offset_form" class="chart-controls">
-							<label for="value">
-								<input type="radio" name="offset" id="value" value="value">
-								<span><i class="graph-control-value"></i>value</span>
-							</label>
-							<label for="stack">
-								<input type="radio" name="offset" id="stack" value="zero" checked="checked">
-								<span><i class="graph-control-stack"></i>stack</span>
-							</label>
-							<label for="stream">
-								<input type="radio" name="offset" id="stream" value="wiggle">
-								<span><i class="graph-control-stream"></i>stream</span>
-							</label>
-							<label for="pct">
-								<input type="radio" name="offset" id="pct" value="expand">
-								<span><i class="graph-control-pct"></i>percent</span>
-							</label>
-						</div>
-						<div id="unit_form" class="chart-controls">
-							<label for="day">
-								<input type="radio" name="unit" id="day" value="day" checked="checked">
-								<span><i class="graph-control-day"></i>days</span>
-							</label>
-							<label for="week">
-								<input type="radio" name="unit" id="week" value="week">
-								<span><i class="graph-control-week"></i>weeks</span>
-							</label>
-							<label for="month">
-								<input type="radio" name="unit" id="month" value="month">
-								<span><i class="graph-control-bar"></i>months</span>
-							</label>
-							<label for="year">
-								<input type="radio" name="unit" id="year" value="year">
-								<span><i class="graph-control-year"></i>years</span>
-							</label>
-						</div>
-						<div id="range_form" class="chart-controls">
-							<label for="rangepicker">
-								<span class="jqui-daterangepicker-text">Select Range:</span>
-								<input class="jqui-daterangepicker" type="text" value="<?php echo gmdate('Y-01-01') . " - " . gmdate('Y-m-d'); ?>"/>
-								<span class="jqui-loading"></span>
-							</label>
+						cf.target("div#compare-week-last")
+							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-week-graph-last")
+							.create("rickshaw",{ unit:"day" })
+							.target("div#compare-week-this")
+							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-week-graph-this")
+							.create("rickshaw",{ unit:"day" })
+							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
+							.target("div#compare-week-compare")
+							.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
+
+						cf.target("div#compare-month-last")
+							.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-month-graph-last")
+							.create("rickshaw",{ unit:"day" })
+							.target("div#compare-month-this")
+							.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-month-graph-this")
+							.create("rickshaw",{ unit:"day" })
+							.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+							.target("div#compare-month-compare")
+							.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
+
+						cf.target("div#compare-year-last")
+							.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-year-graph-last")
+							.create("rickshaw",{ unit:"week" })
+							.target("div#compare-year-this")
+							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-year-graph-this")
+							.create("rickshaw",{ unit:"week" })
+							.target("div#compare-year-last")
+							.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
+							.target("div#compare-year-compare")
+							.create("rickshaw",{ unit:"year", renderer:"line", axes_time:false });
+					</script>
+							</div>
+							<?php
+							break;
+			case 'users':
+				break;
+			case 'sales':
+				?>
+				<section class="paper">
+					<h4>Sales Graph</h4>
+					<div id="sales-graph" class="overview-container">
+						<div id="overview-sales-graph" class="chart-rickshaw-huge"></div>
+						<div class="chart-controls-box">
+							<div id="legend" class="chart-controls">
+								<p><strong>hover</strong> to highlight, <strong>click</strong> to toggle, <strong>drag</strong> to sort groups</p>
+							</div>
+							<div id="renderer_form" class="toggler chart-controls">
+								<input type="radio" name="renderer" id="area" value="area" checked="checked">
+								<label for="area"><i class="graph-control-area"></i>area</label>
+								<input type="radio" name="renderer" id="bar" value="bar">
+								<label for="bar"><i class="graph-control-bar"></i>bar</label>
+								<input type="radio" name="renderer" id="line" value="line">
+								<label for="line"><i class="graph-control-line"></i>line</label>
+								<input type="radio" name="renderer" id="scatter" value="scatterplot">
+								<label for="scatter"><i class="graph-control-scatter"></i>scatter</label>
+							</div>
+							<div id="offset_form" class="chart-controls">
+								<label for="value">
+									<input type="radio" name="offset" id="value" value="value">
+									<span><i class="graph-control-value"></i>value</span>
+								</label>
+								<label for="stack">
+									<input type="radio" name="offset" id="stack" value="zero" checked="checked">
+									<span><i class="graph-control-stack"></i>stack</span>
+								</label>
+								<label for="stream">
+									<input type="radio" name="offset" id="stream" value="wiggle">
+									<span><i class="graph-control-stream"></i>stream</span>
+								</label>
+								<label for="pct">
+									<input type="radio" name="offset" id="pct" value="expand">
+									<span><i class="graph-control-pct"></i>percent</span>
+								</label>
+							</div>
+							<div id="unit_form" class="chart-controls">
+								<label for="day">
+									<input type="radio" name="unit" id="day" value="day" checked="checked">
+									<span><i class="graph-control-day"></i>days</span>
+								</label>
+								<label for="week">
+									<input type="radio" name="unit" id="week" value="week">
+									<span><i class="graph-control-week"></i>weeks</span>
+								</label>
+								<label for="month">
+									<input type="radio" name="unit" id="month" value="month">
+									<span><i class="graph-control-bar"></i>months</span>
+								</label>
+								<label for="year">
+									<input type="radio" name="unit" id="year" value="year">
+									<span><i class="graph-control-year"></i>years</span>
+								</label>
+							</div>
+							<div id="range_form" class="chart-controls">
+								<label for="rangepicker">
+									<span class="jqui-daterangepicker-text">Select Range:</span>
+									<input class="jqui-daterangepicker" type="text" value="<?php echo gmdate('Y-01-01') . " - " . gmdate('Y-m-d'); ?>"/>
+									<span class="jqui-loading"></span>
+								</label>
+							</div>
 						</div>
 					</div>
-				</div>
-				<script type="text/javascript">
-					var cf = d3.chart.factory()
-						.source("sales")
-						.canvas(200, 200, 10)
-						.target("div#overview-sales-graph")
-						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("rickshaw",{ unit:"day", renderer:"area", legend:true });
-				</script>
-						</div>
-						<?php
-						break;
-		case 'all_time':
-			$start = date( "Y", strtotime( $stats['first_sale'] ) );
-			$end = date( "Y" );
+					<script type="text/javascript">
+						var cf = d3.chart.factory()
+							.source("sales")
+							.canvas(200, 200, 10)
+							.target("div#overview-sales-graph")
+							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("rickshaw",{ unit:"day", renderer:"area", legend:true });
+					</script>
+							</div>
+							<?php
+							break;
+			case 'all_time':
+				$start = date( "Y", strtotime( $stats['first_sale'] ) );
+				$end = date( "Y" );
 
-			$years = $start - $end;
-			?>
-			<section class="paper" id="chart">
-				<div id="all-time-cells" class="all-time-container">
-					<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
-						<div id="all-time-<?php echo $i; ?>" class="all-time-container-full">
-							<h4><?php echo $i; ?></h4>
-							<div id="all-time-year-<?php echo $i; ?>-sunburst" class="chart-sunburst"></div>
-							<div id="all-time-year-<?php echo $i; ?>-cells" class="chart-cellular"></div>
-							<div id="all-time-year-<?php echo $i; ?>-graph" class="chart-rickshaw-slim"></div>
-						</div>
-					<?php } ?>
-				</div>
-				<div id="all-time-suns" class="all-time-container-full">
-					<h4>All Time Total</h4>
-					<div id="all-suns" class="chart-sunburstxl"></div>
-				</div>
-				<script type="text/javascript">
-					var cf = d3.chart.factory()
-						.source("sales")
+				$years = $start - $end;
+				?>
+				<section class="paper" id="chart">
+					<div id="all-time-cells" class="all-time-container">
 						<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
-						.canvas(200, 200, 10)
-						.target("div#all-time-year-<?php echo $i; ?>-sunburst")
-						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-							"<?php echo $i . '-12-31 23:59:59'; ?>")
-						.create("sunburst")
-						.canvas(760, 160, 10)
-						.target("div#all-time-year-<?php echo $i; ?>-cells")
-						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-							"<?php echo $i . '-12-31 23:59:59'; ?>")
-						.create("cellular")
-						.target("div#all-time-year-<?php echo $i; ?>-graph")
-						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-							"<?php echo $i . '-12-31 23:59:59'; ?>")
-						.create("rickshaw",{ unit:"week" })
+							<div id="all-time-<?php echo $i; ?>" class="all-time-container-full">
+								<h4><?php echo $i; ?></h4>
+								<div id="all-time-year-<?php echo $i; ?>-sunburst" class="chart-sunburst"></div>
+								<div id="all-time-year-<?php echo $i; ?>-cells" class="chart-cellular"></div>
+								<div id="all-time-year-<?php echo $i; ?>-graph" class="chart-rickshaw-slim"></div>
+							</div>
 						<?php } ?>
-						.canvas(500, 500, 10)
-						.target("div#all-suns")
-						.range(	"<?php echo gmdate('1960-01-01') .' 00:00:00'; ?>",
-							"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst");
-				</script>
-						</div>
-						<?php
-						break;
-	}
-	?>
-	</td></tr>
-	</table>
-	</div>
-	</div>
-	</div>
-	</div>
+					</div>
+					<div id="all-time-suns" class="all-time-container-full">
+						<h4>All Time Total</h4>
+						<div id="all-suns" class="chart-sunburstxl"></div>
+					</div>
+					<script type="text/javascript">
+						var cf = d3.chart.factory()
+							.source("sales")
+							<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
+							.canvas(200, 200, 10)
+							.target("div#all-time-year-<?php echo $i; ?>-sunburst")
+							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+								"<?php echo $i . '-12-31 23:59:59'; ?>")
+							.create("sunburst")
+							.canvas(760, 160, 10)
+							.target("div#all-time-year-<?php echo $i; ?>-cells")
+							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+								"<?php echo $i . '-12-31 23:59:59'; ?>")
+							.create("cellular")
+							.target("div#all-time-year-<?php echo $i; ?>-graph")
+							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+								"<?php echo $i . '-12-31 23:59:59'; ?>")
+							.create("rickshaw",{ unit:"week" })
+							<?php } ?>
+							.canvas(500, 500, 10)
+							.target("div#all-suns")
+							.range(	"<?php echo gmdate('1960-01-01') .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("sunburst");
+					</script>
+							</div>
+							<?php
+							break;
+		}
+		?>
+		</td></tr>
+		</table>
+		</div>
+		</div>
+		</div>
+		</div>
 
-	<?php
-	HTML_myCommon::endCommon();
+		<?php
+		HTML_myCommon::endCommon();
 	}
 
 	/**
