@@ -1,4 +1,2 @@
-aec-legacy
+aec
 ==========
-
-AEC 1.0 branch
