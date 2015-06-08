@@ -1,0 +1,12 @@
+{
+	"name": "daviddeutsch/aec",
+	"license": "GNU GPL v3",
+	"type": "project",
+	"description": "A membership management system for Joomla",
+	"autoload": {
+		"psr-0": { "": "src/", "SymfonyStandard": "app/" }
+	},
+	"require-dev": {
+		"codegyre/robo": "*"
+	}
+}
