@@ -1,12 +1,31 @@
 <?php
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Finder\Finder;
 
 class RoboFile extends Robo\Tasks
 {
 	public function release()
 	{
+		$this->makeBundle();
+	}
 
+	public function makeBundle()
+	{
+		/*$pharTask = $this->taskPackPhar('package/aec.zip')
+			->compress();
+
+		$finder = Finder::create()
+			->ignoreVCS(true)
+			->in('newsrc/code');
+
+		foreach ($finder as $file) {
+			/** var SplFileInfo $file  */
+			/*$pharTask->addFile('src/'.$file->getRelativePathname(), $file->getRealPath());
+		}*/
+
+		$this->taskExec("zip -r aec.zip newsrc/code/*")->run();
 	}
 
 	public function versionBumpClass()
@@ -46,7 +65,7 @@ class RoboFile extends Robo\Tasks
 	public function revisionGet()
 	{
 		// And HE told me the count of the git
-		$count = trim( $this->taskExec('git rev-list HEAD --count') )->run();
+		$count = trim( $this->taskExec('git rev-list HEAD --count')->run() );
 
 		// And on the thirteenth day of the fourth month of the year two thousand and thirteen,
 		// The hardware counter stood at six thousand one hundred and two,
