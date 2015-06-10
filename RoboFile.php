@@ -8,37 +8,69 @@ class RoboFile extends Robo\Tasks
 {
 	public function release()
 	{
+		// On master, new commits == new patch version
+		if ( $this->getBranch() == 'master' ) {
+			$this->taskSemVer(__DIR__ . '/.semver')->increment('patch')->run();
+		}
+
 		$this->makeBundle();
+
+		if ( $this->getBranch() == 'master' ) {
+			$this->taskExec(
+				"git tag -a"
+				. ((string) $this->taskSemVer(__DIR__ . '/.semver'))
+				. " -m 'robo build releasing "
+				. ((string) $this->taskSemVer(__DIR__ . '/.semver')) . "'"
+			)->run();
+
+
+			$this->taskExec("git push origin master --tags")->run();
+
+			$this->taskGitHubRelease(
+				str_replace('v', '', $this->taskSemVer(__DIR__ . '/.semver'))
+			)->uri('daviddeutsch/aec')->run();
+
+		}
 	}
 
 	public function makeBundle()
 	{
-		/*$pharTask = $this->taskPackPhar('package/aec.zip')
-			->compress();
-
-		$finder = Finder::create()
-			->ignoreVCS(true)
-			->in('newsrc/code');
-
-		foreach ($finder as $file) {
-			/** var SplFileInfo $file  */
-			/*$pharTask->addFile('src/'.$file->getRelativePathname(), $file->getRealPath());
-		}*/
-
 		if ( is_dir(__DIR__ . '/tmp') ) {
 			$this->_deleteDir('tmp');
 		}
 
-		$this->taskExec('mkdir tmp')->run();
+		//$this->taskExec('mkdir tmp')->run();
+		$this->taskFilesystemStack()->mkdir('tmp')->run();
 
 		$this->_mirrorDir('newsrc/code', 'tmp');
 
-		foreach ( glob(__DIR__ . '/tmp/modules/*') as $file ) {
-			echo $file . "\n";
+		$this->extractDir('modules');
+
+		$this->extractDir('plugins');
+
+		$this->taskExec(
+			'zip -r aec-'
+			. $this->getVersion()
+			. '-' . str_replace('/', '-', $this->getBranch() )
+			. '-' . $this->getHash()
+			. '.zip .'
+		)
+			->dir('tmp')
+			->printed(false)
+			->run();
+
+	}
+
+	public function extractDir($dir)
+	{
+		foreach ( glob(__DIR__ . '/tmp/' . $dir  . '/*') as $file ) {
+			$this->taskFilesystemStack()->rename(
+				$file,
+				str_replace('/' . $dir, '', $file)
+			)->run();
 		}
 
-		$this->taskExec('zip -r aec.zip .')->dir('tmp')->printed(false)->run();
-
+		$this->_deleteDir('tmp/' . $dir);
 	}
 
 	public function versionBumpClass()
@@ -75,10 +107,31 @@ class RoboFile extends Robo\Tasks
 		}
 	}
 
+	public function getVersion()
+	{
+		return
+			((string) $this->taskSemVer(__DIR__ . '/.semver'))
+			. '-rev' . $this->revisionGet();
+	}
+
+	public function getBranch()
+	{
+		return trim(
+			(string) $this->taskExec('git rev-parse --abbrev-ref HEAD')->run()->getMessage()
+		);
+	}
+
+	public function getHash()
+	{
+		return trim(
+			(string) $this->taskExec("git log --pretty=format:'%h' -n 1")->run()->getMessage()
+		);
+	}
+
 	public function revisionGet()
 	{
 		// And HE told me the count of the git
-		$count = trim( $this->taskExec('git rev-list HEAD --count')->run() );
+		$count = trim( (string) $this->taskExec('git rev-list HEAD --count')->run()->getMessage() );
 
 		// And on the thirteenth day of the fourth month of the year two thousand and thirteen,
 		// The hardware counter stood at six thousand one hundred and two,
