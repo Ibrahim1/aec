@@ -25,7 +25,20 @@ class RoboFile extends Robo\Tasks
 			/*$pharTask->addFile('src/'.$file->getRelativePathname(), $file->getRealPath());
 		}*/
 
-		$this->taskExec("zip -r aec.zip newsrc/code/*")->run();
+		if ( is_dir(__DIR__ . '/tmp') ) {
+			$this->_deleteDir('tmp');
+		}
+
+		$this->taskExec('mkdir tmp')->run();
+
+		$this->_mirrorDir('newsrc/code', 'tmp');
+
+		foreach ( glob(__DIR__ . '/tmp/modules/*') as $file ) {
+			echo $file . "\n";
+		}
+
+		$this->taskExec('zip -r aec.zip .')->dir('tmp')->printed(false)->run();
+
 	}
 
 	public function versionBumpClass()
