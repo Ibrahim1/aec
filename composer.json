@@ -4,9 +4,10 @@
 	"type": "project",
 	"description": "A membership management system for Joomla",
 	"autoload": {
-		"psr-0": { "": "src/", "SymfonyStandard": "app/" }
+		"psr-0": { "": "src/" }
 	},
 	"require-dev": {
-		"codegyre/robo": "*"
+		"codegyre/robo": "*",
+		"tan-tan-kanarek/github-php-client": "dev-master"
 	}
 }

@@ -11,9 +11,11 @@ class RoboFile extends Robo\Tasks
 		// On master, new commits == new patch version
 		if ( $this->getBranch() == 'master' ) {
 			$this->taskSemVer(__DIR__ . '/.semver')->increment('patch')->run();
+
+            $this->taskExec("git commit origin master --tags")->run();
 		}
 
-		$this->makeBundle();
+		$file = $this->makeBundle();
 
 		if ( $this->getBranch() == 'master' ) {
 			$this->taskExec(
@@ -26,10 +28,7 @@ class RoboFile extends Robo\Tasks
 
 			$this->taskExec("git push origin master --tags")->run();
 
-			$this->taskGitHubRelease(
-				str_replace('v', '', $this->taskSemVer(__DIR__ . '/.semver'))
-			)->uri('daviddeutsch/aec')->run();
-
+			$this->uploadRelease($file);
 		}
 	}
 
@@ -48,17 +47,18 @@ class RoboFile extends Robo\Tasks
 
 		$this->extractDir('plugins');
 
-		$this->taskExec(
-			'zip -r aec-'
-			. $this->getVersion()
-			. '-' . str_replace('/', '-', $this->getBranch() )
-			. '-' . $this->getHash()
-			. '.zip .'
-		)
+        $filename = 'aec-'
+            . $this->getVersion()
+            . '-' . str_replace('/', '-', $this->getBranch() )
+            . '-' . $this->getHash()
+            . '.zip';
+
+		$this->taskExec('zip -r ' . $filename . ' .')
 			->dir('tmp')
 			->printed(false)
 			->run();
 
+        return __DIR__ . '/tmp/' . $filename;
 	}
 
 	public function extractDir($dir)
@@ -144,4 +144,32 @@ class RoboFile extends Robo\Tasks
 
 		return $count;
 	}
+
+    public function uploadRelease( $file )
+    {
+        require_once(__DIR__ . '/vendor/tan-tan-kanarek/github-php-client/client/GitHubClient.php');
+
+        $client = new GitHubClient();
+        $client->setDebug(true);
+        $client->setAuthType(GitHubClient::GITHUB_AUTH_TYPE_BASIC);
+        $client->setCredentials(
+            'daviddeutsch',
+            trim( file_get_contents(__DIR__ . '/../github-oauth.token') )
+        );
+
+        $release = $client->repos->releases->create(
+            'daviddeutsch',
+            'aec',
+            ((string) $this->taskSemVer(__DIR__ . '/.semver'))
+        );
+
+        $client->repos->releases->assets->upload(
+            'daviddeutsch',
+            'aec',
+            ((string) $this->taskSemVer(__DIR__ . '/.semver')),
+            basename($file),
+            'application/zip',
+            $file
+        );
+    }
 }
