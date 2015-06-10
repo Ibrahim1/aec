@@ -458,6 +458,10 @@ class Subscription extends serialParamDBTable
 	public function expireNow()
 	{
 		$this->expiration = gmdate( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
+
+		$metaUser = new metaUser($this->userid);
+
+		$metaUser->killSession();
 	}
 
 	public function cancel( $invoice=null )

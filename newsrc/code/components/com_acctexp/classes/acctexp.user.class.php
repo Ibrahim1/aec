@@ -703,6 +703,18 @@ class metaUser
 		return $shandler->instantGIDchange( $this->userid, $gid, $removegid, $sessionextra );
 	}
 
+	public function killSession()
+	{
+		$db = JFactory::getDBO();
+
+		$db->setQuery(
+			'DELETE FROM #__session'
+			. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+		);
+
+		return $db->loadResult();
+	}
+
 	public function isAdmin()
 	{
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
