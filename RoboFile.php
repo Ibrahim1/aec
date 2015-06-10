@@ -166,7 +166,7 @@ class RoboFile extends Robo\Tasks
         $client->repos->releases->assets->upload(
             'daviddeutsch',
             'aec',
-            ((string) $this->taskSemVer(__DIR__ . '/.semver')),
+            $release->getId(),
             basename($file),
             'application/zip',
             $file
