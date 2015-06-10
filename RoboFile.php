@@ -17,7 +17,7 @@ class RoboFile extends Robo\Tasks
 
 		if ( $this->getBranch() == 'master' ) {
 			$this->taskExec(
-				"git tag -a"
+				"git tag -a "
 				. ((string) $this->taskSemVer(__DIR__ . '/.semver'))
 				. " -m 'robo build releasing "
 				. ((string) $this->taskSemVer(__DIR__ . '/.semver')) . "'"
