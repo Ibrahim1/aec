@@ -12,7 +12,14 @@ class RoboFile extends Robo\Tasks
 		if ( $this->getBranch() == 'master' ) {
 			$this->taskSemVer(__DIR__ . '/.semver')->increment('patch')->run();
 
-            $this->taskExec("git commit origin master --tags")->run();
+			$this->taskExec('git add .');
+			$this->taskExec(
+				'git commit -m "patch number bump to '
+				. (string) $this->taskSemVer(__DIR__ . '/.semver')
+				. '"'
+			);
+
+			$this->taskExec('git push origin master --tags')->run();
 		}
 
 		$file = $this->makeBundle();
@@ -145,31 +152,31 @@ class RoboFile extends Robo\Tasks
 		return $count;
 	}
 
-    public function uploadRelease( $file )
-    {
-        require_once(__DIR__ . '/vendor/tan-tan-kanarek/github-php-client/client/GitHubClient.php');
+	public function uploadRelease( $file )
+	{
+		require_once(__DIR__ . '/vendor/tan-tan-kanarek/github-php-client/client/GitHubClient.php');
 
-        $client = new GitHubClient();
-        $client->setDebug(true);
-        $client->setAuthType(GitHubClient::GITHUB_AUTH_TYPE_BASIC);
-        $client->setCredentials(
-            'daviddeutsch',
-            trim( file_get_contents(__DIR__ . '/../github-oauth.token') )
-        );
+		$client = new GitHubClient();
+		$client->setDebug(true);
+		$client->setAuthType(GitHubClient::GITHUB_AUTH_TYPE_BASIC);
+		$client->setCredentials(
+			'daviddeutsch',
+			trim( file_get_contents(__DIR__ . '/../github-oauth.token') )
+		);
 
-        $release = $client->repos->releases->create(
-            'daviddeutsch',
-            'aec',
-            ((string) $this->taskSemVer(__DIR__ . '/.semver'))
-        );
+		$release = $client->repos->releases->create(
+			'daviddeutsch',
+			'aec',
+			((string) $this->taskSemVer(__DIR__ . '/.semver'))
+		);
 
-        $client->repos->releases->assets->upload(
-            'daviddeutsch',
-            'aec',
-            $release->getId(),
-            basename($file),
-            'application/zip',
-            $file
-        );
-    }
+		$client->repos->releases->assets->upload(
+			'daviddeutsch',
+			'aec',
+			$release->getId(),
+			basename($file),
+			'application/zip',
+			$file
+		);
+	}
 }
