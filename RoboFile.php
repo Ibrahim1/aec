@@ -34,7 +34,7 @@ class RoboFile extends Robo\Tasks
 			$this->taskExec(
 				"git tag -a "
 				. ((string) $this->taskSemVer(__DIR__ . '/.semver'))
-				. " -m 'robo build releasing "
+				. " -m 'releasing "
 				. ((string) $this->taskSemVer(__DIR__ . '/.semver')) . "'"
 			)->run();
 
