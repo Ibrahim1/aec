@@ -14,12 +14,12 @@ class RoboFile extends Robo\Tasks
 		if ( $this->getBranch() == 'master' ) {
 			$this->taskSemVer(__DIR__ . '/.semver')->increment('patch')->run();
 
-			$this->taskExec('git add .');
+			$this->taskExec('git add .')->run();
 			$this->taskExec(
 				'git commit -m "patch number bump to '
 				. (string) $this->taskSemVer(__DIR__ . '/.semver')
 				. '"'
-			);
+			)->run();
 
 			$this->taskExec('git push origin master --tags')->run();
 
@@ -47,9 +47,9 @@ class RoboFile extends Robo\Tasks
 		}
 
 		if ( count($times) < 3 ) {
-			$this->say("\n\nBuilt in " . ($times[1] - $times[0]) . " s \n\n");
+			$this->say("Built in " . ($times[1] - $times[0]) . " s \n\n");
 		} else {
-			$this->say("\n\nVersion bump in " . ($times[1] - $times[0]) . " s \n");
+			$this->say("Version bump in " . ($times[1] - $times[0]) . " s \n");
 
 			$this->say("Built in " . ($times[2] - $times[1]) . " s \n");
 
