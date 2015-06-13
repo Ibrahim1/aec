@@ -62,8 +62,6 @@ class mi_aecautomaticdiscount
 			$extracost = - AECToolbox::correctAmount( $total * ( $this->settings['amount']/100 ) );
 		}
 
-		$newtotal = AECToolbox::correctAmount( $total - $this->settings['amount'] );
-
 		$item['terms']->terms[0]->addCost( $extracost, array( 'details' => $this->settings['extra'] ) );
 		$item['cost'] = $item['terms']->renderTotal();
 

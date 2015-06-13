@@ -425,6 +425,28 @@ class InvoiceFactory
 		return;
 	}
 
+	function getInvoiceState( $cached=false, $cache=false )
+	{
+		$this->puffer();
+
+		if ( $cached ) {
+			$state = $this->invoice->loadItemState();
+
+			if ( !empty( $state ) ) {
+				$this->items = $state;
+
+				return;
+			}
+		}
+		$this->loadItems();
+
+		$this->loadItemTotal();
+
+		if ( $cache ) {
+			$this->invoice->cacheItemState( $this );
+		}
+	}
+
 	public function loadPlanObject( $testmi=false, $quick=false )
 	{
 		if ( empty( $this->usage ) && !empty( $this->passthrough['usage'] ) ) {
@@ -1056,13 +1078,14 @@ class InvoiceFactory
 				$params['hide_duration_checkout'] = false;
 			}
 
-			$this->items->itemlist[] = array(	'obj'		=> $this->plan,
-												'name'		=> $this->plan->getProperty( 'name' ),
-												'desc'		=> $this->plan->getProperty( 'desc' ),
-												'quantity'	=> 1,
-												'terms'		=> $terms,
-												'params'	=> $params
-											);
+			$this->items->itemlist[] = array(
+				'obj'		=> $this->plan,
+				'name'		=> $this->plan->getProperty( 'name' ),
+				'desc'		=> $this->plan->getProperty( 'desc' ),
+				'quantity'	=> 1,
+				'terms'		=> $terms,
+				'params'	=> $params
+			);
 
 			$itemlist = array_keys( $this->items->itemlist );
 
@@ -2158,27 +2181,26 @@ class InvoiceFactory
 		// Assemble Checkout Response
 		if ( !empty( $int_var['objUsage'] ) ) {
 			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
-				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this );
+				$int_var['var'] = $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this );
 			} else {
-				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
+				$int_var['var'] = $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
 			}
 		} else {
-			$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
+			$int_var['var'] = $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
 		}
 
-		$int_var['params']	= $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
+		$int_var['params'] = $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
 
 		$this->invoice->formatInvoiceNumber();
 
 		$introtext = JText::_('CHECKOUT_INFO'. ( $repeat ? '_REPEAT' : '' ));
 
-		$this->checkout = array();
-		$this->checkout['checkout_title']					= JText::_('CHECKOUT_TITLE');
-		$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
-
-		$this->checkout['enable_coupons']					= !empty( $aecConfig->cfg['checkout_coupons'] );
-
-		$this->checkout['customtext_checkout_table']		= JText::_('CHECKOUT_TITLE');
+		$this->checkout = array(
+			'checkout_title'            => JText::_('CHECKOUT_TITLE'),
+			'introtext'                 => sprintf( $introtext, $this->invoice->invoice_number ),
+			'enable_coupons'            => !empty( $aecConfig->cfg['checkout_coupons'] ),
+			'customtext_checkout_table' => JText::_('CHECKOUT_TITLE')
+		);
 
 		$this->display_error = $error;
 
@@ -2232,7 +2254,7 @@ class InvoiceFactory
 
 		$this->touchInvoice();
 
-		$this->puffer();
+		$this->getInvoiceState( false, true );
 
 		$objUsage = $this->getObjUsage();
 
@@ -2315,11 +2337,7 @@ class InvoiceFactory
 			}
 		}
 
-		$this->puffer();
-
-		$this->loadItems();
-
-		$this->loadItemTotal();
+		$this->getInvoiceState(true);
 
 		$response = $this->invoice->processorResponse( $this, $response, '', false );
 
@@ -2375,11 +2393,7 @@ class InvoiceFactory
 			$this->processor = $this->invoice->method;
 		}
 
-		$this->puffer();
-
-		$this->loadItems();
-
-		$this->loadItemTotal();
+		$this->getInvoiceState(true);
 
 		if ( !$this->pp->id ) {
 			return getView( 'access_denied' );
@@ -2417,11 +2431,7 @@ class InvoiceFactory
 	{
 		$this->loadMetaUser();
 
-		$this->puffer();
-
-		$this->loadItems();
-
-		$this->loadItemTotal();
+		$this->getInvoiceState(true);
 
 		$var = $this->invoice->getWorkingData( $this );
 
@@ -2450,11 +2460,7 @@ class InvoiceFactory
 			return getView( 'access_denied' );
 		}
 
-		$this->puffer();
-
-		$this->loadItems();
-
-		$this->loadItemTotal();
+		$this->getInvoiceState(true);
 
 		$this->invoice->formatInvoiceNumber();
 
@@ -2716,6 +2722,22 @@ class Invoice extends serialParamDBTable
 
 				return $pp->is_recurring( $recurring_choice );
 			}
+		}
+
+		return false;
+	}
+
+	function cacheItemState( $InvoiceFactory )
+	{
+		$this->params['items'] = $InvoiceFactory->items;
+
+		$this->storeload();
+	}
+
+	function loadItemState()
+	{
+		if ( !empty( $this->params['items'] ) ) {
+			return $this->params['items'];
 		}
 
 		return false;
