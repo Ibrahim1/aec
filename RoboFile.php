@@ -8,20 +8,33 @@ class RoboFile extends Robo\Tasks
 {
 	public function release()
 	{
+		$times = [time()];
+
 		// On master, new commits == new patch version
 		if ( $this->getBranch() == 'master' ) {
 			$this->taskSemVer(__DIR__ . '/.semver')->increment('patch')->run();
 
-            $this->taskExec("git commit origin master --tags")->run();
+			$this->taskExec('git add .')->run();
+			$this->taskExec(
+				'git commit -m "patch number bump to '
+				. (string) $this->taskSemVer(__DIR__ . '/.semver')
+				. '"'
+			)->run();
+
+			$this->taskExec('git push origin master --tags')->run();
+
+			$times[] = time();
 		}
 
 		$file = $this->makeBundle();
+
+		$times[] = time();
 
 		if ( $this->getBranch() == 'master' ) {
 			$this->taskExec(
 				"git tag -a "
 				. ((string) $this->taskSemVer(__DIR__ . '/.semver'))
-				. " -m 'robo build releasing "
+				. " -m 'releasing "
 				. ((string) $this->taskSemVer(__DIR__ . '/.semver')) . "'"
 			)->run();
 
@@ -29,6 +42,20 @@ class RoboFile extends Robo\Tasks
 			$this->taskExec("git push origin master --tags")->run();
 
 			$this->uploadRelease($file);
+
+			$times[] = time();
+		}
+
+		if ( count($times) < 3 ) {
+			$this->say("Built in " . ($times[1] - $times[0]) . " s \n\n");
+		} else {
+			$this->say("Version bump in " . ($times[1] - $times[0]) . " s \n");
+
+			$this->say("Built in " . ($times[2] - $times[1]) . " s \n");
+
+			$this->say("Uploaded in " . ($times[3] - $times[2]) . " s \n");
+
+			$this->say("Total Build time " . ($times[3] - $times[0]) . " s \n\n");
 		}
 	}
 
@@ -145,31 +172,31 @@ class RoboFile extends Robo\Tasks
 		return $count;
 	}
 
-    public function uploadRelease( $file )
-    {
-        require_once(__DIR__ . '/vendor/tan-tan-kanarek/github-php-client/client/GitHubClient.php');
+	public function uploadRelease( $file )
+	{
+		require_once(__DIR__ . '/vendor/tan-tan-kanarek/github-php-client/client/GitHubClient.php');
 
-        $client = new GitHubClient();
-        $client->setDebug(true);
-        $client->setAuthType(GitHubClient::GITHUB_AUTH_TYPE_BASIC);
-        $client->setCredentials(
-            'daviddeutsch',
-            trim( file_get_contents(__DIR__ . '/../github-oauth.token') )
-        );
+		$client = new GitHubClient();
+		$client->setDebug(true);
+		$client->setAuthType(GitHubClient::GITHUB_AUTH_TYPE_BASIC);
+		$client->setCredentials(
+			'daviddeutsch',
+			trim( file_get_contents(__DIR__ . '/../github-oauth.token') )
+		);
 
-        $release = $client->repos->releases->create(
-            'daviddeutsch',
-            'aec',
-            ((string) $this->taskSemVer(__DIR__ . '/.semver'))
-        );
+		$release = $client->repos->releases->create(
+			'daviddeutsch',
+			'aec',
+			((string) $this->taskSemVer(__DIR__ . '/.semver'))
+		);
 
-        $client->repos->releases->assets->upload(
-            'daviddeutsch',
-            'aec',
-            $release->getId(),
-            basename($file),
-            'application/zip',
-            $file
-        );
-    }
+		$client->repos->releases->assets->upload(
+			'daviddeutsch',
+			'aec',
+			$release->getId(),
+			basename($file),
+			'application/zip',
+			$file
+		);
+	}
 }

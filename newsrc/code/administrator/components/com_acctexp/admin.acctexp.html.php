@@ -1414,20 +1414,17 @@ class HTML_AcctExp
 						<p><strong>Hey there, this is David, Chief Developer of AEC.</strong></p>
 						<p>So - you're stuck with AEC? No problem. My team and I are here to help you out.</p>
 						<h4>Need Support?</h4>
-						<p>If you have trouble getting the software to work the way you need it to work, you should check out our <strong>manual, FAQs, video tutorials, community forum</strong> and, last but not least,<strong> our ticket support system</strong>. Right here:</p>
+						<p>If you have trouble getting the software to work the way you need it to work, you should check out our <strong>manual, FAQs and video tutorials</strong>:</p>
 						<div class="modal-overlay">
-							<p><a class="btn btn-large btn-success" href="http://valanx.org/index.php?option=com_content&amp;view=article&amp;id=119&amp;Itemid=156" target="_blank">Get Support Now</a>&nbsp;&nbsp;&larr;the quickest way to get help for AEC</p>
+							<p><a class="btn btn-large btn-success" href="http://valanx.org/aec" target="_blank">Get Support Now</a>&nbsp;&nbsp;&larr;the quickest way to get help for AEC</p>
 						</div>
-						<h4>Account Required</h4>
-						<p><strong>Yes, you will need an active account at valanx.org for that</strong>.</p>
-						<p>In case you got AEC from a friend (or, you know, <em>"from a friend"</em>), please get yourself a membership! Help us help you out.</p>
 						<h4>Suggestions? Complaints?</h4>
-						<p>If you have any suggestions or complaints about the software, our website or our support, please do not hesitate one second to get in touch with me. You can reach me here, <em>personally</em>:</p>
+						<p>If you have any suggestions or complaints about the software or the documentation, please do not hesitate one second to get in touch with me. You can reach me here, <em>personally</em>:</p>
 						<div class="modal-overlay">
-							<p><a class="btn btn-large btn-warning" href="http://valanx.org/index.php?option=com_contact&amp;view=contact&amp;id=5&amp;Itemid=146" target="_blank">Contact David</a>&nbsp;&nbsp;&larr;keep in mind that this is <strong>not</strong> for support requests</p>
+							<p><a class="btn btn-large btn-warning" href="http://valanx.org/index.php?option=com_contact&amp;view=contact&amp;id=5&amp;Itemid=146" target="_blank">Contact David</a>&nbsp;&nbsp;&larr;(keep in mind that this is <strong>not</strong> for support requests)</p>
 						</div>
-						<p>I try my best to respond as quickly as possible and you should get a response within a workday. If not, maybe something about the request failed - please try sending it again.</p>
-						<p><strong>I really care a lot about this software and you using it means a lot to me</strong> - so please give me a chance to clear things up if we have messed up somewhere.</p>
+						<p>I try my best to respond as quickly as possible and you should get a response within a workday or two. If not, maybe something about the request failed - please try sending it again.</p>
+						<p><strong>I really care a lot about this software and you using it means a lot to me</strong> - so please give me a chance to clear things up if you're stuck somewhere.</p>
 					</div>
 				</div>
 			</div>
