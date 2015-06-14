@@ -185,13 +185,13 @@ class RoboFile extends Robo\Tasks
 		);
 
 		$release = $client->repos->releases->create(
-			'daviddeutsch',
+			'valanx',
 			'aec',
 			((string) $this->taskSemVer(__DIR__ . '/.semver'))
 		);
 
 		$client->repos->releases->assets->upload(
-			'daviddeutsch',
+			'valanx',
 			'aec',
 			$release->getId(),
 			basename($file),
