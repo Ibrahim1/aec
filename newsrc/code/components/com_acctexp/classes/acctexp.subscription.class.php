@@ -394,7 +394,7 @@ class Subscription extends serialParamDBTable
 	{
 		// Users who are excluded cannot expire
 		if ( $this->isExcluded() ) {
-			return false;
+			return null;
 		}
 
 		$plan = $this->getPlan();

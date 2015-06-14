@@ -3,7 +3,7 @@
  * @version $Id: acctexp.heartbeat.class.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Core Class
- * @copyright 2006-2015 Copyright (C) David Deutsch
+ * @copyright 2006-2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -115,12 +115,14 @@ class aecHeartbeat extends serialParamDBTable
 		$this->processors = array();
 		$this->proc_prepare = array();
 
-		$this->result = array(	'fail_expired' => 0,
-								'fallback' => 0,
-								'expired' => 0,
-								'pre_expired' => 0,
-								'pre_exp_actions' => 0
-								);
+		$this->result = array(
+			'fail_expired' => 0,
+			'fallback' => 0,
+			'skipped' => 0,
+			'expired' => 0,
+			'pre_expired' => 0,
+			'pre_exp_actions' => 0
+			);
 
 		// Some cleanup
 		$this->deleteTempTokens();
@@ -160,10 +162,12 @@ class aecHeartbeat extends serialParamDBTable
 
 					if ( $expire ) {
 						$this->result['expired']++;
+					} elseif ( $expire === false ) {
+						$this->result['fail_expired']++;
 					} elseif ( is_null($expire) ) {
 						$this->result['fallback']++;
 					} else {
-						$this->result['fail_expired']++;
+						$this->result['skipped']++;
 					}
 				}
 
@@ -309,19 +313,15 @@ class aecHeartbeat extends serialParamDBTable
 		xJLanguageHandler::loadList( $langlist );
 
 		$short	= JText::_('AEC_LOG_SH_HEARTBEAT');
-		$event	= JText::_('AEC_LOG_LO_HEARTBEAT') . ' ';
+		$event	= array( JText::_('AEC_LOG_LO_HEARTBEAT') . ' ' );
 		$tags	= array( 'heartbeat' );
 		$level	= 2;
 
 		if ( $this->result['expired'] ) {
 			if ( $this->result['expired'] > 1 ) {
-				$event .= 'Expires ' . $this->result['expired'] . ' subscriptions';
+				$event[] = 'Expires ' . $this->result['expired'] . ' subscriptions';
 			} else {
-				$event .= 'Expires 1 subscription';
-			}
-
-			if ( $this->result['pre_exp_actions'] || $this->result['fail_expired'] ) {
-				$event .= ', ';
+				$event[] = 'Expires 1 subscription';
 			}
 
 			$tags[] = 'expiration';
@@ -329,9 +329,9 @@ class aecHeartbeat extends serialParamDBTable
 
 		if ( $this->result['fallback'] ) {
 			if ( $this->result['fallback'] > 1 ) {
-				$event .= $this->result['fallback'] . ' subscriptions assigned to a fallback subscription plan';
+				$event[] = $this->result['fallback'] . ' subscriptions assigned to a fallback subscription plan';
 			} else {
-				$event .= '1 subscription assigned to a fallback subscription plan';
+				$event[] = '1 subscription assigned to a fallback subscription plan';
 			}
 
 			$tags[] = 'fallback';
@@ -339,36 +339,40 @@ class aecHeartbeat extends serialParamDBTable
 
 		if ( $this->result['fail_expired'] ) {
 			if ( $this->result['fail_expired'] > 1 ) {
-				$event .= 'Failed to expire ' . $this->result['fail_expired'] . ' subscriptions';
+				$event[] = 'Failed to expire ' . $this->result['fail_expired'] . ' subscriptions';
 			} else {
-				$event .= 'Failed to expire 1 subscription';
+				$event[] = 'Failed to expire 1 subscription';
 			}
 
-			$event .= ', please check your subscriptions for problems';
-
-			if ( $this->result['pre_exp_actions'] ) {
-				$event .= ', ';
-			}
+			$event[] = '- please check your subscriptions for problems';
 
 			$tags[] = 'error';
 			$level	= 128;
 		}
 
 		if ( $this->result['pre_exp_actions'] ) {
-			$event .= $this->result['pre_exp_actions'] . ' Pre-expiration action';
-			$event .= ( $this->result['pre_exp_actions'] > 1 ) ? 's' : '';
-			$event .= ' for ' . $this->result['pre_expired'] . ' subscription';
-			$event .= ( $this->result['pre_expired'] > 1 ) ? 's' : '';
+			$event[] = $this->result['pre_exp_actions'] . ' Pre-expiration action';
+			$event[] = ( $this->result['pre_exp_actions'] > 1 ) ? 's' : '';
+			$event[] = ' for ' . $this->result['pre_expired'] . ' subscription';
+			$event[] = ( $this->result['pre_expired'] > 1 ) ? 's' : '';
 
 			$tags[] = 'pre-expiration';
 		}
 
-		if ( strcmp( JText::_('AEC_LOG_LO_HEARTBEAT') . ' ', $event ) === 0 ) {
-			$event .= JText::_('AEC_LOG_AD_HEARTBEAT_DO_NOTHING');
+		if ( $this->result['skipped'] ) {
+			if ( $this->result['fail_expired'] > 1 ) {
+				$event[] = 'Skipped ' . $this->result['fail_expired'] . ' subscriptions';
+			} else {
+				$event[] = 'Skipped 1 subscription';
+			}
+		}
+
+		if ( count($event) === 0 ) {
+			$event[] = JText::_('AEC_LOG_AD_HEARTBEAT_DO_NOTHING');
 		}
 
 		$eventlog = new eventLog();
-		$eventlog->issue( $short, implode( ',', $tags ), $event, $level );
+		$eventlog->issue( $short, implode( ',', $tags ), implode(" ", $event), $level );
 	}
 
 	public function deleteTempTokens()
