@@ -5043,7 +5043,7 @@ class aecAdminInvoice extends aecAdminEntity
 		}
 
 		if ( !empty($added) ) {
-			foreach ( $added as $coupon_id ) {var_dump($coupon_id);
+			foreach ( $added as $coupon_id ) {
 				$row->addCoupon((int)$coupon_id, true);
 			}
 		}

@@ -190,6 +190,14 @@ class RoboFile extends Robo\Tasks
 			((string) $this->taskSemVer(__DIR__ . '/.semver'))
 		);
 
+		/**
+		 * TODO: This sometimes produces a
+		 *
+		 * 422 Unprocessable Entity
+		 *
+		 * Probably need to try, wait, retry until the ->create call works
+		 */
+
 		$client->repos->releases->assets->upload(
 			'valanx',
 			'aec',
