@@ -461,13 +461,13 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		public function installTranslators( $eucaInstall )
 		{
-			$files = array(
+			/*$files = array(
 				array(
 					'processors/ideal_advanced/lib/ideal_advanced.tar.gz',
 					'processors/ideal_advanced/lib/',
 					0
 				)
-			);
+			);*/
 
 			// check if joomfish (joomla) or nokkaew (mambo) exists)
 			$translation = false;
