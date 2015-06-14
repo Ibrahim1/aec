@@ -2365,7 +2365,10 @@ class InvoiceFactory
 			} elseif ( !empty( $this->pp->info['custom_notify_trail'] ) ) {
 				$this->pp->notify_trail( $this, $response );
 			} else {
-				header("HTTP/1.0 200 OK");
+				if ( !headers_sent() ) {
+					header("HTTP/1.0 200 OK");
+				}
+
 				exit;
 			}
 		}
