@@ -461,6 +461,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		public function installTranslators( $eucaInstall )
 		{
+			$files = array();
 			/*$files = array(
 				array(
 					'processors/ideal_advanced/lib/ideal_advanced.tar.gz',
@@ -492,7 +493,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				$files[] = array( $xmlInst, '../com_' . $translation . '/contentelements/', 1 );
 			}
 
-			$eucaInstall->unpackFileArray( $files );
+			if ( !empty($files) ) $eucaInstall->unpackFileArray($files);
 		}
 
 		public function popIndex( $eucaInstall )
