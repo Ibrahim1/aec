@@ -16,7 +16,7 @@ class RoboFile extends Robo\Tasks
 
 			$this->taskExec('git add .')->run();
 			$this->taskExec(
-				'git commit -m "patch number bump to '
+				'git commit -m "Preparing to release '
 				. (string) $this->taskSemVer(__DIR__ . '/.semver')
 				. '"'
 			)->run();
@@ -34,7 +34,7 @@ class RoboFile extends Robo\Tasks
 			$this->taskExec(
 				"git tag -a "
 				. ((string) $this->taskSemVer(__DIR__ . '/.semver'))
-				. " -m 'releasing "
+				. " -m 'Releasing "
 				. ((string) $this->taskSemVer(__DIR__ . '/.semver')) . "'"
 			)->run();
 
@@ -188,6 +188,38 @@ class RoboFile extends Robo\Tasks
 			'valanx',
 			'aec',
 			((string) $this->taskSemVer(__DIR__ . '/.semver'))
+		);
+
+		$client->repos->releases->assets->upload(
+			'valanx',
+			'aec',
+			$release->getId(),
+			basename($file),
+			'application/zip',
+			$file
+		);
+	}
+
+	public function reuploadRelease()
+	{
+		require_once(__DIR__ . '/vendor/tan-tan-kanarek/github-php-client/client/GitHubClient.php');
+
+		$client = new GitHubClient();
+		$client->setDebug(true);
+		$client->setAuthType(GitHubClient::GITHUB_AUTH_TYPE_BASIC);
+		$client->setCredentials(
+			'daviddeutsch',
+			trim( file_get_contents(__DIR__ . '/../github-oauth.token') )
+		);
+
+		foreach ( glob(__DIR__ . '/tmp/*.zip') as $path ) {
+			$file = $path;
+		}
+
+		$release = $client->repos->releases->get(
+			'valanx',
+			'aec',
+			'latest'
 		);
 
 		$client->repos->releases->assets->upload(
