@@ -1307,6 +1307,7 @@ class aecAdminMembership extends aecAdminEntity
 				$action[1]	= JText::_('AEC_HEAD_CLOSED_SUBS');
 				break;
 
+			case 'manual':
 			case 'notconfig':
 				$action[0]	= 'manual';
 				$action[1]	= JText::_('AEC_HEAD_MANUAL_SUBS');
