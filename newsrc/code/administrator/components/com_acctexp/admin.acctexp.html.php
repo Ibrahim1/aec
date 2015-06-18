@@ -1860,7 +1860,7 @@ class HTML_AcctExp
 						<div class="modal-body">
 							<p>With selected users:</p>
 							<div class="form-group">
-								<?php echo $lists['planid']; ?>
+								<?php echo $lists['set_plan']; ?>
 							</div>
 							<div class="form-group">
 								<div class="form-group">
