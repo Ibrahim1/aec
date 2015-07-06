@@ -88,7 +88,7 @@ switch( strtolower( $task ) ) {
 		} elseif ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
 			aecCentral( $return );
 		} elseif ( !empty( $return ) ) {
-			aecRedirect( 'index.php?option=com_acctexp&task=editMembership&userid=' . $return, JText::_('AEC_QUICKSEARCH_THANKS') );
+			aecRedirect( 'index.php?option=com_acctexp&task=edit&amp;entity=Membership&userid=' . $return, JText::_('AEC_QUICKSEARCH_THANKS') );
 		} else {
 			aecRedirect( 'index.php?option=com_acctexp&task=showcentral', JText::_('AEC_QUICKSEARCH_NOTFOUND') );
 		}
@@ -779,7 +779,7 @@ class aecAdminCentral extends aecAdminEntity
 
 			$userlink = '<div class="lookupresult">';
 			$userlink .= '<a href="';
-			$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $JTableUser->id;
+			$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;entity=Membership&amp;userid=' . $JTableUser->id;
 			$userlink .= '">';
 			$userlink .= str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->name ) . ' (' . str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->username ) . ')';
 			$userlink .= '</a>';
@@ -1830,7 +1830,7 @@ class aecAdminMembership extends aecAdminEntity
 				if ( !empty( $action[5] ) ) {
 					$alink = $action[5];
 				} else {
-					$alink = 'index.php?option=com_acctexp&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=editMembership&userid=' . $metaUser->userid;
+					$alink = 'index.php?option=com_acctexp&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returntask=edit&amp;entity=Membership&userid=' . $metaUser->userid;
 
 					if ( !empty( $action[4] ) ) {
 						$alink .= $action[4];
@@ -1876,7 +1876,7 @@ class aecAdminMembership extends aecAdminEntity
 			}
 
 			$cc = array();
-			$cc['coupon_code']	= '<a href="index.php?option=com_acctexp&amp;task=editCoupon&id=' . $coupon['type'].'.'.$coupon['id'] . '">' . $coupon_code . '</a>';
+			$cc['coupon_code']	= '<a href="index.php?option=com_acctexp&amp;task=edit&amp;entity=Coupon&id=' . $coupon['type'].'.'.$coupon['id'] . '">' . $coupon_code . '</a>';
 			$cc['invoices']		= implode( ", ", $coupon['invoices'] );
 
 			$coupons[] = $cc;
@@ -4683,7 +4683,7 @@ class aecAdminCoupon extends aecAdminEntity
 
 			$invoice->invoice_number_formatted = $invoice->invoice_number . ( ($in_formatted != $invoice->invoice_number) ? "\n" . '(' . $in_formatted . ')' : '' );
 
-			$invoice->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoice->usage . '">' . $invoice->usage . '</a>';
+			$invoice->usage = '<a href="index.php?option=com_acctexp&amp;task=edit&amp;entity=SubscriptionPlan&amp;id=' . $invoice->usage . '">' . $invoice->usage . '</a>';
 
 			$query = 'SELECT username'
 				. ' FROM #__users'
@@ -4692,7 +4692,7 @@ class aecAdminCoupon extends aecAdminEntity
 			$this->db->setQuery( $query );
 			$username = $this->db->loadResult();
 
-			$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoice->userid . '">';
+			$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=edit&amp;entity=Membership&userid=' . $invoice->userid . '">';
 
 			if ( !empty( $username ) ) {
 				$invoice->username .= $username . '</a>';
@@ -4914,7 +4914,7 @@ class aecAdminInvoice extends aecAdminEntity
 				$invoice->coupons = null;
 			}
 
-			$invoice->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoice->usage . '">' . $invoice->usage . '</a>';
+			$invoice->usage = '<a href="index.php?option=com_acctexp&amp;task=edit&amp;entity=SubscriptionPlan&amp;id=' . $invoice->usage . '">' . $invoice->usage . '</a>';
 
 			$query = 'SELECT username'
 				. ' FROM #__users'
@@ -4923,7 +4923,7 @@ class aecAdminInvoice extends aecAdminEntity
 			$this->db->setQuery( $query );
 			$username = $this->db->loadResult();
 
-			$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoice->userid . '">';
+			$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=edit&amp;entity=Membership&userid=' . $invoice->userid . '">';
 
 			if ( !empty( $username ) ) {
 				$invoice->username .= $username . '</a>';
@@ -5380,7 +5380,7 @@ class aecAdminEventlog extends aecAdminEntity
 				foreach ( $row->params as $key => $value ) {
 					switch ( $key ) {
 						case 'userid':
-							$content = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $value . '">' . $value . '</a>';
+							$content = '<a href="index.php?option=com_acctexp&amp;task=edit&amp;entity=Membership&userid=' . $value . '">' . $value . '</a>';
 							break;
 						case 'invoice_number':
 							$content = '<a class="quicksearch" href="#">' . $value . '</a>';
