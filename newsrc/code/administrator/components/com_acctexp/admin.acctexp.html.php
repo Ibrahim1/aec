@@ -1049,7 +1049,7 @@ class HTML_AcctExp
 				'short'	=> JText::_('AEC_CENTR_AREA_SETTINGS_SHORT'),
 
 				'items'	=> array(
-					array( 'index&entity=Settings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
+					array( 'edit&entity=Settings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
 
 					'div',
 
