@@ -2199,7 +2199,7 @@ class aecAdminProcessor extends aecAdminEntity
 		$rows = $this->getRows();
 		foreach ( $rows as $k => $id ) {
 			$pp = new PaymentProcessor();
-			$pp->loadId($id);
+			$pp->loadId($id->id);
 
 			if ( $pp->fullInit() ) {
 				$rows[$k] = $pp;
@@ -2548,9 +2548,9 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			$rows[$n]->group = $group;
 			$rows[$n]->color = $gcolors[$group]['color'];
 
-			$rows[$n]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=all';
-			$rows[$n]->link_active = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=active';
-			$rows[$n]->link_expired = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=expired';
+			$rows[$n]->link = 'index.php?option=com_acctexp&amp;task=index&amp;entity=Membership&amp;plan='.$row->id.'&amp;groups[]=all';
+			$rows[$n]->link_active = 'index.php?option=com_acctexp&amp;task=index&amp;entity=Membership&amp;plan='.$row->id.'&amp;groups[]=active';
+			$rows[$n]->link_expired = 'index.php?option=com_acctexp&amp;task=index&amp;entity=Membership&amp;plan='.$row->id.'&amp;groups[]=expired';
 
 			if ( $totals['expired'] ) {
 				$rows[$n]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
@@ -2735,9 +2735,9 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 		}
 
 		foreach ( $rows as $rid => $row ) {
-			$rows[$rid]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=all';
-			$rows[$rid]->link_active = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=active';
-			$rows[$rid]->link_expired = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=expired';
+			$rows[$rid]->link = 'index.php?option=com_acctexp&amp;task=index&amp;entity=Membership&amp;plan='.$row->id.'&amp;groups[]=all';
+			$rows[$rid]->link_active = 'index.php?option=com_acctexp&amp;task=index&amp;entity=Membership&amp;plan='.$row->id.'&amp;groups[]=active';
+			$rows[$rid]->link_expired = 'index.php?option=com_acctexp&amp;task=index&amp;entity=Membership&amp;plan='.$row->id.'&amp;groups[]=expired';
 
 			if ( $totals['expired'] ) {
 				$rows[$rid]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
@@ -6794,7 +6794,7 @@ class aecAdminHacks extends aecAdminEntity
 
 class aecAdminToolbox extends aecAdminEntity
 {
-	public function toolBoxTool( $cmd )
+	public function index( $cmd )
 	{
 		$path = JPATH_SITE . '/components/com_acctexp/toolbox';
 
@@ -6820,7 +6820,7 @@ class aecAdminToolbox extends aecAdminEntity
 
 				$info = $tool->Info();
 
-				$info['link'] = AECToolbox::deadsureURL( 'administrator/index.php?option=com_acctexp&task=toolbox&cmd=' . $class );
+				$info['link'] = AECToolbox::deadsureURL( 'administrator/index.php?option=com_acctexp&task=index&entity=toolbox&cmd=' . $class );
 
 				$list[] = $info;
 			}

@@ -2568,7 +2568,7 @@ class HTML_AcctExp
 						}
 						echo '</table>';
 					} else {
-						echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
+						echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=edit&amp;entity=microintegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
 					}
 					?>
 				</section>
@@ -2856,7 +2856,7 @@ class HTML_AcctExp
 						}
 						echo '</table>';
 					} else {
-						echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
+						echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=edit&amp;entity=microintegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
 					}
 					?>
 				</section>
