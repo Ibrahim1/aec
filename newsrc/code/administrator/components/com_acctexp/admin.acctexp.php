@@ -316,6 +316,9 @@ class aecAdminEntity
 	{
 		if ($task == 'new') $task = 'edit';
 
+		if (empty($task)) $task = 'index';
+
+
 		if ($task == 'apply') {
 			$task = 'save';
 
@@ -497,9 +500,7 @@ class aecAdminEntity
 
 	public function getPagination( $total=null )
 	{
-		static $cache;
-
-		if ( empty($total) && empty($cache) ) {
+		if ( empty($total) ) {
 			$this->db->setQuery(
 				'SELECT count(*)'
 				. ' FROM #__acctexp_' . $this->table
@@ -507,13 +508,8 @@ class aecAdminEntity
 			);
 
 			$total = $this->db->loadResult();
-
-			$cache = $total;
-		} elseif ( !empty($cache) ) {
-			$total = $cache;
 		}
 
-		// TODO: Optimize by cache
 		return new bsPagination( $total, $this->state->limitstart, $this->state->limit );
 	}
 
@@ -1234,6 +1230,8 @@ class aecAdminMembership extends aecAdminEntity
 		)
 	);
 
+	public $table = 'subscr';
+
 	public function index( $subscriptionid, $userid=array() )
 	{
 		$groups = $this->state->filter->status;
@@ -1591,7 +1589,7 @@ class aecAdminMembership extends aecAdminEntity
 
 		$this->state->sort = $orderby;
 
-		$this->db->setQuery( 'SET SQL_BIG_SELECTS=1');
+		$this->db->setQuery('SET SQL_BIG_SELECTS=1');
 		$this->db->query();
 
 		$this->db->setQuery( $query );
@@ -2090,6 +2088,8 @@ class aecAdminMembership extends aecAdminEntity
 
 class aecAdminTemplate extends aecAdminEntity
 {
+	public $table = 'config_templates';
+
 	public function index()
 	{
 		$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
