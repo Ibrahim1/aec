@@ -46,6 +46,8 @@ class RoboFile extends Robo\Tasks
 			$times[] = time();
 		}
 
+		$this->_deleteDir('tmp');
+
 		if ( count($times) < 3 ) {
 			$this->say("Built in " . ($times[1] - $times[0]) . " s \n\n");
 		} else {
