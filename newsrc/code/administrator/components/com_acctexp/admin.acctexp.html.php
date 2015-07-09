@@ -1749,7 +1749,7 @@ class HTML_AcctExp
 		$th_list = array(
 			array('username', 'CNAME'),
 			array('name', 'USERLOGIN'),
-			array('status', 'AEC_CMN_STATUS', 'left', 'groups'),
+			array('status', 'AEC_CMN_STATUS', 'left', 'filter_status'),
 			array('signup_date', 'SUBSCR_DATE')
 		);
 

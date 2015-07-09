@@ -1235,9 +1235,15 @@ class aecAdminMembership extends aecAdminEntity
 	public function index( $subscriptionid, $userid=array() )
 	{
 		$groups = $this->state->filter->status;
-		if ( is_array($this->state->filter->status) && count( $this->state->filter->status ) === 1 ) {
+		if ( is_array($groups) && count( $groups ) === 1 ) {
 			if ( $this->state->filter->status[0] == 'all' ) {
 				$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
+			}
+		}
+
+		if ( is_array($groups) ) {
+			foreach ( $groups as $k => $v ) {
+				$groups[$k] = strtolower($v);
 			}
 		}
 
@@ -1638,7 +1644,7 @@ class aecAdminMembership extends aecAdminEntity
 
 		$lists['set_plan']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="form-control inputbox" size="1"', 'id', 'name', 0 );
 
-		$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
+		$lists['filter_plan'] = '<select id="plan-filter-select" name="plan[]" multiple="multiple" size="5">';
 		foreach ( $db_plans as $plan ) {
 			$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $this->state->filter->plan ) ? ' selected="selected"' : '' ) . '>' . $plan->name . '</option>';
 		}
@@ -1646,7 +1652,7 @@ class aecAdminMembership extends aecAdminEntity
 
 		$grouplist = ItemGroupHandler::getTree();
 
-		$lists['filter_group'] = '<select id="group-filter-select" name="filter_group[]" multiple="multiple" size="5">';
+		$lists['filter_group'] = '<select id="group-filter-select" name="group[]" multiple="multiple" size="5">';
 		foreach ( $grouplist as $glisti ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $this->state->filter->group ) ? ' selected="selected"' : '' ) . '>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
@@ -1667,7 +1673,7 @@ class aecAdminMembership extends aecAdminEntity
 			'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
 		);
 
-		$lists['filter_status'] = '<select id="status-group-select" name="filter_status[]" multiple="multiple" size="5">';
+		$lists['filter_status'] = '<select id="status-group-select" name="status[]" multiple="multiple" size="5">';
 		foreach ( $status as $id => $txt ) {
 			$lists['filter_status'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected"' : '' ) . '>' . $txt . '</option>';
 		}
@@ -2705,7 +2711,7 @@ class aecAdminSubscriptionPlan extends aecAdminEntity
 			}
 		}
 
-		$lists['filter_group'] = JHTML::_('select.genericlist', $glist, 'filter_group[]', 'size="4" multiple="multiple"', 'value', 'text', $sel_groups );
+		$lists['filter_group'] = JHTML::_('select.genericlist', $glist, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sel_groups );
 
 		$totals = array();
 		$query = 'SELECT count(*)'
@@ -3968,7 +3974,7 @@ class aecAdminMicroIntegration extends aecAdminEntity
 		if ( is_array( $db_plans ) ) {
 			$plans = array_merge( $plans, $db_plans );
 		}
-		$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $this->state->filter->plan );
+		$lists['filter_planid']	= JHTML::_('select.genericlist', $plans, 'planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $this->state->filter->plan );
 
 		HTML_AcctExp::listMicroIntegrations( $rows, $this->state, $this->getPagination(), $lists );
 	}
